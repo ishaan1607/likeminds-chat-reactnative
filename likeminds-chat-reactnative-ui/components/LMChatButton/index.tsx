@@ -1,23 +1,10 @@
-import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
-import LMTextView, { LMTextProps } from "../LMTextView";
-import LMIcon from "../LMIcon";
-import { LMIconProps } from "../LMIcon";
+import { LMChatIcon } from "../LMChatIcon";
 import Styles from "../constants/Styles";
+import { LMChatButtonProps } from "./types";
 
-export interface LMButtonProps {
-  text?: LMTextProps; // this represents the text displayed on the button
-  icon?: LMIconProps; // this represents ths icon displayed on the button
-  onTap: (value?: any) => void; // this represents the functionality to be executed on click of button
-  placement?: "start" | "end"; // this represents the placement of the icon on the button
-  isActive?: boolean; // this represents the active/inactive state of the button
-  activeIcon?: LMIconProps; // this represents the icon to be displayed when the button is in active state
-  activeText?: LMTextProps; // this represents the text to be displayed when the button is in active state
-  buttonStyle?: ViewStyle; // this represents the style of the button
-  isClickable?: boolean; // this represents if the button is disabled or not
-}
-
-const LMButton = ({
+export const LMChatButton = ({
   text,
   icon,
   onTap,
@@ -27,7 +14,7 @@ const LMButton = ({
   activeText,
   buttonStyle,
   isClickable = false,
-}: LMButtonProps) => {
+}: LMChatButtonProps) => {
   const [active, setActive] = useState(isActive);
 
   // this function handles the active state of the button
@@ -61,7 +48,7 @@ const LMButton = ({
           active ? (
             activeIcon ? (
               // this renders the icon in active state
-              <LMIcon
+              <LMChatIcon
                 type={activeIcon.type}
                 width={activeIcon.width}
                 height={activeIcon.height}
@@ -75,7 +62,7 @@ const LMButton = ({
             ) : null
           ) : (
             // this renders the icon in inactive state
-            <LMIcon
+            <LMChatIcon
               type={icon.type}
               width={icon.width}
               height={icon.height}
@@ -109,5 +96,3 @@ const defaultStyles = StyleSheet.create({
     fontSize: 16,
   },
 });
-
-export default LMButton;

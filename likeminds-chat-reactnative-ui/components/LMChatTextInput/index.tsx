@@ -20,11 +20,11 @@ import {
   generateValueFromPartsAndChangedText,
   parseValue,
 } from "./utils";
-import { LMInputTextProps } from "./types";
-import LMButton from "../LMButton";
+import { LMChatTexInputProps } from "./types";
+import { LMChatButton } from "../LMChatButton";
 import Styles from "../constants/Styles";
 
-const LMTextInput: FC<LMInputTextProps> = ({
+export const LMChatTextInput: FC<LMChatTexInputProps> = ({
   inputText,
   onType,
   partTypes = [],
@@ -171,7 +171,7 @@ const LMTextInput: FC<LMInputTextProps> = ({
       </TextInput>
       {/* icon on right of text input */}
       {rightIcon && (
-        <LMButton
+        <LMChatButton
           {...rightIcon}
           onTap={rightIcon.onTap}
           text={rightIcon.text}
@@ -215,5 +215,3 @@ const defaultStyles = StyleSheet.create({
     borderWidth: 0,
   },
 });
-
-export default LMTextInput;

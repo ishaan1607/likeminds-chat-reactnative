@@ -8,7 +8,7 @@ import type {
   ViewStyle,
 } from "react-native";
 import React from "react";
-import { LMButtonProps } from "../LMButton";
+import { LMChatButtonProps } from "../LMChatButton/types";
 
 type Suggestion = {
   id: string;
@@ -105,7 +105,7 @@ type Part = {
   data?: MentionData;
 };
 
-type LMInputTextProps = Omit<TextInputProps, "onChange"> & {
+type LMChatTexInputProps = Omit<TextInputProps, "onChange"> & {
   inputText: string; // this represents the text to be displayed on text input
   onType: (value: string) => void; // this represents a callback function that is called when the text input's text changes
 
@@ -138,7 +138,7 @@ type LMInputTextProps = Omit<TextInputProps, "onChange"> & {
   multilineField?: boolean; // this represents if the input text should be multi lined or not
   secureText?: boolean; // this represents if the text entered should be hidden or visible for sensitive text like passwords
   disabled?: boolean; // this represents if the text input is editable or not
-  rightIcon?: LMButtonProps; // this represents the icon on the text input
+  rightIcon?: LMChatButtonProps; // this represents the icon on the text input
   autoFocus?: boolean; // checks if the text input shoud be on focus or not
   children: React.ReactNode;
 };
@@ -154,6 +154,6 @@ export type {
   MentionPartType,
   PatternPartType,
   PartType,
-  LMInputTextProps,
+  LMChatTexInputProps,
   Mention,
 };

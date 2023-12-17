@@ -1,19 +1,8 @@
-import { Image, View, StyleSheet, ImageStyle, ViewStyle } from "react-native";
+import { Image, View, StyleSheet } from "react-native";
 import React from "react";
+import { LMChatIconProps } from "./types";
 
-export interface LMIconProps {
-  type: "png"; // this represents the type of icon
-  iconUrl?: string; // this represents the url the icon
-  assetPath?: object; // this represents the path of the local image
-  color?: string; // this represents the tintcolor of the icon
-  height?: number; // this represents the height of the icon
-  width?: number; // this represents the width of the icon
-  iconStyle?: ImageStyle; // this represents the style of the icon
-  boxFit?: "center" | "contain" | "cover" | "repeat" | "stretch"; // this defines the fit behaviour of the icon inside the box around it
-  boxStyle?: ViewStyle; // this represents the style of the view
-}
-
-const LMIcon = ({
+export const LMChatIcon = ({
   type,
   iconUrl,
   assetPath,
@@ -23,7 +12,7 @@ const LMIcon = ({
   boxStyle,
   iconStyle,
   boxFit,
-}: LMIconProps) => {
+}: LMChatIconProps) => {
   // this throws the error if both image url and image path are passed as props because only one is required
   if (iconUrl && assetPath) {
     throw new Error("Property iconUrl and assetPath can not exist together.");
@@ -68,5 +57,3 @@ const defaultStyles = StyleSheet.create({
     resizeMode: "contain",
   },
 });
-
-export default LMIcon;
