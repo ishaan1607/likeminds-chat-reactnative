@@ -1,0 +1,29 @@
+{
+  "name": "likeminds_chat_reactnative_integration",
+  "version": "0.5.0",
+  "versionCode": "23",
+  "versionName": "1.8.0",
+  "private": true,
+  "scripts": {
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "start": "react-native start",
+    "test": "jest",
+    "eslint": "eslint .",
+    "eslint:fix": "eslint --fix .",
+    "prettier": "prettier --check .",
+    "prettier:fix": "prettier --write .",
+    "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap"
+  },
+  "dependencies": {
+    "likeminds_chat_reactnative_ui": "file:../likeminds-chat-reactnative-ui/likeminds_chat_reactnative_ui-0.5.0.tgz",
+    "react": "18.2.0",
+    "react-native": "0.73.0"
+  },
+  "jest": {
+    "preset": "react-native"
+  },
+  "devDependencies": {
+    "microbundle": "^0.15.1"
+  }
+}
