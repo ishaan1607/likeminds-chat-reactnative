@@ -25,6 +25,8 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import {Provider} from 'react-redux';
+import store from './components/store';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -63,7 +65,11 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  return <Chatroom />;
+  return (
+    <Provider store={store}>
+      <Chatroom />
+    </Provider>
+  );
 }
 
 const styles = StyleSheet.create({

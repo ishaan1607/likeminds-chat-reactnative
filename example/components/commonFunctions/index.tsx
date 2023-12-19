@@ -180,3 +180,15 @@ export const decode = (
     return text;
   }
 };
+
+export const removeKey = (key: any, {[key]: _, ...rest}) => rest;
+
+// this function is used to extract path from from route query, i.e routeQuery: `user_profile/skjdnc-lskdnjcs-lkdnsm`, path: `skjdnc-lskdnjcs-lkdnsm`
+export function extractPathfromRouteQuery(inputString: string): string | null {
+  const match = inputString.match(EXTRACT_PATH_FROM_ROUTE_QUERY);
+  if (match && match[1]) {
+    return match[1];
+  } else {
+    return null;
+  }
+}

@@ -6,6 +6,8 @@ import {
   Platform,
   ActivityIndicator,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Vibration,
 } from 'react-native';
 import React, {useState, useRef} from 'react';
 import {LMChatTextInput, LMChatTextView} from 'likeminds_chat_reactnative_ui';
@@ -14,19 +16,76 @@ import {myClient} from '../..';
 import {styles} from './styles';
 import {FlashList} from '@shopify/flash-list';
 import Styles from 'likeminds_chat_reactnative_ui/components/constants/Styles';
-import {decode} from '../commonFunctions';
+import {decode, extractPathfromRouteQuery} from '../commonFunctions';
 import LinkPreviewInputBox from '../linkPreviewInputBox';
+import AudioRecorderPlayer from 'react-native-audio-recorder-player';
+import {
+  Gesture,
+  GestureDetector,
+  GestureUpdateEvent,
+  PanGestureHandlerEventPayload,
+} from 'react-native-gesture-handler';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
+import {
+  requestAudioRecordPermission,
+  requestCameraPermission,
+  requestStoragePermission,
+} from './utils';
+import {PERMISSIONS, check, request} from 'react-native-permissions';
+import {
+  CLEAR_SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
+  EDIT_CONVERSATION,
+  LONG_PRESSED,
+  SELECTED_MESSAGES,
+  SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
+  SET_CHATROOM_TOPIC,
+  SET_EDIT_MESSAGE,
+  SET_FILE_UPLOADING_MESSAGES,
+  SHOW_TOAST,
+  STATUS_BAR_STYLE,
+  UPDATE_LAST_CONVERSATION,
+} from '../store/types/types';
+import {useAppDispatch, useAppSelector} from '../store';
+import {replaceMentionValues} from 'likeminds_chat_reactnative_ui/components/LMChatTextInput/utils';
+
+const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
+
+interface VoiceNotesPlayerProps {
+  currentPositionSec: number;
+  currentDurationSec: number;
+  playTime: string;
+  duration: string;
+}
+
+interface VoiceNotesProps {
+  recordSecs: number;
+  recordTime: string;
+  name: string;
+}
 
 interface ChatroomProps {
-  previousMessage: string;
-  isUploadScreen: boolean;
-  isEditable: boolean;
+  previousMessage?: string;
+  isUploadScreen?: boolean;
+  isEditable?: boolean;
+  chatroomType?: string;
+  chatroomID?: string;
+  setIsEditable?: any;
+  currentChatroomTopic?: any;
 }
 
 export const Chatroom = ({
   previousMessage = '',
   isUploadScreen,
   isEditable,
+  chatroomType,
+  chatroomID,
+  setIsEditable,
+  currentChatroomTopic,
 }: ChatroomProps) => {
   const [inputHeight, setInputHeight] = useState(25);
   let refInput = useRef<any>();
@@ -52,6 +111,190 @@ export const Chatroom = ({
   const [closedOnce, setClosedOnce] = useState(false);
   const [isVoiceResult, setIsVoiceResult] = useState(false);
   const [isRecordingLocked, setIsRecordingLocked] = useState(false);
+  const [voiceNotesLink, setVoiceNotesLink] = useState('');
+  const [voiceNotes, setVoiceNotes] = useState<VoiceNotesProps>({
+    recordSecs: 0,
+    recordTime: '',
+    name: '',
+  });
+  const [voiceNotesPlayer, setVoiceNotesPlayer] =
+    useState<VoiceNotesPlayerProps>({
+      currentPositionSec: 0,
+      currentDurationSec: 0,
+      playTime: '',
+      duration: '',
+    });
+  const [isVoiceNoteRecording, setIsVoiceNoteRecording] = useState(false);
+  const [isRecordingPermission, setIsRecordingPermission] = useState(false);
+  const [isLongPressedState, setIsLongPressedState] = useState(false);
+  const [isVoiceNoteIconPress, setIsVoiceNoteIconPress] = useState(false);
+  const [isDraggable, setIsDraggable] = useState(true);
+  const [isDeleteAnimation, setIsDeleteAnimation] = useState(false);
+  const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
+
+  const {
+    chatroomDetails,
+    isReply,
+    replyMessage,
+    editConversation,
+    fileSent,
+    conversations = [],
+  }: any = useAppSelector(state => state.chatroom);
+
+  const dispatch = useAppDispatch();
+
+  // Animation
+  const pressed = useSharedValue(false);
+  const x = useSharedValue(0);
+  const y = useSharedValue(0);
+  const lockOffset = useSharedValue(4);
+  const upChevronOffset = useSharedValue(3);
+  const micIconOpacity = useSharedValue(1); // Initial opacity value
+  const isLongPressed = useSharedValue(false);
+
+  const stopRecord = async () => {
+    if (isVoiceNoteRecording) {
+      await audioRecorderPlayerAttachment.stopRecorder();
+      audioRecorderPlayerAttachment.removeRecordBackListener();
+
+      // if isVoiceResult is true we show audio player instead of audio recorder
+      const voiceNote = {
+        uri: voiceNotesLink,
+        type: 'voice_note',
+        name: `${voiceNotes.name}.${isIOS ? 'm4a' : 'mp3'}`,
+        duration: Math.floor(voiceNotes.recordSecs / 1000),
+      };
+      dispatch({
+        type: SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
+        body: {
+          audio: [voiceNote],
+        },
+      });
+
+      setIsVoiceNoteRecording(false);
+    }
+  };
+
+  // to reset all the recording data we had previously
+  const clearVoiceRecord = async () => {
+    if (isVoiceNoteRecording) {
+      await stopRecord();
+    } else if (isVoiceNotePlaying) {
+      await stopPlay();
+    }
+    setVoiceNotes({
+      recordSecs: 0,
+      recordTime: '',
+      name: '',
+    });
+    setVoiceNotesPlayer({
+      currentPositionSec: 0,
+      currentDurationSec: 0,
+      playTime: '',
+      duration: '',
+    });
+    setVoiceNotesLink('');
+    setIsRecordingLocked(false);
+
+    dispatch({
+      type: CLEAR_SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
+    });
+
+    // if isVoiceResult is false we show audio recorder instead of audio player
+    setIsVoiceResult(false);
+  };
+
+  // this method handles onUpdate callback of pan gesture
+  const onUpdatePanGesture = (
+    event: GestureUpdateEvent<PanGestureHandlerEventPayload>,
+  ) => {
+    'worklet';
+    if (isLongPressed.value) {
+      if (Math.abs(x.value) >= 120) {
+        x.value = withSpring(0);
+        if (isDraggable) {
+          stopRecord();
+          setIsDraggable(false);
+          setIsDeleteAnimation(true);
+          clearVoiceRecord();
+          setIsDraggable(true);
+          isLongPressed.value = false;
+        }
+        pressed.value = false;
+        isLongPressed.value = false;
+      } else if (Math.abs(y.value) >= 100) {
+        y.value = withSpring(0);
+        if (isDraggable) {
+          setIsDraggable(false);
+          setIsDraggable(true);
+          setIsRecordingLocked(true);
+          setIsLongPressedState(false);
+          isLongPressed.value = false;
+        }
+      } else if (Math.abs(x.value) > 5) {
+        x.value = event.translationX;
+      } else if (Math.abs(y.value) > 5) {
+        y.value = event.translationY;
+      } else {
+        x.value = event.translationX;
+        y.value = event.translationY;
+      }
+    }
+  };
+
+  const handleStopRecord = async () => {
+    // to give some time for initiating the start recorder, then only stop it
+    setTimeout(async () => {
+      await stopRecord();
+      setIsVoiceResult(true);
+      setIsRecordingLocked(false);
+    }, 500);
+  };
+
+  // this method handles onEnd callback of pan gesture
+  const onEndPanGesture = () => {
+    'worklet';
+    if (
+      (Math.abs(x.value) > 5 && Math.abs(x.value) < 120) ||
+      (Math.abs(y.value) > 5 && Math.abs(y.value) < 100)
+    ) {
+      setIsRecordingLocked(false);
+      handleStopRecord();
+    }
+    x.value = withSpring(0);
+    y.value = withSpring(0);
+    pressed.value = false;
+    isLongPressed.value = false;
+    setIsLongPressedState(false);
+  };
+
+  const longPressGesture = Gesture.LongPress()
+    .runOnJS(true)
+    .minDuration(250)
+    .onStart(() => {
+      isLongPressed.value = true;
+      setIsLongPressedState(true);
+    });
+
+  // draggle mic pan gesture on x-axis and y-axis
+  const panGesture = Gesture.Pan()
+    .runOnJS(true)
+    .enabled(isDraggable)
+    .onUpdate(onUpdatePanGesture)
+    .onEnd(onEndPanGesture)
+    .onFinalize(() => {
+      'worklet';
+      pressed.value = false;
+      isLongPressed.value = false;
+      setIsLongPressedState(false);
+      setIsDraggable(true);
+    })
+    .onTouchesCancelled(() => {
+      setIsDraggable(true);
+    })
+    .simultaneousWithExternalGesture(longPressGesture);
+
+  const composedGesture = Gesture.Simultaneous(longPressGesture, panGesture);
 
   //pagination loader in the footer
   const renderFooter = () => {
@@ -60,6 +303,12 @@ export const Chatroom = ({
         <ActivityIndicator size="large" color={Styles.$COLORS.SECONDARY} />
       </View>
     ) : null;
+  };
+
+  // to stop playing audio recording
+  const stopPlay = async () => {
+    await audioRecorderPlayerAttachment.stopPlayer();
+    setIsVoiceNotePlaying(false);
   };
 
   // function shows loader in between calling the API and getting the response
@@ -190,6 +439,130 @@ export const Chatroom = ({
         }
       }
     }
+  };
+
+  // lock icon animation styles
+  const lockAnimatedStyles = useAnimatedStyle(() => ({
+    transform: [{translateY: lockOffset.value}],
+  }));
+
+  // up chevron animated styles
+  const upChevronAnimatedStyles = useAnimatedStyle(() => ({
+    transform: [{translateY: upChevronOffset.value}],
+  }));
+
+  // draggle mic panGesture styles
+  const panStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          translateX: x.value,
+        },
+        {
+          translateY: y.value,
+        },
+        {scale: withTiming(isLongPressed.value ? 1.5 : 1)},
+      ],
+    };
+  }, [x, y]);
+
+  const askPermission = async () => {
+    if (!isIOS) {
+      const permission = await requestAudioRecordPermission();
+      setIsRecordingPermission(!!permission);
+    } else {
+      const permission = await request(PERMISSIONS.IOS.MICROPHONE);
+      if (permission === 'granted') {
+        setIsRecordingPermission(true);
+      }
+    }
+  };
+
+  const onEdit = async () => {
+    let selectedConversation = editConversation;
+
+    let conversationId = selectedConversation?.id;
+    let previousConversation = selectedConversation;
+
+    let changedConversation;
+    let conversationText = replaceMentionValues(message, ({id, name}) => {
+      // example ID = `user_profile/8619d45e-9c4c-4730-af8e-4099fe3dcc4b`
+      let PATH = extractPathfromRouteQuery(id);
+      if (!!!PATH) {
+        return `<<${name}|route://${name}>>`;
+      } else {
+        return `<<${name}|route://${id}>>`;
+      }
+    });
+
+    let editedConversation = conversationText;
+    changedConversation = {
+      ...selectedConversation,
+      answer: editedConversation,
+      isEdited: true,
+    };
+
+    dispatch({
+      type: EDIT_CONVERSATION,
+      body: {
+        previousConversation: previousConversation,
+        changedConversation: changedConversation,
+      },
+    });
+
+    dispatch({
+      type: SET_EDIT_MESSAGE,
+      body: {
+        editConversation: '',
+      },
+    });
+
+    let index = conversations.findIndex((element: any) => {
+      return element?.id == selectedConversation?.id;
+    });
+
+    if (index === 0) {
+      dispatch({
+        type: UPDATE_LAST_CONVERSATION,
+        body: {
+          lastConversationAnswer: editedConversation,
+          chatroomType: chatroomType,
+          chatroomID: '3844534',
+        },
+      });
+    }
+    dispatch({type: SELECTED_MESSAGES, body: []});
+    dispatch({type: LONG_PRESSED, body: false});
+    setMessage('');
+    setInputHeight(25);
+    setIsEditable(false);
+
+    const payload = {
+      conversationId: conversationId,
+      text: editedConversation,
+    };
+
+    let editConversationResponse;
+    if (currentChatroomTopic) {
+      editConversationResponse = await myClient?.editConversation(
+        payload,
+        currentChatroomTopic,
+      );
+    } else {
+      editConversationResponse = await myClient?.editConversation(payload);
+    }
+    if (conversationId == currentChatroomTopic?.id) {
+      dispatch({
+        type: SET_CHATROOM_TOPIC,
+        body: {
+          currentChatroomTopic: editConversationResponse?.data?.conversation,
+        },
+      });
+    }
+    await myClient?.updateConversation(
+      conversationId?.toString(),
+      editConversationResponse?.data?.conversation,
+    );
   };
 
   return (
@@ -344,6 +717,91 @@ export const Chatroom = ({
         ]}
         inputText={message}
       />
+
+      {!!message || isVoiceResult || isUploadScreen || isRecordingLocked ? (
+        <TouchableOpacity
+          onPressOut={async () => {
+            if (isEditable) {
+              onEdit();
+            } else {
+              const voiceNote = [
+                {
+                  uri: voiceNotesLink,
+                  type: 'voice_note',
+                  name: `${voiceNotes.name}.${isIOS ? 'm4a' : 'mp3'}`,
+                  duration: Math.floor(voiceNotes.recordSecs / 1000),
+                },
+              ];
+              if (isVoiceNoteRecording) {
+                await stopRecord();
+                // onSend(message, voiceNote, true);
+              } else if (isVoiceNotePlaying) {
+                await stopPlay();
+                // onSend(message, voiceNote, true);
+              } else {
+                // onSend(message);
+              }
+            }
+          }}
+          style={styles.sendButton}>
+          <Image
+            source={require('../assets/images/send_button3x.png')}
+            style={styles.send}
+          />
+        </TouchableOpacity>
+      ) : (
+        <View>
+          {!!isRecordingPermission ? (
+            <GestureDetector gesture={composedGesture}>
+              <Animated.View>
+                {voiceNotes.recordTime && !isRecordingLocked && (
+                  <View
+                    style={[styles.lockRecording, styles.inputBoxWithShadow]}>
+                    <Animated.View style={lockAnimatedStyles}>
+                      <Image
+                        source={require('../assets/images/lock_icon3x.png')}
+                        style={[styles.emoji, {marginTop: 20}]}
+                      />
+                    </Animated.View>
+                    <Animated.View style={upChevronAnimatedStyles}>
+                      <Image
+                        source={require('../assets/images/up_chevron_icon3x.png')}
+                        style={[styles.chevron, {marginTop: 20}]}
+                      />
+                    </Animated.View>
+                  </View>
+                )}
+
+                <Animated.View style={[styles.sendButton, panStyle]}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      setIsVoiceNoteIconPress(true);
+                      Vibration.vibrate(0.5 * 100);
+                    }}
+                    style={[styles.sendButton, {position: 'absolute'}]}>
+                    <Image
+                      source={require('../assets/images/mic_icon3x.png')}
+                      style={styles.mic}
+                    />
+                  </TouchableWithoutFeedback>
+                </Animated.View>
+              </Animated.View>
+            </GestureDetector>
+          ) : (
+            <Animated.View style={[styles.sendButton, panStyle]}>
+              <TouchableWithoutFeedback
+                onPress={askPermission}
+                onLongPress={askPermission}
+                style={[styles.sendButton, {position: 'absolute'}]}>
+                <Image
+                  source={require('../assets/images/mic_icon3x.png')}
+                  style={styles.mic}
+                />
+              </TouchableWithoutFeedback>
+            </Animated.View>
+          )}
+        </View>
+      )}
     </View>
   );
 };
