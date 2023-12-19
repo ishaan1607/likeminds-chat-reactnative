@@ -27,6 +27,7 @@ import {
 } from 'react-native/Libraries/NewAppScreen';
 import {Provider} from 'react-redux';
 import store from './components/store';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -66,9 +67,11 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <Provider store={store}>
-      <Chatroom />
-    </Provider>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <Provider store={store}>
+        <Chatroom />
+      </Provider>
+    </GestureHandlerRootView>
   );
 }
 

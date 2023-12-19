@@ -1,7 +1,16 @@
 import {StyleSheet} from 'react-native';
 import Styles from 'likeminds_chat_reactnative_ui/components/constants/Styles';
+import Layout from '../linkPreviewInputBox/Layout';
 
 export const styles = StyleSheet.create({
+  textInput: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    flexGrow: 1,
+    borderRadius: 30,
+    width: Layout.window.width - 75,
+  },
   input: {
     flexGrow: 1,
     fontSize: Styles.$FONT_SIZES.XL,
@@ -42,6 +51,15 @@ export const styles = StyleSheet.create({
     fontSize: Styles.$FONT_SIZES.LARGE,
     fontFamily: Styles.$FONT_TYPES.MEDIUM,
     color: Styles.$COLORS.PRIMARY,
+  },
+  replyBoxParent: {
+    backgroundColor: 'white',
+    borderBottom: 'none',
+    borderBottomWidth: 0,
+    borderBottomRightRadius: 30,
+    borderBottomLeftRadius: 30,
+    borderColor: Styles.$COLORS.MSG,
+    overflow: 'hidden',
   },
   subTitle: {
     fontSize: Styles.$FONT_SIZES.MEDIUM,
@@ -99,6 +117,10 @@ export const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
+  emojiButton: {
+    padding: 10,
+    backgroundColor: 'red',
+  },
   emoji: {
     width: 22,
     height: 22,
@@ -113,5 +135,17 @@ export const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
+  },
+  lockIcon: {
+    width: 22,
+    height: 22,
+    resizeMode: 'contain',
+    marginTop: 20,
+  },
+  upChevron: {
+    width: 12,
+    height: 12,
+    resizeMode: 'contain',
+    marginTop: 20,
   },
 });

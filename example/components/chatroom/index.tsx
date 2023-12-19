@@ -8,9 +8,14 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   Vibration,
+  Keyboard,
 } from 'react-native';
 import React, {useState, useRef} from 'react';
-import {LMChatTextInput, LMChatTextView} from 'likeminds_chat_reactnative_ui';
+import {
+  LMChatIcon,
+  LMChatTextInput,
+  LMChatTextView,
+} from 'likeminds_chat_reactnative_ui';
 import {detectMentions, replaceLastMention} from './utils';
 import {myClient} from '../..';
 import {styles} from './styles';
@@ -131,6 +136,7 @@ export const Chatroom = ({
   const [isDraggable, setIsDraggable] = useState(true);
   const [isDeleteAnimation, setIsDeleteAnimation] = useState(false);
   const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const {
     chatroomDetails,
@@ -566,7 +572,26 @@ export const Chatroom = ({
   };
 
   return (
-    <View>
+    <View
+      style={
+        (isReply && !isUploadScreen) ||
+        isUserTagging ||
+        isEditable ||
+        Object.keys(ogTagsState).length !== 0
+          ? [
+              styles.replyBoxParent,
+              {
+                borderTopWidth:
+                  isReply && !isUploadScreen && !isUserTagging ? 0 : 0,
+                borderTopLeftRadius:
+                  isReply && !isUploadScreen && !isUserTagging ? 10 : 20,
+                borderTopRightRadius:
+                  isReply && !isUploadScreen && !isUserTagging ? 10 : 20,
+                backgroundColor: isUploadScreen ? 'black' : 'white',
+              },
+            ]
+          : null
+      }>
       {/* tagging view */}
       {userTaggingList && isUserTagging ? (
         <View
@@ -599,15 +624,19 @@ export const Chatroom = ({
                     setIsUserTagging(false);
                   }}
                   style={styles.taggableUserView}>
-                  <Image
-                    source={
-                      !!imageUrl
-                        ? {uri: imageUrl}
-                        : require('../assets/images/default_pic.png')
-                    }
-                    style={styles.avatar}
-                  />
-
+                  {!!imageUrl ? (
+                    <LMChatIcon
+                      type="png"
+                      iconUrl={imageUrl}
+                      iconStyle={styles.avatar}
+                    />
+                  ) : (
+                    <LMChatIcon
+                      type="png"
+                      assetPath={require('../assets/images/default_pic.png')}
+                      iconStyle={styles.avatar}
+                    />
+                  )}
                   <View
                     style={[
                       styles.infoContainer,
@@ -616,6 +645,16 @@ export const Chatroom = ({
                         gap: isIOS ? 5 : 0,
                       },
                     ]}>
+                    {/* <LMChatTextView maxLines={1} textStyle={[
+                        styles.title,
+                        {
+                          color: false
+                            ? Styles.$COLORS.TERTIARY
+                            : Styles.$COLORS.PRIMARY,
+                        },
+                      ]}>
+                      {item?.name}
+                      </LMChatTextView> */}
                     <Text
                       style={[
                         styles.title,
@@ -681,127 +720,178 @@ export const Chatroom = ({
               setClosedPreview(true);
             }}
             style={styles.replyBoxClose}>
-            <Image
-              style={styles.replyCloseImg}
-              source={require('../assets/images/close_icon.png')}
+            <LMChatIcon
+              type="png"
+              assetPath={require('../assets/images/close_icon.png')}
+              iconStyle={styles.replyCloseImg}
             />
           </TouchableOpacity>
         </View>
       ) : null}
 
-      {/* text input */}
-      <LMChatTextInput
-        placeholderText="Type here..."
-        placeholderTextColor="#0F1E3D66"
-        inputTextStyle={{
-          marginHorizontal: 15,
-          fontSize: 16,
-          elevation: 0,
-          maxHeight: 220,
-          borderRadius: 50,
-          backgroundColor: '#D3D3D3',
-          paddingLeft: 10,
-        }}
-        multilineField
-        inputRef={refInput}
-        onType={handleInputChange}
-        autoFocus={false}
-        selectionColor="red"
-        partTypes={[
-          {
-            trigger: '@',
-            textStyle: {
-              color: '#007AFF',
-            }, // The mention style in the input
-          },
-        ]}
-        inputText={message}
-      />
-
-      {!!message || isVoiceResult || isUploadScreen || isRecordingLocked ? (
-        <TouchableOpacity
-          onPressOut={async () => {
-            if (isEditable) {
-              onEdit();
-            } else {
-              const voiceNote = [
-                {
-                  uri: voiceNotesLink,
-                  type: 'voice_note',
-                  name: `${voiceNotes.name}.${isIOS ? 'm4a' : 'mp3'}`,
-                  duration: Math.floor(voiceNotes.recordSecs / 1000),
-                },
-              ];
-              if (isVoiceNoteRecording) {
-                await stopRecord();
-                // onSend(message, voiceNote, true);
-              } else if (isVoiceNotePlaying) {
-                await stopPlay();
-                // onSend(message, voiceNote, true);
-              } else {
-                // onSend(message);
-              }
-            }
+      <View
+        style={styles.textInput}
+        // style={[
+        //   styles.textInput,
+        //   !(isEditable || isReply) ? styles.inputBoxWithShadow : null,
+        //   {
+        //     backgroundColor: !!isUploadScreen
+        //       ? Styles.$BACKGROUND_COLORS.DARK
+        //       : Styles.$BACKGROUND_COLORS.LIGHT,
+        //   },
+        //   (isReply && !isUploadScreen) || isEditable || isUserTagging
+        //     ? {
+        //         borderWidth: 0,
+        //         margin: isIOS ? 0 : 2,
+        //       }
+        //     : null,
+        // ]}
+      >
+        {/* text input */}
+        <LMChatTextInput
+          placeholderText="Type here..."
+          placeholderTextColor="#0F1E3D66"
+          inputTextStyle={{
+            fontSize: 16,
+            elevation: 0,
+            maxHeight: 220,
+            borderRadius: 50,
+            backgroundColor: '#D3D3D3',
+            paddingLeft: 10,
           }}
-          style={styles.sendButton}>
-          <Image
-            source={require('../assets/images/send_button3x.png')}
-            style={styles.send}
-          />
-        </TouchableOpacity>
-      ) : (
-        <View>
-          {!!isRecordingPermission ? (
-            <GestureDetector gesture={composedGesture}>
-              <Animated.View>
-                {voiceNotes.recordTime && !isRecordingLocked && (
-                  <View
-                    style={[styles.lockRecording, styles.inputBoxWithShadow]}>
-                    <Animated.View style={lockAnimatedStyles}>
-                      <Image
-                        source={require('../assets/images/lock_icon3x.png')}
-                        style={[styles.emoji, {marginTop: 20}]}
-                      />
-                    </Animated.View>
-                    <Animated.View style={upChevronAnimatedStyles}>
-                      <Image
-                        source={require('../assets/images/up_chevron_icon3x.png')}
-                        style={[styles.chevron, {marginTop: 20}]}
-                      />
-                    </Animated.View>
-                  </View>
-                )}
+          multilineField
+          inputRef={refInput}
+          onType={handleInputChange}
+          autoFocus={false}
+          selectionColor="red"
+          partTypes={[
+            {
+              trigger: '@',
+              textStyle: {
+                color: '#007AFF',
+              }, // The mention style in the input
+            },
+          ]}
+          inputText={message}
+          rightIcon={{
+            onTap: () => console.log('1234'),
+            icon: {
+              type: 'png',
+              assetPath: require('../assets/images/open_files3x.png'),
+              iconStyle: styles.emoji,
+            },
+            placement: 'start',
+          }}
+        />
 
-                <Animated.View style={[styles.sendButton, panStyle]}>
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      setIsVoiceNoteIconPress(true);
-                      Vibration.vibrate(0.5 * 100);
-                    }}
-                    style={[styles.sendButton, {position: 'absolute'}]}>
-                    <Image
-                      source={require('../assets/images/mic_icon3x.png')}
-                      style={styles.mic}
-                    />
-                  </TouchableWithoutFeedback>
+        {!isUploadScreen &&
+        !isEditable &&
+        !voiceNotes?.recordTime &&
+        !isDeleteAnimation ? (
+          <TouchableOpacity
+            style={styles.emojiButton}
+            onPress={() => {
+              Keyboard.dismiss();
+              setModalVisible(true);
+            }}>
+            <LMChatIcon
+              type="png"
+              iconStyle={styles.emoji}
+              assetPath={require('../assets/images/open_files3x.png')}
+            />
+          </TouchableOpacity>
+        ) : null}
+
+        {!!message || isVoiceResult || isUploadScreen || isRecordingLocked ? (
+          <TouchableOpacity
+            onPressOut={async () => {
+              if (isEditable) {
+                onEdit();
+              } else {
+                const voiceNote = [
+                  {
+                    uri: voiceNotesLink,
+                    type: 'voice_note',
+                    name: `${voiceNotes.name}.${isIOS ? 'm4a' : 'mp3'}`,
+                    duration: Math.floor(voiceNotes.recordSecs / 1000),
+                  },
+                ];
+                if (isVoiceNoteRecording) {
+                  await stopRecord();
+                  // onSend(message, voiceNote, true);
+                } else if (isVoiceNotePlaying) {
+                  await stopPlay();
+                  // onSend(message, voiceNote, true);
+                } else {
+                  // onSend(message);
+                }
+              }
+            }}
+            style={styles.sendButton}>
+            <LMChatIcon
+              type="png"
+              assetPath={require('../assets/images/send_button3x.png')}
+              iconStyle={styles.send}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View>
+            {!!isRecordingPermission ? (
+              <GestureDetector gesture={composedGesture}>
+                <Animated.View>
+                  {voiceNotes.recordTime && !isRecordingLocked && (
+                    <View
+                      style={[styles.lockRecording, styles.inputBoxWithShadow]}>
+                      <Animated.View style={lockAnimatedStyles}>
+                        <LMChatIcon
+                          type="png"
+                          assetPath={require('../assets/images/lock_icon3x.png')}
+                          iconStyle={styles.lockIcon}
+                        />
+                      </Animated.View>
+                      <Animated.View style={upChevronAnimatedStyles}>
+                        <LMChatIcon
+                          type="png"
+                          assetPath={require('../assets/images/up_chevron_icon3x.png')}
+                          iconStyle={styles.upChevron}
+                        />
+                      </Animated.View>
+                    </View>
+                  )}
+
+                  <Animated.View style={[styles.sendButton, panStyle]}>
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        setIsVoiceNoteIconPress(true);
+                        Vibration.vibrate(0.5 * 100);
+                      }}
+                      style={[styles.sendButton, {position: 'absolute'}]}>
+                      <LMChatIcon
+                        type="png"
+                        assetPath={require('../assets/images/mic_icon3x.png')}
+                        iconStyle={styles.mic}
+                      />
+                    </TouchableWithoutFeedback>
+                  </Animated.View>
                 </Animated.View>
+              </GestureDetector>
+            ) : (
+              <Animated.View style={[styles.sendButton, panStyle]}>
+                <TouchableWithoutFeedback
+                  onPress={askPermission}
+                  onLongPress={askPermission}
+                  style={[styles.sendButton, {position: 'absolute'}]}>
+                  <LMChatIcon
+                    type="png"
+                    assetPath={require('../assets/images/mic_icon3x.png')}
+                    iconStyle={styles.mic}
+                  />
+                </TouchableWithoutFeedback>
               </Animated.View>
-            </GestureDetector>
-          ) : (
-            <Animated.View style={[styles.sendButton, panStyle]}>
-              <TouchableWithoutFeedback
-                onPress={askPermission}
-                onLongPress={askPermission}
-                style={[styles.sendButton, {position: 'absolute'}]}>
-                <Image
-                  source={require('../assets/images/mic_icon3x.png')}
-                  style={styles.mic}
-                />
-              </TouchableWithoutFeedback>
-            </Animated.View>
-          )}
-        </View>
-      )}
+            )}
+          </View>
+        )}
+      </View>
     </View>
   );
 };
