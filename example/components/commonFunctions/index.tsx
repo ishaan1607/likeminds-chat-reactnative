@@ -1,5 +1,15 @@
 import Styles from 'likeminds_chat_reactnative_ui/components/constants/Styles';
 import React, {Alert, Text, Linking} from 'react-native';
+import {PDF_TEXT, VIDEO_TEXT} from '../constants/Strings';
+import {createThumbnail} from 'react-native-create-thumbnail';
+import PdfThumbnail from 'react-native-pdf-thumbnail';
+
+interface VideoThumbnail {
+  selectedImages: any;
+  selectedFilesToUpload?: any;
+  selectedFilesToUploadThumbnails?: any;
+  initial: boolean; // true when selecting Videos for first time, else false.
+}
 
 const REGEX_USER_SPLITTING = /(<<.+?\|route:\/\/[^>]+>>)/gu;
 export const REGEX_USER_TAGGING =
@@ -192,3 +202,125 @@ export function extractPathfromRouteQuery(inputString: string): string | null {
     return null;
   }
 }
+
+// function to get thumbnails from videos
+export const getVideoThumbnail = async ({
+  selectedImages,
+  selectedFilesToUpload,
+  selectedFilesToUploadThumbnails,
+  initial,
+}: VideoThumbnail) => {
+  let arr: any = [];
+  const dummyArrSelectedFiles: any = selectedImages;
+  for (let i = 0; i < selectedImages?.length; i++) {
+    const item = selectedImages[i];
+    if (item?.type?.split('/')[0] === VIDEO_TEXT) {
+      await createThumbnail({
+        url: item.uri,
+        timeStamp: 10000,
+      })
+        .then(response => {
+          arr = [...arr, {uri: response.path}];
+          dummyArrSelectedFiles[i] = {
+            ...dummyArrSelectedFiles[i],
+            thumbnailUrl: response.path,
+          };
+        })
+        .catch(() => {});
+    } else {
+      arr = [...arr, {uri: item.uri}];
+    }
+  }
+  return {
+    selectedFilesToUploadThumbnails: initial
+      ? arr
+      : [...selectedFilesToUploadThumbnails, ...arr],
+    selectedFilesToUpload: initial
+      ? dummyArrSelectedFiles
+      : [...selectedFilesToUpload, ...dummyArrSelectedFiles],
+  };
+};
+
+// function to get thumbnails of all pdf
+export const getAllPdfThumbnail = async (selectedImages: any) => {
+  let arr: any = [];
+  for (let i = 0; i < selectedImages?.length; i++) {
+    const item = selectedImages[i];
+    const filePath = item.uri;
+    const page = 0;
+    if (item?.type?.split('/')[1] === PDF_TEXT) {
+      const res = await PdfThumbnail.generate(filePath, page);
+      if (res) {
+        arr = [...arr, {uri: res?.uri}];
+      }
+    } else {
+      arr = [...arr, {uri: item.uri}];
+    }
+  }
+  return arr;
+};
+
+// function to get thumbnails of pdf
+export const getPdfThumbnail = async (selectedFile: any) => {
+  let arr: any = [];
+  const filePath = selectedFile.uri;
+  const page = 0;
+  if (selectedFile?.type?.split('/')[1] === PDF_TEXT) {
+    const res = await PdfThumbnail.generate(filePath, page);
+    if (res) {
+      arr = [...arr, {uri: res?.uri}];
+    }
+  } else {
+    arr = [...arr, {uri: selectedFile.uri}];
+  }
+  return arr;
+};
+
+export const decodeForNotifications = (text: string | undefined) => {
+  if (!text) {
+    return;
+  }
+  const arr: any[] = [];
+  const parts = text?.split(/(?:<<)?([\w\s🤖@]+\|route:\/\/\S+>>)/g);
+  const TEMP_REGEX_USER_TAGGING =
+    /(?:<<)?((?<name>[^<>|]+)\|route:\/\/(?<route>[^?]+(\?.+)?)>>)/g;
+
+  if (parts) {
+    for (const matchResult of parts) {
+      if (matchResult.match(TEMP_REGEX_USER_TAGGING)) {
+        const match = TEMP_REGEX_USER_TAGGING.exec(matchResult);
+        if (match !== null) {
+          const {name, route} = match?.groups!;
+          arr.push({key: name, route: route});
+        }
+      } else {
+        arr.push({key: matchResult, route: null});
+      }
+    }
+    let decodedText = '';
+    for (let i = 0; i < arr.length; i++) {
+      decodedText = decodedText + arr[i].key;
+    }
+    return decodedText;
+  } else {
+    return text;
+  }
+};
+
+// replace gif string message
+export const generateGifString = (message: string) => {
+  if (!message) {
+    return '';
+  }
+  let originalString: string = message;
+  let searchString: string =
+    '* This is a gif message. Please update your app *';
+  let replacementString: string = '';
+
+  let resultString: string = originalString.replace(
+    searchString,
+    replacementString,
+  );
+
+  return resultString?.trim();
+};

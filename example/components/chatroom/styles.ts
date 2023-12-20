@@ -1,4 +1,4 @@
-import {StyleSheet, PixelRatio} from 'react-native';
+import {StyleSheet, PixelRatio, Platform} from 'react-native';
 import Styles from 'likeminds_chat_reactnative_ui/components/constants/Styles';
 import Layout from '../linkPreviewInputBox/Layout';
 
@@ -60,7 +60,8 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
     paddingLeft: 0,
-    width: '70%',
+    backgroundColor: 'red',
+    width: '100%',
   },
   replyBoxParent: {
     backgroundColor: 'white',
@@ -140,8 +141,15 @@ export const styles = StyleSheet.create({
     width: 22,
     height: 22,
     resizeMode: 'contain',
-    position: 'relative',
+    position: 'absolute',
     right: 20,
+  },
+  gifIcon: {
+    width: 22,
+    height: 22,
+    resizeMode: 'contain',
+    position: 'absolute',
+    left: 20,
   },
   chevron: {
     width: 12,
@@ -203,5 +211,50 @@ export const styles = StyleSheet.create({
     fontSize: Styles.$FONT_SIZES.SMALL,
     fontFamily: Styles.$FONT_TYPES.LIGHT,
     color: Styles.$COLORS.PRIMARY,
+  },
+  voiceNotesInputParent: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+    paddingLeft: 0,
+    width: '88%',
+  },
+  voiceRecorderInput: {
+    marginHorizontal: 20,
+    paddingVertical: 4,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  alignItems: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    textAlign: 'center',
+  },
+  recordTitle: {
+    fontSize: Styles.$FONT_SIZES.LARGE,
+    fontFamily: Styles.$FONT_TYPES.LIGHT,
+    color: Styles.$COLORS.MSG,
+    marginTop: Platform.OS === 'ios' ? 3 : 0,
+  },
+  gifView: {
+    backgroundColor: Styles.$COLORS.MSG,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderRadius: 5,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 10,
+  },
+  gifText: {
+    fontFamily: Styles.$FONT_TYPES.LIGHT,
+    fontSize: Styles.$FONT_SIZES.SMALL,
+    color: 'white',
+    marginTop: Platform.OS === 'ios' ? 2 : 0,
   },
 });

@@ -11,7 +11,7 @@ import {
   Keyboard,
   Modal,
 } from 'react-native';
-import React, {useState, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   LMChatIcon,
   LMChatTextInput,
@@ -22,7 +22,13 @@ import {myClient} from '../..';
 import {styles} from './styles';
 import {FlashList} from '@shopify/flash-list';
 import Styles from 'likeminds_chat_reactnative_ui/components/constants/Styles';
-import {decode, extractPathfromRouteQuery} from '../commonFunctions';
+import {
+  decode,
+  extractPathfromRouteQuery,
+  getAllPdfThumbnail,
+  getPdfThumbnail,
+  getVideoThumbnail,
+} from '../commonFunctions';
 import LinkPreviewInputBox from '../linkPreviewInputBox';
 import AudioRecorderPlayer from 'react-native-audio-recorder-player';
 import {
@@ -47,7 +53,11 @@ import {
   CLEAR_SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
   EDIT_CONVERSATION,
   LONG_PRESSED,
+  SELECTED_FILES_TO_UPLOAD,
+  SELECTED_FILES_TO_UPLOAD_THUMBNAILS,
+  SELECTED_FILE_TO_VIEW,
   SELECTED_MESSAGES,
+  SELECTED_MORE_FILES_TO_UPLOAD,
   SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
   SET_CHATROOM_TOPIC,
   SET_EDIT_MESSAGE,
@@ -60,9 +70,30 @@ import {useAppDispatch, useAppSelector} from '../store';
 import {replaceMentionValues} from 'likeminds_chat_reactnative_ui/components/LMChatTextInput/utils';
 import {
   CAMERA_TEXT,
+  CAPITAL_GIF_TEXT,
   DOCUMENTS_TEXT,
   PHOTOS_AND_VIDEOS_TEXT,
+  SLIDE_TO_CANCEL,
 } from '../constants/Strings';
+import {Conversation} from '@likeminds.community/chat-rn/dist/shared/responseModels/Conversation';
+import {
+  Asset,
+  ImagePickerResponse,
+  MediaType,
+  launchCamera,
+  launchImageLibrary,
+} from 'react-native-image-picker';
+import {FILE_UPLOAD} from '../constants/Screens';
+import DocumentPicker from 'react-native-document-picker';
+import LottieView from 'lottie-react-native';
+import {
+  GiphyContentType,
+  GiphyDialog,
+  GiphyDialogEvent,
+  GiphyDialogMediaSelectEventHandler,
+  GiphyMedia,
+} from '@giphy/react-native-sdk';
+import {createThumbnail} from 'react-native-create-thumbnail';
 
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
 
@@ -79,24 +110,51 @@ interface VoiceNotesProps {
   name: string;
 }
 
+interface LaunchActivityProps {
+  mediaType: MediaType;
+  selectionLimit: number;
+}
+
 interface ChatroomProps {
+  replyChatID?: any;
+  chatroomID: any;
+  chatRequestState?: any;
+  chatroomType?: any;
+  navigation: any;
+  isUploadScreen: boolean;
+  isPrivateMember?: boolean;
+  isDoc?: boolean;
+  myRef?: any;
   previousMessage?: string;
-  isUploadScreen?: boolean;
+  handleFileUpload: any;
   isEditable?: boolean;
-  chatroomType?: string;
-  chatroomID?: string;
   setIsEditable?: any;
-  currentChatroomTopic?: any;
+  isSecret?: any;
+  chatroomWithUser?: any;
+  chatroomName?: any;
+  currentChatroomTopic?: Conversation;
+  isGif?: boolean;
 }
 
 export const Chatroom = ({
-  previousMessage = '',
-  isUploadScreen,
-  isEditable,
-  chatroomType,
+  replyChatID,
   chatroomID,
+  chatRequestState,
+  chatroomType,
+  navigation,
+  isUploadScreen,
+  isPrivateMember,
+  isDoc,
+  myRef,
+  previousMessage = '',
+  handleFileUpload,
+  isEditable,
   setIsEditable,
+  isSecret,
+  chatroomWithUser,
+  chatroomName,
   currentChatroomTopic,
+  isGif,
 }: ChatroomProps) => {
   const [inputHeight, setInputHeight] = useState(25);
   let refInput = useRef<any>();
@@ -144,6 +202,8 @@ export const Chatroom = ({
   const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const MAX_FILE_SIZE = 104857600; // 100MB in bytes
+
   const handleModalClose = () => {
     setModalVisible(false);
   };
@@ -155,30 +215,314 @@ export const Chatroom = ({
     editConversation,
     fileSent,
     conversations = [],
+    selectedFilesToUpload = [],
+    selectedVoiceNoteFilesToUpload = [],
+    selectedFilesToUploadThumbnails = [],
+    selectedMessages = [],
   }: any = useAppSelector(state => state.chatroom);
 
   const dispatch = useAppDispatch();
 
+  const selectGIF = async (gif: GiphyMedia, message: string) => {
+    const item = {...gif, thumbnailUrl: ''};
+
+    navigation.navigate(FILE_UPLOAD, {
+      chatroomID: chatroomID,
+      previousMessage: message, // to keep message on uploadScreen InputBox
+    });
+
+    await createThumbnail({
+      url: gif?.data?.images?.fixed_width?.mp4,
+      timeStamp: 10000,
+    })
+      .then(response => {
+        item.thumbnailUrl = response?.path;
+
+        dispatch({
+          type: SELECTED_FILE_TO_VIEW,
+          body: {image: item},
+        });
+        dispatch({
+          type: SELECTED_FILES_TO_UPLOAD,
+          body: {
+            images: [item],
+          },
+        });
+        dispatch({
+          type: STATUS_BAR_STYLE,
+          body: {color: Styles.$STATUS_BAR_STYLE['light-content']},
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  // Handling GIFs selection in GiphyDialog
+  useEffect(() => {
+    GiphyDialog.configure({
+      mediaTypeConfig: [GiphyContentType.Recents, GiphyContentType.Gif],
+    });
+    const handler: GiphyDialogMediaSelectEventHandler = e => {
+      selectGIF(e.media, message);
+      GiphyDialog.hide();
+    };
+    const listener = GiphyDialog.addListener(
+      GiphyDialogEvent.MediaSelected,
+      handler,
+    );
+    return () => {
+      listener.remove();
+    };
+  }, [message]);
+
+  // this method launches native camera
+  const openCamera = async () => {
+    try {
+      const options: LaunchActivityProps = {
+        mediaType: 'photo',
+        selectionLimit: 0,
+      };
+      navigation.navigate(FILE_UPLOAD, {
+        chatroomID: chatroomID,
+        previousMessage: message, // to keep message on uploadScreen InputBox
+      });
+      await launchCamera(options, async (response: ImagePickerResponse) => {
+        if (response?.didCancel) {
+          if (selectedFilesToUpload.length === 0) {
+            navigation.goBack();
+          }
+        } else if (response.errorCode) {
+          return;
+        } else {
+          const selectedImages: Asset[] | undefined = response.assets; // selectedImages would be images only
+
+          if (!selectedImages) {
+            return;
+          }
+          if (selectedImages?.length > 0) {
+            const fileSize = selectedImages[0]?.fileSize;
+            if (Number(fileSize) >= MAX_FILE_SIZE) {
+              dispatch({
+                type: SHOW_TOAST,
+                body: {isToast: true, msg: 'Files above 100 MB is not allowed'},
+              });
+              navigation.goBack();
+              return;
+            }
+          }
+          await handleImageAndVideoUpload(selectedImages);
+        }
+      });
+    } catch (error) {
+      if (selectedFilesToUpload.length === 0) {
+        navigation.goBack();
+      }
+    }
+  };
+
   // function handles opening of camera functionality
   const handleCamera = async () => {
     if (isIOS) {
-      // await openCamera();
+      await openCamera();
     } else {
       const res = await requestCameraPermission();
       if (res === true) {
-        // await openCamera();
+        await openCamera();
       }
     }
+  };
+
+  const handleVideoThumbnail = async (images: any) => {
+    const res = await getVideoThumbnail({
+      selectedImages: images,
+      initial: true,
+    });
+    dispatch({
+      type: SELECTED_FILES_TO_UPLOAD_THUMBNAILS,
+      body: {
+        images: res?.selectedFilesToUploadThumbnails,
+      },
+    });
+    dispatch({
+      type: SELECTED_FILES_TO_UPLOAD,
+      body: {
+        images: res?.selectedFilesToUpload,
+      },
+    });
+  };
+
+  // this method sets image and video to upload on FileUpload screen via redux.
+  const handleImageAndVideoUpload = async (selectedImages: Asset[]) => {
+    if (selectedImages) {
+      if (isUploadScreen === false) {
+        // to select images and videos from chatroom.
+        await handleVideoThumbnail(selectedImages);
+        dispatch({
+          type: SELECTED_FILE_TO_VIEW,
+          body: {image: selectedImages[0]},
+        });
+        dispatch({
+          type: STATUS_BAR_STYLE,
+          body: {color: Styles.$STATUS_BAR_STYLE['light-content']},
+        });
+      } else {
+        // to select more images and videos on FileUpload screen (isUploadScreen === true)
+        const res = await getVideoThumbnail({
+          // selected files will be saved in redux inside get video function
+          selectedImages,
+          selectedFilesToUpload,
+          selectedFilesToUploadThumbnails,
+          initial: false,
+        });
+        dispatch({
+          type: SELECTED_FILES_TO_UPLOAD_THUMBNAILS,
+          body: {
+            images: res?.selectedFilesToUploadThumbnails,
+          },
+        });
+        dispatch({
+          type: SELECTED_FILES_TO_UPLOAD,
+          body: {
+            images: res?.selectedFilesToUpload,
+          },
+        });
+      }
+    }
+  };
+
+  //select Images and videoes From Gallery
+  const selectGallery = async () => {
+    const options: LaunchActivityProps = {
+      mediaType: 'mixed',
+      selectionLimit: 0,
+    };
+    navigation.navigate(FILE_UPLOAD, {
+      chatroomID: chatroomID,
+      previousMessage: message, // to keep message on uploadScreen InputBox
+    });
+    await launchImageLibrary(options, async (response: ImagePickerResponse) => {
+      if (response?.didCancel) {
+        if (selectedFilesToUpload.length === 0) {
+          navigation.goBack();
+        }
+      } else if (response.errorCode) {
+        return;
+      } else {
+        const selectedImages: Asset[] | undefined = response.assets; // selectedImages can be anything images or videos or both
+
+        if (!selectedImages) {
+          return;
+        }
+        for (let i = 0; i < selectedImages?.length; i++) {
+          const fileSize = selectedImages[i]?.fileSize;
+          if (Number(fileSize) >= MAX_FILE_SIZE) {
+            dispatch({
+              type: SHOW_TOAST,
+              body: {isToast: true, msg: 'Files above 100 MB is not allowed'},
+            });
+            navigation.goBack();
+            return;
+          }
+        }
+        handleImageAndVideoUpload(selectedImages);
+      }
+    });
   };
 
   // function handles the selection of images and videos
   const handleGallery = async () => {
     if (isIOS) {
-      // selectGallery();
+      selectGallery();
     } else {
       const res = await requestStoragePermission();
       if (res === true) {
-        // selectGallery();
+        selectGallery();
+      }
+    }
+  };
+
+  //select Documents From Gallery
+  const selectDoc = async () => {
+    try {
+      navigation.navigate(FILE_UPLOAD, {
+        chatroomID: chatroomID,
+        previousMessage: message, // to keep message on uploadScreen InputBox
+      });
+      const response = await DocumentPicker.pick({
+        type: [DocumentPicker.types.pdf],
+        allowMultiSelection: true,
+      });
+      const selectedDocs: any = response; // selectedImages can be anything images or videos or both
+      const docsArrlength = selectedDocs?.length;
+      if (docsArrlength > 0) {
+        for (let i = 0; i < docsArrlength; i++) {
+          if (selectedDocs[i].size >= MAX_FILE_SIZE) {
+            dispatch({
+              type: SHOW_TOAST,
+              body: {isToast: true, msg: 'Files above 100 MB is not allowed'},
+            });
+            navigation.goBack();
+            return;
+          }
+        }
+        if (isUploadScreen === false) {
+          const allThumbnailsArr = await getAllPdfThumbnail(selectedDocs);
+
+          //loop is for appending thumbanil in the object we get from document picker
+          for (let i = 0; i < selectedDocs?.length; i++) {
+            selectedDocs[i] = {
+              ...selectedDocs[i],
+              thumbnailUrl: allThumbnailsArr[i]?.uri,
+            };
+          }
+
+          //redux action to save thumbnails for bottom horizontal scroll list in fileUpload, it does not need to have complete pdf, only thumbnail is fine
+          dispatch({
+            type: SELECTED_FILES_TO_UPLOAD_THUMBNAILS,
+            body: {images: allThumbnailsArr},
+          });
+
+          //redux action to save thumbnails along with pdf to send and view on fileUpload screen
+          dispatch({
+            type: SELECTED_FILES_TO_UPLOAD,
+            body: {images: selectedDocs},
+          });
+          const res: any = await getPdfThumbnail(selectedDocs[0]);
+
+          //redux action to save thumbnail of selected file
+          dispatch({
+            type: SELECTED_FILE_TO_VIEW,
+            body: {image: {...selectedDocs[0], thumbnailUrl: res[0]?.uri}},
+          });
+
+          //redux action to change status bar color
+          dispatch({
+            type: STATUS_BAR_STYLE,
+            body: {color: Styles.$STATUS_BAR_STYLE['light-content']},
+          });
+        } else if (isUploadScreen === true) {
+          const arr: any = await getAllPdfThumbnail(selectedDocs);
+          for (let i = 0; i < selectedDocs?.length; i++) {
+            selectedDocs[i] = {...selectedDocs[i], thumbnailUrl: arr[i]?.uri};
+          }
+
+          //redux action to select more files to upload
+          dispatch({
+            type: SELECTED_MORE_FILES_TO_UPLOAD,
+            body: {images: selectedDocs},
+          });
+
+          //redux action to save thumbnail of selected files. It saves thumbnail as URI only not as thumbnail property
+          dispatch({
+            type: SELECTED_FILES_TO_UPLOAD_THUMBNAILS,
+            body: {images: [...selectedFilesToUploadThumbnails, ...arr]},
+          });
+        }
+      }
+    } catch (error) {
+      if (selectedFilesToUpload.length === 0) {
+        navigation.goBack();
       }
     }
   };
@@ -186,11 +530,11 @@ export const Chatroom = ({
   // function handles the slection of documents
   const handleDoc = async () => {
     if (isIOS) {
-      // selectDoc();
+      selectDoc();
     } else {
       const res = await requestStoragePermission();
       if (res === true) {
-        // selectDoc();
+        selectDoc();
       }
     }
   };
@@ -793,45 +1137,183 @@ export const Chatroom = ({
         //     : null,
         // ]}
       >
-        {/* text input */}
-        <LMChatTextInput
-          placeholderText="Type here..."
-          placeholderTextColor="#0F1E3D66"
-          inputTextStyle={{
-            fontSize: 16,
-            elevation: 0,
-            maxHeight: 220,
-            borderRadius: 50,
-            backgroundColor: '#D3D3D3',
-            paddingLeft: 10,
-          }}
-          multilineField
-          inputRef={refInput}
-          onType={handleInputChange}
-          autoFocus={false}
-          selectionColor="red"
-          partTypes={[
-            {
-              trigger: '@',
-              textStyle: {
-                color: '#007AFF',
-              }, // The mention style in the input
-            },
-          ]}
-          inputText={message}
-          rightIcon={{
-            onTap: () => {
-              Keyboard.dismiss();
-              setModalVisible(true);
-            },
-            icon: {
-              type: 'png',
-              assetPath: require('../assets/images/open_files3x.png'),
-            },
-            placement: 'end',
-            buttonStyle: styles.attachmentIcon,
-          }}
-        />
+        {isDeleteAnimation ? (
+          <View
+            style={[
+              styles.voiceNotesInputParent,
+              styles.voiceRecorderInput,
+              {
+                paddingVertical: 0,
+                marginVertical: 0,
+                marginHorizontal: 10,
+              },
+            ]}>
+            <View style={styles.alignItems}>
+              <LottieView
+                source={require('../assets/lottieJSON/delete.json')}
+                style={{height: 40, width: 40}}
+                autoPlay
+                // loop
+              />
+            </View>
+          </View>
+        ) : !!voiceNotes?.recordTime && !isVoiceResult ? (
+          <View
+            style={[styles.voiceNotesInputParent, styles.voiceRecorderInput]}>
+            <View style={styles.alignItems}>
+              <Animated.View style={[{opacity: micIconOpacity}]}>
+                <Image
+                  source={require('../assets/images/record_icon3x.png')}
+                  style={[styles.emoji]}
+                />
+              </Animated.View>
+
+              <Text style={styles.recordTitle}>{voiceNotes.recordTime}</Text>
+            </View>
+            {isRecordingLocked ? (
+              <View style={styles.alignItems}>
+                <TouchableOpacity onPress={handleStopRecord}>
+                  <Image
+                    source={require('../assets/images/stop_recording_icon3x.png')}
+                    style={styles.emoji}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={clearVoiceRecord}>
+                  <Image
+                    source={require('../assets/images/cross_circle_icon3x.png')}
+                    style={styles.emoji}
+                  />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.alignItems}>
+                <Image
+                  style={styles.chevron}
+                  source={require('../assets/images/left_chevron_icon3x.png')}
+                />
+                <Text style={styles.recordTitle}>{SLIDE_TO_CANCEL}</Text>
+              </View>
+            )}
+          </View>
+        ) : isVoiceResult ? (
+          <View
+            style={[styles.voiceNotesInputParent, styles.voiceRecorderInput]}>
+            <View style={styles.alignItems}>
+              {isVoiceNotePlaying ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    // onPausePlay();
+                  }}>
+                  <Image
+                    source={require('../assets/images/pause_icon3x.png')}
+                    style={styles.emoji}
+                  />
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (voiceNotesPlayer?.playTime !== '') {
+                      // onResumePlay();
+                    } else {
+                      // startPlay(voiceNotesLink);
+                    }
+                  }}>
+                  <Image
+                    source={require('../assets/images/play_icon3x.png')}
+                    style={styles.emoji}
+                  />
+                </TouchableOpacity>
+              )}
+              {isVoiceNotePlaying || voiceNotesPlayer?.playTime ? (
+                <Text style={styles.recordTitle}>
+                  {voiceNotesPlayer?.playTime}
+                </Text>
+              ) : (
+                <Text style={styles.recordTitle}>{voiceNotes?.recordTime}</Text>
+              )}
+            </View>
+            <TouchableOpacity
+              onPress={clearVoiceRecord}
+              style={styles.alignItems}>
+              <Image
+                source={require('../assets/images/cross_circle_icon3x.png')}
+                style={styles.emoji}
+              />
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <View
+            style={[
+              styles.inputParent,
+              isUploadScreen
+                ? {
+                    marginHorizontal: 5,
+                  }
+                : {marginHorizontal: 15},
+            ]}>
+            {/* {!isUploadScreen &&
+            !isEditable &&
+            !voiceNotes?.recordTime &&
+            !isDeleteAnimation ? (
+              <TouchableOpacity
+                style={styles.gifView}
+                onPress={() => GiphyDialog.show()}>
+                <Text style={styles.gifText}>{CAPITAL_GIF_TEXT}</Text>
+              </TouchableOpacity> */}
+            {/* ) : null} */}
+            {/* text input */}
+            <LMChatTextInput
+              placeholderText="Type here..."
+              placeholderTextColor="#0F1E3D66"
+              inputTextStyle={{
+                fontSize: 16,
+                elevation: 0,
+                maxHeight: 220,
+                borderRadius: 50,
+                backgroundColor: '#D3D3D3',
+                paddingLeft: 10,
+              }}
+              multilineField
+              inputRef={refInput}
+              onType={handleInputChange}
+              autoFocus={false}
+              selectionColor="red"
+              partTypes={[
+                {
+                  trigger: '@',
+                  textStyle: {
+                    color: '#007AFF',
+                  }, // The mention style in the input
+                },
+              ]}
+              inputText={message}
+              rightIcon={{
+                onTap: () => {
+                  Keyboard.dismiss();
+                  setModalVisible(true);
+                },
+                icon: {
+                  type: 'png',
+                  assetPath: require('../assets/images/open_files3x.png'),
+                },
+                placement: 'end',
+                buttonStyle: styles.attachmentIcon,
+              }}
+              leftIcon={{
+                onTap: () => {
+                  GiphyDialog.show();
+                },
+                text: {CAPITAL_GIF_TEXT},
+                icon: {
+                  type: 'png',
+                  assetPath: require('../assets/images/open_files3x.png'),
+                },
+                placement: 'start',
+                buttonStyle: styles.gifIcon,
+              }}
+            />
+          </View>
+        )}
 
         {/* attachment icon */}
         {/* {!isUploadScreen &&
@@ -1025,7 +1507,7 @@ export const Chatroom = ({
                       }}
                       style={styles.pollStyle}>
                       <Image
-                        source={require('../../assets/images/poll_icon3x.png')}
+                        source={require('../assets/images/poll_icon3x.png')}
                         style={styles.emoji}
                       />
                     </TouchableOpacity>
