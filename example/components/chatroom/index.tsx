@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Vibration,
   Keyboard,
+  Modal,
 } from 'react-native';
 import React, {useState, useRef} from 'react';
 import {
@@ -57,6 +58,11 @@ import {
 } from '../store/types/types';
 import {useAppDispatch, useAppSelector} from '../store';
 import {replaceMentionValues} from 'likeminds_chat_reactnative_ui/components/LMChatTextInput/utils';
+import {
+  CAMERA_TEXT,
+  DOCUMENTS_TEXT,
+  PHOTOS_AND_VIDEOS_TEXT,
+} from '../constants/Strings';
 
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
 
@@ -138,6 +144,10 @@ export const Chatroom = ({
   const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
 
+  const handleModalClose = () => {
+    setModalVisible(false);
+  };
+
   const {
     chatroomDetails,
     isReply,
@@ -148,6 +158,42 @@ export const Chatroom = ({
   }: any = useAppSelector(state => state.chatroom);
 
   const dispatch = useAppDispatch();
+
+  // function handles opening of camera functionality
+  const handleCamera = async () => {
+    if (isIOS) {
+      // await openCamera();
+    } else {
+      const res = await requestCameraPermission();
+      if (res === true) {
+        // await openCamera();
+      }
+    }
+  };
+
+  // function handles the selection of images and videos
+  const handleGallery = async () => {
+    if (isIOS) {
+      // selectGallery();
+    } else {
+      const res = await requestStoragePermission();
+      if (res === true) {
+        // selectGallery();
+      }
+    }
+  };
+
+  // function handles the slection of documents
+  const handleDoc = async () => {
+    if (isIOS) {
+      // selectDoc();
+    } else {
+      const res = await requestStoragePermission();
+      if (res === true) {
+        // selectDoc();
+      }
+    }
+  };
 
   // Animation
   const pressed = useSharedValue(false);
@@ -774,22 +820,26 @@ export const Chatroom = ({
           ]}
           inputText={message}
           rightIcon={{
-            onTap: () => console.log('1234'),
+            onTap: () => {
+              Keyboard.dismiss();
+              setModalVisible(true);
+            },
             icon: {
               type: 'png',
               assetPath: require('../assets/images/open_files3x.png'),
-              iconStyle: styles.emoji,
             },
-            placement: 'start',
+            placement: 'end',
+            buttonStyle: styles.attachmentIcon,
           }}
         />
 
-        {!isUploadScreen &&
+        {/* attachment icon */}
+        {/* {!isUploadScreen &&
         !isEditable &&
         !voiceNotes?.recordTime &&
         !isDeleteAnimation ? (
           <TouchableOpacity
-            style={styles.emojiButton}
+            style={[styles.emojiButton, {marginLeft: 15}]}
             onPress={() => {
               Keyboard.dismiss();
               setModalVisible(true);
@@ -800,8 +850,9 @@ export const Chatroom = ({
               assetPath={require('../assets/images/open_files3x.png')}
             />
           </TouchableOpacity>
-        ) : null}
+        ) : null} */}
 
+        {/* send/voice note button */}
         {!!message || isVoiceResult || isUploadScreen || isRecordingLocked ? (
           <TouchableOpacity
             onPressOut={async () => {
@@ -892,6 +943,100 @@ export const Chatroom = ({
           </View>
         )}
       </View>
+
+      {/* More features modal like select Images, Docs etc. */}
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <Pressable style={styles.centeredView} onPress={handleModalClose}>
+          <View style={styles.modalViewParent}>
+            <Pressable onPress={() => {}} style={[styles.modalView]}>
+              <View style={styles.alignModalElements}>
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(false);
+                      setTimeout(() => {
+                        handleCamera();
+                      }, 50);
+                    }}
+                    style={styles.cameraStyle}>
+                    <LMChatIcon
+                      assetPath={require('../assets/images/camera_icon3x.png')}
+                      type="png"
+                      iconStyle={styles.emoji}
+                    />
+                  </TouchableOpacity>
+                  <LMChatTextView textStyle={styles.iconText}>
+                    {CAMERA_TEXT}
+                  </LMChatTextView>
+                </View>
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(false);
+                      setTimeout(() => {
+                        handleGallery();
+                      }, 500);
+                    }}
+                    style={styles.imageStyle}>
+                    <LMChatIcon
+                      assetPath={require('../assets/images/select_image_icon3x.png')}
+                      type="png"
+                      iconStyle={styles.emoji}
+                    />
+                  </TouchableOpacity>
+                  <LMChatTextView textStyle={styles.iconText}>
+                    {PHOTOS_AND_VIDEOS_TEXT}
+                  </LMChatTextView>
+                </View>
+                <View style={styles.iconContainer}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setModalVisible(false);
+                      setTimeout(() => {
+                        handleDoc();
+                      }, 50);
+                    }}
+                    style={styles.docStyle}>
+                    <LMChatIcon
+                      assetPath={require('../assets/images/select_doc_icon3x.png')}
+                      type="png"
+                      iconStyle={styles.emoji}
+                    />
+                  </TouchableOpacity>
+                  <LMChatTextView textStyle={styles.iconText}>
+                    {DOCUMENTS_TEXT}
+                  </LMChatTextView>
+                </View>
+                {/* {chatroomType !== 10 ? (
+                  <View style={styles.iconContainer}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        setModalVisible(false);
+                        navigation.navigate(CREATE_POLL_SCREEN, {
+                          chatroomID: chatroomID,
+                          conversationsLength: conversations.length * 2,
+                        });
+                      }}
+                      style={styles.pollStyle}>
+                      <Image
+                        source={require('../../assets/images/poll_icon3x.png')}
+                        style={styles.emoji}
+                      />
+                    </TouchableOpacity>
+                    <Text style={styles.iconText}>{POLL_TEXT}</Text>
+                  </View>
+                ) : null} */}
+              </View>
+            </Pressable>
+          </View>
+        </Pressable>
+      </Modal>
     </View>
   );
 };

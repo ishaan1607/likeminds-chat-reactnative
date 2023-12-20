@@ -184,7 +184,7 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
             ...rightIcon.icon,
           }}
           placement={rightIcon.placement}
-          buttonStyle={defaultStyles.rightIconButton}
+          buttonStyle={rightIcon.buttonStyle}
         />
       )}
     </View>

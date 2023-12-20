@@ -1,6 +1,8 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, PixelRatio} from 'react-native';
 import Styles from 'likeminds_chat_reactnative_ui/components/constants/Styles';
 import Layout from '../linkPreviewInputBox/Layout';
+
+const pixelRatio = PixelRatio.get();
 
 export const styles = StyleSheet.create({
   textInput: {
@@ -51,6 +53,14 @@ export const styles = StyleSheet.create({
     fontSize: Styles.$FONT_SIZES.LARGE,
     fontFamily: Styles.$FONT_TYPES.MEDIUM,
     color: Styles.$COLORS.PRIMARY,
+  },
+  inputParent: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 10,
+    paddingLeft: 0,
+    width: '70%',
   },
   replyBoxParent: {
     backgroundColor: 'white',
@@ -126,6 +136,13 @@ export const styles = StyleSheet.create({
     height: 22,
     resizeMode: 'contain',
   },
+  attachmentIcon: {
+    width: 22,
+    height: 22,
+    resizeMode: 'contain',
+    position: 'relative',
+    right: 20,
+  },
   chevron: {
     width: 12,
     height: 12,
@@ -147,5 +164,44 @@ export const styles = StyleSheet.create({
     height: 12,
     resizeMode: 'contain',
     marginTop: 20,
+  },
+  centeredView: {
+    flexGrow: 1,
+    marginTop: 20,
+  },
+  modalViewParent: {
+    position: 'absolute',
+    bottom: 27 * pixelRatio,
+    flexGrow: 1,
+    width: Layout.window.width,
+  },
+  modalView: {
+    margin: 10,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+  },
+  alignModalElements: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 20,
+    flexWrap: 'wrap',
+    marginHorizontal: 20,
+  },
+  iconContainer: {alignItems: 'center', margin: 5 * pixelRatio, gap: 5},
+  cameraStyle: {backgroundColor: '#06C3AF', padding: 15, borderRadius: 50},
+  imageStyle: {backgroundColor: '#555feb', padding: 15, borderRadius: 50},
+  docStyle: {backgroundColor: '#e55e69', padding: 15, borderRadius: 50},
+  pollStyle: {backgroundColor: '#4098f7', padding: 15, borderRadius: 50},
+  iconText: {
+    fontSize: Styles.$FONT_SIZES.SMALL,
+    fontFamily: Styles.$FONT_TYPES.LIGHT,
+    color: Styles.$COLORS.PRIMARY,
   },
 });
