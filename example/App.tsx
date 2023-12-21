@@ -5,7 +5,6 @@
  * @format
  */
 
-import {Chatroom} from './components/chatroom';
 import React from 'react';
 import type {PropsWithChildren} from 'react';
 import {
@@ -25,39 +24,17 @@ import {
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
-import {Provider} from 'react-redux';
-import store from './components/store';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import {
+  NavigationContainer,
+  createNavigationContainerRef,
+  StackActions,
+} from '@react-navigation/native';
+import {navigationRef} from './RootNavigation';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import ChatRoom from 'likeminds_chat_reactnative_integration/ChatSX/screens/ChatRoom';
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+const Stack = createNativeStackNavigator();
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -67,11 +44,18 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <GestureHandlerRootView style={{flex: 1}}>
-      <Provider store={store}>
-        <Chatroom />
-      </Provider>
-    </GestureHandlerRootView>
+    <NavigationContainer ref={navigationRef} independent={true}>
+      <Stack.Navigator>
+        <Stack.Screen
+          name={'Chatroom'}
+          component={ChatRoom}
+          initialParams={{
+            chatroomID: '3844534',
+            isInvited: false,
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 

@@ -40,7 +40,6 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
   multilineField,
   secureText,
   disabled,
-  rightIcon,
   autoFocus,
   selectionColor,
   // children,
@@ -133,7 +132,7 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
   };
 
   return (
-    <View style={StyleSheet.flatten([defaultStyles.textInput, inputTextStyle])}>
+    <View style={inputTextStyle}>
       <TextInput
         {...textInputProps}
         ref={handleTextInputRef}
@@ -144,11 +143,7 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
         placeholderTextColor={
           placeholderTextColor ? placeholderTextColor : "#000"
         }
-        style={
-          rightIcon
-            ? defaultStyles.textInputWithRightIcon
-            : defaultStyles.textInputWithoutRightIcon
-        }
+        style={defaultStyles.textInputWithoutRightIcon}
         placeholder={placeholderText}
         autoCapitalize={autoCapitalize ? autoCapitalize : "none"}
         keyboardType={keyboardType ? keyboardType : "default"}
@@ -172,21 +167,6 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
           )}
         </Text>
       </TextInput>
-      {/* icon on right of text input */}
-      {rightIcon && (
-        <LMChatButton
-          {...rightIcon}
-          onTap={rightIcon.onTap}
-          text={rightIcon.text}
-          icon={{
-            type: "png",
-            assetPath: rightIcon.icon?.assetPath,
-            ...rightIcon.icon,
-          }}
-          placement={rightIcon.placement}
-          buttonStyle={rightIcon.buttonStyle}
-        />
-      )}
     </View>
   );
 };
