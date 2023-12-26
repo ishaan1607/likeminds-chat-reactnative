@@ -32,6 +32,11 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationRef} from './RootNavigation';
 import {ChatRoom} from 'likeminds_chat_reactnative_integration';
+import {RealmProvider} from '@realm/react';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {UserSchemaRO} from './UserSchema';
+import {Provider as ReduxProvider} from 'react-redux';
+import store from './store';
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -73,18 +78,24 @@ function App(): React.JSX.Element {
   };
 
   return (
-    <NavigationContainer ref={navigationRef} independent={true}>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="ChatRoom"
-          component={ChatRoom}
-          initialParams={{
-            chatroomID: '3844534',
-            isInvited: false,
-          }}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <RealmProvider schema={[UserSchemaRO]}>
+      <GestureHandlerRootView style={{flex: 1}}>
+        <ReduxProvider store={store}>
+          <NavigationContainer ref={navigationRef} independent={true}>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="ChatRoom"
+                component={ChatRoom}
+                initialParams={{
+                  chatroomID: '3844534',
+                  isInvited: false,
+                }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </ReduxProvider>
+      </GestureHandlerRootView>
+    </RealmProvider>
   );
 }
 
