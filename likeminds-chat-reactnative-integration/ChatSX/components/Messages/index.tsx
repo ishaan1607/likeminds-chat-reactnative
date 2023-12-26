@@ -1,27 +1,28 @@
-import {View, Text, Image, TouchableOpacity, Pressable} from 'react-native';
-import React, {useEffect, useState, useLayoutEffect} from 'react';
-import {styles} from './styles';
-import STYLES from '../../constants/Styles';
-import {decode} from '../../commonFuctions';
-import ReplyConversations from '../ReplyConversations';
-import AttachmentConversations from '../AttachmentConversations';
-import ReactionGridModal from '../ReactionGridModal';
-import {useAppDispatch, useAppSelector} from '../../store';
+import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
+import React, { useEffect, useState, useLayoutEffect } from "react";
+import { styles } from "./styles";
+import STYLES from "../../constants/Styles";
+import { decode } from "../../commonFuctions";
+import ReplyConversations from "../ReplyConversations";
+import AttachmentConversations from "../AttachmentConversations";
+import ReactionGridModal from "../ReactionGridModal";
+import { useAppDispatch, useAppSelector } from "../../store";
 import {
   LONG_PRESSED,
   SELECTED_MESSAGES,
   SET_POSITION,
-} from '../../store/types/types';
-import {PollConversationView} from '../Poll';
-import {useQuery} from '@realm/react';
-import {myClient} from '../../..';
-import {ChatroomChatRequestState, Events, Keys} from '../../enums';
-import {ChatroomType} from '../../enums';
-import {UserSchemaResponse} from '../../db/models';
-import {USER_SCHEMA_RO} from '../../constants/Strings';
-import LinkPreview from '../LinkPreview';
-import {LMChatAnalytics} from '../../analytics/LMChatAnalytics';
-import {Credentials} from '../../credentials';
+} from "../../store/types/types";
+import { PollConversationView } from "../Poll";
+import { useQuery } from "@realm/react";
+import { myClient } from "../../..";
+import { ChatroomChatRequestState, Events, Keys } from "../../enums";
+import { ChatroomType } from "../../enums";
+import { UserSchemaResponse } from "../../db/models";
+import { USER_SCHEMA_RO } from "../../constants/Strings";
+import LinkPreview from "../LinkPreview";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import { Credentials } from "../../credentials";
+import ReactionList from "../ReactionList";
 
 interface Messages {
   item: any;
@@ -36,6 +37,17 @@ interface Messages {
   chatroomType: any;
   chatroomID: any;
   chatroomName: any;
+
+  // styling props
+  borderRadius: number;
+  sentMessageBackgroundColor: string;
+  receivedMessageBackgroundColor: string;
+  selectedBackgroundColor: string;
+  textStyles: any;
+  linkTextColor: string;
+  taggingTextColor: string;
+  stateMessagesBackgroundColor: string;
+  stateMessagesTextStyles: any;
 }
 
 const Messages = ({
@@ -51,26 +63,33 @@ const Messages = ({
   chatroomType,
   chatroomID,
   chatroomName,
+
+  //styling props
+  borderRadius,
+  sentMessageBackgroundColor,
+  receivedMessageBackgroundColor,
+  selectedBackgroundColor,
+  textStyles,
+  linkTextColor,
+  taggingTextColor,
+  stateMessagesBackgroundColor,
+  stateMessagesTextStyles,
 }: Messages) => {
-  const {user} = useAppSelector(state => state.homefeed);
+  const { user } = useAppSelector((state) => state.homefeed);
 
-  const {
-    selectedMessages,
-    isLongPress,
-    stateArr,
-    conversations,
-    chatroomDetails,
-    chatroomDBDetails,
-  }: any = useAppSelector(state => state.chatroom);
+  const { stateArr, conversations, chatroomDBDetails }: any = useAppSelector(
+    (state) => state.chatroom
+  );
 
-  const [selectedReaction, setSelectedReaction] = useState();
-  const [modalVisible, setModalVisible] = useState(false);
   const [reactionArr, setReactionArr] = useState([] as any);
   const userIdStringified = user?.id?.toString();
   const isTypeSent = item?.member?.id == userIdStringified ? true : false;
-  const chatRequestedBy = chatroomDBDetails?.chatRequestedBy;
   const chatroomWithUser = chatroomDBDetails?.chatroomWithUser;
   const isItemIncludedInStateArr = stateArr.includes(item?.state);
+
+  const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor
+    ? selectedBackgroundColor
+    : STYLES.$COLORS.SELECTED_BLUE;
 
   const dispatch = useAppDispatch();
 
@@ -85,11 +104,11 @@ const Messages = ({
     for (let i = 0; i < defaultReactionArrLen; i++) {
       if (defaultReactionArrLen > 0) {
         const isIncuded = tempArr.some(
-          (val: any) => val.reaction === item?.reactions[i]?.reaction,
+          (val: any) => val.reaction === item?.reactions[i]?.reaction
         );
         if (isIncuded) {
           const index = tempArr.findIndex(
-            (val: any) => val.reaction === item?.reactions[i]?.reaction,
+            (val: any) => val.reaction === item?.reactions[i]?.reaction
           );
           tempArr[index].memberArr = [
             ...tempArr[index]?.memberArr,
@@ -108,65 +127,24 @@ const Messages = ({
     }
   }, [item?.reactions]);
 
-  const reactionLen = reactionArr.length;
-
   // function handles event on longPress action on a message
   const handleLongPress = (event: any) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     longPressOpenKeyboard();
   };
 
   // function handles event on Press action on a message
   const handleOnPress = (event: any) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     openKeyboard();
-  };
-
-  // function handles event on Press reaction below a message
-  const handleReactionOnPress = (event: any, val?: any) => {
-    const {pageX, pageY} = event.nativeEvent;
-    dispatch({
-      type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
-    });
-    const isStateIncluded = stateArr.includes(item?.state);
-    if (isLongPress) {
-      if (isIncluded) {
-        const filterdMessages = selectedMessages.filter(
-          (val: any) => val?.id !== item?.id && !isStateIncluded,
-        );
-        if (filterdMessages.length > 0) {
-          dispatch({
-            type: SELECTED_MESSAGES,
-            body: [...filterdMessages],
-          });
-        } else {
-          dispatch({
-            type: SELECTED_MESSAGES,
-            body: [...filterdMessages],
-          });
-          dispatch({type: LONG_PRESSED, body: false});
-        }
-      } else {
-        if (!isStateIncluded) {
-          dispatch({
-            type: SELECTED_MESSAGES,
-            body: [...selectedMessages, item],
-          });
-        }
-      }
-    } else {
-      setSelectedReaction(val);
-      setModalVisible(true);
-    }
   };
 
   const conversationDeletor = item?.deletedByMember?.sdkClientInfo?.uuid;
@@ -187,12 +165,12 @@ const Messages = ({
       chatroomDBDetails?.chatroomWithUser?.sdkClientInfo?.uuid;
 
     if (loggedInMember === chatroomWithUser) {
-      const startingIndex = answer.lastIndexOf('<');
+      const startingIndex = answer.lastIndexOf("<");
       const receivingUser = answer.substring(0, startingIndex - 2);
       return receivingUser;
     } else {
-      const startingIndex = answer.indexOf('<');
-      const endingIndex = answer.indexOf('>');
+      const startingIndex = answer.indexOf("<");
+      const endingIndex = answer.indexOf(">");
       const sendingUser =
         answer.substring(0, startingIndex - 1) +
         answer.substring(endingIndex + 2);
@@ -211,9 +189,10 @@ const Messages = ({
                   styles.message,
                   isTypeSent ? styles.sentMessage : styles.receivedMessage,
                   isIncluded
-                    ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
+                    ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                     : null,
-                ]}>
+                ]}
+              >
                 <Text style={styles.deletedMsg}>You deleted this message</Text>
               </View>
             ) : conversationCreator === conversationDeletor ? (
@@ -222,9 +201,10 @@ const Messages = ({
                   styles.message,
                   isTypeSent ? styles.sentMessage : styles.receivedMessage,
                   isIncluded
-                    ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
+                    ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                     : null,
-                ]}>
+                ]}
+              >
                 <Text style={styles.deletedMsg}>
                   This message has been deleted by {conversationDeletorName}
                 </Text>
@@ -235,9 +215,10 @@ const Messages = ({
                   styles.message,
                   isTypeSent ? styles.sentMessage : styles.receivedMessage,
                   isIncluded
-                    ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
+                    ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                     : null,
-                ]}>
+                ]}
+              >
                 <Text style={styles.deletedMsg}>
                   This message has been deleted by Community Manager
                 </Text>
@@ -249,9 +230,10 @@ const Messages = ({
                 styles.message,
                 isTypeSent ? styles.sentMessage : styles.receivedMessage,
                 isIncluded
-                  ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
+                  ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                   : null,
-              ]}>
+              ]}
+            >
               <Text style={styles.deletedMsg}>You deleted this message</Text>
             </View>
           ) : (
@@ -260,9 +242,10 @@ const Messages = ({
                 styles.message,
                 isTypeSent ? styles.sentMessage : styles.receivedMessage,
                 isIncluded
-                  ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
+                  ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                   : null,
-              ]}>
+              ]}
+            >
               <Text style={styles.deletedMsg}>
                 This message has been deleted by {conversationDeletorName}
               </Text>
@@ -307,9 +290,10 @@ const Messages = ({
               styles.pollMessage,
               isTypeSent ? styles.sentMessage : styles.receivedMessage,
               isIncluded
-                ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
+                ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                 : null,
-            ]}>
+            ]}
+          >
             <PollConversationView
               navigation={navigation}
               item={item}
@@ -354,7 +338,13 @@ const Messages = ({
                     onPress={() => {
                       handleTapToUndo();
                     }}
-                    style={[styles.statusMessage]}>
+                    style={[
+                      styles.statusMessage,
+                      stateMessagesBackgroundColor
+                        ? { backgroundColor: stateMessagesBackgroundColor }
+                        : null,
+                    ]}
+                  >
                     <Text
                       style={[
                         styles.textCenterAlign,
@@ -362,13 +352,18 @@ const Messages = ({
                           color: STYLES.$COLORS.PRIMARY,
                           fontFamily: STYLES.$FONT_TYPES.LIGHT,
                         },
-                      ]}>
+                        stateMessagesTextStyles
+                          ? { ...stateMessagesTextStyles }
+                          : null,
+                      ]}
+                    >
                       {`${item?.answer} `}
                       <Text
                         style={{
                           color: STYLES.$COLORS.LIGHT_BLUE,
                           fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                        }}>
+                        }}
+                      >
                         Tap to undo.
                       </Text>
                     </Text>
@@ -390,6 +385,9 @@ const Messages = ({
 
                               chatroomWithUserUuid,
                               chatroomWithUserMemberId,
+                              (textStyles = stateMessagesTextStyles),
+                              taggingTextColor,
+                              linkTextColor
                             )
                           : decode(
                               item?.answer,
@@ -401,6 +399,9 @@ const Messages = ({
 
                               chatroomWithUserUuid,
                               chatroomWithUserMemberId,
+                              (textStyles = stateMessagesTextStyles),
+                              taggingTextColor,
+                              linkTextColor
                             )
                       }
                     </Text>
@@ -412,25 +413,43 @@ const Messages = ({
                 style={[
                   styles.alignMessage,
                   {
-                    justifyContent: isTypeSent ? 'flex-end' : 'flex-start',
+                    justifyContent: isTypeSent ? "flex-end" : "flex-start",
                   },
-                ]}>
+                ]}
+              >
                 <View
                   style={[
-                    styles.message,
-                    isTypeSent ? styles.sentMessage : styles.receivedMessage,
+                    [
+                      styles.message,
+                      borderRadius ? { borderRadius: borderRadius } : null,
+                    ],
+                    isTypeSent
+                      ? [
+                          styles.sentMessage,
+                          sentMessageBackgroundColor
+                            ? { backgroundColor: sentMessageBackgroundColor }
+                            : null,
+                        ]
+                      : [
+                          styles.receivedMessage,
+                          receivedMessageBackgroundColor
+                            ? {
+                                backgroundColor: receivedMessageBackgroundColor,
+                              }
+                            : null,
+                        ],
                     isIncluded
-                      ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
+                      ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                       : null,
-                  ]}>
+                  ]}
+                >
                   {item?.member?.id == userIdStringified ? null : (
                     <Text style={styles.messageInfo} numberOfLines={1}>
                       {item?.member?.name}
                       {item?.member?.customTitle ? (
                         <Text
-                          style={
-                            styles.messageCustomTitle
-                          }>{` • ${item?.member?.customTitle}`}</Text>
+                          style={styles.messageCustomTitle}
+                        >{` • ${item?.member?.customTitle}`}</Text>
                       ) : null}
                     </Text>
                   )}
@@ -440,42 +459,36 @@ const Messages = ({
                       true,
                       chatroomName,
                       user?.sdkClientInfo?.community,
+                      textStyles,
+                      taggingTextColor,
+                      linkTextColor
                     )}
                   </Text>
                   <View style={styles.alignTime}>
                     {item?.isEdited ? (
-                      <Text style={styles.messageDate}>{'Edited • '}</Text>
+                      <Text style={styles.messageDate}>{"Edited • "}</Text>
                     ) : null}
                     <Text style={styles.messageDate}>{item?.createdAt}</Text>
                   </View>
                 </View>
                 {(reactionArr.length > 0 ||
-                  item?.answer?.split('').length > 100) &&
+                  item?.answer?.split("").length > 100) &&
                 !isTypeSent ? (
                   <Pressable
                     onLongPress={handleLongPress}
                     delayLongPress={200}
-                    onPress={handleOnPress}>
+                    onPress={handleOnPress}
+                  >
                     <Image
                       style={{
                         height: 25,
                         width: 25,
-                        resizeMode: 'contain',
+                        resizeMode: "contain",
                       }}
-                      source={require('../../assets/images/add_more_emojis3x.png')}
+                      source={require("../../assets/images/add_more_emojis3x.png")}
                     />
                   </Pressable>
                 ) : null}
-                {/* <View
-                  style={[
-                    styles.message,
-                    isTypeSent ? styles.sentMessage : styles.receivedMessage,
-                    isIncluded
-                      ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
-                      : null,
-                  ]}>
-                  <PollConversationView />
-                </View> */}
               </View>
             )}
           </View>
@@ -489,8 +502,8 @@ const Messages = ({
                   styles.typeSent,
                   isIncluded
                     ? {
-                        borderBottomColor: STYLES.$COLORS.SELECTED_BLUE,
-                        borderLeftColor: STYLES.$COLORS.SELECTED_BLUE,
+                        borderBottomColor: SELECTED_BACKGROUND_COLOR,
+                        borderLeftColor: SELECTED_BACKGROUND_COLOR,
                       }
                     : null,
                 ]}
@@ -501,8 +514,8 @@ const Messages = ({
                   styles.typeReceived,
                   isIncluded
                     ? {
-                        borderBottomColor: STYLES.$COLORS.SELECTED_BLUE,
-                        borderRightColor: STYLES.$COLORS.SELECTED_BLUE,
+                        borderBottomColor: SELECTED_BACKGROUND_COLOR,
+                        borderRightColor: SELECTED_BACKGROUND_COLOR,
                       }
                     : null,
                 ]}
@@ -510,137 +523,18 @@ const Messages = ({
             )}
           </View>
         ) : null}
+
+        <ReactionList
+          item={item}
+          chatroomID={chatroomID}
+          userIdStringified={userIdStringified}
+          reactionArr={reactionArr}
+          isTypeSent={isTypeSent}
+          isIncluded={isIncluded}
+          handleLongPress={handleLongPress}
+          removeReaction={removeReaction}
+        />
       </View>
-
-      {!item?.deletedBy ? (
-        reactionLen > 0 && reactionLen <= 2 ? (
-          <View
-            style={[
-              isTypeSent
-                ? styles.reactionSentParent
-                : styles.reactionReceivedParent,
-            ]}>
-            {reactionArr.map((val: any, index: any) => (
-              <TouchableOpacity
-                onLongPress={handleLongPress}
-                delayLongPress={200}
-                onPress={event => {
-                  handleReactionOnPress(event, val?.reaction);
-                }}
-                style={[
-                  styles.reaction,
-                  isIncluded
-                    ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
-                    : {backgroundColor: 'white'},
-                ]}
-                key={val + index}>
-                <Text style={styles.messageText}>{val?.reaction}</Text>
-                <Text style={styles.messageText}>{val?.memberArr?.length}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        ) : reactionLen > 2 ? (
-          <View
-            style={
-              isTypeSent
-                ? styles.reactionSentParent
-                : styles.reactionReceivedParent
-            }>
-            <TouchableOpacity
-              onLongPress={handleLongPress}
-              delayLongPress={200}
-              onPress={event => {
-                handleReactionOnPress(event, reactionArr[0]?.reaction);
-              }}
-              style={[
-                styles.reaction,
-                isIncluded
-                  ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
-                  : {backgroundColor: 'white'},
-              ]}>
-              <Text style={styles.messageText}>{reactionArr[0]?.reaction}</Text>
-              <Text style={styles.messageText}>
-                {reactionArr[0]?.memberArr?.length}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onLongPress={handleLongPress}
-              delayLongPress={200}
-              onPress={event => {
-                handleReactionOnPress(event, reactionArr[1]?.reaction);
-              }}
-              style={[
-                styles.reaction,
-                isIncluded
-                  ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
-                  : {backgroundColor: 'white'},
-              ]}>
-              <Text style={styles.messageText}>{reactionArr[1]?.reaction}</Text>
-              <Text style={styles.messageText}>
-                {reactionArr[1]?.memberArr?.length}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onLongPress={handleLongPress}
-              delayLongPress={200}
-              onPress={event => {
-                handleReactionOnPress(event, null);
-              }}
-              style={[
-                styles.moreReaction,
-                isIncluded
-                  ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE}
-                  : {backgroundColor: STYLES.$COLORS.TERTIARY},
-              ]}>
-              <View>
-                <Image
-                  style={{
-                    height: 20,
-                    width: 20,
-                    resizeMode: 'contain',
-                  }}
-                  source={require('../../assets/images/more_dots3x.png')}
-                />
-              </View>
-            </TouchableOpacity>
-          </View>
-        ) : null
-      ) : null}
-
-      <ReactionGridModal
-        defaultReactionArr={item?.reactions}
-        reactionArr={reactionArr}
-        modalVisible={modalVisible}
-        selectedReaction={selectedReaction}
-        setModalVisible={val => {
-          setModalVisible(val);
-        }}
-        item={item}
-        chatroomID={chatroomID}
-        removeReaction={(reactionArr: any, removeFromList?: any) => {
-          removeReaction(item, reactionArr, removeFromList);
-
-          LMChatAnalytics.track(
-            Events.REACTION_REMOVED,
-            new Map<string, string>([
-              [Keys.MESSAGE_ID, item?.id],
-              [Keys.CHATROOM_ID, chatroomID?.toString()],
-            ]),
-          );
-
-          //logic to check clicked index and findIndex are same so that we can remove reaction
-          const index = item?.reactions.findIndex(
-            (val: any) => val?.member?.id == userIdStringified,
-          );
-
-          if (
-            index !== -1 &&
-            item?.reactions[index]?.member?.id == reactionArr?.id // this condition checks if clicked reaction ID matches the findIndex ID
-          ) {
-            setModalVisible(false);
-          }
-        }}
-      />
     </View>
   );
 };

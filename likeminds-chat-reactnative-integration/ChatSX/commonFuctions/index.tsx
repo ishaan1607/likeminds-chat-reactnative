@@ -44,7 +44,12 @@ export function getFullDate(time: any) {
   }
 }
 
-function detectLinks(message: string, isLongPress?: boolean) {
+function detectLinks(
+  message: string,
+  isLongPress?: boolean,
+  textStyles?: any,
+  linkTextColor?: string
+) {
   const regex =
     /((?:https?:\/\/)?(?:www\.)?(?:\w+\.)+\w+(?:\/\S*)?|\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b)/i;
 
@@ -76,11 +81,15 @@ function detectLinks(message: string, isLongPress?: boolean) {
                 }}
               >
                 <Text
-                  style={{
-                    color: STYLES.$COLORS.LIGHT_BLUE,
-                    fontSize: STYLES.$FONT_SIZES.MEDIUM,
-                    fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                  }}
+                  style={[
+                    {
+                      color: STYLES.$COLORS.LIGHT_BLUE,
+                      fontSize: STYLES.$FONT_SIZES.MEDIUM,
+                      fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                    },
+                    textStyles ? { ...textStyles } : null,
+                    linkTextColor ? { color: linkTextColor } : null,
+                  ]}
                 >
                   {val}
                 </Text>
@@ -121,7 +130,10 @@ export const decode = (
   isLongPress?: boolean,
   memberUuid?: string,
   chatroomWithUserUuid?: string,
-  chatroomWithUserMemberId?: string
+  chatroomWithUserMemberId?: string,
+  textStyles?: any,
+  taggingTextColor?: string,
+  linkTextColor?: string
 ) => {
   if (!text) {
     return;
@@ -173,10 +185,13 @@ export const decode = (
       <Text>
         {arr.map((val, index) => (
           <Text
-            style={{
-              color: STYLES.$COLORS.PRIMARY,
-              fontFamily: STYLES.$FONT_TYPES.LIGHT,
-            }}
+            style={[
+              {
+                color: STYLES.$COLORS.PRIMARY,
+                fontFamily: STYLES.$FONT_TYPES.LIGHT,
+              },
+              textStyles ? { ...textStyles } : null,
+            ]}
             key={val.key + index}
           >
             {/* key should be unique so we are passing `val(abc) + index(number) = abc2` to make it unique */}
@@ -188,16 +203,20 @@ export const decode = (
                     Alert.alert(`navigate to the route ${val?.route}`);
                   }
                 }}
-                style={{
-                  color: STYLES.$COLORS.LIGHT_BLUE,
-                  fontSize: STYLES.$FONT_SIZES.MEDIUM,
-                  fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                }}
+                style={[
+                  {
+                    color: STYLES.$COLORS.LIGHT_BLUE,
+                    fontSize: STYLES.$FONT_SIZES.MEDIUM,
+                    fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                  },
+                  textStyles ? { ...textStyles } : null,
+                  taggingTextColor ? { color: taggingTextColor } : null,
+                ]}
               >
                 {val.key}
               </Text>
             ) : (
-              detectLinks(val.key, isLongPress)
+              detectLinks(val.key, isLongPress, textStyles, linkTextColor)
             )}
           </Text>
         ))}
@@ -437,7 +456,7 @@ export const getPdfThumbnail = async (selectedFile: any) => {
 //this function detect "@" mentions/tags while typing.
 export function detectMentions(input: string) {
   const mentionRegex = /(?:^|\s)@(\w+)/g;
-  const matches: any[] = [];
+  const matches = [];
   let match;
 
   while ((match = mentionRegex.exec(input)) !== null) {
