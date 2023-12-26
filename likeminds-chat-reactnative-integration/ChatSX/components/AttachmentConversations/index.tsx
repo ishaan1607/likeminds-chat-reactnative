@@ -8,23 +8,23 @@ import {
   ActivityIndicator,
   Platform,
   TouchableWithoutFeedback,
-} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {styles} from './styles';
+} from "react-native";
+import React, { useEffect, useState } from "react";
+import { styles } from "./styles";
 import {
   convertSecondsToTime,
   decode,
   generateGifString,
-} from '../../commonFuctions';
-import STYLES from '../../constants/Styles';
+} from "../../commonFuctions";
+import STYLES from "../../constants/Styles";
 import {
   LONG_PRESSED,
   SELECTED_MESSAGES,
   SET_POSITION,
   STATUS_BAR_STYLE,
-} from '../../store/types/types';
-import {useAppDispatch, useAppSelector} from '../../store';
-import {CAROUSEL_SCREEN} from '../../constants/Screens';
+} from "../../store/types/types";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { CAROUSEL_SCREEN } from "../../constants/Screens";
 import {
   AUDIO_TEXT,
   CAPITAL_GIF_TEXT,
@@ -35,18 +35,18 @@ import {
   SUCCESS,
   VIDEO_TEXT,
   VOICE_NOTE_TEXT,
-} from '../../constants/Strings';
-import Slider from '@react-native-community/slider';
+} from "../../constants/Strings";
+import Slider from "@react-native-community/slider";
 import TrackPlayer, {
   useActiveTrack,
   useProgress,
-} from 'react-native-track-player';
-import {onPausePlay, onResumePlay, startPlay, stopPlay} from '../../audio';
-import {LMChatAnalytics} from '../../analytics/LMChatAnalytics';
-import {Events, Keys} from '../../enums';
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import {Base64} from '../../aws-exports';
-import {onSeekTo} from '../../audio/Controls';
+} from "react-native-track-player";
+import { onPausePlay, onResumePlay, startPlay, stopPlay } from "../../audio";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import { Events, Keys } from "../../enums";
+import ReactNativeBlobUtil from "react-native-blob-util";
+import { Base64 } from "../../aws-exports";
+import { onSeekTo } from "../../audio/Controls";
 
 interface AttachmentConversations {
   item: any;
@@ -84,9 +84,9 @@ const AttachmentConversations = ({
   const isGif = firstAttachment?.type === GIF_TEXT;
   const isAnswer = isGif ? !!generateGifString(item?.answer) : !!item?.answer;
   const dispatch = useAppDispatch();
-  const {user} = useAppSelector(state => state.homefeed);
-  const {selectedMessages, stateArr, isLongPress}: any = useAppSelector(
-    state => state.chatroom,
+  const { user } = useAppSelector((state) => state.homefeed);
+  const { selectedMessages, stateArr, isLongPress }: any = useAppSelector(
+    (state) => state.chatroom
   );
 
   // to stop the audio if move out of the chatroom
@@ -99,8 +99,8 @@ const AttachmentConversations = ({
 
   // to handle start player
   const handleStartPlay = async (path: string) => {
-    if (Platform.OS === 'ios') {
-      const fileExtension = 'm4a';
+    if (Platform.OS === "ios") {
+      const fileExtension = "m4a";
 
       const dir = ReactNativeBlobUtil.fs.dirs.DocumentDir;
       const localPath = `${dir}/${Base64.btoa(path)}.${fileExtension}`;
@@ -109,8 +109,8 @@ const AttachmentConversations = ({
         appendExt: fileExtension,
         path: localPath,
       })
-        .fetch('GET', path)
-        .then(async res => {
+        .fetch("GET", path)
+        .then(async (res) => {
           const internalUrl = `file://${res.path()}`;
           await startPlay(internalUrl, path);
           setIsVoiceNotePlaying(true);
@@ -125,7 +125,7 @@ const AttachmentConversations = ({
         [Keys.CHATROOM_TYPE, item?.state?.toString()],
         [Keys.CHATROOM_ID, item?.chatroomId?.toString()],
         [Keys.MESSAGE_ID, item?.id?.toString()],
-      ]),
+      ])
     );
   };
 
@@ -157,26 +157,26 @@ const AttachmentConversations = ({
 
   // handle gif on long press
   const handleLongPress = (event: any) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     longPressOpenKeyboard();
   };
 
   // handle gif on press
   const handleOnPress = (event: any, url: string, index: number) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     let isStateIncluded = stateArr.includes(item?.state);
     if (isLongPress) {
       if (isIncluded) {
         const filterdMessages = selectedMessages.filter(
-          (val: any) => val?.id !== item?.id && !stateArr.includes(val?.state),
+          (val: any) => val?.id !== item?.id && !stateArr.includes(val?.state)
         );
         if (filterdMessages.length > 0) {
           dispatch({
@@ -188,7 +188,7 @@ const AttachmentConversations = ({
             type: SELECTED_MESSAGES,
             body: [...filterdMessages],
           });
-          dispatch({type: LONG_PRESSED, body: false});
+          dispatch({ type: LONG_PRESSED, body: false });
         }
       } else {
         if (!isStateIncluded) {
@@ -207,27 +207,28 @@ const AttachmentConversations = ({
       style={[
         styles.displayRow,
         {
-          justifyContent: isTypeSent ? 'flex-end' : 'flex-start',
+          justifyContent: isTypeSent ? "flex-end" : "flex-start",
         },
-      ]}>
+      ]}
+    >
       <View
         style={[
           styles.attachmentMessage,
           {
-            width: isReplyConversation ? '100%' : '80%',
+            width: isReplyConversation ? "100%" : "80%",
             padding: isReplyConversation ? 0 : 10,
           },
           isTypeSent ? styles.sentMessage : styles.receivedMessage,
-          isIncluded ? {backgroundColor: STYLES.$COLORS.SELECTED_BLUE} : null,
-        ]}>
+          isIncluded ? { backgroundColor: STYLES.$COLORS.SELECTED_BLUE } : null,
+        ]}
+      >
         {!!(item?.member?.id == user?.id) || isReply ? null : (
           <Text style={styles.messageInfo} numberOfLines={1}>
             {item?.member?.name}
             {item?.member?.customTitle ? (
               <Text
-                style={
-                  styles.messageCustomTitle
-                }>{` • ${item?.member?.customTitle}`}</Text>
+                style={styles.messageCustomTitle}
+              >{` • ${item?.member?.customTitle}`}</Text>
             ) : null}
           </Text>
         )}
@@ -271,9 +272,10 @@ const AttachmentConversations = ({
                   onPress={() => {
                     handleOnPausePlay();
                   }}
-                  style={styles.playPauseBox}>
+                  style={styles.playPauseBox}
+                >
                   <Image
-                    source={require('../../assets/images/pause_icon3x.png')}
+                    source={require("../../assets/images/pause_icon3x.png")}
                     style={styles.playPauseImage}
                   />
                 </TouchableOpacity>
@@ -286,19 +288,21 @@ const AttachmentConversations = ({
                       handleStartPlay(firstAttachment?.url);
                     }
                   }}
-                  style={styles.playPauseBox}>
+                  style={styles.playPauseBox}
+                >
                   <Image
                     style={styles.playPauseImage}
-                    source={require('../../assets/images/play_icon3x.png')}
+                    source={require("../../assets/images/play_icon3x.png")}
                   />
                 </TouchableOpacity>
               )}
               <View
                 style={{
                   flex: 1,
-                  marginTop: Platform.OS === 'ios' ? 0 : 10,
+                  marginTop: Platform.OS === "ios" ? 0 : 10,
                   gap: 3,
-                }}>
+                }}
+              >
                 <Slider
                   minimumValue={0}
                   maximumValue={100}
@@ -318,14 +322,15 @@ const AttachmentConversations = ({
                 />
                 <View
                   style={{
-                    display: 'flex',
-                    flexDirection: 'row',
+                    display: "flex",
+                    flexDirection: "row",
                     marginLeft: 10,
-                    alignItems: 'center',
-                  }}>
+                    alignItems: "center",
+                  }}
+                >
                   <Image
-                    source={require('../../assets/images/mic_icon3x.png')}
-                    style={[styles.smallIcon, {tintColor: 'grey'}]}
+                    source={require("../../assets/images/mic_icon3x.png")}
+                    style={[styles.smallIcon, { tintColor: "grey" }]}
                   />
                   {isVoiceNotePlaying ? (
                     <Text style={styles.recordTitle}>
@@ -336,7 +341,7 @@ const AttachmentConversations = ({
                   ) : (
                     <Text style={styles.recordTitle}>
                       {convertSecondsToTime(
-                        Math.floor(firstAttachment?.metaRO?.duration),
+                        Math.floor(firstAttachment?.metaRO?.duration)
                       )}
                     </Text>
                   )}
@@ -356,15 +361,16 @@ const AttachmentConversations = ({
                   onPress={() => {
                     handleFileUpload(item?.id, true);
                   }}
-                  style={({pressed}) => [
+                  style={({ pressed }) => [
                     {
                       opacity: pressed ? 0.5 : 1,
                     },
                     styles.retryButton,
-                  ]}>
+                  ]}
+                >
                   <Image
                     style={styles.retryIcon}
-                    source={require('../../assets/images/retry_file_upload3x.png')}
+                    source={require("../../assets/images/retry_file_upload3x.png")}
                   />
                   <Text style={styles.retryText}>RETRY</Text>
                 </Pressable>
@@ -380,30 +386,33 @@ const AttachmentConversations = ({
                     opacity: 0.7,
                   }
                 : null
-            }>
+            }
+          >
             {!isGifPlaying && !item?.isInProgress ? (
               <TouchableOpacity
-                onPress={handleOnPress}
+                onPress={() => handleOnPress}
                 onLongPress={handleLongPress}
                 style={[
                   {
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
                     height: 150,
-                    position: 'absolute',
-                    width: '100%',
+                    position: "absolute",
+                    width: "100%",
                     zIndex: 1,
                   },
-                ]}>
+                ]}
+              >
                 <View
                   style={{
-                    backgroundColor: 'black',
+                    backgroundColor: "black",
                     opacity: 0.9,
                     padding: 10,
                     borderRadius: 50,
-                  }}>
-                  <Text style={{color: 'white'}}>{CAPITAL_GIF_TEXT}</Text>
+                  }}
+                >
+                  <Text style={{ color: "white" }}>{CAPITAL_GIF_TEXT}</Text>
                 </View>
               </TouchableOpacity>
             ) : null}
@@ -417,9 +426,10 @@ const AttachmentConversations = ({
                   });
                   dispatch({
                     type: STATUS_BAR_STYLE,
-                    body: {color: STYLES.$STATUS_BAR_STYLE['light-content']},
+                    body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
                   });
-                }}>
+                }}
+              >
                 <Image
                   source={{
                     uri: firstAttachment?.url,
@@ -449,15 +459,16 @@ const AttachmentConversations = ({
                   onPress={() => {
                     handleFileUpload(item?.id, true);
                   }}
-                  style={({pressed}) => [
+                  style={({ pressed }) => [
                     {
                       opacity: pressed ? 0.5 : 1,
                     },
                     styles.retryButton,
-                  ]}>
+                  ]}
+                >
                   <Image
                     style={styles.retryIcon}
-                    source={require('../../assets/images/retry_file_upload3x.png')}
+                    source={require("../../assets/images/retry_file_upload3x.png")}
                   />
                   <Text style={styles.retryText}>RETRY</Text>
                 </Pressable>
@@ -472,13 +483,13 @@ const AttachmentConversations = ({
               isGif ? generateGifString(item?.answer) : item?.answer,
               true,
               chatroomName,
-              user?.sdkClientInfo?.community,
+              user?.sdkClientInfo?.community
             )}
           </View>
         ) : null}
         <View style={styles.alignTime}>
           {item?.isEdited ? (
-            <Text style={styles.messageDate}>{'Edited • '}</Text>
+            <Text style={styles.messageDate}>{"Edited • "}</Text>
           ) : null}
           <Text style={styles.messageDate}>{item?.createdAt}</Text>
         </View>
@@ -486,30 +497,31 @@ const AttachmentConversations = ({
 
       {!isTypeSent && !(firstAttachment?.type === AUDIO_TEXT) ? (
         <Pressable
-          onLongPress={event => {
-            const {pageX, pageY} = event.nativeEvent;
+          onLongPress={(event) => {
+            const { pageX, pageY } = event.nativeEvent;
             dispatch({
               type: SET_POSITION,
-              body: {pageX: pageX, pageY: pageY},
+              body: { pageX: pageX, pageY: pageY },
             });
             longPressOpenKeyboard();
           }}
           delayLongPress={200}
-          onPress={event => {
-            const {pageX, pageY} = event.nativeEvent;
+          onPress={(event) => {
+            const { pageX, pageY } = event.nativeEvent;
             dispatch({
               type: SET_POSITION,
-              body: {pageX: pageX, pageY: pageY},
+              body: { pageX: pageX, pageY: pageY },
             });
             openKeyboard();
-          }}>
+          }}
+        >
           <Image
             style={{
               height: 25,
               width: 25,
-              resizeMode: 'contain',
+              resizeMode: "contain",
             }}
-            source={require('../../assets/images/add_more_emojis3x.png')}
+            source={require("../../assets/images/add_more_emojis3x.png")}
           />
         </Pressable>
       ) : null}
@@ -537,31 +549,31 @@ export const VideoConversations = ({
   const firstAttachment = item?.attachments[0];
   const secondAttachment = item?.attachments[1];
   const dispatch = useAppDispatch();
-  const {selectedMessages, stateArr, isLongPress}: any = useAppSelector(
-    state => state.chatroom,
+  const { selectedMessages, stateArr, isLongPress }: any = useAppSelector(
+    (state) => state.chatroom
   );
   const [isFullList, setIsFullList] = useState(false);
 
   const handleLongPress = (event: any) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     longPressOpenKeyboard();
   };
 
   const handleOnPress = (event: any, url: string) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     const isStateIncluded = stateArr.includes(item?.state);
     if (isLongPress) {
       if (isIncluded) {
         const filterdMessages = selectedMessages.filter(
-          (val: any) => val?.id !== item?.id && !stateArr.includes(val?.state),
+          (val: any) => val?.id !== item?.id && !stateArr.includes(val?.state)
         );
         if (filterdMessages.length > 0) {
           dispatch({
@@ -573,7 +585,7 @@ export const VideoConversations = ({
             type: SELECTED_MESSAGES,
             body: [...filterdMessages],
           });
-          dispatch({type: LONG_PRESSED, body: false});
+          dispatch({ type: LONG_PRESSED, body: false });
         }
       } else {
         if (!isStateIncluded) {
@@ -590,18 +602,19 @@ export const VideoConversations = ({
   return (
     <View>
       {item?.attachmentCount > 1 ? (
-        <View style={{gap: 2}}>
+        <View style={{ gap: 2 }}>
           {!isFullList ? (
             <View>
               <TouchableOpacity
                 onLongPress={handleLongPress}
                 delayLongPress={200}
-                onPress={event => {
+                onPress={(event) => {
                   handleOnPress(event, firstAttachment?.url);
                 }}
-                style={styles.alignRow}>
+                style={styles.alignRow}
+              >
                 <Image
-                  source={require('../../assets/images/play_video.png')}
+                  source={require("../../assets/images/play_video.png")}
                   style={styles.icon}
                 />
                 <Text numberOfLines={2} style={styles.docName}>
@@ -611,12 +624,13 @@ export const VideoConversations = ({
               <TouchableOpacity
                 onLongPress={handleLongPress}
                 delayLongPress={200}
-                onPress={event => {
+                onPress={(event) => {
                   handleOnPress(event, secondAttachment?.url);
                 }}
-                style={styles.alignRow}>
+                style={styles.alignRow}
+              >
                 <Image
-                  source={require('../../assets/images/play_video.png')}
+                  source={require("../../assets/images/play_video.png")}
                   style={styles.icon}
                 />
                 <Text numberOfLines={2} style={styles.docName}>
@@ -629,13 +643,14 @@ export const VideoConversations = ({
               <TouchableOpacity
                 onLongPress={handleLongPress}
                 delayLongPress={200}
-                onPress={event => {
+                onPress={(event) => {
                   handleOnPress(event, val?.url);
                 }}
                 key={val + index}
-                style={styles.alignRow}>
+                style={styles.alignRow}
+              >
                 <Image
-                  source={require('../../assets/images/play_video.png')}
+                  source={require("../../assets/images/play_video.png")}
                   style={styles.icon}
                 />
                 <Text numberOfLines={2} style={styles.docName}>
@@ -649,12 +664,13 @@ export const VideoConversations = ({
         <TouchableOpacity
           onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={event => {
+          onPress={(event) => {
             handleOnPress(event, firstAttachment?.url);
           }}
-          style={styles.alignRow}>
+          style={styles.alignRow}
+        >
           <Image
-            source={require('../../assets/images/play_video.png')}
+            source={require("../../assets/images/play_video.png")}
             style={styles.icon}
           />
           <Text numberOfLines={2} style={styles.docName}>
@@ -666,18 +682,18 @@ export const VideoConversations = ({
         <TouchableOpacity
           onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={event => {
-            const {pageX, pageY} = event.nativeEvent;
+          onPress={(event) => {
+            const { pageX, pageY } = event.nativeEvent;
             dispatch({
               type: SET_POSITION,
-              body: {pageX: pageX, pageY: pageY},
+              body: { pageX: pageX, pageY: pageY },
             });
             const isStateIncluded = stateArr.includes(item?.state);
             if (isLongPress) {
               if (isIncluded) {
                 const filterdMessages = selectedMessages.filter(
                   (val: any) =>
-                    val?.id !== item?.id && !stateArr.includes(val?.state),
+                    val?.id !== item?.id && !stateArr.includes(val?.state)
                 );
                 if (filterdMessages.length > 0) {
                   dispatch({
@@ -689,7 +705,7 @@ export const VideoConversations = ({
                     type: SELECTED_MESSAGES,
                     body: [...filterdMessages],
                   });
-                  dispatch({type: LONG_PRESSED, body: false});
+                  dispatch({ type: LONG_PRESSED, body: false });
                 }
               } else {
                 if (!isStateIncluded) {
@@ -702,7 +718,8 @@ export const VideoConversations = ({
             } else {
               setIsFullList(true);
             }
-          }}>
+          }}
+        >
           <Text style={styles.fullListCount}>{`+${
             item.attachmentCount - 2
           } more`}</Text>
@@ -718,15 +735,16 @@ export const VideoConversations = ({
             onPress={() => {
               handleFileUpload(item?.id, true);
             }}
-            style={({pressed}) => [
+            style={({ pressed }) => [
               {
                 opacity: pressed ? 0.5 : 1,
               },
               styles.retryButton,
-            ]}>
+            ]}
+          >
             <Image
               style={styles.retryIcon}
-              source={require('../../assets/images/retry_file_upload3x.png')}
+              source={require("../../assets/images/retry_file_upload3x.png")}
             />
             <Text style={styles.retryText}>RETRY</Text>
           </Pressable>
@@ -746,33 +764,33 @@ export const PDFConversations = ({
   const firstAttachment = item?.attachments[0];
   const secondAttachment = item?.attachments[1];
   const dispatch = useAppDispatch();
-  const {selectedMessages, stateArr, isLongPress}: any = useAppSelector(
-    state => state.chatroom,
+  const { selectedMessages, stateArr, isLongPress }: any = useAppSelector(
+    (state) => state.chatroom
   );
-  const {isFileUploading, fileUploadingID}: any = useAppSelector(
-    state => state.upload,
+  const { isFileUploading, fileUploadingID }: any = useAppSelector(
+    (state) => state.upload
   );
   const [isFullList, setIsFullList] = useState(false);
   const handleLongPress = (event: any) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     longPressOpenKeyboard();
   };
 
   const handleOnPress = (event: any, url: string) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     const isStateIncluded = stateArr.includes(item?.state);
     if (isLongPress) {
       if (isIncluded) {
         const filterdMessages = selectedMessages.filter(
-          (val: any) => val?.id !== item?.id && !stateArr.includes(val?.state),
+          (val: any) => val?.id !== item?.id && !stateArr.includes(val?.state)
         );
         if (filterdMessages.length > 0) {
           dispatch({
@@ -784,7 +802,7 @@ export const PDFConversations = ({
             type: SELECTED_MESSAGES,
             body: [...filterdMessages],
           });
-          dispatch({type: LONG_PRESSED, body: false});
+          dispatch({ type: LONG_PRESSED, body: false });
         }
       } else {
         if (!isStateIncluded) {
@@ -801,18 +819,19 @@ export const PDFConversations = ({
   return (
     <View>
       {item?.attachmentCount > 1 ? (
-        <View style={{gap: 2}}>
+        <View style={{ gap: 2 }}>
           {!isFullList ? (
             <View>
               <TouchableOpacity
                 onLongPress={handleLongPress}
                 delayLongPress={200}
-                onPress={event => {
+                onPress={(event) => {
                   handleOnPress(event, firstAttachment?.url);
                 }}
-                style={styles.alignRow}>
+                style={styles.alignRow}
+              >
                 <Image
-                  source={require('../../assets/images/pdf_icon3x.png')}
+                  source={require("../../assets/images/pdf_icon3x.png")}
                   style={styles.icon}
                 />
                 <Text numberOfLines={2} style={styles.docName}>
@@ -822,12 +841,13 @@ export const PDFConversations = ({
               <TouchableOpacity
                 onLongPress={handleLongPress}
                 delayLongPress={200}
-                onPress={event => {
+                onPress={(event) => {
                   handleOnPress(event, secondAttachment?.url);
                 }}
-                style={styles.alignRow}>
+                style={styles.alignRow}
+              >
                 <Image
-                  source={require('../../assets/images/pdf_icon3x.png')}
+                  source={require("../../assets/images/pdf_icon3x.png")}
                   style={styles.icon}
                 />
                 <Text numberOfLines={2} style={styles.docName}>
@@ -840,13 +860,14 @@ export const PDFConversations = ({
               <TouchableOpacity
                 onLongPress={handleLongPress}
                 delayLongPress={200}
-                onPress={event => {
+                onPress={(event) => {
                   handleOnPress(event, val?.url);
                 }}
                 key={val + index}
-                style={styles.alignRow}>
+                style={styles.alignRow}
+              >
                 <Image
-                  source={require('../../assets/images/pdf_icon3x.png')}
+                  source={require("../../assets/images/pdf_icon3x.png")}
                   style={styles.icon}
                 />
                 <Text numberOfLines={2} style={styles.docName}>
@@ -860,12 +881,13 @@ export const PDFConversations = ({
         <TouchableOpacity
           onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={event => {
+          onPress={(event) => {
             handleOnPress(event, firstAttachment?.url);
           }}
-          style={styles.alignRow}>
+          style={styles.alignRow}
+        >
           <Image
-            source={require('../../assets/images/pdf_icon3x.png')}
+            source={require("../../assets/images/pdf_icon3x.png")}
             style={styles.icon}
           />
           <Text numberOfLines={2} style={styles.docName}>
@@ -877,18 +899,18 @@ export const PDFConversations = ({
         <TouchableOpacity
           onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={event => {
-            const {pageX, pageY} = event.nativeEvent;
+          onPress={(event) => {
+            const { pageX, pageY } = event.nativeEvent;
             dispatch({
               type: SET_POSITION,
-              body: {pageX: pageX, pageY: pageY},
+              body: { pageX: pageX, pageY: pageY },
             });
             const isStateIncluded = stateArr.includes(item?.state);
             if (isLongPress) {
               if (isIncluded) {
                 const filterdMessages = selectedMessages.filter(
                   (val: any) =>
-                    val?.id !== item?.id && !stateArr.includes(val?.state),
+                    val?.id !== item?.id && !stateArr.includes(val?.state)
                 );
                 if (filterdMessages.length > 0) {
                   dispatch({
@@ -900,7 +922,7 @@ export const PDFConversations = ({
                     type: SELECTED_MESSAGES,
                     body: [...filterdMessages],
                   });
-                  dispatch({type: LONG_PRESSED, body: false});
+                  dispatch({ type: LONG_PRESSED, body: false });
                 }
               } else {
                 if (!isStateIncluded) {
@@ -913,7 +935,8 @@ export const PDFConversations = ({
             } else {
               setIsFullList(true);
             }
-          }}>
+          }}
+        >
           <Text style={styles.fullListCount}>{`+${
             item.attachmentCount - 2
           } more`}</Text>
@@ -929,15 +952,16 @@ export const PDFConversations = ({
             onPress={() => {
               handleFileUpload(item?.id, true);
             }}
-            style={({pressed}) => [
+            style={({ pressed }) => [
               {
                 opacity: pressed ? 0.5 : 1,
               },
               styles.retryButton,
-            ]}>
+            ]}
+          >
             <Image
               style={styles.retryIcon}
-              source={require('../../assets/images/retry_file_upload3x.png')}
+              source={require("../../assets/images/retry_file_upload3x.png")}
             />
             <Text style={styles.retryText}>RETRY</Text>
           </Pressable>
@@ -969,32 +993,32 @@ export const ImageConversations = ({
   const thirdAttachment = item?.attachments[2];
   const fourthAttachment = item?.attachments[3];
   const dispatch = useAppDispatch();
-  const {selectedMessages, stateArr, isLongPress}: any = useAppSelector(
-    state => state.chatroom,
+  const { selectedMessages, stateArr, isLongPress }: any = useAppSelector(
+    (state) => state.chatroom
   );
 
   // handle on long press on attachment
   const handleLongPress = (event: any) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     longPressOpenKeyboard();
   };
 
   // handle on press on attachment
   const handleOnPress = (event: any, url: string, index: number) => {
-    const {pageX, pageY} = event.nativeEvent;
+    const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
-      body: {pageX: pageX, pageY: pageY},
+      body: { pageX: pageX, pageY: pageY },
     });
     const isStateIncluded = stateArr.includes(item?.state);
     if (isLongPress) {
       if (isIncluded) {
         const filterdMessages = selectedMessages.filter(
-          (val: any) => val?.id !== item?.id && !stateArr.includes(val?.state),
+          (val: any) => val?.id !== item?.id && !stateArr.includes(val?.state)
         );
         if (filterdMessages.length > 0) {
           dispatch({
@@ -1006,7 +1030,7 @@ export const ImageConversations = ({
             type: SELECTED_MESSAGES,
             body: [...filterdMessages],
           });
-          dispatch({type: LONG_PRESSED, body: false});
+          dispatch({ type: LONG_PRESSED, body: false });
         }
       } else {
         if (!isStateIncluded) {
@@ -1023,7 +1047,7 @@ export const ImageConversations = ({
       });
       dispatch({
         type: STATUS_BAR_STYLE,
-        body: {color: STYLES.$STATUS_BAR_STYLE['light-content']},
+        body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
       });
     }
   };
@@ -1037,7 +1061,7 @@ export const ImageConversations = ({
       (firstAttachment.type === IMAGE_TEXT && firstAttachment.url === null)
     ) {
       // Use require for video or image
-      firstImageSource = require('../../assets/images/imagePlaceholder.jpeg');
+      firstImageSource = require("../../assets/images/imagePlaceholder.jpeg");
     } else {
       // Use the uri
       firstImageSource = {
@@ -1058,7 +1082,7 @@ export const ImageConversations = ({
       (secondAttachment.type === IMAGE_TEXT && secondAttachment.url === null)
     ) {
       // Use require for video or image
-      secondImageSource = require('../../assets/images/imagePlaceholder.jpeg');
+      secondImageSource = require("../../assets/images/imagePlaceholder.jpeg");
     } else {
       // Use the uri
       secondImageSource = {
@@ -1079,7 +1103,7 @@ export const ImageConversations = ({
       (thirdAttachment.type === IMAGE_TEXT && thirdAttachment.url === null)
     ) {
       // Use require for video or image
-      thirdImageSource = require('../../assets/images/imagePlaceholder.jpeg');
+      thirdImageSource = require("../../assets/images/imagePlaceholder.jpeg");
     } else {
       // Use the uri
       thirdImageSource = {
@@ -1100,7 +1124,7 @@ export const ImageConversations = ({
       (fourthAttachment.type === IMAGE_TEXT && fourthAttachment.url === null)
     ) {
       // Use require for video or image
-      fourthImageSource = require('../../assets/images/imagePlaceholder.jpeg');
+      fourthImageSource = require("../../assets/images/imagePlaceholder.jpeg");
     } else {
       // Use the uri
       fourthImageSource = {
@@ -1118,14 +1142,15 @@ export const ImageConversations = ({
         <TouchableOpacity
           onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={event => {
+          onPress={(event) => {
             handleOnPress(event, firstAttachment?.url, 0);
-          }}>
+          }}
+        >
           <Image style={styles.singleImg} source={firstImageSource} />
           {firstAttachment?.type === VIDEO_TEXT ? (
-            <View style={{position: 'absolute', bottom: 0, left: 5}}>
+            <View style={{ position: "absolute", bottom: 0, left: 5 }}>
               <Image
-                source={require('../../assets/images/video_icon3x.png')}
+                source={require("../../assets/images/video_icon3x.png")}
                 style={styles.videoIcon}
               />
             </View>
@@ -1137,14 +1162,15 @@ export const ImageConversations = ({
             style={styles.touchableImg}
             onLongPress={handleLongPress}
             delayLongPress={200}
-            onPress={event => {
+            onPress={(event) => {
               handleOnPress(event, firstAttachment?.url, 0);
-            }}>
+            }}
+          >
             <Image source={firstImageSource} style={styles.doubleImg} />
             {firstAttachment?.type === VIDEO_TEXT ? (
-              <View style={{position: 'absolute', bottom: 0, left: 5}}>
+              <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                 <Image
-                  source={require('../../assets/images/video_icon3x.png')}
+                  source={require("../../assets/images/video_icon3x.png")}
                   style={styles.videoIcon}
                 />
               </View>
@@ -1154,14 +1180,15 @@ export const ImageConversations = ({
             style={styles.touchableImg}
             onLongPress={handleLongPress}
             delayLongPress={200}
-            onPress={event => {
+            onPress={(event) => {
               handleOnPress(event, secondAttachment?.url, 1);
-            }}>
+            }}
+          >
             <Image source={secondImageSource} style={styles.doubleImg} />
             {secondAttachment?.type === VIDEO_TEXT ? (
-              <View style={{position: 'absolute', bottom: 0, left: 5}}>
+              <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                 <Image
-                  source={require('../../assets/images/video_icon3x.png')}
+                  source={require("../../assets/images/video_icon3x.png")}
                   style={styles.videoIcon}
                 />
               </View>
@@ -1172,18 +1199,18 @@ export const ImageConversations = ({
         <TouchableOpacity
           onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={event => {
-            const {pageX, pageY} = event.nativeEvent;
+          onPress={(event) => {
+            const { pageX, pageY } = event.nativeEvent;
             dispatch({
               type: SET_POSITION,
-              body: {pageX: pageX, pageY: pageY},
+              body: { pageX: pageX, pageY: pageY },
             });
             const isStateIncluded = stateArr.includes(item?.state);
             if (isLongPress) {
               if (isIncluded) {
                 const filterdMessages = selectedMessages.filter(
                   (val: any) =>
-                    val?.id !== item?.id && !stateArr.includes(val?.state),
+                    val?.id !== item?.id && !stateArr.includes(val?.state)
                 );
                 if (filterdMessages.length > 0) {
                   dispatch({
@@ -1195,7 +1222,7 @@ export const ImageConversations = ({
                     type: SELECTED_MESSAGES,
                     body: [...filterdMessages],
                   });
-                  dispatch({type: LONG_PRESSED, body: false});
+                  dispatch({ type: LONG_PRESSED, body: false });
                 }
               } else {
                 if (!isStateIncluded) {
@@ -1212,17 +1239,18 @@ export const ImageConversations = ({
               });
               dispatch({
                 type: STATUS_BAR_STYLE,
-                body: {color: STYLES.$STATUS_BAR_STYLE['light-content']},
+                body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
               });
             }
           }}
-          style={styles.doubleImgParent}>
+          style={styles.doubleImgParent}
+        >
           <View style={styles.imgParent}>
             <Image source={firstImageSource} style={styles.multipleImg} />
             {firstAttachment?.type === VIDEO_TEXT ? (
-              <View style={{position: 'absolute', bottom: 0, left: 5}}>
+              <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                 <Image
-                  source={require('../../assets/images/video_icon3x.png')}
+                  source={require("../../assets/images/video_icon3x.png")}
                   style={styles.videoIcon}
                 />
               </View>
@@ -1231,9 +1259,9 @@ export const ImageConversations = ({
           <View style={styles.imgParent}>
             <Image style={styles.multipleImg} source={secondImageSource} />
             {firstAttachment?.type === VIDEO_TEXT ? (
-              <View style={{position: 'absolute', bottom: 0, left: 5}}>
+              <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                 <Image
-                  source={require('../../assets/images/video_icon3x.png')}
+                  source={require("../../assets/images/video_icon3x.png")}
                   style={styles.videoIcon}
                 />
               </View>
@@ -1244,20 +1272,21 @@ export const ImageConversations = ({
           </View>
         </TouchableOpacity>
       ) : item?.attachmentCount === 4 ? (
-        <View style={{gap: 5}}>
+        <View style={{ gap: 5 }}>
           <View style={styles.doubleImgParent}>
             <TouchableOpacity
               style={styles.touchableImg}
               onLongPress={handleLongPress}
               delayLongPress={200}
-              onPress={event => {
+              onPress={(event) => {
                 handleOnPress(event, firstAttachment?.url, 0);
-              }}>
+              }}
+            >
               <Image source={firstImageSource} style={styles.doubleImg} />
               {firstAttachment?.type === VIDEO_TEXT ? (
-                <View style={{position: 'absolute', bottom: 0, left: 5}}>
+                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                   <Image
-                    source={require('../../assets/images/video_icon3x.png')}
+                    source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
                   />
                 </View>
@@ -1267,14 +1296,15 @@ export const ImageConversations = ({
               style={styles.touchableImg}
               onLongPress={handleLongPress}
               delayLongPress={200}
-              onPress={event => {
+              onPress={(event) => {
                 handleOnPress(event, secondAttachment?.url, 1);
-              }}>
+              }}
+            >
               <Image source={secondImageSource} style={styles.doubleImg} />
               {secondAttachment?.type === VIDEO_TEXT ? (
-                <View style={{position: 'absolute', bottom: 0, left: 5}}>
+                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                   <Image
-                    source={require('../../assets/images/video_icon3x.png')}
+                    source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
                   />
                 </View>
@@ -1286,14 +1316,15 @@ export const ImageConversations = ({
               style={styles.touchableImg}
               onLongPress={handleLongPress}
               delayLongPress={200}
-              onPress={event => {
+              onPress={(event) => {
                 handleOnPress(event, thirdAttachment?.url, 2);
-              }}>
+              }}
+            >
               <Image source={thirdImageSource} style={styles.doubleImg} />
               {thirdAttachment?.type === VIDEO_TEXT ? (
-                <View style={{position: 'absolute', bottom: 0, left: 5}}>
+                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                   <Image
-                    source={require('../../assets/images/video_icon3x.png')}
+                    source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
                   />
                 </View>
@@ -1303,14 +1334,15 @@ export const ImageConversations = ({
               style={styles.touchableImg}
               onLongPress={handleLongPress}
               delayLongPress={200}
-              onPress={event => {
+              onPress={(event) => {
                 handleOnPress(event, fourthAttachment?.url, 3);
-              }}>
+              }}
+            >
               <Image source={fourthImageSource} style={styles.doubleImg} />
               {fourthAttachment?.type === VIDEO_TEXT ? (
-                <View style={{position: 'absolute', bottom: 0, left: 5}}>
+                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                   <Image
-                    source={require('../../assets/images/video_icon3x.png')}
+                    source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
                   />
                 </View>
@@ -1320,21 +1352,21 @@ export const ImageConversations = ({
         </View>
       ) : item?.attachmentCount > 4 ? (
         <TouchableOpacity
-          style={{gap: 5}}
+          style={{ gap: 5 }}
           onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={event => {
-            const {pageX, pageY} = event.nativeEvent;
+          onPress={(event) => {
+            const { pageX, pageY } = event.nativeEvent;
             dispatch({
               type: SET_POSITION,
-              body: {pageX: pageX, pageY: pageY},
+              body: { pageX: pageX, pageY: pageY },
             });
             const isStateIncluded = stateArr.includes(item?.state);
             if (isLongPress) {
               if (isIncluded) {
                 const filterdMessages = selectedMessages.filter(
                   (val: any) =>
-                    val?.id !== item?.id && !stateArr.includes(val?.state),
+                    val?.id !== item?.id && !stateArr.includes(val?.state)
                 );
                 if (filterdMessages.length > 0) {
                   dispatch({
@@ -1346,7 +1378,7 @@ export const ImageConversations = ({
                     type: SELECTED_MESSAGES,
                     body: [...filterdMessages],
                   });
-                  dispatch({type: LONG_PRESSED, body: false});
+                  dispatch({ type: LONG_PRESSED, body: false });
                 }
               } else {
                 if (!isStateIncluded) {
@@ -1363,17 +1395,18 @@ export const ImageConversations = ({
               });
               dispatch({
                 type: STATUS_BAR_STYLE,
-                body: {color: STYLES.$STATUS_BAR_STYLE['light-content']},
+                body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
               });
             }
-          }}>
+          }}
+        >
           <View style={styles.doubleImgParent}>
             <View style={styles.imgParent}>
               <Image source={firstImageSource} style={styles.multipleImg} />
               {firstAttachment?.type === VIDEO_TEXT ? (
-                <View style={{position: 'absolute', bottom: 0, left: 5}}>
+                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                   <Image
-                    source={require('../../assets/images/video_icon3x.png')}
+                    source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
                   />
                 </View>
@@ -1382,9 +1415,9 @@ export const ImageConversations = ({
             <View style={styles.imgParent}>
               <Image style={styles.multipleImg} source={secondImageSource} />
               {secondAttachment?.type === VIDEO_TEXT ? (
-                <View style={{position: 'absolute', bottom: 0, left: 5}}>
+                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                   <Image
-                    source={require('../../assets/images/video_icon3x.png')}
+                    source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
                   />
                 </View>
@@ -1395,9 +1428,9 @@ export const ImageConversations = ({
             <View style={styles.imgParent}>
               <Image source={thirdImageSource} style={styles.multipleImg} />
               {thirdAttachment?.type === VIDEO_TEXT ? (
-                <View style={{position: 'absolute', bottom: 0, left: 5}}>
+                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                   <Image
-                    source={require('../../assets/images/video_icon3x.png')}
+                    source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
                   />
                 </View>
@@ -1406,9 +1439,9 @@ export const ImageConversations = ({
             <View style={styles.imgParent}>
               <Image style={styles.multipleImg} source={fourthImageSource} />
               {fourthAttachment?.type === VIDEO_TEXT ? (
-                <View style={{position: 'absolute', bottom: 0, left: 5}}>
+                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
                   <Image
-                    source={require('../../assets/images/video_icon3x.png')}
+                    source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
                   />
                 </View>
@@ -1425,9 +1458,9 @@ export const ImageConversations = ({
       {isIncluded && item?.attachmentCount <= 3 ? (
         <View
           style={{
-            position: 'absolute',
+            position: "absolute",
             height: 150,
-            width: '100%',
+            width: "100%",
             backgroundColor: STYLES.$COLORS.SELECTED_BLUE,
             opacity: 0.5,
           }}
@@ -1435,9 +1468,9 @@ export const ImageConversations = ({
       ) : isIncluded && item?.attachmentCount > 3 ? (
         <View
           style={{
-            position: 'absolute',
+            position: "absolute",
             height: 310,
-            width: '100%',
+            width: "100%",
             backgroundColor: STYLES.$COLORS.SELECTED_BLUE,
             opacity: 0.5,
           }}
@@ -1454,15 +1487,16 @@ export const ImageConversations = ({
             onPress={() => {
               handleFileUpload(item?.id, true);
             }}
-            style={({pressed}) => [
+            style={({ pressed }) => [
               {
                 opacity: pressed ? 0.5 : 1,
               },
               styles.retryButton,
-            ]}>
+            ]}
+          >
             <Image
               style={styles.retryIcon}
-              source={require('../../assets/images/retry_file_upload3x.png')}
+              source={require("../../assets/images/retry_file_upload3x.png")}
             />
             <Text style={styles.retryText}>RETRY</Text>
           </Pressable>

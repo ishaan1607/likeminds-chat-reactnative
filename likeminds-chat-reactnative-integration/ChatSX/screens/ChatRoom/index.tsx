@@ -222,7 +222,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const [shouldLoadMoreChatEnd, setShouldLoadMoreChatEnd] = useState(true);
   const [shouldLoadMoreChatStart, setShouldLoadMoreChatStart] = useState(true);
   const [lastScrollOffset, setLastScrollOffset] = useState(true);
-  const [response, setResponse] = useState([]);
+  const [response, setResponse] = useState<any>([]);
   const [isRealmDataPresent, setIsRealmDataPresent] = useState(false);
   const [flashListMounted, setFlashListMounted] = useState(false);
 
@@ -241,7 +241,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
 
   const dispatch = useAppDispatch();
   const {
-    conversations = [],
     chatroomDetails,
     chatroomDBDetails,
     messageSent,
@@ -256,6 +255,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const { user, community, memberRights } = useAppSelector(
     (state) => state.homefeed
   );
+
+  const { conversations = [] }: any = useAppSelector((state) => state.chatroom);
 
   const { uploadingFilesMessages }: any = useAppSelector(
     (state) => state.upload
@@ -3882,4 +3883,4 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   );
 };
 
-export default ChatRoom;
+export { ChatRoom };

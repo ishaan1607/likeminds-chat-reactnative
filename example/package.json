@@ -10,6 +10,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "@notifee/react-native": "^7.6.1",
+    "@react-navigation/native": "^6.1.2",
+    "@react-navigation/native-stack": "^6.9.8",
+    "likeminds_chat_reactnative_integration": "file:../likeminds-chat-reactnative-integration/likeminds_chat_reactnative_integration-0.5.0.tgz",
     "react": "18.2.0",
     "react-native": "0.73.1"
   },

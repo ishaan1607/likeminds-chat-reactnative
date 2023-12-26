@@ -11,11 +11,11 @@ import {
   TouchableWithoutFeedback,
   PermissionsAndroid,
   Vibration,
-} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {styles} from './styles';
-import {useAppDispatch, useAppSelector} from '../../store';
-import {onConversationsCreate} from '../../store/actions/chatroom';
+} from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import { styles } from "./styles";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { onConversationsCreate } from "../../store/actions/chatroom";
 import {
   CLEAR_SELECTED_FILES_TO_UPLOAD,
   CLEAR_SELECTED_FILE_TO_VIEW,
@@ -41,20 +41,20 @@ import {
   SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
   CLEAR_SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
   SET_CHATROOM_TOPIC,
-} from '../../store/types/types';
-import {ReplyBox} from '../ReplyConversations';
-import {chatSchema} from '../../assets/chatSchema';
-import {myClient} from '../../..';
+} from "../../store/types/types";
+import { ReplyBox } from "../ReplyConversations";
+import { chatSchema } from "../../assets/chatSchema";
+import { myClient } from "../../..";
 import {
   launchImageLibrary,
   launchCamera,
   ImagePickerResponse,
   Asset,
-} from 'react-native-image-picker';
-import DocumentPicker from 'react-native-document-picker';
-import {CREATE_POLL_SCREEN, FILE_UPLOAD} from '../../constants/Screens';
-import STYLES from '../../constants/Styles';
-import SendDMRequestModal from '../../customModals/SendDMRequest';
+} from "react-native-image-picker";
+import DocumentPicker from "react-native-document-picker";
+import { CREATE_POLL_SCREEN, FILE_UPLOAD } from "../../constants/Screens";
+import STYLES from "../../constants/Styles";
+import SendDMRequestModal from "../../customModals/SendDMRequest";
 import {
   BLOCKED_DM,
   CAMERA_TEXT,
@@ -72,10 +72,10 @@ import {
   TAP_AND_HOLD,
   VIDEO_TEXT,
   VOICE_NOTE_TEXT,
-} from '../../constants/Strings';
-import {CognitoIdentityCredentials, S3} from 'aws-sdk';
-import AWS from 'aws-sdk';
-import {POOL_ID, REGION} from '../../aws-exports';
+} from "../../constants/Strings";
+import { CognitoIdentityCredentials, S3 } from "aws-sdk";
+import AWS from "aws-sdk";
+import { POOL_ID, REGION } from "../../aws-exports";
 import {
   atLeastAndroid13,
   detectMentions,
@@ -84,26 +84,21 @@ import {
   getPdfThumbnail,
   getVideoThumbnail,
   replaceLastMention,
-} from '../../commonFuctions';
+} from "../../commonFuctions";
 import {
   requestAudioRecordPermission,
   requestCameraPermission,
   requestStoragePermission,
-} from '../../utils/permissions';
-import {FlashList} from '@shopify/flash-list';
-import {TaggingView} from '../TaggingView';
-import {
-  convertToMentionValues,
-  replaceMentionValues,
-} from '../TaggingView/utils';
-import {ChatroomChatRequestState, Events, Keys} from '../../enums';
-import {ChatroomType} from '../../enums';
+} from "../../utils/permissions";
+import { FlashList } from "@shopify/flash-list";
+import { ChatroomChatRequestState, Events, Keys } from "../../enums";
+import { ChatroomType } from "../../enums";
 import {
   InputBoxProps,
   LaunchActivityProps,
   VoiceNotesPlayerProps,
   VoiceNotesProps,
-} from './models';
+} from "./models";
 import Animated, {
   Easing,
   useAnimatedStyle,
@@ -111,36 +106,43 @@ import Animated, {
   withRepeat,
   withSpring,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 import {
   Gesture,
   GestureDetector,
   GestureUpdateEvent,
   PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler';
-import LottieView from 'lottie-react-native';
-import ReactNativeBlobUtil from 'react-native-blob-util';
-import {generateAudioSet, generateVoiceNoteName} from '../../audio';
-import AudioRecorderPlayer from 'react-native-audio-recorder-player';
-import {LINK_PREVIEW_REGEX} from '../../constants/Regex';
-import LinkPreviewInputBox from '../linkPreviewInputBox';
-import {LMChatAnalytics} from '../../analytics/LMChatAnalytics';
-import {getChatroomType, getConversationType} from '../../utils/analyticsUtils';
-import {PERMISSIONS, check, request} from 'react-native-permissions';
+} from "react-native-gesture-handler";
+import LottieView from "lottie-react-native";
+import ReactNativeBlobUtil from "react-native-blob-util";
+import { generateAudioSet, generateVoiceNoteName } from "../../audio";
+import AudioRecorderPlayer from "react-native-audio-recorder-player";
+import { LINK_PREVIEW_REGEX } from "../../constants/Regex";
+import LinkPreviewInputBox from "../linkPreviewInputBox";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import {
+  getChatroomType,
+  getConversationType,
+} from "../../utils/analyticsUtils";
+import { PERMISSIONS, check, request } from "react-native-permissions";
 import {
   GiphyContentType,
   GiphyDialog,
   GiphyDialogEvent,
   GiphyDialogMediaSelectEventHandler,
   GiphyMedia,
-} from '@giphy/react-native-sdk';
-import {createThumbnail} from 'react-native-create-thumbnail';
+} from "@giphy/react-native-sdk";
+import { createThumbnail } from "react-native-create-thumbnail";
 import {
   LMChatIcon,
   LMChatLoader,
   LMChatTextInput,
   LMChatTextView,
-} from 'likeminds_chat_reactnative_ui';
+} from "likeminds_chat_reactnative_ui";
+import {
+  convertToMentionValues,
+  replaceMentionValues,
+} from "likeminds_chat_reactnative_ui/components/LMChatTextInput/utils";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
@@ -155,7 +157,7 @@ const InputBox = ({
   isPrivateMember,
   isDoc,
   myRef,
-  previousMessage = '',
+  previousMessage = "",
   handleFileUpload,
   isEditable,
   setIsEditable,
@@ -173,7 +175,7 @@ const InputBox = ({
   const [showEmoji, setShowEmoji] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [pollModalVisible, setPollModalVisible] = useState(false);
-  const [progressText, setProgressText] = useState('');
+  const [progressText, setProgressText] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [s3UploadResponse, setS3UploadResponse] = useState<any>();
   const [DMSentAlertModalVisible, setDMSentAlertModalVisible] = useState(false);
@@ -184,22 +186,22 @@ const InputBox = ({
   const [userTaggingList, setUserTaggingList] = useState<any>([]);
   const [userTaggingListHeight, setUserTaggingListHeight] = useState<any>(116);
   const [groupTags, setGroupTags] = useState<any>([]);
-  const [taggedUserName, setTaggedUserName] = useState('');
+  const [taggedUserName, setTaggedUserName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [voiceNotes, setVoiceNotes] = useState<VoiceNotesProps>({
     recordSecs: 0,
-    recordTime: '',
-    name: '',
+    recordTime: "",
+    name: "",
   });
   const [voiceNotesPlayer, setVoiceNotesPlayer] =
     useState<VoiceNotesPlayerProps>({
       currentPositionSec: 0,
       currentDurationSec: 0,
-      playTime: '',
-      duration: '',
+      playTime: "",
+      duration: "",
     });
-  const [voiceNotesLink, setVoiceNotesLink] = useState('');
+  const [voiceNotesLink, setVoiceNotesLink] = useState("");
   const [isVoiceResult, setIsVoiceResult] = useState(false);
   const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
   const [isVoiceNoteRecording, setIsVoiceNoteRecording] = useState(false);
@@ -210,18 +212,18 @@ const InputBox = ({
   const [isDeleteAnimation, setIsDeleteAnimation] = useState(false);
   const [isRecordingPermission, setIsRecordingPermission] = useState(false);
   const [isVoiceNoteIconPress, setIsVoiceNoteIconPress] = useState(false);
-  const {chatroomDBDetails}: any = useAppSelector(state => state.chatroom);
+  const { chatroomDBDetails }: any = useAppSelector((state) => state.chatroom);
 
   const [ogTagsState, setOgTagsState] = useState<any>({});
   const [closedOnce, setClosedOnce] = useState(false);
   const [showLinkPreview, setShowLinkPreview] = useState(true);
-  const [url, setUrl] = useState('');
+  const [url, setUrl] = useState("");
   const [closedPreview, setClosedPreview] = useState(false);
 
   const MAX_FILE_SIZE = 104857600; // 100MB in bytes
   const MAX_LENGTH = 300;
 
-  const isIOS = Platform.OS === 'ios' ? true : false;
+  const isIOS = Platform.OS === "ios" ? true : false;
 
   const taggedUserNames: any = [];
 
@@ -233,9 +235,9 @@ const InputBox = ({
     selectedFilesToUploadThumbnails = [],
     conversations = [],
     selectedMessages = [],
-  }: any = useAppSelector(state => state.chatroom);
-  const {myChatrooms, user, community}: any = useAppSelector(
-    state => state.homefeed,
+  }: any = useAppSelector((state) => state.chatroom);
+  const { myChatrooms, user, community }: any = useAppSelector(
+    (state) => state.homefeed
   );
   const {
     chatroomDetails,
@@ -243,9 +245,11 @@ const InputBox = ({
     replyMessage,
     editConversation,
     fileSent,
-  }: any = useAppSelector(state => state.chatroom);
+  }: any = useAppSelector((state) => state.chatroom);
 
-  const {uploadingFilesMessages}: any = useAppSelector(state => state.upload);
+  const { uploadingFilesMessages }: any = useAppSelector(
+    (state) => state.upload
+  );
   let isGroupTag = false;
 
   const dispatch = useAppDispatch();
@@ -272,38 +276,38 @@ const InputBox = ({
 
   // lock icon animation styles
   const lockAnimatedStyles = useAnimatedStyle(() => ({
-    transform: [{translateY: lockOffset.value}],
+    transform: [{ translateY: lockOffset.value }],
   }));
 
   // up chevron animated styles
   const upChevronAnimatedStyles = useAnimatedStyle(() => ({
-    transform: [{translateY: upChevronOffset.value}],
+    transform: [{ translateY: upChevronOffset.value }],
   }));
 
   // recorder mic icon animation effect
   useEffect(() => {
     micIconOpacity.value = withRepeat(
-      withTiming(0, {duration: 800, easing: Easing.inOut(Easing.ease)}),
+      withTiming(0, { duration: 800, easing: Easing.inOut(Easing.ease) }),
       -1, // Infinite repetition (-1)
-      true, // Reverse the animation direction after each iteration
+      true // Reverse the animation direction after each iteration
     );
   }, []);
 
   // lock icon animation useEffect
   useEffect(() => {
     lockOffset.value = withRepeat(
-      withTiming(-lockOffset.value, {duration: 800}),
+      withTiming(-lockOffset.value, { duration: 800 }),
       -1, // Infinite repetition (-1)
-      true, // Reverse the animation direction after each iteration
+      true // Reverse the animation direction after each iteration
     );
   }, []);
 
   // up chevron animation useEffect
   useEffect(() => {
     upChevronOffset.value = withRepeat(
-      withTiming(-upChevronOffset.value, {duration: 400}),
+      withTiming(-upChevronOffset.value, { duration: 400 }),
       -1,
-      true,
+      true
     );
   }, []);
 
@@ -346,9 +350,9 @@ const InputBox = ({
 
   // this method handles onUpdate callback of pan gesture
   const onUpdatePanGesture = (
-    event: GestureUpdateEvent<PanGestureHandlerEventPayload>,
+    event: GestureUpdateEvent<PanGestureHandlerEventPayload>
   ) => {
-    'worklet';
+    "worklet";
     if (isLongPressed.value) {
       if (Math.abs(x.value) >= 120) {
         x.value = withSpring(0);
@@ -384,7 +388,7 @@ const InputBox = ({
 
   // this method handles onEnd callback of pan gesture
   const onEndPanGesture = () => {
-    'worklet';
+    "worklet";
     if (
       (Math.abs(x.value) > 5 && Math.abs(x.value) < 120) ||
       (Math.abs(y.value) > 5 && Math.abs(y.value) < 100)
@@ -406,7 +410,7 @@ const InputBox = ({
     .onUpdate(onUpdatePanGesture)
     .onEnd(onEndPanGesture)
     .onFinalize(() => {
-      'worklet';
+      "worklet";
       pressed.value = false;
       isLongPressed.value = false;
       setIsLongPressedState(false);
@@ -429,7 +433,7 @@ const InputBox = ({
         {
           translateY: y.value,
         },
-        {scale: withTiming(isLongPressed.value ? 1.5 : 1)},
+        { scale: withTiming(isLongPressed.value ? 1.5 : 1) },
       ],
     };
   }, [x, y]);
@@ -442,23 +446,23 @@ const InputBox = ({
       const isAtLeastAndroid13 = atLeastAndroid13();
       if (isAtLeastAndroid13) {
         const isRecordAudioPermission = await PermissionsAndroid.check(
-          'android.permission.RECORD_AUDIO',
+          "android.permission.RECORD_AUDIO"
         );
         const isReadMediaAudioPermission = await PermissionsAndroid.check(
-          'android.permission.READ_MEDIA_AUDIO',
+          "android.permission.READ_MEDIA_AUDIO"
         );
         if (isRecordAudioPermission && isReadMediaAudioPermission) {
           setIsRecordingPermission(true);
         }
       } else {
         const isRecordAudioPermission = await PermissionsAndroid.check(
-          'android.permission.RECORD_AUDIO',
+          "android.permission.RECORD_AUDIO"
         );
         const isReadExternalStoragePermission = await PermissionsAndroid.check(
-          'android.permission.READ_EXTERNAL_STORAGE',
+          "android.permission.READ_EXTERNAL_STORAGE"
         );
         const isWriteExternalStoragePermission = await PermissionsAndroid.check(
-          'android.permission.WRITE_EXTERNAL_STORAGE',
+          "android.permission.WRITE_EXTERNAL_STORAGE"
         );
         if (
           isRecordAudioPermission &&
@@ -477,7 +481,7 @@ const InputBox = ({
       }
     }
 
-    if (Platform.OS === 'android') {
+    if (Platform.OS === "android") {
       checkAndroidPermission();
     } else {
       checkIosPermission();
@@ -487,8 +491,8 @@ const InputBox = ({
   // to clear message on ChatScreen InputBox when fileSent from UploadScreen
   useEffect(() => {
     if (!isUploadScreen) {
-      setMessage('');
-      setFormattedConversation('');
+      setMessage("");
+      setFormattedConversation("");
       setInputHeight(25);
     }
   }, [fileSent]);
@@ -506,13 +510,13 @@ const InputBox = ({
     if (isEditable) {
       const convertedText = convertToMentionValues(
         `${editConversation?.answer} `, // to put extra space after a message whwn we want to edit a message
-        ({URLwithID, name}) => {
+        ({ URLwithID, name }) => {
           if (!URLwithID) {
             return `@[${name}](${name})`;
           } else {
             return `@[${name}](${URLwithID})`;
           }
-        },
+        }
       );
       setMessage(convertedText);
     }
@@ -523,13 +527,13 @@ const InputBox = ({
     GiphyDialog.configure({
       mediaTypeConfig: [GiphyContentType.Recents, GiphyContentType.Gif],
     });
-    const handler: GiphyDialogMediaSelectEventHandler = e => {
+    const handler: GiphyDialogMediaSelectEventHandler = (e) => {
       selectGIF(e.media, message);
       GiphyDialog.hide();
     };
     const listener = GiphyDialog.addListener(
       GiphyDialogEvent.MediaSelected,
-      handler,
+      handler
     );
     return () => {
       listener.remove();
@@ -563,11 +567,11 @@ const InputBox = ({
         await handleVideoThumbnail(selectedImages);
         dispatch({
           type: SELECTED_FILE_TO_VIEW,
-          body: {image: selectedImages[0]},
+          body: { image: selectedImages[0] },
         });
         dispatch({
           type: STATUS_BAR_STYLE,
-          body: {color: STYLES.$STATUS_BAR_STYLE['light-content']},
+          body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
         });
       } else {
         // to select more images and videos on FileUpload screen (isUploadScreen === true)
@@ -597,7 +601,7 @@ const InputBox = ({
   //select Images and videoes From Gallery
   const selectGallery = async () => {
     const options: LaunchActivityProps = {
-      mediaType: 'mixed',
+      mediaType: "mixed",
       selectionLimit: 0,
     };
     navigation.navigate(FILE_UPLOAD, {
@@ -622,7 +626,7 @@ const InputBox = ({
           if (Number(fileSize) >= MAX_FILE_SIZE) {
             dispatch({
               type: SHOW_TOAST,
-              body: {isToast: true, msg: 'Files above 100 MB is not allowed'},
+              body: { isToast: true, msg: "Files above 100 MB is not allowed" },
             });
             navigation.goBack();
             return;
@@ -651,7 +655,7 @@ const InputBox = ({
           if (selectedDocs[i].size >= MAX_FILE_SIZE) {
             dispatch({
               type: SHOW_TOAST,
-              body: {isToast: true, msg: 'Files above 100 MB is not allowed'},
+              body: { isToast: true, msg: "Files above 100 MB is not allowed" },
             });
             navigation.goBack();
             return;
@@ -671,43 +675,43 @@ const InputBox = ({
           //redux action to save thumbnails for bottom horizontal scroll list in fileUpload, it does not need to have complete pdf, only thumbnail is fine
           dispatch({
             type: SELECTED_FILES_TO_UPLOAD_THUMBNAILS,
-            body: {images: allThumbnailsArr},
+            body: { images: allThumbnailsArr },
           });
 
           //redux action to save thumbnails along with pdf to send and view on fileUpload screen
           dispatch({
             type: SELECTED_FILES_TO_UPLOAD,
-            body: {images: selectedDocs},
+            body: { images: selectedDocs },
           });
           const res: any = await getPdfThumbnail(selectedDocs[0]);
 
           //redux action to save thumbnail of selected file
           dispatch({
             type: SELECTED_FILE_TO_VIEW,
-            body: {image: {...selectedDocs[0], thumbnailUrl: res[0]?.uri}},
+            body: { image: { ...selectedDocs[0], thumbnailUrl: res[0]?.uri } },
           });
 
           //redux action to change status bar color
           dispatch({
             type: STATUS_BAR_STYLE,
-            body: {color: STYLES.$STATUS_BAR_STYLE['light-content']},
+            body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
           });
         } else if (isUploadScreen === true) {
           const arr: any = await getAllPdfThumbnail(selectedDocs);
           for (let i = 0; i < selectedDocs?.length; i++) {
-            selectedDocs[i] = {...selectedDocs[i], thumbnailUrl: arr[i]?.uri};
+            selectedDocs[i] = { ...selectedDocs[i], thumbnailUrl: arr[i]?.uri };
           }
 
           //redux action to select more files to upload
           dispatch({
             type: SELECTED_MORE_FILES_TO_UPLOAD,
-            body: {images: selectedDocs},
+            body: { images: selectedDocs },
           });
 
           //redux action to save thumbnail of selected files. It saves thumbnail as URI only not as thumbnail property
           dispatch({
             type: SELECTED_FILES_TO_UPLOAD_THUMBNAILS,
-            body: {images: [...selectedFilesToUploadThumbnails, ...arr]},
+            body: { images: [...selectedFilesToUploadThumbnails, ...arr] },
           });
         }
       }
@@ -721,7 +725,7 @@ const InputBox = ({
   const openCamera = async () => {
     try {
       const options: LaunchActivityProps = {
-        mediaType: 'photo',
+        mediaType: "photo",
         selectionLimit: 0,
       };
       navigation.navigate(FILE_UPLOAD, {
@@ -746,7 +750,10 @@ const InputBox = ({
             if (Number(fileSize) >= MAX_FILE_SIZE) {
               dispatch({
                 type: SHOW_TOAST,
-                body: {isToast: true, msg: 'Files above 100 MB is not allowed'},
+                body: {
+                  isToast: true,
+                  msg: "Files above 100 MB is not allowed",
+                },
               });
               navigation.goBack();
               return;
@@ -763,7 +770,7 @@ const InputBox = ({
   };
 
   const selectGIF = async (gif: GiphyMedia, message: string) => {
-    const item = {...gif, thumbnailUrl: ''};
+    const item = { ...gif, thumbnailUrl: "" };
 
     navigation.navigate(FILE_UPLOAD, {
       chatroomID: chatroomID,
@@ -774,12 +781,12 @@ const InputBox = ({
       url: gif?.data?.images?.fixed_width?.mp4,
       timeStamp: 10000,
     })
-      .then(response => {
+      .then((response) => {
         item.thumbnailUrl = response?.path;
 
         dispatch({
           type: SELECTED_FILE_TO_VIEW,
-          body: {image: item},
+          body: { image: item },
         });
         dispatch({
           type: SELECTED_FILES_TO_UPLOAD,
@@ -789,10 +796,10 @@ const InputBox = ({
         });
         dispatch({
           type: STATUS_BAR_STYLE,
-          body: {color: STYLES.$STATUS_BAR_STYLE['light-content']},
+          body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
         });
       })
-      .catch(err => {});
+      .catch((err) => {});
   };
 
   const handleModalClose = () => {
@@ -800,10 +807,10 @@ const InputBox = ({
   };
 
   useEffect(() => {
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+    const showSubscription = Keyboard.addListener("keyboardDidShow", () => {
       setIsKeyBoardFocused(true);
     });
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+    const hideSubscription = Keyboard.addListener("keyboardDidHide", () => {
       setIsKeyBoardFocused(false);
     });
 
@@ -865,32 +872,32 @@ const InputBox = ({
   const onSend = async (
     conversation: string,
     voiceNote?: any,
-    isSendWhileVoiceNoteRecorderPlayerRunning?: boolean,
+    isSendWhileVoiceNoteRecorderPlayerRunning?: boolean
   ) => {
     setClosedPreview(true);
     setShowLinkPreview(false);
-    setMessage('');
+    setMessage("");
     setInputHeight(25);
     setIsVoiceResult(false);
     setVoiceNotes({
       recordSecs: 0,
-      recordTime: '',
-      name: '',
+      recordTime: "",
+      name: "",
     });
     // -- Code for local message handling for normal and reply for now
     const months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sep',
-      'Oct',
-      'Nov',
-      'Dec',
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
     ];
     const time = new Date(Date.now());
     const hr = time.getHours();
@@ -908,8 +915,8 @@ const InputBox = ({
     // for making data for `images`, `videos` and `pdf` key
     if (attachmentsCount > 0) {
       for (let i = 0; i < attachmentsCount; i++) {
-        const attachmentType = selectedFilesToUpload[i]?.type?.split('/')[0];
-        const docAttachmentType = selectedFilesToUpload[i]?.type?.split('/')[1];
+        const attachmentType = selectedFilesToUpload[i]?.type?.split("/")[0];
+        const docAttachmentType = selectedFilesToUpload[i]?.type?.split("/")[1];
         if (attachmentType === IMAGE_TEXT) {
           const obj = {
             imageUrl: selectedFilesToUpload[i].uri,
@@ -938,8 +945,8 @@ const InputBox = ({
       for (let i = 0; i < attachmentsCount; i++) {
         const attachmentType = selectedFilesToUpload[i]?.data?.type
           ? selectedFilesToUpload[i]?.data?.type
-          : selectedFilesToUpload[i]?.type?.split('/')[0];
-        const docAttachmentType = selectedFilesToUpload[i]?.type?.split('/')[1];
+          : selectedFilesToUpload[i]?.type?.split("/")[0];
+        const docAttachmentType = selectedFilesToUpload[i]?.type?.split("/")[1];
         const audioAttachmentType = voiceNotesToUpload[i]?.type;
         const audioURI = voiceNotesToUpload[i]?.uri;
         const URI = selectedFilesToUpload[i]?.uri;
@@ -999,7 +1006,7 @@ const InputBox = ({
 
     const conversationText = replaceMentionValues(
       conversation,
-      ({id, name}) => {
+      ({ id, name }) => {
         // example ID = `user_profile/8619d45e-9c4c-4730-af8e-4099fe3dcc4b`
         const PATH = extractPathfromRouteQuery(id);
         if (!PATH) {
@@ -1011,7 +1018,7 @@ const InputBox = ({
           taggedUserNames.push(name);
           return `<<${name}|route://${id}>>`;
         }
-      },
+      }
     );
 
     const isMessageTrimmed =
@@ -1030,10 +1037,10 @@ const InputBox = ({
         replyObj.member.sdkClientInfo = user?.sdkClientInfo;
         replyObj.member.uuid = user?.uuid;
         replyObj.answer = conversationText?.trim()?.toString();
-        replyObj.createdAt = `${hr.toLocaleString('en-US', {
+        replyObj.createdAt = `${hr.toLocaleString("en-US", {
           minimumIntegerDigits: 2,
           useGrouping: false,
-        })}:${min.toLocaleString('en-US', {
+        })}:${min.toLocaleString("en-US", {
           minimumIntegerDigits: 2,
           useGrouping: false,
         })}`;
@@ -1065,10 +1072,10 @@ const InputBox = ({
       obj.member.sdkClientInfo = user?.sdkClientInfo;
       obj.member.uuid = user?.uuid;
       obj.answer = conversationText?.trim()?.toString();
-      obj.createdAt = `${hr.toLocaleString('en-US', {
+      obj.createdAt = `${hr.toLocaleString("en-US", {
         minimumIntegerDigits: 2,
         useGrouping: false,
-      })}:${min.toLocaleString('en-US', {
+      })}:${min.toLocaleString("en-US", {
         minimumIntegerDigits: 2,
         useGrouping: false,
       })}`;
@@ -1092,13 +1099,13 @@ const InputBox = ({
       dispatch({
         type: UPDATE_CONVERSATIONS,
         body: isReply
-          ? {obj: {...replyObj, isInProgress: SUCCESS}}
-          : {obj: {...obj, isInProgress: SUCCESS}},
+          ? { obj: { ...replyObj, isInProgress: SUCCESS } }
+          : { obj: { ...obj, isInProgress: SUCCESS } },
       });
 
       dispatch({
         type: MESSAGE_SENT,
-        body: isReply ? {id: replyObj?.id} : {id: obj?.id},
+        body: isReply ? { id: replyObj?.id } : { id: obj?.id },
       });
 
       if (
@@ -1107,23 +1114,23 @@ const InputBox = ({
       ) {
         if (isReply) {
           if (attachmentsCount > 0) {
-            const editedReplyObj = {...replyObj, isInProgress: SUCCESS};
+            const editedReplyObj = { ...replyObj, isInProgress: SUCCESS };
             await myClient?.saveNewConversation(
               chatroomID?.toString(),
-              editedReplyObj,
+              editedReplyObj
             );
           } else {
             await myClient?.saveNewConversation(
               chatroomID?.toString(),
-              replyObj,
+              replyObj
             );
           }
         } else {
           if (attachmentsCount > 0) {
-            const editedObj = {...obj, isInProgress: SUCCESS};
+            const editedObj = { ...obj, isInProgress: SUCCESS };
             await myClient?.saveNewConversation(
               chatroomID?.toString(),
-              editedObj,
+              editedObj
             );
           } else {
             await myClient?.saveNewConversation(chatroomID?.toString(), obj);
@@ -1141,8 +1148,8 @@ const InputBox = ({
       }
 
       if (isReply) {
-        dispatch({type: SET_IS_REPLY, body: {isReply: false}});
-        dispatch({type: SET_REPLY_MESSAGE, body: {replyMessage: ''}});
+        dispatch({ type: SET_IS_REPLY, body: { isReply: false } });
+        dispatch({ type: SET_REPLY_MESSAGE, body: { replyMessage: "" } });
       }
 
       // -- Code for local message handling ended
@@ -1160,21 +1167,21 @@ const InputBox = ({
 
         dispatch({
           type: SHOW_TOAST,
-          body: {isToast: true, msg: 'Direct messaging request sent'},
+          body: { isToast: true, msg: "Direct messaging request sent" },
         });
 
         //dispatching redux action for local handling of chatRequestState
         dispatch({
           type: UPDATE_CHAT_REQUEST_STATE,
-          body: {chatRequestState: ChatroomChatRequestState.INITIATED},
+          body: { chatRequestState: ChatroomChatRequestState.INITIATED },
         });
         await myClient?.saveNewConversation(
           chatroomID?.toString(),
-          response?.data?.conversation,
+          response?.data?.conversation
         );
         await myClient?.updateChatRequestState(
           chatroomID?.toString(),
-          ChatroomChatRequestState.INITIATED,
+          ChatroomChatRequestState.INITIATED
         );
       } else if (
         chatroomType === ChatroomType.DMCHATROOM && // if DM
@@ -1189,15 +1196,15 @@ const InputBox = ({
 
         dispatch({
           type: UPDATE_CHAT_REQUEST_STATE,
-          body: {chatRequestState: ChatroomChatRequestState.ACCEPTED},
+          body: { chatRequestState: ChatroomChatRequestState.ACCEPTED },
         });
         await myClient?.saveNewConversation(
           chatroomID?.toString(),
-          response?.data?.conversation,
+          response?.data?.conversation
         );
         await myClient?.updateChatRequestState(
           chatroomID?.toString(),
-          ChatroomChatRequestState.ACCEPTED,
+          ChatroomChatRequestState.ACCEPTED
         );
       } else {
         if (!isUploadScreen) {
@@ -1221,7 +1228,7 @@ const InputBox = ({
           }
 
           const response = await dispatch(
-            onConversationsCreate(payload) as any,
+            onConversationsCreate(payload) as any
           );
 
           if (response) {
@@ -1281,7 +1288,7 @@ const InputBox = ({
 
             await myClient?.saveAttachmentUploadConversation(
               id.toString(),
-              JSON.stringify(message),
+              JSON.stringify(message)
             );
 
             if (voiceNotesToUpload?.length > 0) {
@@ -1289,7 +1296,7 @@ const InputBox = ({
                 response?.id,
                 false,
                 true,
-                voiceNotesToUpload,
+                voiceNotesToUpload
               );
             } else {
               await handleFileUpload(response?.id, false);
@@ -1298,7 +1305,7 @@ const InputBox = ({
         } else {
           dispatch({
             type: FILE_SENT,
-            body: {status: !fileSent},
+            body: { status: !fileSent },
           });
           navigation.goBack();
           const payload: any = {
@@ -1321,7 +1328,7 @@ const InputBox = ({
           }
 
           const response = await dispatch(
-            onConversationsCreate(payload) as any,
+            onConversationsCreate(payload) as any
           );
 
           await myClient?.replaceSavedConversation(response?.conversation);
@@ -1331,7 +1338,7 @@ const InputBox = ({
               type: SHOW_TOAST,
               body: {
                 isToast: true,
-                msg: 'Message not sent. Please check your internet connection',
+                msg: "Message not sent. Please check your internet connection",
               },
             });
           } else if (response) {
@@ -1373,14 +1380,14 @@ const InputBox = ({
 
             await myClient?.saveAttachmentUploadConversation(
               id?.toString(),
-              JSON.stringify(message),
+              JSON.stringify(message)
             );
 
             await handleFileUpload(response?.id, false);
           }
           dispatch({
             type: STATUS_BAR_STYLE,
-            body: {color: STYLES.$STATUS_BAR_STYLE.default},
+            body: { color: STYLES.$STATUS_BAR_STYLE.default },
           });
         }
       }
@@ -1397,28 +1404,33 @@ const InputBox = ({
             Keys.CHATROOM_TYPE,
             getChatroomType(
               chatroomDBDetails?.type?.toString(),
-              chatroomDBDetails?.isSecret,
+              chatroomDBDetails?.isSecret
             ),
           ],
           [Keys.COMMUNITY_ID, user?.sdkClientInfo?.community?.toString()],
           [Keys.CHATROOM_NAME, chatroomName?.toString()],
           [Keys.CHATROOM_LAST_CONVERSATION_TYPE, selectedType?.toString()],
-          ['count_tagged_users', taggedUserNames?.length?.toString()],
-          ['name_tagged_users', taggedUserNames?.toString()],
-          ['is_group_tag', isGroupTag?.toString()],
-        ]),
+          ["count_tagged_users", taggedUserNames?.length?.toString()],
+          ["name_tagged_users", taggedUserNames?.toString()],
+          ["is_group_tag", isGroupTag?.toString()],
+        ])
       );
     }
 
-    dispatch({type: CLEAR_SELECTED_VOICE_NOTE_FILES_TO_UPLOAD});
+    dispatch({ type: CLEAR_SELECTED_VOICE_NOTE_FILES_TO_UPLOAD });
     setIsRecordingLocked(false);
     setOgTagsState({});
-    setUrl('');
+    setUrl("");
     setClosedOnce(false);
     setClosedPreview(false);
   };
 
-  const taggingAPI = async ({page, searchName, chatroomId, isSecret}: any) => {
+  const taggingAPI = async ({
+    page,
+    searchName,
+    chatroomId,
+    isSecret,
+  }: any) => {
     const res = await myClient?.getTaggingList({
       page: page,
       pageSize: 10,
@@ -1462,7 +1474,7 @@ const InputBox = ({
   //pagination loader in the footer
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{paddingVertical: 20}}>
+      <View style={{ paddingVertical: 20 }}>
         <LMChatLoader color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;
@@ -1582,7 +1594,7 @@ const InputBox = ({
     const previousConversation = selectedConversation;
 
     let changedConversation;
-    const conversationText = replaceMentionValues(message, ({id, name}) => {
+    const conversationText = replaceMentionValues(message, ({ id, name }) => {
       // example ID = `user_profile/8619d45e-9c4c-4730-af8e-4099fe3dcc4b`
       const PATH = extractPathfromRouteQuery(id);
       if (!PATH) {
@@ -1610,7 +1622,7 @@ const InputBox = ({
     dispatch({
       type: SET_EDIT_MESSAGE,
       body: {
-        editConversation: '',
+        editConversation: "",
       },
     });
 
@@ -1628,9 +1640,9 @@ const InputBox = ({
         },
       });
     }
-    dispatch({type: SELECTED_MESSAGES, body: []});
-    dispatch({type: LONG_PRESSED, body: false});
-    setMessage('');
+    dispatch({ type: SELECTED_MESSAGES, body: [] });
+    dispatch({ type: LONG_PRESSED, body: false });
+    setMessage("");
     setInputHeight(25);
     setIsEditable(false);
 
@@ -1643,7 +1655,7 @@ const InputBox = ({
     if (currentChatroomTopic) {
       editConversationResponse = await myClient?.editConversation(
         payload,
-        currentChatroomTopic,
+        currentChatroomTopic
       );
     } else {
       editConversationResponse = await myClient?.editConversation(payload);
@@ -1658,14 +1670,14 @@ const InputBox = ({
     }
     await myClient?.updateConversation(
       conversationId?.toString(),
-      editConversationResponse?.data?.conversation,
+      editConversationResponse?.data?.conversation
     );
     LMChatAnalytics.track(
       Events.MESSAGE_EDITED,
       new Map<string, string>([
         [Keys.TYPE, getConversationType(selectedConversation)],
         [Keys.DESCRIPTION_UPDATED, false?.toString()],
-      ]),
+      ])
     );
   };
 
@@ -1687,17 +1699,17 @@ const InputBox = ({
 
       const name = generateVoiceNoteName();
       const path =
-        Platform.OS === 'android'
+        Platform.OS === "android"
           ? `${ReactNativeBlobUtil.fs.dirs.CacheDir}/${name}.mp3`
           : `${name}.m4a`;
 
       const result = await audioRecorderPlayerAttachment.startRecorder(
         path,
-        audioSet,
+        audioSet
       );
       setIsVoiceNoteRecording(true);
       setVoiceNotesLink(result);
-      audioRecorderPlayerAttachment.addRecordBackListener(e => {
+      audioRecorderPlayerAttachment.addRecordBackListener((e) => {
         const seconds = Math.floor(e.currentPosition / 1000);
         if (seconds >= 900) {
           setStopRecording(!stopRecording);
@@ -1724,7 +1736,7 @@ const InputBox = ({
       const voiceNote = {
         uri: voiceNotesLink,
         type: VOICE_NOTE_TEXT,
-        name: `${voiceNotes.name}.${isIOS ? 'm4a' : 'mp3'}`,
+        name: `${voiceNotes.name}.${isIOS ? "m4a" : "mp3"}`,
         duration: Math.floor(voiceNotes.recordSecs / 1000),
       };
       dispatch({
@@ -1741,7 +1753,7 @@ const InputBox = ({
         new Map<string, string>([
           [Keys.CHATROOM_TYPE, chatroomType?.toString()],
           [Keys.CHATROOM_ID, chatroomID?.toString()],
-        ]),
+        ])
       );
     }
   };
@@ -1764,16 +1776,16 @@ const InputBox = ({
     }
     setVoiceNotes({
       recordSecs: 0,
-      recordTime: '',
-      name: '',
+      recordTime: "",
+      name: "",
     });
     setVoiceNotesPlayer({
       currentPositionSec: 0,
       currentDurationSec: 0,
-      playTime: '',
-      duration: '',
+      playTime: "",
+      duration: "",
     });
-    setVoiceNotesLink('');
+    setVoiceNotesLink("");
     setIsRecordingLocked(false);
 
     dispatch({
@@ -1788,19 +1800,19 @@ const InputBox = ({
       new Map<string, string>([
         [Keys.CHATROOM_TYPE, chatroomType?.toString()],
         [Keys.CHATROOM_ID, chatroomID?.toString()],
-      ]),
+      ])
     );
   };
 
   // to start playing audio recording
   const startPlay = async (path: string) => {
     await audioRecorderPlayerAttachment.startPlayer(path);
-    audioRecorderPlayerAttachment.addPlayBackListener(e => {
+    audioRecorderPlayerAttachment.addPlayBackListener((e) => {
       const playTime = audioRecorderPlayerAttachment.mmssss(
-        Math.floor(e.currentPosition),
+        Math.floor(e.currentPosition)
       );
       const duration = audioRecorderPlayerAttachment.mmssss(
-        Math.floor(e.duration),
+        Math.floor(e.duration)
       );
       setVoiceNotesPlayer({
         currentPositionSec: e.currentPosition,
@@ -1819,8 +1831,8 @@ const InputBox = ({
         setVoiceNotesPlayer({
           currentPositionSec: 0,
           currentDurationSec: 0,
-          playTime: '',
-          duration: '',
+          playTime: "",
+          duration: "",
         });
       }
       return;
@@ -1831,7 +1843,7 @@ const InputBox = ({
       new Map<string, string>([
         [Keys.CHATROOM_TYPE, chatroomType?.toString()],
         [Keys.CHATROOM_ID, chatroomID?.toString()],
-      ]),
+      ])
     );
     setIsVoiceNotePlaying(true);
   };
@@ -1881,8 +1893,11 @@ const InputBox = ({
         <View
           style={[
             styles.tapAndHold,
-            {bottom: isKeyBoardFocused ? (isIOS ? 65 : 110) : isIOS ? 80 : 70},
-          ]}>
+            {
+              bottom: isKeyBoardFocused ? (isIOS ? 65 : 110) : isIOS ? 80 : 70,
+            },
+          ]}
+        >
           <LMChatTextView textStyle={styles.tapAndHoldStyle}>
             {TAP_AND_HOLD}
           </LMChatTextView>
@@ -1895,7 +1910,7 @@ const InputBox = ({
           !isUploadScreen
             ? {
                 marginBottom: isKeyBoardFocused
-                  ? Platform.OS === 'android'
+                  ? Platform.OS === "android"
                     ? 45
                     : 5
                   : isIOS
@@ -1903,7 +1918,8 @@ const InputBox = ({
                   : 5,
               }
             : null,
-        ]}>
+        ]}
+      >
         <View
           style={
             (isReply && !isUploadScreen) ||
@@ -1919,23 +1935,25 @@ const InputBox = ({
                       isReply && !isUploadScreen && !isUserTagging ? 10 : 20,
                     borderTopRightRadius:
                       isReply && !isUploadScreen && !isUserTagging ? 10 : 20,
-                    backgroundColor: isUploadScreen ? 'black' : 'white',
+                    backgroundColor: isUploadScreen ? "black" : "white",
                   },
                 ]
               : null
-          }>
+          }
+        >
           {userTaggingList && isUserTagging ? (
             <View
               style={[
                 styles.taggableUsersBox,
                 {
-                  backgroundColor: isUploadScreen ? 'black' : 'white',
+                  backgroundColor: isUploadScreen ? "black" : "white",
                   height: userTaggingListHeight,
                 },
-              ]}>
+              ]}
+            >
               <FlashList
                 data={[...groupTags, ...userTaggingList]}
-                renderItem={({item, index}: any) => {
+                renderItem={({ item, index }: any) => {
                   const description = item?.description;
                   const imageUrl = item?.imageUrl;
                   return (
@@ -1946,7 +1964,7 @@ const InputBox = ({
                           message,
                           taggedUserName,
                           item?.name,
-                          uuid ? `user_profile/${uuid}` : uuid,
+                          uuid ? `user_profile/${uuid}` : uuid
                         );
                         setMessage(res);
                         setFormattedConversation(res);
@@ -1954,7 +1972,8 @@ const InputBox = ({
                         setGroupTags([]);
                         setIsUserTagging(false);
                       }}
-                      style={styles.taggableUserView}>
+                      style={styles.taggableUserView}
+                    >
                       {imageUrl ? (
                         <LMChatIcon
                           type="png"
@@ -1964,7 +1983,7 @@ const InputBox = ({
                       ) : (
                         <LMChatIcon
                           type="png"
-                          assetPath={require('../../assets/images/default_pic.png')}
+                          assetPath={require("../../assets/images/default_pic.png")}
                           iconStyle={styles.avatar}
                         />
                       )}
@@ -1975,7 +1994,8 @@ const InputBox = ({
                             borderBottomWidth: 0.2,
                             gap: isIOS ? 5 : 0,
                           },
-                        ]}>
+                        ]}
+                      >
                         <LMChatTextView
                           textStyle={{
                             ...styles.title,
@@ -1983,7 +2003,8 @@ const InputBox = ({
                               ? STYLES.$COLORS.TERTIARY
                               : STYLES.$COLORS.PRIMARY,
                           }}
-                          maxLines={1}>
+                          maxLines={1}
+                        >
                           {item?.name}
                         </LMChatTextView>
                         {description ? (
@@ -1994,7 +2015,8 @@ const InputBox = ({
                                 ? STYLES.$COLORS.TERTIARY
                                 : STYLES.$COLORS.PRIMARY,
                             }}
-                            maxLines={1}>
+                            maxLines={1}
+                          >
                             {description}
                           </LMChatTextView>
                         ) : null}
@@ -2006,7 +2028,7 @@ const InputBox = ({
                   value: [message, userTaggingList],
                 }}
                 estimatedItemSize={15}
-                keyboardShouldPersistTaps={'handled'}
+                keyboardShouldPersistTaps={"handled"}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={1}
                 bounces={false}
@@ -2027,16 +2049,17 @@ const InputBox = ({
               />
               <TouchableOpacity
                 onPress={() => {
-                  dispatch({type: SET_IS_REPLY, body: {isReply: false}});
+                  dispatch({ type: SET_IS_REPLY, body: { isReply: false } });
                   dispatch({
                     type: SET_REPLY_MESSAGE,
-                    body: {replyMessage: ''},
+                    body: { replyMessage: "" },
                   });
                 }}
-                style={styles.replyBoxClose}>
+                style={styles.replyBoxClose}
+              >
                 <LMChatIcon
                   type="png"
-                  assetPath={require('../../assets/images/close_icon.png')}
+                  assetPath={require("../../assets/images/close_icon.png")}
                   iconStyle={styles.replyCloseImg}
                 />
               </TouchableOpacity>
@@ -2050,9 +2073,10 @@ const InputBox = ({
               style={[
                 styles.taggableUsersBox,
                 {
-                  backgroundColor: isUploadScreen ? 'black' : 'white',
+                  backgroundColor: isUploadScreen ? "black" : "white",
                 },
-              ]}>
+              ]}
+            >
               <LinkPreviewInputBox ogTags={ogTagsState} />
               <TouchableOpacity
                 onPress={() => {
@@ -2060,10 +2084,11 @@ const InputBox = ({
                   setClosedOnce(true);
                   setClosedPreview(true);
                 }}
-                style={styles.replyBoxClose}>
+                style={styles.replyBoxClose}
+              >
                 <LMChatIcon
                   type="png"
-                  assetPath={require('../../assets/images/close_icon.png')}
+                  assetPath={require("../../assets/images/close_icon.png")}
                   iconStyle={styles.replyCloseImg}
                 />
               </TouchableOpacity>
@@ -2080,11 +2105,11 @@ const InputBox = ({
               <TouchableOpacity
                 onPress={() => {
                   setIsEditable(false);
-                  setMessage('');
+                  setMessage("");
                   dispatch({
                     type: SET_EDIT_MESSAGE,
                     body: {
-                      editConversation: '',
+                      editConversation: "",
                     },
                   });
                   dispatch({
@@ -2092,10 +2117,11 @@ const InputBox = ({
                     body: [],
                   });
                 }}
-                style={styles.replyBoxClose}>
+                style={styles.replyBoxClose}
+              >
                 <LMChatIcon
                   type="png"
-                  assetPath={require('../../assets/images/close_icon.png')}
+                  assetPath={require("../../assets/images/close_icon.png")}
                   iconStyle={styles.replyCloseImg}
                 />
               </TouchableOpacity>
@@ -2117,16 +2143,18 @@ const InputBox = ({
                     margin: isIOS ? 0 : 2,
                   }
                 : null,
-            ]}>
+            ]}
+          >
             {!!isUploadScreen && !isDoc && !isGif ? (
               <TouchableOpacity
                 style={styles.addMoreButton}
                 onPress={() => {
                   selectGallery();
-                }}>
+                }}
+              >
                 <LMChatIcon
                   type="png"
-                  assetPath={require('../../assets/images/addImages3x.png')}
+                  assetPath={require("../../assets/images/addImages3x.png")}
                   iconStyle={styles.emoji}
                 />
               </TouchableOpacity>
@@ -2135,10 +2163,11 @@ const InputBox = ({
                 style={styles.addMoreButton}
                 onPress={() => {
                   selectDoc();
-                }}>
+                }}
+              >
                 <LMChatIcon
                   type="png"
-                  assetPath={require('../../assets/images/add_more_docs3x.png')}
+                  assetPath={require("../../assets/images/add_more_docs3x.png")}
                   iconStyle={styles.emoji}
                 />
               </TouchableOpacity>
@@ -2156,11 +2185,12 @@ const InputBox = ({
                     marginVertical: 0,
                     marginHorizontal: 10,
                   },
-                ]}>
+                ]}
+              >
                 <View style={styles.alignItems}>
                   <LottieView
-                    source={require('../../assets/lottieJSON/delete.json')}
-                    style={{height: 40, width: 40}}
+                    source={require("../../assets/lottieJSON/delete.json")}
+                    style={{ height: 40, width: 40 }}
                     autoPlay
                     // loop
                   />
@@ -2171,12 +2201,13 @@ const InputBox = ({
                 style={[
                   styles.voiceNotesInputParent,
                   styles.voiceRecorderInput,
-                ]}>
+                ]}
+              >
                 <View style={styles.alignItems}>
-                  <Animated.View style={[{opacity: micIconOpacity}]}>
+                  <Animated.View style={[{ opacity: micIconOpacity }]}>
                     <LMChatIcon
                       type="png"
-                      assetPath={require('../../assets/images/record_icon3x.png')}
+                      assetPath={require("../../assets/images/record_icon3x.png")}
                       iconStyle={styles.emoji}
                     />
                   </Animated.View>
@@ -2189,14 +2220,14 @@ const InputBox = ({
                     <TouchableOpacity onPress={handleStopRecord}>
                       <LMChatIcon
                         type="png"
-                        assetPath={require('../../assets/images/stop_recording_icon3x.png')}
+                        assetPath={require("../../assets/images/stop_recording_icon3x.png")}
                         iconStyle={styles.emoji}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={clearVoiceRecord}>
                       <LMChatIcon
                         type="png"
-                        assetPath={require('../../assets/images/cross_circle_icon3x.png')}
+                        assetPath={require("../../assets/images/cross_circle_icon3x.png")}
                         iconStyle={styles.emoji}
                       />
                     </TouchableOpacity>
@@ -2205,7 +2236,7 @@ const InputBox = ({
                   <View style={styles.alignItems}>
                     <LMChatIcon
                       type="png"
-                      assetPath={require('../../assets/images/left_chevron_icon3x.png')}
+                      assetPath={require("../../assets/images/left_chevron_icon3x.png")}
                       iconStyle={styles.chevron}
                     />
                     <LMChatTextView textStyle={styles.recordTitle}>
@@ -2219,31 +2250,34 @@ const InputBox = ({
                 style={[
                   styles.voiceNotesInputParent,
                   styles.voiceRecorderInput,
-                ]}>
+                ]}
+              >
                 <View style={styles.alignItems}>
                   {isVoiceNotePlaying ? (
                     <TouchableOpacity
                       onPress={() => {
                         onPausePlay();
-                      }}>
+                      }}
+                    >
                       <LMChatIcon
                         type="png"
-                        assetPath={require('../../assets/images/pause_icon3x.png')}
+                        assetPath={require("../../assets/images/pause_icon3x.png")}
                         iconStyle={styles.emoji}
                       />
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity
                       onPress={() => {
-                        if (voiceNotesPlayer?.playTime !== '') {
+                        if (voiceNotesPlayer?.playTime !== "") {
                           onResumePlay();
                         } else {
                           startPlay(voiceNotesLink);
                         }
-                      }}>
+                      }}
+                    >
                       <LMChatIcon
                         type="png"
-                        assetPath={require('../../assets/images/play_icon3x.png')}
+                        assetPath={require("../../assets/images/play_icon3x.png")}
                         iconStyle={styles.emoji}
                       />
                     </TouchableOpacity>
@@ -2260,10 +2294,11 @@ const InputBox = ({
                 </View>
                 <TouchableOpacity
                   onPress={clearVoiceRecord}
-                  style={styles.alignItems}>
+                  style={styles.alignItems}
+                >
                   <LMChatIcon
                     type="png"
-                    assetPath={require('../../assets/images/cross_circle_icon3x.png')}
+                    assetPath={require("../../assets/images/cross_circle_icon3x.png")}
                     iconStyle={styles.emoji}
                   />
                 </TouchableOpacity>
@@ -2276,8 +2311,9 @@ const InputBox = ({
                     ? {
                         marginHorizontal: 5,
                       }
-                    : {marginHorizontal: 15},
-                ]}>
+                    : { marginHorizontal: 15 },
+                ]}
+              >
                 {!isUploadScreen &&
                 !(
                   chatRequestState === ChatroomChatRequestState.INITIATED ||
@@ -2288,7 +2324,8 @@ const InputBox = ({
                 !isDeleteAnimation ? (
                   <TouchableOpacity
                     style={styles.gifView}
-                    onPress={() => GiphyDialog.show()}>
+                    onPress={() => GiphyDialog.show()}
+                  >
                     <LMChatTextView textStyle={styles.gifText}>
                       {CAPITAL_GIF_TEXT}
                     </LMChatTextView>
@@ -2309,7 +2346,7 @@ const InputBox = ({
                     // borderRadius: 50,
                     // paddingLeft: 10,
                   }}
-                  onContentSizeChange={event => {
+                  onContentSizeChange={(event) => {
                     setInputHeight(event.nativeEvent.contentSize.height);
                   }}
                   multilineField
@@ -2319,9 +2356,9 @@ const InputBox = ({
                   selectionColor="red"
                   partTypes={[
                     {
-                      trigger: '@',
+                      trigger: "@",
                       textStyle: {
-                        color: '#007AFF',
+                        color: "#007AFF",
                       }, // The mention style in the input
                     },
                   ]}
@@ -2381,14 +2418,15 @@ const InputBox = ({
             !voiceNotes?.recordTime &&
             !isDeleteAnimation ? (
               <TouchableOpacity
-                style={[styles.emojiButton, {marginLeft: 15}]}
+                style={[styles.emojiButton, { marginLeft: 15 }]}
                 onPress={() => {
                   Keyboard.dismiss();
                   setModalVisible(true);
-                }}>
+                }}
+              >
                 <LMChatIcon
                   type="png"
-                  assetPath={require('../../assets/images/open_files3x.png')}
+                  assetPath={require("../../assets/images/open_files3x.png")}
                   iconStyle={styles.emoji}
                 />
               </TouchableOpacity>
@@ -2426,7 +2464,7 @@ const InputBox = ({
                     {
                       uri: voiceNotesLink,
                       type: VOICE_NOTE_TEXT,
-                      name: `${voiceNotes.name}.${isIOS ? 'm4a' : 'mp3'}`,
+                      name: `${voiceNotes.name}.${isIOS ? "m4a" : "mp3"}`,
                       duration: Math.floor(voiceNotes.recordSecs / 1000),
                     },
                   ];
@@ -2442,10 +2480,11 @@ const InputBox = ({
                 }
               }
             }}
-            style={styles.sendButton}>
+            style={styles.sendButton}
+          >
             <LMChatIcon
               type="png"
-              assetPath={require('../../assets/images/send_button3x.png')}
+              assetPath={require("../../assets/images/send_button3x.png")}
               iconStyle={styles.send}
             />
           </TouchableOpacity>
@@ -2456,18 +2495,19 @@ const InputBox = ({
                 <Animated.View>
                   {voiceNotes.recordTime && !isRecordingLocked && (
                     <View
-                      style={[styles.lockRecording, styles.inputBoxWithShadow]}>
+                      style={[styles.lockRecording, styles.inputBoxWithShadow]}
+                    >
                       <Animated.View style={lockAnimatedStyles}>
                         <LMChatIcon
                           type="png"
-                          assetPath={require('../../assets/images/lock_icon3x.png')}
+                          assetPath={require("../../assets/images/lock_icon3x.png")}
                           iconStyle={styles.lockIconStyle}
                         />
                       </Animated.View>
                       <Animated.View style={upChevronAnimatedStyles}>
                         <LMChatIcon
                           type="png"
-                          assetPath={require('../../assets/images/up_chevron_icon3x.png')}
+                          assetPath={require("../../assets/images/up_chevron_icon3x.png")}
                           iconStyle={styles.chevronUpStyle}
                         />
                       </Animated.View>
@@ -2480,10 +2520,11 @@ const InputBox = ({
                         setIsVoiceNoteIconPress(true);
                         Vibration.vibrate(0.5 * 100);
                       }}
-                      style={[styles.sendButton, {position: 'absolute'}]}>
+                      style={[styles.sendButton, { position: "absolute" }]}
+                    >
                       <LMChatIcon
                         type="png"
-                        assetPath={require('../../assets/images/mic_icon3x.png')}
+                        assetPath={require("../../assets/images/mic_icon3x.png")}
                         iconStyle={styles.mic}
                       />
                     </TouchableWithoutFeedback>
@@ -2495,10 +2536,11 @@ const InputBox = ({
                 <TouchableWithoutFeedback
                   onPress={askPermission}
                   onLongPress={askPermission}
-                  style={[styles.sendButton, {position: 'absolute'}]}>
+                  style={[styles.sendButton, { position: "absolute" }]}
+                >
                   <LMChatIcon
                     type="png"
-                    assetPath={require('../../assets/images/mic_icon3x.png')}
+                    assetPath={require("../../assets/images/mic_icon3x.png")}
                     iconStyle={styles.mic}
                   />
                 </TouchableWithoutFeedback>
@@ -2515,7 +2557,8 @@ const InputBox = ({
         visible={modalVisible}
         onRequestClose={() => {
           setModalVisible(!modalVisible);
-        }}>
+        }}
+      >
         <Pressable style={styles.centeredView} onPress={handleModalClose}>
           <View style={styles.modalViewParent}>
             <Pressable onPress={() => {}} style={[styles.modalView]}>
@@ -2528,10 +2571,11 @@ const InputBox = ({
                         handleCamera();
                       }, 50);
                     }}
-                    style={styles.cameraStyle}>
+                    style={styles.cameraStyle}
+                  >
                     <LMChatIcon
                       type="png"
-                      assetPath={require('../../assets/images/camera_icon3x.png')}
+                      assetPath={require("../../assets/images/camera_icon3x.png")}
                       iconStyle={styles.emoji}
                     />
                   </TouchableOpacity>
@@ -2547,10 +2591,11 @@ const InputBox = ({
                         handleGallery();
                       }, 500);
                     }}
-                    style={styles.imageStyle}>
+                    style={styles.imageStyle}
+                  >
                     <LMChatIcon
                       type="png"
-                      assetPath={require('../../assets/images/select_image_icon3x.png')}
+                      assetPath={require("../../assets/images/select_image_icon3x.png")}
                       iconStyle={styles.emoji}
                     />
                   </TouchableOpacity>
@@ -2566,10 +2611,11 @@ const InputBox = ({
                         handleDoc();
                       }, 50);
                     }}
-                    style={styles.docStyle}>
+                    style={styles.docStyle}
+                  >
                     <LMChatIcon
                       type="png"
-                      assetPath={require('../../assets/images/select_doc_icon3x.png')}
+                      assetPath={require("../../assets/images/select_doc_icon3x.png")}
                       iconStyle={styles.emoji}
                     />
                   </TouchableOpacity>
@@ -2587,10 +2633,11 @@ const InputBox = ({
                           conversationsLength: conversations.length * 2,
                         });
                       }}
-                      style={styles.pollStyle}>
+                      style={styles.pollStyle}
+                    >
                       <LMChatIcon
                         type="png"
-                        assetPath={require('../../assets/images/poll_icon3x.png')}
+                        assetPath={require("../../assets/images/poll_icon3x.png")}
                         iconStyle={styles.emoji}
                       />
                     </TouchableOpacity>
