@@ -17,7 +17,7 @@ interface LMProviderProps {
   children: React.ReactNode;
 }
 
-export const LMProvider = ({
+export const LMChatProvider = ({
   myClient,
   children,
 }: LMProviderProps): JSX.Element => {
@@ -48,28 +48,35 @@ export const LMProvider = ({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    console.log("myClient", myClient);
+
     // storing myClient followed by community details
     const callInitApi = async () => {
+      console.log("aduasj");
+
       dispatch({
         type: STORE_MY_CLIENT,
         body: { myClient: myClient },
       });
 
       const payload = {
-        uuid: Credentials.userUniqueId, // uuid
-        userName: Credentials.username, // user name
+        uuid: "ajhdhjasd", // uuid
+        userName: "jhashjsa", // user name
         isGuest: false,
       };
 
       const response = await myClient?.initiateUser(payload);
 
+      console.log("response", response);
+
       dispatch({
         type: INIT_API_SUCCESS,
         body: { community: response?.data?.community },
       });
+      console.log("1234");
     };
     callInitApi();
-  }, [dispatch, myClient]);
+  });
 
   return (
     <RealmProvider schema={[UserSchemaRO]}>

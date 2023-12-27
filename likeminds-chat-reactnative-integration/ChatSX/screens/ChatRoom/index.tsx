@@ -23,7 +23,6 @@ import {
   ScrollViewProps,
 } from "react-native";
 import { Image as CompressedImage } from "react-native-compressor";
-import { myClient } from "../../..";
 import { SyncConversationRequest } from "@likeminds.community/chat-rn";
 import {
   SHOW_LIST_REGEX,
@@ -165,6 +164,7 @@ import {
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
 import Swipeable from "../../components/Swipeable";
+// import { myClient } from "../../..";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -188,10 +188,25 @@ interface UploadResource {
 }
 
 const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
+  const { myClient }: any = useAppSelector((state) => state.homefeed);
+
+  console.log("myClient", myClient);
+
+  const {
+    chatroomID,
+    isInvited,
+    previousChatroomID,
+    navigationFromNotification,
+    updatedAt,
+    deepLinking,
+  } = route.params;
+
   const flatlistRef = useRef<any>(null);
   const refInput = useRef<any>();
 
   const db = myClient?.firebaseInstance();
+
+  console.log("db", db);
 
   const [replyChatID, setReplyChatID] = useState<number>();
   const [endPage, setEndPage] = useState(1);
@@ -228,15 +243,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
 
   const reactionArr = ["❤️", "😂", "😮", "😢", "😠", "👍"];
   const users = useQuery<UserSchemaResponse>(USER_SCHEMA_RO);
-
-  const {
-    chatroomID,
-    isInvited,
-    previousChatroomID,
-    navigationFromNotification,
-    updatedAt,
-    deepLinking,
-  } = route.params;
   const isFocused = useIsFocused();
 
   const dispatch = useAppDispatch();

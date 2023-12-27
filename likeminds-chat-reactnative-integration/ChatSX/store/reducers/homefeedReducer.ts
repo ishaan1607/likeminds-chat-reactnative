@@ -56,6 +56,8 @@ export function homefeedReducer(state = initialState, action: any) {
   switch (action?.type) {
     case STORE_MY_CLIENT: {
       const { myClient = {} } = action.body;
+      console.log("action.body", action.body);
+      console.log("myClient", myClient);
       return { ...state, myClient: myClient };
     }
     case SET_PAGE: {

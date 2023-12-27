@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -31,42 +31,13 @@ import {
 } from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationRef} from './RootNavigation';
-import {ChatRoom} from 'likeminds_chat_reactnative_integration';
+import {ChatRoom, LMChatProvider} from 'likeminds_chat_reactnative_integration';
 import {RealmProvider} from '@realm/react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {UserSchemaRO} from './UserSchema';
 import {Provider as ReduxProvider} from 'react-redux';
-import store from './store';
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+import {myClient} from '.';
+import {store} from 'likeminds_chat_reactnative_integration';
 
 const Stack = createNativeStackNavigator();
 
@@ -77,25 +48,25 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
+  console.log('myClientgenerated', myClient);
+
   return (
-    <RealmProvider schema={[UserSchemaRO]}>
-      <GestureHandlerRootView style={{flex: 1}}>
-        <ReduxProvider store={store}>
-          <NavigationContainer ref={navigationRef} independent={true}>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="ChatRoom"
-                component={ChatRoom}
-                initialParams={{
-                  chatroomID: '3844534',
-                  isInvited: false,
-                }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </ReduxProvider>
-      </GestureHandlerRootView>
-    </RealmProvider>
+    <ReduxProvider store={store}>
+      <LMChatProvider myClient={myClient}>
+        <NavigationContainer ref={navigationRef} independent={true}>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="ChatRoom"
+              component={ChatRoom}
+              initialParams={{
+                chatroomID: '3844534',
+                isInvited: false,
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </LMChatProvider>
+    </ReduxProvider>
   );
 }
 
