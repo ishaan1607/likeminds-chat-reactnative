@@ -1,6 +1,6 @@
-import {Platform, StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
-import Layout from '../../constants/Layout';
+import { Platform, StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 export const styles = StyleSheet.create({
   page: {
@@ -8,9 +8,9 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   itemContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: STYLES.$PADDINGS.MEDIUM,
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: STYLES.$COLORS.TERTIARY,
   },
   avatar: {
@@ -22,17 +22,17 @@ export const styles = StyleSheet.create({
   smallIcon: {
     width: 15,
     height: 15,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   sendIcon: {
     width: 25,
     height: 25,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   icon: {
     width: 30,
     height: 30,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginLeft: -3,
     // backgroundColor: 'pink',
   },
@@ -42,27 +42,27 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   participantsTitle: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   headingContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 15,
   },
-  backBtn: {height: 40, width: 40, resizeMode: 'contain'},
-  search: {height: 20, width: 20, resizeMode: 'contain'},
-  chatRoomInfo: {gap: 5},
+  backBtn: { height: 40, width: 40, resizeMode: "contain" },
+  search: { height: 20, width: 20, resizeMode: "contain" },
+  chatRoomInfo: { gap: 5 },
   participants: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     // backgroundColor: 'pink',
     paddingHorizontal: 15,
     paddingVertical: 10,
@@ -81,11 +81,11 @@ export const styles = StyleSheet.create({
     backgroundColor: STYLES.$COLORS.PRIMARY,
     height: 25,
     width: 25,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 15,
-    position: 'absolute',
+    position: "absolute",
     right: 5,
     bottom: 0,
   },
@@ -94,13 +94,13 @@ export const styles = StyleSheet.create({
     width: 60,
     borderRadius: 50,
     backgroundColor: STYLES.$COLORS.PRIMARY,
-    position: 'absolute',
+    position: "absolute",
     right: 15,
     bottom: 30,
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   messageCustomTitle: {
     color: STYLES.$COLORS.SECONDARY,
@@ -108,9 +108,9 @@ export const styles = StyleSheet.create({
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
   justifyCenter: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: STYLES.$PADDINGS.MEDIUM,
-    justifyContent: 'center',
+    justifyContent: "center",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     flex: 1,
   },

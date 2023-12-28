@@ -151,7 +151,7 @@ export const styles = StyleSheet.create({
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   statusMessage: {
     padding: 10,
@@ -189,7 +189,7 @@ export const styles = StyleSheet.create({
   inviteBtnText: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   avatar: {
     width: 40,
@@ -269,7 +269,7 @@ export const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   attachment_msg: {
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     marginRight: 5,
@@ -278,7 +278,7 @@ export const styles = StyleSheet.create({
     lineHeight: 18,
   },
   gif_attachment_msg: {
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     marginRight: 5,
@@ -290,7 +290,7 @@ export const styles = StyleSheet.create({
     marginLeft: 5,
   },
   deletedMessage: {
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     fontStyle: "italic",

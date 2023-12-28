@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
+import { StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
 
 const styles = StyleSheet.create({
   page: {
@@ -7,12 +7,18 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headingContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 15,
   },
-  backBtn: {height: 40, width: 40, borderRadius: 10, resizeMode: 'contain'},
+  backBtn: {
+    height: 40,
+    width: 40,
+    borderRadius: 10,
+    resizeMode: "contain",
+    tintColor: STYLES.$COLORS.SECONDARY,
+  },
 });
 
 export default styles;

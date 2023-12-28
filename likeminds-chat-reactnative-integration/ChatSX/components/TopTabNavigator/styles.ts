@@ -1,5 +1,5 @@
-import {StatusBar, StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
+import { StatusBar, StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
 
 export const styles = StyleSheet.create({
   avatar: {
@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
   textHeading: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.SEMI_BOLD,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   text: {
     fontSize: STYLES.$FONT_SIZES.SMALL,
@@ -25,21 +25,21 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.MSG,
   },
   reactionItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: STYLES.$PADDINGS.MEDIUM,
   },
   alignRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   alignColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
     paddingVertical: 2,
     gap: 5,
     flexGrow: 1,

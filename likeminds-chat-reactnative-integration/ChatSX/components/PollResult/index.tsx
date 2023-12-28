@@ -1,39 +1,41 @@
-import {View, Text, Image, Alert, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import styles from './styles';
-import STYLES from '../../constants/Styles';
-import {FlashList} from '@shopify/flash-list';
-import {NO_RESPONSES, POLL_RESULT_TEXT} from '../../constants/Strings';
-import {myClient} from '../../..';
+import { View, Text, Image, Alert, TouchableOpacity } from "react-native";
+import React, { useEffect, useState } from "react";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import styles from "./styles";
+import STYLES from "../../constants/Styles";
+import { FlashList } from "@shopify/flash-list";
+import { NO_RESPONSES, POLL_RESULT_TEXT } from "../../constants/Strings";
+import { myClient } from "../../..";
 
 const PollStack = createMaterialTopTabNavigator();
 
-const PollResult = ({navigation, route}: any) => {
-  const {tabsValueArr = [], conversationID} = route.params;
+const PollResult = ({ navigation, route }: any) => {
+  const { tabsValueArr = [], conversationID } = route.params;
 
   const setInitialHeader = () => {
     navigation.setOptions({
-      title: '',
+      title: "",
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
           <TouchableOpacity
             onPress={() => {
               navigation.goBack();
-            }}>
+            }}
+          >
             <Image
-              source={require('../../assets/images/back_arrow3x.png')}
+              source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
             />
           </TouchableOpacity>
           <View style={styles.chatRoomInfo}>
             <Text
               style={{
-                color: STYLES.$COLORS.PRIMARY,
+                color: STYLES.$COLORS.FONT_PRIMARY,
                 fontSize: STYLES.$FONT_SIZES.LARGE,
                 fontFamily: STYLES.$FONT_TYPES.BOLD,
-              }}>
+              }}
+            >
               {POLL_RESULT_TEXT}
             </Text>
           </View>
@@ -50,13 +52,15 @@ const PollResult = ({navigation, route}: any) => {
     <View
       style={{
         flex: 1,
-      }}>
+      }}
+    >
       <PollStack.Navigator
         screenOptions={{
           tabBarLabelStyle: styles.font,
-          tabBarIndicatorStyle: {backgroundColor: STYLES.$COLORS.PRIMARY},
+          tabBarIndicatorStyle: { backgroundColor: STYLES.$COLORS.PRIMARY },
           tabBarScrollEnabled: tabsValueArr.length < 3 ? false : true,
-        }}>
+        }}
+      >
         {tabsValueArr?.map((val: any, index: any) => {
           return (
             <PollStack.Screen
@@ -70,7 +74,7 @@ const PollResult = ({navigation, route}: any) => {
                 />
               )}
               options={{
-                tabBarLabel: ({focused}) => (
+                tabBarLabel: ({ focused }) => (
                   <View>
                     <Text
                       style={[
@@ -79,9 +83,10 @@ const PollResult = ({navigation, route}: any) => {
                           color: focused
                             ? STYLES.$COLORS.PRIMARY
                             : STYLES.$COLORS.MSG,
-                          textAlign: 'center',
+                          textAlign: "center",
                         },
-                      ]}>
+                      ]}
+                    >
                       {val?.noVotes}
                     </Text>
                     <Text
@@ -91,7 +96,8 @@ const PollResult = ({navigation, route}: any) => {
                           color: STYLES.$COLORS.MSG,
                           marginTop: 5,
                         },
-                      ]}>
+                      ]}
+                    >
                       {val?.text}
                     </Text>
                   </View>
@@ -105,7 +111,7 @@ const PollResult = ({navigation, route}: any) => {
   );
 };
 
-const TabScreenUI = ({pollID, conversationID}: any) => {
+const TabScreenUI = ({ pollID, conversationID }: any) => {
   const [users, setUsers] = useState([]);
   useEffect(() => {
     fetchPollUsers(pollID);
@@ -133,7 +139,7 @@ const TabScreenUI = ({pollID, conversationID}: any) => {
           <View style={[styles.justifyCenter]}>
             <Image
               style={styles.nothingImg}
-              source={require('../../assets/images/nothing3x.png')}
+              source={require("../../assets/images/nothing3x.png")}
             />
             <Text style={styles.title}>{NO_RESPONSES}</Text>
           </View>
@@ -142,14 +148,14 @@ const TabScreenUI = ({pollID, conversationID}: any) => {
         <FlashList
           data={users}
           estimatedItemSize={1}
-          renderItem={({item}: any) => {
+          renderItem={({ item }: any) => {
             return (
               <View key={item?.id} style={styles.participants}>
                 <Image
                   source={
                     item?.imageUrl
-                      ? {uri: item?.imageUrl}
-                      : require('../../assets/images/default_pic.png')
+                      ? { uri: item?.imageUrl }
+                      : require("../../assets/images/default_pic.png")
                   }
                   style={styles.avatar}
                 />
@@ -159,9 +165,8 @@ const TabScreenUI = ({pollID, conversationID}: any) => {
                       {item?.name}
                       {item?.customTitle ? (
                         <Text
-                          style={
-                            styles.messageCustomTitle
-                          }>{` • ${item?.customTitle}`}</Text>
+                          style={styles.messageCustomTitle}
+                        >{` • ${item?.customTitle}`}</Text>
                       ) : null}
                     </Text>
                   </View>

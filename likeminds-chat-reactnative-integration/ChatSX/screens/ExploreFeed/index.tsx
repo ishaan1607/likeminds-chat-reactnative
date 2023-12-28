@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useRef, useEffect} from 'react';
+import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,58 +7,59 @@ import {
   Image,
   ActivityIndicator,
   Alert,
-} from 'react-native';
-import ExploreFeedFilters from '../../components/ExploreFeedFilters';
-import ExploreFeedItem from '../../components/ExploreFeedItem';
-import ToastMessage from '../../components/ToastMessage';
-import STYLES from '../../constants/Styles';
-import {useAppDispatch, useAppSelector} from '../../store';
+} from "react-native";
+import ExploreFeedFilters from "../../components/ExploreFeedFilters";
+import ExploreFeedItem from "../../components/ExploreFeedItem";
+import ToastMessage from "../../components/ToastMessage";
+import STYLES from "../../constants/Styles";
+import { useAppDispatch, useAppSelector } from "../../store";
 import {
   getExploreFeedData,
   updateExploreFeedData,
-} from '../../store/actions/explorefeed';
-import {SET_EXPLORE_FEED_PAGE} from '../../store/types/types';
-import styles from './styles';
-import {FlashList} from '@shopify/flash-list';
-import {LoaderComponent} from '../../components/LoaderComponent';
+} from "../../store/actions/explorefeed";
+import { SET_EXPLORE_FEED_PAGE } from "../../store/types/types";
+import styles from "./styles";
+import { FlashList } from "@shopify/flash-list";
+import { LoaderComponent } from "../../components/LoaderComponent";
 
 interface Props {
   navigation: any;
 }
 
-const ExploreFeed = ({navigation}: Props) => {
+const ExploreFeed = ({ navigation }: Props) => {
   const {
     exploreChatrooms = [],
     page,
     pinnedChatroomsCount,
-  }: any = useAppSelector(state => state.explorefeed);
-  const {community}: any = useAppSelector(state => state.homefeed);
+  }: any = useAppSelector((state) => state.explorefeed);
+  const { community }: any = useAppSelector((state) => state.homefeed);
   const [chats, setChats] = useState(exploreChatrooms);
   const [filterState, setFilterState] = useState(0);
   const [isPinned, setIsPinned] = useState(false);
   // const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const {count} = useAppSelector(state => state.loader);
+  const { count } = useAppSelector((state) => state.loader);
   const dispatch = useAppDispatch();
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: '',
+      title: "",
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
           <TouchableOpacity onPress={navigation.goBack}>
             <Image
-              source={require('../../assets/images/back_arrow3x.png')}
+              source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
             />
           </TouchableOpacity>
           <Text
             style={{
-              color: STYLES.$COLORS.PRIMARY,
+              color: STYLES.$COLORS.FONT_PRIMARY,
               fontSize: STYLES.$FONT_SIZES.XL,
               fontFamily: STYLES.$FONT_TYPES.BOLD,
-            }}>
+            }}
+          >
             Explore Chatrooms
           </Text>
         </View>
@@ -68,7 +69,7 @@ const ExploreFeed = ({navigation}: Props) => {
 
   async function fetchData() {
     // let payload = {chatroomID: 69285, page: 1000};
-    dispatch({type: SET_EXPLORE_FEED_PAGE, body: 1});
+    dispatch({ type: SET_EXPLORE_FEED_PAGE, body: 1 });
     const payload = {
       orderType: filterState,
       page: 1,
@@ -93,7 +94,7 @@ const ExploreFeed = ({navigation}: Props) => {
   useEffect(() => {
     if (isPinned) {
       const pinnedChats = exploreChatrooms.filter((item: any) =>
-        item?.isPinned ? item : null,
+        item?.isPinned ? item : null
       );
       setChats(pinnedChats);
     } else {
@@ -114,7 +115,7 @@ const ExploreFeed = ({navigation}: Props) => {
       if (chats.length > 0 && chats.length % 10 === 0) {
         // Alert.alert(`${page} handleLoadMore`)
         const newPage = page + 1;
-        dispatch({type: SET_EXPLORE_FEED_PAGE, body: newPage});
+        dispatch({ type: SET_EXPLORE_FEED_PAGE, body: newPage });
         loadData(newPage);
       }
     }
@@ -122,7 +123,7 @@ const ExploreFeed = ({navigation}: Props) => {
 
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{paddingVertical: 20}}>
+      <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;
@@ -135,13 +136,13 @@ const ExploreFeed = ({navigation}: Props) => {
         ListHeaderComponent={() => (
           <ExploreFeedFilters
             filterState={filterState}
-            setFilterState={val => {
+            setFilterState={(val) => {
               setFilterState(val);
             }}
-            setIsPinned={val => {
+            setIsPinned={(val) => {
               if (val) {
                 const pinnedChats = chats.filter((item: any) =>
-                  item?.isPinned ? item : null,
+                  item?.isPinned ? item : null
                 );
                 setChats(pinnedChats);
                 setIsPinned(val);
@@ -154,7 +155,7 @@ const ExploreFeed = ({navigation}: Props) => {
             pinnedChatroomsCount={pinnedChatroomsCount}
           />
         )}
-        renderItem={({item}: any) => {
+        renderItem={({ item }: any) => {
           const exploreFeedProps = {
             header: item?.header,
             title: item?.title!,

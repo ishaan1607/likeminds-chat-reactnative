@@ -117,24 +117,38 @@ export function getNameInitials(name: string) {
   return initials;
 }
 
+interface DecodeProps {
+  text: string | undefined;
+  enableClick: boolean;
+  chatroomName: string;
+  communityId: string;
+  isLongPress?: boolean;
+  memberUuid?: string;
+  chatroomWithUserUuid?: string;
+  chatroomWithUserMemberId?: string;
+  textStyles?: any;
+  taggingTextColor?: string;
+  linkTextColor?: string;
+}
+
 // naruto: naruto|route://member_profile/88226?member_id=__id__&community_id=__community__>>
 // test string = '<<Sanjay kumar 🤖|route://member/1260>> <<Ishaan Jain|route://member/1003>> Hey google.com';
 // This decode function helps us to decode tagged messages like the above test string in to readable format.
 // This function has two responses: one for Homefeed screen and other is for chat screen(Pressable ones are for chat screen).
 // The REGEX_USER_SPLITTING is used to split the text into different parts based on the regex specified and then using a for loop tags are shown differently along with name and route
-export const decode = (
-  text: string | undefined,
-  enableClick: boolean,
-  chatroomName: string,
-  communityId: string,
-  isLongPress?: boolean,
-  memberUuid?: string,
-  chatroomWithUserUuid?: string,
-  chatroomWithUserMemberId?: string,
-  textStyles?: any,
-  taggingTextColor?: string,
-  linkTextColor?: string
-) => {
+export const decode = ({
+  text,
+  enableClick,
+  chatroomName,
+  communityId,
+  isLongPress,
+  memberUuid,
+  chatroomWithUserUuid,
+  chatroomWithUserMemberId,
+  textStyles,
+  taggingTextColor,
+  linkTextColor,
+}: DecodeProps) => {
   if (!text) {
     return;
   }
@@ -187,7 +201,7 @@ export const decode = (
           <Text
             style={[
               {
-                color: STYLES.$COLORS.PRIMARY,
+                color: STYLES.$COLORS.FONT_PRIMARY,
                 fontFamily: STYLES.$FONT_TYPES.LIGHT,
               },
               textStyles ? { ...textStyles } : null,
@@ -226,7 +240,7 @@ export const decode = (
         {arr.map((val, index) => (
           <Text
             style={{
-              color: STYLES.$COLORS.PRIMARY,
+              color: STYLES.$COLORS.FONT_PRIMARY,
               fontFamily: STYLES.$FONT_TYPES.LIGHT,
             }}
             key={val.key + index}
@@ -234,7 +248,7 @@ export const decode = (
             {val.route ? (
               <Text
                 style={{
-                  color: STYLES.$COLORS.PRIMARY,
+                  color: STYLES.$COLORS.FONT_PRIMARY,
                   fontFamily: STYLES.$FONT_TYPES.BOLD,
                 }}
               >

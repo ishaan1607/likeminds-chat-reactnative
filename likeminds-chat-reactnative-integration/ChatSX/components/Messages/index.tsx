@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
-import React, { useEffect, useState, useLayoutEffect } from "react";
+import React, { useEffect, useState, useLayoutEffect, useContext } from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
 import { decode } from "../../commonFuctions";
@@ -23,6 +23,7 @@ import LinkPreview from "../LinkPreview";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Credentials } from "../../credentials";
 import ReactionList from "../ReactionList";
+import { LMChat } from "../../LMChatProvider";
 
 interface Messages {
   item: any;
@@ -37,17 +38,6 @@ interface Messages {
   chatroomType: any;
   chatroomID: any;
   chatroomName: any;
-
-  // styling props
-  borderRadius: number;
-  sentMessageBackgroundColor: string;
-  receivedMessageBackgroundColor: string;
-  selectedBackgroundColor: string;
-  textStyles: any;
-  linkTextColor: string;
-  taggingTextColor: string;
-  stateMessagesBackgroundColor: string;
-  stateMessagesTextStyles: any;
 }
 
 const Messages = ({
@@ -63,17 +53,6 @@ const Messages = ({
   chatroomType,
   chatroomID,
   chatroomName,
-
-  //styling props
-  borderRadius,
-  sentMessageBackgroundColor,
-  receivedMessageBackgroundColor,
-  selectedBackgroundColor,
-  textStyles,
-  linkTextColor,
-  taggingTextColor,
-  stateMessagesBackgroundColor,
-  stateMessagesTextStyles,
 }: Messages) => {
   const { user } = useAppSelector((state) => state.homefeed);
 
@@ -81,15 +60,35 @@ const Messages = ({
     (state) => state.chatroom
   );
 
+  const LMChatContext = useContext(LMChat);
+  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+
+  //styling props
+  const borderRadius = chatBubbleStyles?.borderRadius;
+  const sentMessageBackgroundColor =
+    chatBubbleStyles?.sentMessageBackgroundColor;
+  const receivedMessageBackgroundColor =
+    chatBubbleStyles?.receivedMessageBackgroundColor;
+  const selectedMessageBackgroundColor =
+    chatBubbleStyles?.selectedMessageBackgroundColor;
+  const textStyles = chatBubbleStyles?.textStyles;
+  const linkTextColor = chatBubbleStyles?.linkTextColor;
+  const taggingTextColor = chatBubbleStyles?.taggingTextColor;
+  const stateMessagesBackgroundColor =
+    chatBubbleStyles?.stateMessagesBackgroundColor;
+  const stateMessagesTextStyles = chatBubbleStyles?.stateMessagesTextStyles;
+  const deletedMessagesTextStyles = chatBubbleStyles?.deletedMessagesTextStyles;
+
+  const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
+    ? selectedMessageBackgroundColor
+    : STYLES.$COLORS.SELECTED_BLUE;
+  // styling props ended
+
   const [reactionArr, setReactionArr] = useState([] as any);
   const userIdStringified = user?.id?.toString();
   const isTypeSent = item?.member?.id == userIdStringified ? true : false;
   const chatroomWithUser = chatroomDBDetails?.chatroomWithUser;
   const isItemIncludedInStateArr = stateArr.includes(item?.state);
-
-  const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor
-    ? selectedBackgroundColor
-    : STYLES.$COLORS.SELECTED_BLUE;
 
   const dispatch = useAppDispatch();
 
@@ -193,7 +192,16 @@ const Messages = ({
                     : null,
                 ]}
               >
-                <Text style={styles.deletedMsg}>You deleted this message</Text>
+                <Text
+                  style={[
+                    styles.deletedMsg,
+                    deletedMessagesTextStyles
+                      ? { ...deletedMessagesTextStyles }
+                      : null,
+                  ]}
+                >
+                  You deleted this message
+                </Text>
               </View>
             ) : conversationCreator === conversationDeletor ? (
               <View
@@ -205,7 +213,14 @@ const Messages = ({
                     : null,
                 ]}
               >
-                <Text style={styles.deletedMsg}>
+                <Text
+                  style={[
+                    styles.deletedMsg,
+                    deletedMessagesTextStyles
+                      ? { ...deletedMessagesTextStyles }
+                      : null,
+                  ]}
+                >
                   This message has been deleted by {conversationDeletorName}
                 </Text>
               </View>
@@ -219,7 +234,14 @@ const Messages = ({
                     : null,
                 ]}
               >
-                <Text style={styles.deletedMsg}>
+                <Text
+                  style={[
+                    styles.deletedMsg,
+                    deletedMessagesTextStyles
+                      ? { ...deletedMessagesTextStyles }
+                      : null,
+                  ]}
+                >
                   This message has been deleted by Community Manager
                 </Text>
               </View>
@@ -234,7 +256,16 @@ const Messages = ({
                   : null,
               ]}
             >
-              <Text style={styles.deletedMsg}>You deleted this message</Text>
+              <Text
+                style={[
+                  styles.deletedMsg,
+                  deletedMessagesTextStyles
+                    ? { ...deletedMessagesTextStyles }
+                    : null,
+                ]}
+              >
+                You deleted this message
+              </Text>
             </View>
           ) : (
             <View
@@ -246,7 +277,14 @@ const Messages = ({
                   : null,
               ]}
             >
-              <Text style={styles.deletedMsg}>
+              <Text
+                style={[
+                  styles.deletedMsg,
+                  deletedMessagesTextStyles
+                    ? { ...deletedMessagesTextStyles }
+                    : null,
+                ]}
+              >
                 This message has been deleted by {conversationDeletorName}
               </Text>
             </View>
@@ -288,7 +326,19 @@ const Messages = ({
           <View
             style={[
               styles.pollMessage,
-              isTypeSent ? styles.sentMessage : styles.receivedMessage,
+              isTypeSent
+                ? [
+                    styles.sentMessage,
+                    sentMessageBackgroundColor
+                      ? { backgroundColor: sentMessageBackgroundColor }
+                      : null,
+                  ]
+                : [
+                    styles.receivedMessage,
+                    receivedMessageBackgroundColor
+                      ? { backgroundColor: receivedMessageBackgroundColor }
+                      : null,
+                  ],
               isIncluded
                 ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                 : null,
@@ -349,7 +399,7 @@ const Messages = ({
                       style={[
                         styles.textCenterAlign,
                         {
-                          color: STYLES.$COLORS.PRIMARY,
+                          color: STYLES.$COLORS.FONT_PRIMARY,
                           fontFamily: STYLES.$FONT_TYPES.LIGHT,
                         },
                         stateMessagesTextStyles
@@ -375,34 +425,34 @@ const Messages = ({
                         // State 1 refers to initial DM message, so in that case trimming the first user name
                         item?.state === 1 &&
                         chatroomType === ChatroomType.DMCHATROOM
-                          ? decode(
-                              answerTrimming(item?.answer),
-                              true,
-                              chatroomName,
-                              user?.sdkClientInfo?.community,
-                              false,
-                              conversationCreator,
-
-                              chatroomWithUserUuid,
-                              chatroomWithUserMemberId,
-                              (textStyles = stateMessagesTextStyles),
-                              taggingTextColor,
-                              linkTextColor
-                            )
-                          : decode(
-                              item?.answer,
-                              true,
-                              chatroomName,
-                              user?.sdkClientInfo?.community,
-                              false,
-                              conversationCreator,
-
-                              chatroomWithUserUuid,
-                              chatroomWithUserMemberId,
-                              (textStyles = stateMessagesTextStyles),
-                              taggingTextColor,
-                              linkTextColor
-                            )
+                          ? decode({
+                              text: answerTrimming(item?.answer),
+                              enableClick: true,
+                              chatroomName: chatroomName,
+                              communityId: user?.sdkClientInfo?.community,
+                              isLongPress: false,
+                              memberUuid: conversationCreator,
+                              chatroomWithUserUuid: chatroomWithUserUuid,
+                              chatroomWithUserMemberId:
+                                chatroomWithUserMemberId,
+                              textStyles: stateMessagesTextStyles,
+                              linkTextColor: linkTextColor,
+                              taggingTextColor: taggingTextColor,
+                            })
+                          : decode({
+                              text: item?.answer,
+                              enableClick: true,
+                              chatroomName: chatroomName,
+                              communityId: user?.sdkClientInfo?.community,
+                              isLongPress: false,
+                              memberUuid: conversationCreator,
+                              chatroomWithUserUuid: chatroomWithUserUuid,
+                              chatroomWithUserMemberId:
+                                chatroomWithUserMemberId,
+                              textStyles: stateMessagesTextStyles,
+                              linkTextColor: linkTextColor,
+                              taggingTextColor: taggingTextColor,
+                            })
                       }
                     </Text>
                   </View>
@@ -419,10 +469,8 @@ const Messages = ({
               >
                 <View
                   style={[
-                    [
-                      styles.message,
-                      borderRadius ? { borderRadius: borderRadius } : null,
-                    ],
+                    styles.message,
+                    borderRadius ? { borderRadius: borderRadius } : null,
                     isTypeSent
                       ? [
                           styles.sentMessage,
@@ -454,15 +502,15 @@ const Messages = ({
                     </Text>
                   )}
                   <Text>
-                    {decode(
-                      item?.answer,
-                      true,
-                      chatroomName,
-                      user?.sdkClientInfo?.community,
-                      textStyles,
-                      taggingTextColor,
-                      linkTextColor
-                    )}
+                    {decode({
+                      text: item?.answer,
+                      enableClick: true,
+                      chatroomName: chatroomName,
+                      communityId: user?.sdkClientInfo?.community,
+                      textStyles: textStyles,
+                      linkTextColor: linkTextColor,
+                      taggingTextColor: taggingTextColor,
+                    })}
                   </Text>
                   <View style={styles.alignTime}>
                     {item?.isEdited ? (
@@ -500,6 +548,12 @@ const Messages = ({
               <View
                 style={[
                   styles.typeSent,
+                  sentMessageBackgroundColor
+                    ? {
+                        borderBottomColor: sentMessageBackgroundColor,
+                        borderLeftColor: sentMessageBackgroundColor,
+                      }
+                    : null,
                   isIncluded
                     ? {
                         borderBottomColor: SELECTED_BACKGROUND_COLOR,
@@ -512,6 +566,12 @@ const Messages = ({
               <View
                 style={[
                   styles.typeReceived,
+                  receivedMessageBackgroundColor
+                    ? {
+                        borderBottomColor: receivedMessageBackgroundColor,
+                        borderRightColor: receivedMessageBackgroundColor,
+                      }
+                    : null,
                   isIncluded
                     ? {
                         borderBottomColor: SELECTED_BACKGROUND_COLOR,

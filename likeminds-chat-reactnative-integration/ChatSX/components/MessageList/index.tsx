@@ -6,7 +6,13 @@ import {
   ScrollViewProps,
   ActivityIndicator,
 } from "react-native";
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import React, {
+  forwardRef,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FlashList } from "@shopify/flash-list";
 import Swipeable from "../Swipeable";
 import Messages from "../Messages";
@@ -29,6 +35,7 @@ import { myClient } from "../../..";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
 import { CAPITAL_GIF_TEXT, VOICE_NOTE_STRING } from "../../constants/Strings";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
+import { LMChat } from "../../LMChatProvider";
 
 const MessageList = forwardRef(
   (
@@ -51,6 +58,7 @@ const MessageList = forwardRef(
       useState(true);
     const [response, setResponse] = useState([]);
     const [flashListMounted, setFlashListMounted] = useState(false);
+    const [isFound, setIsFound] = useState(false);
 
     const flatlistRef = useRef<any>(null);
     const dispatch = useAppDispatch();
@@ -68,9 +76,19 @@ const MessageList = forwardRef(
     const { user } = useAppSelector((state) => state.homefeed);
     const PAGE_SIZE = 200;
 
+    const LMChatContext = useContext(LMChat);
+    const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+
+    //styling props
+    const selectedBackgroundColor = chatBubbleStyles?.selectedBackgroundColor;
+
+    const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor
+      ? selectedBackgroundColor
+      : STYLES.$COLORS.SELECTED_BLUE;
+    // styling props ended
+
     const chatroomType = chatroomDBDetails?.type;
     const chatroomWithUser = chatroomDBDetails?.chatroomWithUser;
-    const [isFound, setIsFound] = useState(false);
 
     {
       /* `{? = then}`, `{: = else}`  */
@@ -377,12 +395,12 @@ const MessageList = forwardRef(
               source={require("../../assets/images/document_icon3x.png")}
               style={styles.chatroomTopicIcon}
             />{" "}
-            {decode(
-              val?.answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
+            {decode({
+              text: val?.answer,
+              enableClick: false,
+              chatroomName: chatroomName,
+              communityId: user?.sdkClientInfo?.community,
+            })}
           </Text>
         </View>
       );
@@ -406,12 +424,12 @@ const MessageList = forwardRef(
               source={require("../../assets/images/video_icon3x.png")}
               style={styles.chatroomTopicIcon}
             />{" "}
-            {decode(
-              val?.answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
+            {decode({
+              text: val?.answer,
+              enableClick: false,
+              chatroomName: chatroomName,
+              communityId: user?.sdkClientInfo?.community,
+            })}
           </Text>
         </View>
       );
@@ -435,12 +453,12 @@ const MessageList = forwardRef(
               source={require("../../assets/images/document_icon3x.png")}
               style={styles.chatroomTopicIcon}
             />{" "}
-            {decode(
-              val?.answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
+            {decode({
+              text: val?.answer,
+              enableClick: false,
+              chatroomName: chatroomName,
+              communityId: user?.sdkClientInfo?.community,
+            })}
           </Text>
         </View>
       );
@@ -464,12 +482,12 @@ const MessageList = forwardRef(
               source={require("../../assets/images/document_icon3x.png")}
               style={styles.chatroomTopicIcon}
             />{" "}
-            {decode(
-              val?.answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
+            {decode({
+              text: val?.answer,
+              enableClick: false,
+              chatroomName: chatroomName,
+              communityId: user?.sdkClientInfo?.community,
+            })}
           </Text>
         </View>
       );
@@ -501,12 +519,12 @@ const MessageList = forwardRef(
                 source={require("../../assets/images/document_icon3x.png")}
                 style={styles.chatroomTopicIcon}
               />{" "}
-              {decode(
-                val?.answer,
-                false,
-                chatroomName,
-                user?.sdkClientInfo?.community
-              )}
+              {decode({
+                text: val?.answer,
+                enableClick: false,
+                chatroomName: chatroomName,
+                communityId: user?.sdkClientInfo?.community,
+              })}
             </Text>
           )}
         </View>
@@ -546,12 +564,12 @@ const MessageList = forwardRef(
                 source={require("../../assets/images/video_icon3x.png")}
                 style={styles.chatroomTopicIcon}
               />{" "}
-              {decode(
-                val?.answer,
-                false,
-                chatroomName,
-                user?.sdkClientInfo?.community
-              )}
+              {decode({
+                text: val?.answer,
+                enableClick: false,
+                chatroomName: chatroomName,
+                communityId: user?.sdkClientInfo?.community,
+              })}
             </Text>
           )}
         </View>
@@ -584,12 +602,12 @@ const MessageList = forwardRef(
                 source={require("../../assets/images/image_icon3x.png")}
                 style={styles.chatroomTopicIcon}
               />{" "}
-              {decode(
-                val?.answer,
-                false,
-                chatroomName,
-                user?.sdkClientInfo?.community
-              )}
+              {decode({
+                text: val?.answer,
+                enableClick: false,
+                chatroomName: chatroomName,
+                communityId: user?.sdkClientInfo?.community,
+              })}
             </Text>
           )}
         </View>
@@ -607,12 +625,12 @@ const MessageList = forwardRef(
                 { tintColor: STYLES.$COLORS.PRIMARY },
               ]}
             />{" "}
-            {decode(
-              val?.answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
+            {decode({
+              text: val?.answer,
+              enableClick: false,
+              chatroomName: chatroomName,
+              communityId: user?.sdkClientInfo?.community,
+            })}
           </Text>
         </View>
       );
@@ -638,12 +656,12 @@ const MessageList = forwardRef(
                 <Text style={styles.gifText}>{CAPITAL_GIF_TEXT}</Text>
               </View>
               <View style={styles.sub_attachment_msg} />
-              {decode(
-                answer,
-                false,
-                chatroomName,
-                user?.sdkClientInfo?.community
-              )}
+              {decode({
+                text: val?.answer,
+                enableClick: false,
+                chatroomName: chatroomName,
+                communityId: user?.sdkClientInfo?.community,
+              })}
             </Text>
           )}
         </View>
@@ -682,12 +700,12 @@ const MessageList = forwardRef(
               source={require("../../assets/images/link_icon.png")}
               style={styles.chatroomTopicIcon}
             />{" "}
-            {decode(
-              val?.answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
+            {decode({
+              text: val?.answer,
+              enableClick: false,
+              chatroomName: chatroomName,
+              communityId: user?.sdkClientInfo?.community,
+            })}
           </Text>
         </View>
       );
@@ -796,7 +814,7 @@ const MessageList = forwardRef(
                   <View style={[styles.statusMessage]}>
                     <Text
                       style={{
-                        color: STYLES.$COLORS.PRIMARY,
+                        color: STYLES.$COLORS.FONT_PRIMARY,
                         fontSize: STYLES.$FONT_SIZES.SMALL,
                         fontFamily: STYLES.$FONT_TYPES.LIGHT,
                       }}
@@ -842,7 +860,16 @@ const MessageList = forwardRef(
                         selectedMessages
                       );
                     }}
-                    style={isIncluded ? { backgroundColor: "#d7e6f7" } : null}
+                    style={
+                      isIncluded
+                        ? selectedBackgroundColor
+                          ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
+                          : {
+                              backgroundColor:
+                                STYLES.$COLORS.SELECTED_CHAT_BUBBLE,
+                            }
+                        : null
+                    }
                   >
                     <Messages
                       chatroomName={chatroomName}
@@ -960,7 +987,7 @@ const MessageList = forwardRef(
                   ellipsizeMode="tail"
                   numberOfLines={1}
                   style={{
-                    color: STYLES.$COLORS.PRIMARY,
+                    color: STYLES.$COLORS.FONT_PRIMARY,
                     fontSize: STYLES.$FONT_SIZES.LARGE,
                     fontFamily: STYLES.$FONT_TYPES.BOLD,
                   }}
@@ -986,12 +1013,12 @@ const MessageList = forwardRef(
                       lineHeight: 18,
                     }}
                   >
-                    {decode(
-                      currentChatroomTopic?.answer,
-                      false,
-                      chatroomName,
-                      user?.sdkClientInfo?.community
-                    )}
+                    {decode({
+                      text: currentChatroomTopic?.answer,
+                      enableClick: false,
+                      chatroomName: chatroomName,
+                      communityId: user?.sdkClientInfo?.community,
+                    })}
                   </Text>
                 )}
               </View>

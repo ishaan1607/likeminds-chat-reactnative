@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ReactionGridModal from "../ReactionGridModal";
 import {
   LONG_PRESSED,
@@ -11,6 +11,7 @@ import STYLES from "../../constants/Styles";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../enums";
 import { styles } from "./styles";
+import { LMChat, ThemeContextProps } from "../../LMChatProvider";
 
 const ReactionList = ({
   item,
@@ -21,17 +22,25 @@ const ReactionList = ({
   isIncluded,
   handleLongPress,
   removeReaction,
-
-  // styling props
-  fill,
-  reactionSize,
-  reactionLeftItemStroke,
-  reactionRightItemStroke,
-  reactionItemBorderRadius,
-  gap,
 }: any) => {
   const [selectedReaction, setSelectedReaction] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+
+  const LMChatContext = useContext(LMChat);
+  const reactionListStyles = LMChatContext?.reactionListStyles;
+
+  //styling props
+  const reactionSize = reactionListStyles?.reactionSize;
+  const reactionLeftItemStroke = reactionListStyles?.reactionLeftItemStroke;
+  const reactionRightItemStroke = reactionListStyles?.reactionRightItemStroke;
+  const reactionItemBorderRadius = reactionListStyles?.reactionItemBorderRadius;
+  const gap = reactionListStyles?.gap;
+  const selectedMessageBackgroundColor =
+    reactionListStyles?.selectedMessageBackgroundColor;
+
+  const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
+    ? selectedMessageBackgroundColor
+    : STYLES.$COLORS.SELECTED_BLUE;
 
   const { selectedMessages, isLongPress, stateArr }: any = useAppSelector(
     (state) => state.chatroom
@@ -98,31 +107,26 @@ const ReactionList = ({
                   handleReactionOnPress(event, val?.reaction);
                 }}
                 style={[
-                  [
-                    styles.reaction,
-                    reactionSize
-                      ? { width: reactionSize, height: reactionSize }
-                      : null,
-                    reactionItemBorderRadius
-                      ? {
-                          borderRadius: reactionItemBorderRadius,
-                        }
-                      : null,
-                    gap ? { gap: gap } : null,
-                  ],
+                  styles.reaction,
+                  reactionSize
+                    ? { width: reactionSize, height: reactionSize }
+                    : null,
+                  isTypeSent && reactionRightItemStroke
+                    ? { backgroundColor: reactionRightItemStroke }
+                    : null,
+                  !isTypeSent && reactionLeftItemStroke
+                    ? { backgroundColor: reactionLeftItemStroke }
+                    : null,
+                  reactionItemBorderRadius
+                    ? {
+                        borderRadius: reactionItemBorderRadius,
+                      }
+                    : null,
+                  gap ? { gap: gap } : null,
+
                   isIncluded
-                    ? [
-                        { backgroundColor: STYLES.$COLORS.SELECTED_BLUE },
-                        reactionRightItemStroke
-                          ? { backgroundColor: reactionRightItemStroke }
-                          : null,
-                      ]
-                    : [
-                        { backgroundColor: "white" },
-                        reactionLeftItemStroke
-                          ? { backgroundColor: reactionLeftItemStroke }
-                          : null,
-                      ],
+                    ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
+                    : null,
                 ]}
                 key={val + index}
               >
@@ -147,9 +151,16 @@ const ReactionList = ({
               }}
               style={[
                 styles.reaction,
+                reactionItemBorderRadius
+                  ? { borderRadius: reactionItemBorderRadius }
+                  : null,
                 isIncluded
-                  ? { backgroundColor: STYLES.$COLORS.SELECTED_BLUE }
-                  : { backgroundColor: "white" },
+                  ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
+                  : !isTypeSent && reactionLeftItemStroke
+                  ? { backgroundColor: reactionLeftItemStroke }
+                  : isTypeSent && reactionRightItemStroke
+                  ? { backgroundColor: reactionRightItemStroke }
+                  : { backgroundColor: STYLES.$COLORS.TERTIARY },
               ]}
             >
               <Text style={styles.messageText}>{reactionArr[0]?.reaction}</Text>
@@ -165,9 +176,16 @@ const ReactionList = ({
               }}
               style={[
                 styles.reaction,
+                reactionItemBorderRadius
+                  ? { borderRadius: reactionItemBorderRadius }
+                  : null,
                 isIncluded
-                  ? { backgroundColor: STYLES.$COLORS.SELECTED_BLUE }
-                  : { backgroundColor: "white" },
+                  ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
+                  : !isTypeSent && reactionLeftItemStroke
+                  ? { backgroundColor: reactionLeftItemStroke }
+                  : isTypeSent && reactionRightItemStroke
+                  ? { backgroundColor: reactionRightItemStroke }
+                  : { backgroundColor: STYLES.$COLORS.TERTIARY },
               ]}
             >
               <Text style={styles.messageText}>{reactionArr[1]?.reaction}</Text>
@@ -183,8 +201,15 @@ const ReactionList = ({
               }}
               style={[
                 styles.moreReaction,
+                reactionItemBorderRadius
+                  ? { borderRadius: reactionItemBorderRadius }
+                  : null,
                 isIncluded
-                  ? { backgroundColor: STYLES.$COLORS.SELECTED_BLUE }
+                  ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
+                  : !isTypeSent && reactionLeftItemStroke
+                  ? { backgroundColor: reactionLeftItemStroke }
+                  : isTypeSent && reactionRightItemStroke
+                  ? { backgroundColor: reactionRightItemStroke }
                   : { backgroundColor: STYLES.$COLORS.TERTIARY },
               ]}
             >

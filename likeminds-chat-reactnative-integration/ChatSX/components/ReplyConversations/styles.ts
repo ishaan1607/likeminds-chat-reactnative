@@ -1,6 +1,6 @@
-import {Platform, StyleSheet} from 'react-native';
-import Layout from '../../constants/Layout';
-import STYLES from '../../constants/Styles';
+import { Platform, StyleSheet } from "react-native";
+import Layout from "../../constants/Layout";
+import STYLES from "../../constants/Styles";
 
 export const styles = StyleSheet.create({
   messageParent: {
@@ -9,36 +9,34 @@ export const styles = StyleSheet.create({
   },
   replyMessage: {
     padding: 10,
-    width: '80%',
-    alignSelf: 'flex-end',
+    width: "80%",
+    alignSelf: "flex-end",
     borderRadius: 15,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   sentMessage: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     borderBottomRightRadius: 0,
   },
   receivedMessage: {
-    alignSelf: 'flex-start',
+    alignSelf: "flex-start",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     borderBottomLeftRadius: 0,
   },
   messageText: {
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     maxWidth: Layout.window.width - 150,
-    // textAlign: 'left',
   },
   messageDate: {
     fontSize: 10,
-    color: '#aaa',
-    // marginTop: 5,
-    textAlign: 'right',
+    color: "#aaa",
+    textAlign: "right",
   },
   replySender: {
-    color: 'green',
+    color: "green",
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.BOLD,
   },
@@ -49,30 +47,30 @@ export const styles = StyleSheet.create({
     borderLeftWidth: 5,
     borderLeftColor: STYLES.$COLORS.SECONDARY,
     padding: 10,
-    overflow: 'hidden',
+    overflow: "hidden",
     marginBottom: STYLES.$MARGINS.XS,
   },
   icon: {
     height: 15,
     width: 15,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginRight: 5,
   },
   alignRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 5,
   },
-  displayRow: {flexDirection: 'row', alignItems: 'center', gap: 10},
+  displayRow: { flexDirection: "row", alignItems: "center", gap: 10 },
   alignTime: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
     marginTop: 3,
   },
   messageInfo: {
-    color: 'green',
+    color: "green",
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.BOLD,
     marginBottom: STYLES.$MARGINS.XS,
@@ -87,16 +85,16 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 5,
     paddingVertical: 3,
     borderRadius: 5,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     marginRight: 5,
   },
   gifText: {
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     fontSize: STYLES.$FONT_SIZES.XS,
-    color: 'white',
-    marginTop: Platform.OS === 'ios' ? 1 : 0,
+    color: "white",
+    marginTop: Platform.OS === "ios" ? 1 : 0,
   },
 });

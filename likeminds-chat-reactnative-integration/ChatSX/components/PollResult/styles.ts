@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
+import { StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
 
 const styles = StyleSheet.create({
   page: {
@@ -15,13 +15,13 @@ const styles = StyleSheet.create({
   font: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    textTransform: 'none',
+    textTransform: "none",
   },
   participants: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
     // justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: "center",
     paddingHorizontal: 15,
     paddingVertical: 10,
     flex: 1,
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   secondaryTitle: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
@@ -45,20 +45,20 @@ const styles = StyleSheet.create({
     color: STYLES.$COLORS.MSG,
   },
   headingContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 15,
   },
-  backBtn: {height: 40, width: 40, resizeMode: 'contain'},
-  search: {height: 20, width: 20, resizeMode: 'contain'},
-  chatRoomInfo: {gap: 5},
-  nothingImg: {height: 100, width: 100, resizeMode: 'contain'},
-  nothingDM: {display: 'flex', flexGrow: 1},
+  backBtn: { height: 40, width: 40, resizeMode: "contain" },
+  search: { height: 20, width: 20, resizeMode: "contain" },
+  chatRoomInfo: { gap: 5 },
+  nothingImg: { height: 100, width: 100, resizeMode: "contain" },
+  nothingDM: { display: "flex", flexGrow: 1 },
   justifyCenter: {
     padding: STYLES.$PADDINGS.MEDIUM,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     flex: 1,
     gap: 10,
@@ -67,9 +67,9 @@ const styles = StyleSheet.create({
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     color: STYLES.$COLORS.MSG,
-    textAlign: 'center',
+    textAlign: "center",
   },
-  gap: {gap: 5},
+  gap: { gap: 5 },
 });
 
 export default styles;

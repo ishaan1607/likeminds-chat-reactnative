@@ -1,30 +1,31 @@
-import {View, Text, TouchableOpacity, Image} from 'react-native';
-import React, {useLayoutEffect, useRef} from 'react';
-import {styles} from './styles';
-import STYLES from '../../constants/Styles';
+import { View, Text, TouchableOpacity, Image } from "react-native";
+import React, { useLayoutEffect, useRef } from "react";
+import { styles } from "./styles";
+import STYLES from "../../constants/Styles";
 
-const VideoPlayer = ({navigation, route}: any) => {
+const VideoPlayer = ({ navigation, route }: any) => {
   const video = useRef();
   const setInitialHeader = () => {
     navigation?.setOptions({
-      title: '',
+      title: "",
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
           <TouchableOpacity onPress={navigation?.goBack}>
             <Image
-              source={require('../../assets/images/back_arrow3x.png')}
+              source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
             />
           </TouchableOpacity>
           <View style={styles.chatRoomInfo}>
             <Text
               style={{
-                color: STYLES.$COLORS.PRIMARY,
+                color: STYLES.$COLORS.FONT_PRIMARY,
                 fontSize: STYLES.$FONT_SIZES.LARGE,
                 fontFamily: STYLES.$FONT_TYPES.BOLD,
-              }}>
-              {'Video'}
+              }}
+            >
+              {"Video"}
             </Text>
           </View>
         </View>
@@ -46,7 +47,7 @@ const VideoPlayer = ({navigation, route}: any) => {
           <VideoPlayer
             videoRef={video}
             disableVolume={true}
-            source={{uri: url}}
+            source={{ uri: url }}
             videoStyle={styles.videoPlayer}
             disableBack={true}
             disableFullscreen={true}

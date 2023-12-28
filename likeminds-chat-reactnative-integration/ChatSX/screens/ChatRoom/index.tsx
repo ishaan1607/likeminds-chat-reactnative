@@ -7,45 +7,30 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
-  TextInput,
   TouchableOpacity,
   Keyboard,
   Image,
   Pressable,
-  ActivityIndicator,
   Alert,
   Modal,
   BackHandler,
   Platform,
   LogBox,
   AppState,
-  ScrollViewProps,
 } from "react-native";
 import { Image as CompressedImage } from "react-native-compressor";
 import { myClient } from "../../..";
 import { SyncConversationRequest } from "@likeminds.community/chat-rn";
 import {
-  SHOW_LIST_REGEX,
   copySelectedMessages,
-  decode,
   fetchResourceFromURI,
   formatTime,
-  generateGifString,
 } from "../../commonFuctions";
 import InputBox from "../../components/InputBox";
-import Messages from "../../components/Messages";
 import ToastMessage from "../../components/ToastMessage";
 import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store";
-import {
-  firebaseConversation,
-  getChatroom,
-  getConversations,
-  paginatedConversations,
-  paginatedConversationsEnd,
-  paginatedConversationsStart,
-} from "../../store/actions/chatroom";
+import { getChatroom } from "../../store/actions/chatroom";
 import { styles } from "./styles";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { DataSnapshot, onValue, ref } from "firebase/database";
@@ -77,17 +62,11 @@ import {
   SET_FILE_UPLOADING_MESSAGES,
   SET_IS_REPLY,
   SET_PAGE,
-  SET_POSITION,
   SET_REPLY_MESSAGE,
   SET_TEMP_STATE_MESSAGE,
   SHOW_TOAST,
-  TO_BE_DELETED,
   UPDATE_CHAT_REQUEST_STATE,
 } from "../../store/types/types";
-import {
-  START_CHATROOM_LOADING,
-  STOP_CHATROOM_LOADING,
-} from "../../store/types/loader";
 import { getExploreFeedData } from "../../store/actions/explorefeed";
 import Layout from "../../constants/Layout";
 import EmojiPicker, { EmojiKeyboard } from "rn-emoji-keyboard";
@@ -121,8 +100,6 @@ import {
   WARNING_MSG_PUBLIC_CHATROOM,
   USER_SCHEMA_RO,
   VOICE_NOTE_TEXT,
-  CAPITAL_GIF_TEXT,
-  VOICE_NOTE_STRING,
 } from "../../constants/Strings";
 import { DM_ALL_MEMBERS } from "../../constants/Screens";
 import ApproveDMRequestModal from "../../customModals/ApproveDMRequest";
@@ -131,17 +108,12 @@ import RejectDMRequestModal from "../../customModals/RejectDMRequest";
 import { BUCKET, POOL_ID, REGION } from "../../aws-exports";
 import { CognitoIdentityCredentials, S3 } from "aws-sdk";
 import AWS from "aws-sdk";
-import { FlashList } from "@shopify/flash-list";
 import WarningMessageModal from "../../customModals/WarningMessage";
 import { useQuery } from "@realm/react";
-import { Share } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import { paginatedSyncAPI } from "../../utils/syncChatroomApi";
 import {
   ChatroomChatRequestState,
-  DocumentType,
-  GetConversationsType,
   Keys,
   MemberState,
   Sources,
@@ -156,15 +128,9 @@ import {
   getChatroomType,
   getConversationType,
 } from "../../utils/analyticsUtils";
-import { GetConversationsRequest } from "@likeminds.community/chat-rn/dist/localDb/models/requestModels/GetConversationsRequest";
-import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
-import {
-  createTemporaryStateMessage,
-  getCurrentConversation,
-} from "../../utils/chatroomUtils";
+import { createTemporaryStateMessage } from "../../utils/chatroomUtils";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
-import Swipeable from "../../components/Swipeable";
 import MessageList from "../../components/MessageList";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
@@ -189,7 +155,6 @@ interface UploadResource {
 }
 
 const ChatRoom = ({ navigation, route }: ChatRoom) => {
-  // const flatlistRef = useRef<any>(null);
   const refInput = useRef<any>();
 
   const db = myClient?.firebaseInstance();
@@ -216,7 +181,6 @@ const ChatRoom = ({ navigation, route }: ChatRoom) => {
     useState(false);
   const [appState, setAppState] = useState(AppState.currentState);
   const [shimmerIsLoading, setShimmerIsLoading] = useState(true);
-  const [shouldLoadMoreChatEnd, setShouldLoadMoreChatEnd] = useState(true);
   const [isRealmDataPresent, setIsRealmDataPresent] = useState(false);
 
   const reactionArr = ["❤️", "😂", "😮", "😢", "😠", "👍"];
@@ -397,7 +361,7 @@ const ChatRoom = ({ navigation, route }: ChatRoom) => {
                   ellipsizeMode="tail"
                   numberOfLines={1}
                   style={{
-                    color: STYLES.$COLORS.PRIMARY,
+                    color: STYLES.$COLORS.FONT_PRIMARY,
                     fontSize: STYLES.$FONT_SIZES.LARGE,
                     fontFamily: STYLES.$FONT_TYPES.BOLD,
                     maxWidth: 150,
@@ -465,7 +429,7 @@ const ChatRoom = ({ navigation, route }: ChatRoom) => {
           <View style={styles.chatRoomInfo}>
             <Text
               style={{
-                color: STYLES.$COLORS.PRIMARY,
+                color: STYLES.$COLORS.FONT_PRIMARY,
                 fontSize: STYLES.$FONT_SIZES.LARGE,
                 fontFamily: STYLES.$FONT_TYPES.BOLD,
               }}
@@ -1169,16 +1133,6 @@ const ChatRoom = ({ navigation, route }: ChatRoom) => {
       callApi();
     }
   }, [chatroomDBDetails]);
-
-  // // this useEffect scroll to Index of latest message when we send the message.
-  // useEffect(() => {
-  //   if (conversations?.length > 0) {
-  //     flatlistRef?.current?.scrollToIndex({
-  //       animated: false,
-  //       index: 0,
-  //     });
-  //   }
-  // }, [messageSent]);
 
   // this useEffect update headers when we longPress or update selectedMessages array.
   useEffect(() => {

@@ -192,7 +192,7 @@ export const styles = StyleSheet.create({
   linkPreviewMessageText: {
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     maxWidth: Layout.window.width - 150,
   },
   replyBoxClose: {
@@ -207,7 +207,7 @@ export const styles = StyleSheet.create({
   iconText: {
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   iconContainer: {alignItems: 'center', margin: 5 * pixelRatio, gap: 5},
   avatar: {
@@ -236,7 +236,7 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   subTitle: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
