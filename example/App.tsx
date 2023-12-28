@@ -38,6 +38,7 @@ import {UserSchemaRO} from './UserSchema';
 import {Provider as ReduxProvider} from 'react-redux';
 import {myClient} from '.';
 import {store} from 'likeminds_chat_reactnative_integration';
+// import {LMChatProvider} from './LMChatProvider';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,8 +60,9 @@ function App(): React.JSX.Element {
               name="ChatRoom"
               component={ChatRoom}
               initialParams={{
-                chatroomID: '3844534',
+                chatroomID: '94903',
                 isInvited: false,
+                myClient: myClient,
               }}
             />
           </Stack.Navigator>

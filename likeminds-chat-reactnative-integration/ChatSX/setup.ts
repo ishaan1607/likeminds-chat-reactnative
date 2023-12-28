@@ -1,14 +1,14 @@
-import notifee, {EventType} from '@notifee/react-native';
-import getNotification from './notifications';
-import {getRoute} from './notifications/routes';
-import * as RootNavigation from './RootNavigation';
-import messaging from '@react-native-firebase/messaging';
-import TrackPlayer from 'react-native-track-player';
-import {playbackService} from './audio';
-import {LMChatClient} from '@likeminds.community/chat-rn';
+import notifee, { EventType } from "@notifee/react-native";
+import getNotification from "./notifications";
+import { getRoute } from "./notifications/routes";
+import * as RootNavigation from "./RootNavigation";
+import messaging from "@react-native-firebase/messaging";
+import TrackPlayer from "react-native-track-player";
+import { playbackService } from "./audio";
+import { LMChatClient } from "@likeminds.community/chat-rn";
 
 export const initMyClient = (apiKey: string) => {
-  notifee.onBackgroundEvent(async ({type, detail}) => {
+  notifee.onBackgroundEvent(async ({ type, detail }) => {
     const routes = getRoute(detail?.notification?.data?.route);
 
     if (type === EventType.PRESS) {
@@ -20,7 +20,7 @@ export const initMyClient = (apiKey: string) => {
     }
   });
 
-  messaging().setBackgroundMessageHandler(async remoteMessage => {
+  messaging().setBackgroundMessageHandler(async (remoteMessage) => {
     const val = await getNotification(remoteMessage);
     return val;
   });
@@ -28,8 +28,8 @@ export const initMyClient = (apiKey: string) => {
   TrackPlayer.registerPlaybackService(() => playbackService);
 
   const myClient = LMChatClient.setApiKey(apiKey)
-    .setPlatformCode('rn')
-    .setVersionCode(parseInt('23'))
+    .setPlatformCode("rn")
+    .setVersionCode(parseInt("23"))
     .build();
 
   return myClient;
