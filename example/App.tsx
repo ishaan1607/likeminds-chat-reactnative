@@ -60,7 +60,7 @@ function App(): React.JSX.Element {
               name="ChatRoom"
               component={ChatRoom}
               initialParams={{
-                chatroomID: '94903',
+                chatroomID: '87584',
                 isInvited: false,
                 myClient: myClient,
               }}
