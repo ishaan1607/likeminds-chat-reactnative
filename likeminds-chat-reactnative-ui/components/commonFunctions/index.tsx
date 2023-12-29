@@ -94,16 +94,6 @@ export const decode = (
           const startingIndex = route.indexOf("/");
           const taggedUserId = route.substring(startingIndex + 1);
 
-          // LMChatAnalytics.track(
-          //   Events.USER_TAGS_SOMEONE,
-          //   new Map<string, string>([
-          //     [Keys.COMMUNITY_ID, communityId?.toString()],
-          //     [Keys.CHATROOM_NAME, chatroomName?.toString()],
-          //     [Keys.TAGGED_USER_ID, taggedUserId?.toString()],
-          //     [Keys.TAGGED_USER_NAME, name?.toString()],
-          //   ]),
-          // );
-
           if (memberUuid && chatroomWithUserUuid && chatroomWithUserMemberId) {
             const startingIndex = route.indexOf("/");
 

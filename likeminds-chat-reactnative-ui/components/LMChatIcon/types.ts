@@ -1,7 +1,6 @@
 import { ImageStyle, ViewStyle } from "react-native";
 
 export interface LMChatIconProps {
-  type: "png"; // this represents the type of icon
   iconUrl?: string; // this represents the url the icon
   assetPath?: object; // this represents the path of the local image
   color?: string; // this represents the tintcolor of the icon

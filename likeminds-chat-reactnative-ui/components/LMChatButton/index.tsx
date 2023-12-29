@@ -1,8 +1,8 @@
 import { StyleSheet, TouchableOpacity, View } from "react-native";
 import React, { useState } from "react";
 import { LMChatIcon } from "../LMChatIcon";
-import Styles from "../constants/Styles";
 import { LMChatButtonProps } from "./types";
+import defaultStyles from "../constants/defaultStyles";
 
 export const LMChatButton = ({
   text,
@@ -49,7 +49,6 @@ export const LMChatButton = ({
             activeIcon ? (
               // this renders the icon in active state
               <LMChatIcon
-                type={activeIcon.type}
                 width={activeIcon.width}
                 height={activeIcon.height}
                 iconUrl={activeIcon.iconUrl}
@@ -63,7 +62,6 @@ export const LMChatButton = ({
           ) : (
             // this renders the icon in inactive state
             <LMChatIcon
-              type={icon.type}
               width={icon.width}
               height={icon.height}
               iconUrl={icon.iconUrl}
@@ -80,19 +78,3 @@ export const LMChatButton = ({
     </TouchableOpacity>
   );
 };
-
-// default button style
-const defaultStyles = StyleSheet.create({
-  buttonViewStyle: {
-    backgroundColor: Styles.$BACKGROUND_COLORS.LIGHT,
-    borderColor: Styles.$COLORS.PRIMARY,
-    borderWidth: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingVertical: 5,
-    borderRadius: 5,
-  },
-  buttonTextStyle: {
-    fontSize: 16,
-  },
-});
