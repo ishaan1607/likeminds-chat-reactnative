@@ -21,8 +21,8 @@ import {
   parseValue,
 } from "./utils";
 import { LMChatTexInputProps } from "./types";
-import { LMChatButton } from "../LMChatButton";
-import Styles from "../constants/Styles";
+import { decode } from "../commonFunctions";
+import defaultStyles from "../constants/defaultStyles";
 
 export const LMChatTextInput: FC<LMChatTexInputProps> = ({
   inputText,
@@ -39,7 +39,6 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
   multilineField,
   secureText,
   disabled,
-  rightIcon,
   autoFocus,
   children,
   ...textInputProps
@@ -142,11 +141,7 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
         placeholderTextColor={
           placeholderTextColor ? placeholderTextColor : "#000"
         }
-        style={
-          rightIcon
-            ? defaultStyles.textInputWithRightIcon
-            : defaultStyles.textInputWithoutRightIcon
-        }
+        style={defaultStyles.textInputWithoutRightIcon}
         placeholder={placeholderText}
         autoCapitalize={autoCapitalize ? autoCapitalize : "none"}
         keyboardType={keyboardType ? keyboardType : "default"}
@@ -164,54 +159,11 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
                 {text}
               </Text>
             ) : (
-              children
+              <Text key={index}>{decode(text, true)}</Text>
             )
           )}
         </Text>
       </TextInput>
-      {/* icon on right of text input */}
-      {rightIcon && (
-        <LMChatButton
-          {...rightIcon}
-          onTap={rightIcon.onTap}
-          text={rightIcon.text}
-          icon={{
-            type: "png",
-            assetPath: rightIcon.icon?.assetPath,
-            ...rightIcon.icon,
-          }}
-          placement={rightIcon.placement}
-          buttonStyle={defaultStyles.rightIconButton}
-        />
-      )}
     </View>
   );
 };
-
-// default inputText style
-const defaultStyles = StyleSheet.create({
-  textInput: {
-    margin: 10,
-    shadowRadius: 5,
-    elevation: 8,
-    borderRadius: 10,
-    backgroundColor: Styles.$BACKGROUND_COLORS.LIGHT,
-    paddingVertical: 10,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  textInputWithRightIcon: {
-    width: "90%",
-    fontSize: 14,
-    color: Styles.$COLORS.PRIMARY,
-  },
-  textInputWithoutRightIcon: {
-    width: "100%",
-    fontSize: 14,
-    color: Styles.$COLORS.PRIMARY,
-  },
-  rightIconButton: {
-    borderWidth: 0,
-  },
-});

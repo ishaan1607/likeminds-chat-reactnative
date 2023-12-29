@@ -1,6 +1,7 @@
 import { StyleSheet, Text } from "react-native";
 import React from "react";
 import { LMChatTextViewProps } from "./types";
+import defaultStyles from "../constants/defaultStyles";
 
 export const LMChatTextView = ({
   maxLines,
@@ -21,14 +22,3 @@ export const LMChatTextView = ({
     </Text>
   );
 };
-
-// default text style
-const defaultStyles = StyleSheet.create({
-  textStyle: {
-    color: "black",
-    fontSize: 14,
-    fontFamily: "Arial",
-    textAlign: "auto",
-    fontStyle: "normal",
-  },
-});

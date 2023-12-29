@@ -138,7 +138,6 @@ type LMChatTexInputProps = Omit<TextInputProps, "onChange"> & {
   multilineField?: boolean; // this represents if the input text should be multi lined or not
   secureText?: boolean; // this represents if the text entered should be hidden or visible for sensitive text like passwords
   disabled?: boolean; // this represents if the text input is editable or not
-  rightIcon?: LMChatButtonProps; // this represents the icon on the text input
   autoFocus?: boolean; // checks if the text input shoud be on focus or not
   children: React.ReactNode;
 };
