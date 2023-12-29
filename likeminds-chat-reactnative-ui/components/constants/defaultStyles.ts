@@ -42,7 +42,7 @@ export default {
   textStyle: {
     color: "black",
     fontSize: 14,
-    fontFamily: "Arial",
+    fontFamily: Styles.$FONT_TYPES.MEDIUM,
     textAlign: "auto",
     fontStyle: "normal",
   },

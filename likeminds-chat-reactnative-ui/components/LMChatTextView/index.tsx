@@ -14,11 +14,11 @@ export const LMChatTextView = ({
   return (
     // this renders the text component
     <Text
-      {...textViewProps}
       selectable={selectable ? selectable : true} // default selectable value is true
       numberOfLines={maxLines}
       onTextLayout={onTextLayout}
       style={StyleSheet.flatten([defaultStyles.textStyle, textStyle])}
+      {...textViewProps}
     >
       {children}
     </Text>

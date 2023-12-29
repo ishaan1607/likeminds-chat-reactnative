@@ -132,7 +132,6 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
   return (
     <View style={StyleSheet.flatten([defaultStyles.textInput, inputTextStyle])}>
       <TextInput
-        {...textInputProps}
         ref={handleTextInputRef}
         onChangeText={onChangeInput}
         autoFocus={autoFocus}
@@ -148,6 +147,7 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
         multiline={multilineField ? multilineField : false}
         secureTextEntry={secureText ? secureText : false}
         editable={disabled ? disabled : true}
+        {...textInputProps}
       >
         <Text>
           {parts.map(({ text, partType, data }, index) =>
