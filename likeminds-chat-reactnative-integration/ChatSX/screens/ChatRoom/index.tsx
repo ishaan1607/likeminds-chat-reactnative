@@ -164,6 +164,7 @@ import {
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
 import Swipeable from "../../components/Swipeable";
+import { useLMChat } from "../../LMChatProvider";
 // import { myClient } from "../../..";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
@@ -188,9 +189,13 @@ interface UploadResource {
 }
 
 const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
-  const { myClient }: any = useAppSelector((state) => state.homefeed);
+  // const { myClient }: any = useAppSelector((state) => state.homefeed);
 
-  console.log("myClient", myClient);
+  // console.log("myClient", myClient);
+
+  const myClient = useLMChat();
+
+  console.log("myClientFromContext", myClient);
 
   const {
     chatroomID,
@@ -205,8 +210,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const refInput = useRef<any>();
 
   const db = myClient?.firebaseInstance();
-
-  console.log("db", db);
 
   const [replyChatID, setReplyChatID] = useState<number>();
   const [endPage, setEndPage] = useState(1);

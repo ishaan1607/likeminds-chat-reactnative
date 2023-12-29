@@ -1,11 +1,15 @@
-import React, { useEffect } from "react";
+import React, { createContext, useContext, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
 import { RealmProvider } from "@realm/react";
 import { UserSchemaRO } from "./db/schemas/UserSchema";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppDispatch } from "./store";
 import { Credentials } from "./credentials";
-import { INIT_API_SUCCESS, STORE_MY_CLIENT } from "./store/types/types";
+import {
+  INIT_API_SUCCESS,
+  PROFILE_DATA_SUCCESS,
+  STORE_MY_CLIENT,
+} from "./store/types/types";
 import notifee from "@notifee/react-native";
 import { getRoute } from "./notifications/routes";
 import * as RootNavigation from "./RootNavigation";
@@ -16,6 +20,18 @@ interface LMProviderProps {
   myClient: LMChatClient;
   children: React.ReactNode;
 }
+
+// Create a context for LMChatProvider
+const LMChatContext = createContext<LMChatClient | undefined>(undefined);
+
+// Create a hook to use the LMChatContext
+export const useLMChat = () => {
+  const context = useContext(LMChatContext);
+  if (!context) {
+    throw new Error("useLMChat must be used within an LMChatProvider");
+  }
+  return context;
+};
 
 export const LMChatProvider = ({
   myClient,
@@ -52,13 +68,6 @@ export const LMChatProvider = ({
 
     // storing myClient followed by community details
     const callInitApi = async () => {
-      console.log("aduasj");
-
-      dispatch({
-        type: STORE_MY_CLIENT,
-        body: { myClient: myClient },
-      });
-
       const payload = {
         uuid: "ajhdhjasd", // uuid
         userName: "jhashjsa", // user name
@@ -74,16 +83,29 @@ export const LMChatProvider = ({
         body: { community: response?.data?.community },
       });
       console.log("1234");
+
+      const response1 = await myClient?.getMemberState();
+      console.log("response1343543", response1);
+
+      dispatch({
+        type: PROFILE_DATA_SUCCESS,
+        body: {
+          member: response1?.data?.member,
+          memberRights: response1?.data?.memberRights,
+        },
+      });
     };
     callInitApi();
-  });
+  }, []);
 
   return (
-    <RealmProvider schema={[UserSchemaRO]}>
-      <GestureHandlerRootView style={styles.flexStyling}>
-        <View style={styles.flexStyling}>{children}</View>
-      </GestureHandlerRootView>
-    </RealmProvider>
+    <LMChatContext.Provider value={myClient}>
+      <RealmProvider schema={[UserSchemaRO]}>
+        <GestureHandlerRootView style={styles.flexStyling}>
+          <View style={styles.flexStyling}>{children}</View>
+        </GestureHandlerRootView>
+      </RealmProvider>
+    </LMChatContext.Provider>
   );
 };
 
