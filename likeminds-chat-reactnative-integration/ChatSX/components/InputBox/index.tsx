@@ -1976,13 +1976,11 @@ const InputBox = ({
                     >
                       {imageUrl ? (
                         <LMChatIcon
-                          type="png"
                           iconUrl={imageUrl}
                           iconStyle={styles.avatar}
                         />
                       ) : (
                         <LMChatIcon
-                          type="png"
                           assetPath={require("../../assets/images/default_pic.png")}
                           iconStyle={styles.avatar}
                         />
@@ -2058,7 +2056,6 @@ const InputBox = ({
                 style={styles.replyBoxClose}
               >
                 <LMChatIcon
-                  type="png"
                   assetPath={require("../../assets/images/close_icon.png")}
                   iconStyle={styles.replyCloseImg}
                 />
@@ -2087,7 +2084,6 @@ const InputBox = ({
                 style={styles.replyBoxClose}
               >
                 <LMChatIcon
-                  type="png"
                   assetPath={require("../../assets/images/close_icon.png")}
                   iconStyle={styles.replyCloseImg}
                 />
@@ -2120,7 +2116,6 @@ const InputBox = ({
                 style={styles.replyBoxClose}
               >
                 <LMChatIcon
-                  type="png"
                   assetPath={require("../../assets/images/close_icon.png")}
                   iconStyle={styles.replyCloseImg}
                 />
@@ -2153,7 +2148,6 @@ const InputBox = ({
                 }}
               >
                 <LMChatIcon
-                  type="png"
                   assetPath={require("../../assets/images/addImages3x.png")}
                   iconStyle={styles.emoji}
                 />
@@ -2166,7 +2160,6 @@ const InputBox = ({
                 }}
               >
                 <LMChatIcon
-                  type="png"
                   assetPath={require("../../assets/images/add_more_docs3x.png")}
                   iconStyle={styles.emoji}
                 />
@@ -2206,7 +2199,6 @@ const InputBox = ({
                 <View style={styles.alignItems}>
                   <Animated.View style={[{ opacity: micIconOpacity }]}>
                     <LMChatIcon
-                      type="png"
                       assetPath={require("../../assets/images/record_icon3x.png")}
                       iconStyle={styles.emoji}
                     />
@@ -2219,14 +2211,12 @@ const InputBox = ({
                   <View style={styles.alignItems}>
                     <TouchableOpacity onPress={handleStopRecord}>
                       <LMChatIcon
-                        type="png"
                         assetPath={require("../../assets/images/stop_recording_icon3x.png")}
                         iconStyle={styles.emoji}
                       />
                     </TouchableOpacity>
                     <TouchableOpacity onPress={clearVoiceRecord}>
                       <LMChatIcon
-                        type="png"
                         assetPath={require("../../assets/images/cross_circle_icon3x.png")}
                         iconStyle={styles.emoji}
                       />
@@ -2235,7 +2225,6 @@ const InputBox = ({
                 ) : (
                   <View style={styles.alignItems}>
                     <LMChatIcon
-                      type="png"
                       assetPath={require("../../assets/images/left_chevron_icon3x.png")}
                       iconStyle={styles.chevron}
                     />
@@ -2260,7 +2249,6 @@ const InputBox = ({
                       }}
                     >
                       <LMChatIcon
-                        type="png"
                         assetPath={require("../../assets/images/pause_icon3x.png")}
                         iconStyle={styles.emoji}
                       />
@@ -2276,7 +2264,6 @@ const InputBox = ({
                       }}
                     >
                       <LMChatIcon
-                        type="png"
                         assetPath={require("../../assets/images/play_icon3x.png")}
                         iconStyle={styles.emoji}
                       />
@@ -2297,7 +2284,6 @@ const InputBox = ({
                   style={styles.alignItems}
                 >
                   <LMChatIcon
-                    type="png"
                     assetPath={require("../../assets/images/cross_circle_icon3x.png")}
                     iconStyle={styles.emoji}
                   />
@@ -2425,7 +2411,6 @@ const InputBox = ({
                 }}
               >
                 <LMChatIcon
-                  type="png"
                   assetPath={require("../../assets/images/open_files3x.png")}
                   iconStyle={styles.emoji}
                 />
@@ -2483,7 +2468,6 @@ const InputBox = ({
             style={styles.sendButton}
           >
             <LMChatIcon
-              type="png"
               assetPath={require("../../assets/images/send_button3x.png")}
               iconStyle={styles.send}
             />
@@ -2499,14 +2483,12 @@ const InputBox = ({
                     >
                       <Animated.View style={lockAnimatedStyles}>
                         <LMChatIcon
-                          type="png"
                           assetPath={require("../../assets/images/lock_icon3x.png")}
                           iconStyle={styles.lockIconStyle}
                         />
                       </Animated.View>
                       <Animated.View style={upChevronAnimatedStyles}>
                         <LMChatIcon
-                          type="png"
                           assetPath={require("../../assets/images/up_chevron_icon3x.png")}
                           iconStyle={styles.chevronUpStyle}
                         />
@@ -2523,7 +2505,6 @@ const InputBox = ({
                       style={[styles.sendButton, { position: "absolute" }]}
                     >
                       <LMChatIcon
-                        type="png"
                         assetPath={require("../../assets/images/mic_icon3x.png")}
                         iconStyle={styles.mic}
                       />
@@ -2539,7 +2520,6 @@ const InputBox = ({
                   style={[styles.sendButton, { position: "absolute" }]}
                 >
                   <LMChatIcon
-                    type="png"
                     assetPath={require("../../assets/images/mic_icon3x.png")}
                     iconStyle={styles.mic}
                   />
@@ -2574,7 +2554,6 @@ const InputBox = ({
                     style={styles.cameraStyle}
                   >
                     <LMChatIcon
-                      type="png"
                       assetPath={require("../../assets/images/camera_icon3x.png")}
                       iconStyle={styles.emoji}
                     />
@@ -2594,7 +2573,6 @@ const InputBox = ({
                     style={styles.imageStyle}
                   >
                     <LMChatIcon
-                      type="png"
                       assetPath={require("../../assets/images/select_image_icon3x.png")}
                       iconStyle={styles.emoji}
                     />
@@ -2614,7 +2592,6 @@ const InputBox = ({
                     style={styles.docStyle}
                   >
                     <LMChatIcon
-                      type="png"
                       assetPath={require("../../assets/images/select_doc_icon3x.png")}
                       iconStyle={styles.emoji}
                     />
@@ -2636,7 +2613,6 @@ const InputBox = ({
                       style={styles.pollStyle}
                     >
                       <LMChatIcon
-                        type="png"
                         assetPath={require("../../assets/images/poll_icon3x.png")}
                         iconStyle={styles.emoji}
                       />

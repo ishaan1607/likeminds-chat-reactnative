@@ -33,13 +33,13 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationRef} from './RootNavigation';
 import {
-  CarouselScreen,
+  // CarouselScreen,
   ChatRoom,
-  CreatePollScreen,
-  FileUpload,
-  ImageCropScreen,
+  // CreatePollScreen,
+  // FileUpload,
+  // ImageCropScreen,
   LMChatProvider,
-  PollResult,
+  // PollResult,
 } from 'likeminds_chat_reactnative_integration';
 import {RealmProvider} from '@realm/react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -74,13 +74,13 @@ function App(): React.JSX.Element {
                 myClient: myClient,
               }}
             />
-            <Stack.Screen
+            {/* <Stack.Screen
               options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
               name={'FileUpload'}
               component={FileUpload}
-            />
+            /> */}
             {/* <Stack.Screen name={VIDEO_PLAYER} component={VideoPlayer} /> */}
-            <Stack.Screen
+            {/* <Stack.Screen
               options={{gestureEnabled: false}}
               name={'CarouselScreen'}
               component={CarouselScreen}
@@ -94,7 +94,7 @@ function App(): React.JSX.Element {
               // options={{headerShown: false, gestureEnabled: false}}
               name={'CreatePollScreen'}
               component={CreatePollScreen}
-            />
+            /> */}
             {/* <Stack.Screen
               options={{headerShown: false}}
               name={'ImageCropScreen'}
