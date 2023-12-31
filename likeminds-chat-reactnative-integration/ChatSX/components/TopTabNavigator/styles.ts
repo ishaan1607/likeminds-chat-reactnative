@@ -1,5 +1,5 @@
-import {StatusBar, StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
+import { StatusBar, StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
 
 export const styles = StyleSheet.create({
   avatar: {
@@ -8,9 +8,7 @@ export const styles = StyleSheet.create({
     borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
     marginRight: STYLES.$MARGINS.SMALL,
   },
-  container: {
-    // marginTop: StatusBar.currentHeight,
-  },
+  container: {},
   scene: {
     flex: 1,
   },
@@ -25,21 +23,21 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.MSG,
   },
   reactionItem: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingVertical: STYLES.$PADDINGS.MEDIUM,
   },
   alignRow: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   alignColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
     paddingVertical: 2,
     gap: 5,
     flexGrow: 1,

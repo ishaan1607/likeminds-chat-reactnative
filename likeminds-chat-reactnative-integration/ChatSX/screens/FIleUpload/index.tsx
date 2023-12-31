@@ -376,13 +376,13 @@ const FileUpload = ({ navigation, route }: any) => {
           /* jshint ignore:start */
           <View style={styles.video}>
             <VideoPlayer
-              // source={{ uri: selectedFileToView?.uri }}
+              source={{ uri: selectedFileToView?.uri }}
               videoStyle={styles.videoPlayer}
               videoRef={video}
               disableBack={true}
               disableVolume={true}
               disableFullscreen={true}
-              // paused={true}
+              paused={true}
               showOnStart={true}
             />
           </View>

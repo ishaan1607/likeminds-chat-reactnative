@@ -143,13 +143,13 @@ const CarouselScreen = ({ navigation, route }: any) => {
               ) : item?.type === VIDEO_TEXT ? (
                 <View style={styles.video}>
                   <VideoPlayer
-                    // source={{uri: item?.url}}
+                    source={{ uri: item?.url }}
                     videoStyle={styles.videoPlayer}
                     videoRef={video}
                     disableVolume={true}
                     disableBack={true}
                     disableFullscreen={true}
-                    // paused={true}
+                    paused={true}
                     showOnStart={true}
                   />
                 </View>

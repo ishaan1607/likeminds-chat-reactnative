@@ -1,12 +1,12 @@
-import {View, Image, Text, ScrollView, TouchableOpacity} from 'react-native';
-import React, {useLayoutEffect, useState} from 'react';
-import {styles} from './styles';
-import STYLES from '../../constants/Styles';
-import {TabView, SceneMap, TabBar} from 'react-native-tab-view';
-import Layout from '../../constants/Layout';
-import {useAppSelector} from '../../store';
-import {Events, Keys} from '../../enums';
-import {LMChatAnalytics} from '../../analytics/LMChatAnalytics';
+import { View, Image, Text, ScrollView, TouchableOpacity } from "react-native";
+import React, { useLayoutEffect, useState } from "react";
+import { styles } from "./styles";
+import STYLES from "../../constants/Styles";
+import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import Layout from "../../constants/Layout";
+import { useAppSelector } from "../../store";
+import { Events, Keys } from "../../enums";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 
 interface PeopleWhoReactedDefault {
   item: any;
@@ -27,10 +27,11 @@ export const PeopleWhoReactedDefault = ({
   user,
 }: PeopleWhoReactedDefault) => {
   return (
-    <View style={{height: '100%'}}>
+    <View style={{ height: "100%" }}>
       <ScrollView
-        contentContainerStyle={{flexGrow: 1}}
-        keyboardDismissMode="on-drag">
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardDismissMode="on-drag"
+      >
         {item?.map((val: any, index: any) => {
           return (
             <View key={val + index} style={styles.reactionItem}>
@@ -39,8 +40,8 @@ export const PeopleWhoReactedDefault = ({
                   <Image
                     source={
                       val?.member?.image_url
-                        ? {uri: val?.member?.image_url}
-                        : require('../../assets/images/default_pic.png')
+                        ? { uri: val?.member?.image_url }
+                        : require("../../assets/images/default_pic.png")
                     }
                     style={styles.avatar}
                   />
@@ -49,7 +50,8 @@ export const PeopleWhoReactedDefault = ({
                   onPress={() => {
                     removeReaction(val?.member, false);
                   }}
-                  style={styles.alignColumn}>
+                  style={styles.alignColumn}
+                >
                   <Text style={styles.textHeading}>{val?.member?.name}</Text>
                   {val?.member?.id == user?.id ? (
                     <Text style={styles.text}>Tap to remove</Text>
@@ -74,7 +76,7 @@ export const PeopleWhoReacted = ({
   user,
 }: PeopleWhoReacted) => {
   return (
-    <View style={{height: '100%'}}>
+    <View style={{ height: "100%" }}>
       <ScrollView>
         {item?.map((val: any, index: any) => {
           return (
@@ -84,8 +86,8 @@ export const PeopleWhoReacted = ({
                   <Image
                     source={
                       val?.image_url
-                        ? {uri: val?.image_url}
-                        : require('../../assets/images/default_pic.png')
+                        ? { uri: val?.image_url }
+                        : require("../../assets/images/default_pic.png")
                     }
                     style={styles.avatar}
                   />
@@ -94,7 +96,8 @@ export const PeopleWhoReacted = ({
                   onPress={() => {
                     removeReaction(val, true);
                   }}
-                  style={styles.alignColumn}>
+                  style={styles.alignColumn}
+                >
                   <Text style={styles.textHeading}>{val?.name}</Text>
                   {val?.id == user?.id ? (
                     <Text style={styles.text}>Tap to remove</Text>
@@ -115,13 +118,13 @@ export const PeopleWhoReacted = ({
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
-    tabStyle={{width: 70, color: STYLES.$COLORS.SECONDARY}}
+    tabStyle={{ width: 70, color: STYLES.$COLORS.SECONDARY }}
     labelStyle={[
       styles.textHeading,
-      {color: STYLES.$COLORS.LIGHT_BLUE, textTransform: 'capitalize'},
+      { color: STYLES.$COLORS.LIGHT_BLUE, textTransform: "capitalize" },
     ]}
-    indicatorStyle={{backgroundColor: STYLES.$COLORS.SECONDARY}}
-    style={{backgroundColor: 'white'}}
+    indicatorStyle={{ backgroundColor: STYLES.$COLORS.SECONDARY }}
+    style={{ backgroundColor: "white" }}
     scrollEnabled={true}
   />
 );
@@ -143,26 +146,26 @@ export default function MyTabs({
   item,
   chatroomID,
 }: MyTabs) {
-  const {user} = useAppSelector(state => state.homefeed);
+  const { user } = useAppSelector((state) => state.homefeed);
   const index = reactionArr.findIndex(
-    (val: any) => val?.reaction === selectedReaction,
+    (val: any) => val?.reaction === selectedReaction
   );
   const [state, setState] = useState({
     index: index >= 0 && selectedReaction ? index + 1 : 0,
-    routes: [{key: 'all', title: 'All ', val: defaultReactionArr}],
+    routes: [{ key: "all", title: "All ", val: defaultReactionArr }],
   });
 
   useLayoutEffect(() => {
     const initialState = {
       index: 0,
-      routes: [{key: 'all', title: 'All ', val: defaultReactionArr}],
+      routes: [{ key: "all", title: "All ", val: defaultReactionArr }],
     };
     LMChatAnalytics.track(
       Events.REACTION_LIST_OPENED,
       new Map<string, string>([
         [Keys.MESSAGE_ID, item?.id],
         [Keys.CHATROOM_ID, chatroomID?.toString()],
-      ]),
+      ])
     );
     if (reactionArr.length > 0) {
       for (let i = 0; i < reactionArr.length; i++) {
@@ -185,9 +188,9 @@ export default function MyTabs({
     <TabView
       navigationState={state}
       renderTabBar={renderTabBar}
-      renderScene={({route}) => {
+      renderScene={({ route }) => {
         switch (route.key) {
-          case 'all':
+          case "all":
             return (
               <PeopleWhoReactedDefault
                 item={defaultReactionArr}
@@ -206,14 +209,12 @@ export default function MyTabs({
             );
         }
       }}
-      onIndexChange={index => setState({index, routes: state.routes})}
-      initialLayout={{width: Layout.window.width}}
+      onIndexChange={(index) => setState({ index, routes: state.routes })}
+      initialLayout={{ width: Layout.window.width }}
       style={styles.container}
-      overScrollMode={'always'}
+      overScrollMode={"always"}
       animationEnabled={true}
       swipeEnabled={true}
-      // pagerStyle={{overflow: 'scroll', height: 150}}
-      // sceneContainerStyle={{overflow:'scroll',height:150}}
     />
   );
 }
