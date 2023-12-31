@@ -13,10 +13,14 @@ import { getRoute } from "./notifications/routes";
 import * as RootNavigation from "./RootNavigation";
 import { setupPlayer } from "./audio";
 import { LMChatClient } from "@likeminds.community/chat-rn";
+import { GiphySDK } from "@giphy/react-native-sdk";
+import { GIPHY_SDK_API_KEY } from "./awsExports";
 
 interface LMProviderProps {
   myClient: LMChatClient;
   children: React.ReactNode;
+  userName: string;
+  userUniqueId: string;
 }
 
 // Create a context for LMChatProvider
@@ -34,6 +38,8 @@ export const useLMChat = () => {
 export const LMChatProvider = ({
   myClient,
   children,
+  userName,
+  userUniqueId,
 }: LMProviderProps): JSX.Element => {
   //To navigate onPress notification while android app is in background state / quit state.
   useEffect(() => {
@@ -58,6 +64,11 @@ export const LMChatProvider = ({
     setup();
   }, []);
 
+  // to configure gifphy sdk
+  useEffect(() => {
+    GiphySDK.configure({ apiKey: GIPHY_SDK_API_KEY });
+  }, []);
+
   // to get dispatch
   const dispatch = useAppDispatch();
 
@@ -65,10 +76,12 @@ export const LMChatProvider = ({
     // storing myClient followed by community details
     const callInitApi = async () => {
       const payload = {
-        uuid: "ajhdhjasd12345", // uuid
-        userName: "ajhdhjasd12345", // user name
+        uuid: userUniqueId, // uuid
+        userName: userName, // user name
         isGuest: false,
       };
+
+      Credentials.setCredentials(userName, userUniqueId);
 
       const response = await myClient?.initiateUser(payload);
 

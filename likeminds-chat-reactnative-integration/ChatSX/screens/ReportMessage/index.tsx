@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { myClient } from "../../..";
 import STYLES from "../../constants/Styles";
 import styles from "./styles";
 import { SHOW_TOAST } from "../../store/types/types";
@@ -17,6 +16,7 @@ import { useAppDispatch } from "../../store";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { getConversationType } from "../../utils/analyticsUtils";
+import { myClient } from "../../../";
 interface Props {
   navigation: any;
   route: any;

@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useEffect} from 'react';
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,46 +9,49 @@ import {
   ActivityIndicator,
   Image,
   Pressable,
-} from 'react-native';
-import {myClient} from '../../../../..';
-import {SHOW_LIST_REGEX, getNameInitials} from '../../../../commonFuctions';
-import HomeFeedExplore from '../../../../components/HomeFeedExplore';
-import HomeFeedItem from '../../../../components/HomeFeedItem';
-import STYLES from '../../../../constants/Styles';
-import {onValue, ref} from '@firebase/database';
-import {useAppDispatch, useAppSelector} from '../../../../store';
+} from "react-native";
+import { SHOW_LIST_REGEX, getNameInitials } from "../../../../commonFuctions";
+import HomeFeedExplore from "../../../../components/HomeFeedExplore";
+import HomeFeedItem from "../../../../components/HomeFeedItem";
+import STYLES from "../../../../constants/Styles";
+import { onValue, ref } from "@firebase/database";
+import { useAppDispatch, useAppSelector } from "../../../../store";
 import {
   getInvites,
   initAPI,
   updateDMFeedData,
   updateHomeFeedData,
   updateInvites,
-} from '../../../../store/actions/homefeed';
-import styles from './styles';
+} from "../../../../store/actions/homefeed";
+import styles from "./styles";
 import {
   SET_DM_PAGE,
   SET_INITIAL_DMFEED_CHATROOM,
   INSERT_DMFEED_CHATROOM,
   UPDATE_DMFEED_CHATROOM,
   DELETE_DMFEED_CHATROOM,
-} from '../../../../store/types/types';
-import {getUniqueId} from 'react-native-device-info';
-import {fetchFCMToken, requestUserPermission} from '../../../../notifications';
-import {DM_ALL_MEMBERS} from '../../../../constants/Screens';
+} from "../../../../store/types/types";
+import { getUniqueId } from "react-native-device-info";
+import {
+  fetchFCMToken,
+  requestUserPermission,
+} from "../../../../notifications";
+import { DM_ALL_MEMBERS } from "../../../../constants/Screens";
 import {
   DM_INFO,
   NEW_MESSAGE_BTN_TEXT,
   NO_DM,
   NO_DM_TEXT,
-} from '../../../../constants/Strings';
-import {FlashList} from '@shopify/flash-list';
-import {useIsFocused} from '@react-navigation/native';
-import Realm from 'realm';
-import {paginatedSyncAPI} from '../../../../utils/syncChatroomApi';
-import LinearGradient from 'react-native-linear-gradient';
-import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import {Events, Keys, Sources} from '../../../../enums';
-import {LMChatAnalytics} from '../../../../analytics/LMChatAnalytics';
+} from "../../../../constants/Strings";
+import { FlashList } from "@shopify/flash-list";
+import { useIsFocused } from "@react-navigation/native";
+import Realm from "realm";
+import { paginatedSyncAPI } from "../../../../utils/syncChatroomApi";
+import LinearGradient from "react-native-linear-gradient";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import { Events, Keys, Sources } from "../../../../enums";
+import { LMChatAnalytics } from "../../../../analytics/LMChatAnalytics";
+import { myClient } from "../../../../../";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -56,12 +59,12 @@ interface Props {
   navigation: any;
 }
 
-const DMFeed = ({navigation}: Props) => {
+const DMFeed = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [shimmerIsLoading, setShimmerIsLoading] = useState(true);
   const [showDM, setShowDM] = useState(false);
   const [showList, setShowList] = useState<any>(null);
-  const [FCMToken, setFCMToken] = useState('');
+  const [FCMToken, setFCMToken] = useState("");
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
 
@@ -72,8 +75,8 @@ const DMFeed = ({navigation}: Props) => {
     dmPage,
     invitedChatrooms,
     dmFeedChatrooms,
-  } = useAppSelector(state => state.homefeed);
-  const {user, community} = useAppSelector(state => state.homefeed);
+  } = useAppSelector((state) => state.homefeed);
+  const { user, community } = useAppSelector((state) => state.homefeed);
 
   const db = myClient?.firebaseInstance();
   const chatrooms = [...myDMChatrooms];
@@ -87,7 +90,7 @@ const DMFeed = ({navigation}: Props) => {
         page: 1,
       };
       const apiRes = await myClient?.checkDMStatus({
-        requestFrom: 'dm_feed_v2',
+        requestFrom: "dm_feed_v2",
       });
       const response = apiRes?.data;
       if (response) {
@@ -106,7 +109,7 @@ const DMFeed = ({navigation}: Props) => {
     if (isFocused) {
       LMChatAnalytics.track(
         Events.DM_FEED_OPENED,
-        new Map<string, string>([[Keys.SOURCE, Sources.HOME_FEED]]),
+        new Map<string, string>([[Keys.SOURCE, Sources.HOME_FEED]])
       );
     }
   }, [isFocused]);
@@ -135,7 +138,7 @@ const DMFeed = ({navigation}: Props) => {
       setShimmerIsLoading(false);
       dispatch({
         type: SET_INITIAL_DMFEED_CHATROOM,
-        body: {dmFeedChatrooms: existingChatrooms},
+        body: { dmFeedChatrooms: existingChatrooms },
       });
     }
   };
@@ -155,7 +158,7 @@ const DMFeed = ({navigation}: Props) => {
 
   useEffect(() => {
     const query = ref(db, `/community/${community?.id}`);
-    return onValue(query, snapshot => {
+    return onValue(query, (snapshot) => {
       if (snapshot.exists()) {
         if (!user?.sdkClientInfo?.community) {
           return;
@@ -185,7 +188,7 @@ const DMFeed = ({navigation}: Props) => {
           new Map<string, string>([
             [Keys.SYNC_COMPLETE, true?.toString()],
             [Keys.TIME_TAKEN, (endTime - startTime)?.toString()],
-          ]),
+          ])
         );
       }
       setShimmerIsLoading(false);
@@ -225,7 +228,7 @@ const DMFeed = ({navigation}: Props) => {
         myDMChatrooms?.length === 10 * dmPage
       ) {
         const newPage = dmPage + 1;
-        dispatch({type: SET_DM_PAGE, body: newPage});
+        dispatch({ type: SET_DM_PAGE, body: newPage });
         loadData(newPage);
       }
     }
@@ -233,7 +236,7 @@ const DMFeed = ({navigation}: Props) => {
 
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{paddingVertical: 20}}>
+      <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;
@@ -246,22 +249,23 @@ const DMFeed = ({navigation}: Props) => {
           <View style={[styles.justifyCenter]}>
             <Image
               style={styles.nothingImg}
-              source={require('../../../../assets/images/nothing3x.png')}
+              source={require("../../../../assets/images/nothing3x.png")}
             />
             <Text style={styles.title}>{NO_DM}</Text>
             <Text style={styles.subTitle}>{NO_DM_TEXT}</Text>
 
             <Pressable
               onPress={() => {
-                navigation.navigate(DM_ALL_MEMBERS, {showList: showList});
+                navigation.navigate(DM_ALL_MEMBERS, { showList: showList });
               }}
-              style={({pressed}) => [
-                {opacity: pressed ? 0.5 : 1.0},
+              style={({ pressed }) => [
+                { opacity: pressed ? 0.5 : 1.0 },
                 styles.nothingFab,
-              ]}>
+              ]}
+            >
               <Image
                 style={styles.fabImg}
-                source={require('../../../../assets/images/new_message_icon3x.png')}
+                source={require("../../../../assets/images/new_message_icon3x.png")}
               />
               <Text style={styles.text}>{NEW_MESSAGE_BTN_TEXT}</Text>
             </Pressable>
@@ -270,8 +274,9 @@ const DMFeed = ({navigation}: Props) => {
           <Text
             style={[
               styles.subTitle,
-              {marginBottom: 30, paddingHorizontal: 10},
-            ]}>
+              { marginBottom: 30, paddingHorizontal: 10 },
+            ]}
+          >
             {DM_INFO}
           </Text>
         </View>
@@ -279,86 +284,92 @@ const DMFeed = ({navigation}: Props) => {
         <>
           <View
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
               marginTop: 50,
-            }}>
+            }}
+          >
             <View
               style={{
-                width: '20%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+                width: "20%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ShimmerPlaceHolder
                 style={{
                   width: 50,
-                  alignItmes: 'center',
-                  justifyContent: 'center',
+                  alignItmes: "center",
+                  justifyContent: "center",
                   borderRadius: 50,
                   height: 50,
                 }}
               />
             </View>
-            <View style={{width: '100%'}}>
-              <ShimmerPlaceHolder style={{width: '70%'}} />
-              <ShimmerPlaceHolder style={{marginTop: 10, width: '50%'}} />
+            <View style={{ width: "100%" }}>
+              <ShimmerPlaceHolder style={{ width: "70%" }} />
+              <ShimmerPlaceHolder style={{ marginTop: 10, width: "50%" }} />
             </View>
           </View>
           <View
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
               marginTop: 50,
-            }}>
+            }}
+          >
             <View
               style={{
-                width: '20%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+                width: "20%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ShimmerPlaceHolder
                 style={{
                   width: 50,
-                  alignItmes: 'center',
-                  justifyContent: 'center',
+                  alignItmes: "center",
+                  justifyContent: "center",
                   borderRadius: 50,
                   height: 50,
                 }}
               />
             </View>
-            <View style={{width: '100%'}}>
-              <ShimmerPlaceHolder style={{width: '70%'}} />
-              <ShimmerPlaceHolder style={{marginTop: 10, width: '50%'}} />
+            <View style={{ width: "100%" }}>
+              <ShimmerPlaceHolder style={{ width: "70%" }} />
+              <ShimmerPlaceHolder style={{ marginTop: 10, width: "50%" }} />
             </View>
           </View>
           <View
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
               marginTop: 50,
-            }}>
+            }}
+          >
             <View
               style={{
-                width: '20%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+                width: "20%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ShimmerPlaceHolder
                 style={{
                   width: 50,
-                  alignItmes: 'center',
-                  justifyContent: 'center',
+                  alignItmes: "center",
+                  justifyContent: "center",
                   borderRadius: 50,
                   height: 50,
                 }}
               />
             </View>
-            <View style={{width: '100%'}}>
-              <ShimmerPlaceHolder style={{width: '70%'}} />
-              <ShimmerPlaceHolder style={{marginTop: 10, width: '50%'}} />
+            <View style={{ width: "100%" }}>
+              <ShimmerPlaceHolder style={{ width: "70%" }} />
+              <ShimmerPlaceHolder style={{ marginTop: 10, width: "50%" }} />
             </View>
           </View>
         </>
@@ -369,7 +380,7 @@ const DMFeed = ({navigation}: Props) => {
             value: [user, dmFeedChatrooms],
           }}
           estimatedItemSize={15}
-          renderItem={({item}: any) => {
+          renderItem={({ item }: any) => {
             const userTitle =
               user?.id == item?.chatroomWithUserId
                 ? item?.member?.name
@@ -410,12 +421,16 @@ const DMFeed = ({navigation}: Props) => {
       {showDM && dmFeedChatrooms?.length > 0 ? (
         <Pressable
           onPress={() => {
-            navigation.navigate(DM_ALL_MEMBERS, {showList: showList});
+            navigation.navigate(DM_ALL_MEMBERS, { showList: showList });
           }}
-          style={({pressed}) => [{opacity: pressed ? 0.5 : 1.0}, styles.fab]}>
+          style={({ pressed }) => [
+            { opacity: pressed ? 0.5 : 1.0 },
+            styles.fab,
+          ]}
+        >
           <Image
             style={styles.fabImg}
-            source={require('../../../../assets/images/new_message_icon3x.png')}
+            source={require("../../../../assets/images/new_message_icon3x.png")}
           />
           <Text style={styles.text}>{NEW_MESSAGE_BTN_TEXT}</Text>
         </Pressable>

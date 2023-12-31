@@ -5,7 +5,7 @@ import styles from "./styles";
 import STYLES from "../../constants/Styles";
 import { FlashList } from "@shopify/flash-list";
 import { NO_RESPONSES, POLL_RESULT_TEXT } from "../../constants/Strings";
-import { myClient } from "../../..";
+import { myClient } from "../../../";
 
 const PollStack = createMaterialTopTabNavigator();
 

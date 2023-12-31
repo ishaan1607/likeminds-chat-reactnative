@@ -44,7 +44,6 @@ import {
 } from "../../store/types/types";
 import { ReplyBox } from "../ReplyConversations";
 import { chatSchema } from "../../assets/chatSchema";
-import { myClient } from "../../..";
 import {
   launchImageLibrary,
   launchCamera,
@@ -75,7 +74,7 @@ import {
 } from "../../constants/Strings";
 import { CognitoIdentityCredentials, S3 } from "aws-sdk";
 import AWS from "aws-sdk";
-import { POOL_ID, REGION } from "../../aws-exports";
+import { POOL_ID, REGION } from "../../awsExports";
 import {
   atLeastAndroid13,
   detectMentions,
@@ -143,6 +142,7 @@ import {
   convertToMentionValues,
   replaceMentionValues,
 } from "likeminds_chat_reactnative_ui/components/LMChatTextInput/utils";
+import { myClient } from "../../../";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
@@ -2326,16 +2326,12 @@ const InputBox = ({
                   placeholderText="Type here..."
                   placeholderTextColor="#aaa"
                   inputTextStyle={{
-                    // fontSize: 16,
-                    // height: 40,
+                    width: "100%",
                     height: Math.max(35, inputHeight),
                     elevation: 0,
                     backgroundColor: isUploadScreen
                       ? STYLES.$BACKGROUND_COLORS.DARK
                       : STYLES.$BACKGROUND_COLORS.LIGHT,
-                    // maxHeight: 220,
-                    // borderRadius: 50,
-                    // paddingLeft: 10,
                   }}
                   onContentSizeChange={(event) => {
                     setInputHeight(event.nativeEvent.contentSize.height);
@@ -2353,9 +2349,6 @@ const InputBox = ({
                       }, // The mention style in the input
                     },
                   ]}
-                  nonPartTypeTextStyle={{
-                    color: "#aaa",
-                  }}
                   inputText={message}
                   maxLength={
                     chatRequestState === 0 || chatRequestState === null
@@ -2363,46 +2356,6 @@ const InputBox = ({
                       : undefined
                   }
                 />
-                {/* <TaggingView
-                  defaultValue={message}
-                  onChange={handleInputChange}
-                  placeholder="Type here..."
-                  placeholderTextColor="#aaa"
-                  inputRef={myRef}
-                  maxLength={
-                    chatRequestState === 0 || chatRequestState === null
-                      ? MAX_LENGTH
-                      : undefined
-                  }
-                  onContentSizeChange={event => {
-                    setInputHeight(event.nativeEvent.contentSize.height);
-                  }}
-                  style={[
-                    styles.input,
-                    {height: Math.max(25, inputHeight)},
-                    {
-                      color: isUploadScreen
-                        ? STYLES.$BACKGROUND_COLORS.LIGHT
-                        : STYLES.$BACKGROUND_COLORS.DARK,
-                    },
-                  ]}
-                  numberOfLines={6}
-                  onBlur={() => {
-                    setIsKeyBoardFocused(false);
-                  }}
-                  onFocus={() => {
-                    setIsKeyBoardFocused(true);
-                  }}
-                  partTypes={[
-                    {
-                      trigger: '@', // Should be a single character like '@' or '#'
-                      textStyle: {
-                        color: STYLES.$COLORS.LIGHT_BLUE,
-                        fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                      }, // The mention style in the input
-                    },
-                  ]}
-                /> */}
               </View>
             )}
 

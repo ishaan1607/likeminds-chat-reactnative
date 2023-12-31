@@ -1,5 +1,12 @@
 import Styles from "../constants/Styles";
-import React, { Alert, Text, Linking } from "react-native";
+import React, {
+  Alert,
+  Text,
+  Linking,
+  StyleProp,
+  TextStyle,
+} from "react-native";
+import defaultStyles from "../constants/defaultStyles";
 
 const REGEX_USER_SPLITTING = /(<<.+?\|route:\/\/[^>]+>>)/gu;
 export const REGEX_USER_TAGGING =
@@ -71,6 +78,7 @@ function detectLinks(message: string, isLongPress?: boolean) {
 export const decode = (
   text: string | undefined,
   enableClick: boolean,
+  nonPartTypeTextStyle?: StyleProp<TextStyle>,
   chatroomName?: string,
   communityId?: string,
   isLongPress?: boolean,
@@ -117,10 +125,11 @@ export const decode = (
       <Text>
         {arr.map((val, index) => (
           <Text
-            style={{
-              color: Styles.$COLORS.PRIMARY,
-              fontFamily: Styles.$FONT_TYPES.LIGHT,
-            }}
+            style={
+              nonPartTypeTextStyle
+                ? nonPartTypeTextStyle
+                : defaultStyles.nonPartTextStyle
+            }
             key={val.key + index}
           >
             {/* key should be unique so we are passing `val(abc) + index(number) = abc2` to make it unique */}

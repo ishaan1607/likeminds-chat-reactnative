@@ -11,7 +11,6 @@ import {
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
-import { myClient } from "../../..";
 import { useAppSelector } from "../../store";
 import Layout from "../../constants/Layout";
 import { ADD_PARTICIPANTS } from "../../constants/Screens";
@@ -19,6 +18,7 @@ import { FlashList } from "@shopify/flash-list";
 import { LoaderComponent } from "../../components/LoaderComponent";
 import { Events, Keys, Sources } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import { myClient } from "../../../";
 
 const ViewParticipants = ({ navigation, route }: any) => {
   const [participants, setParticipants] = useState({} as any);

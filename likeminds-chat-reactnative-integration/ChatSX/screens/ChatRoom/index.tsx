@@ -163,7 +163,6 @@ import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
 import Swipeable from "../../components/Swipeable";
 import { useLMChat } from "../../LMChatProvider";
-// import { myClient } from "../../..";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 

@@ -1,5 +1,5 @@
-import {CALL_API} from '../apiMiddleware';
-import {Alert} from 'react-native';
+import { CALL_API } from "../apiMiddleware";
+import { Alert } from "react-native";
 import {
   GET_EXPLORE_FEED_CHAT,
   GET_EXPLORE_FEED_CHAT_FAILED,
@@ -7,9 +7,9 @@ import {
   UPDATE_EXPLORE_FEED_CHAT,
   UPDATE_EXPLORE_FEED_CHAT_FAILED,
   UPDATE_EXPLORE_FEED_CHAT_SUCCESS,
-} from '../types/types';
-import {myClient} from '../../..';
-import {Dispatch} from '@reduxjs/toolkit';
+} from "../types/types";
+import { Dispatch } from "@reduxjs/toolkit";
+import { myClient } from "../../../";
 
 export const getExploreFeedData =
   (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {

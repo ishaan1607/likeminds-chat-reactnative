@@ -159,8 +159,8 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
                 {text}
               </Text>
             ) : (
-              <Text key={index} style={nonPartTypeTextStyle}>
-                {decode(text, true)}
+              <Text key={index}>
+                {decode(text, true, nonPartTypeTextStyle)}
               </Text>
             )
           )}

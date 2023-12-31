@@ -46,4 +46,5 @@ export default {
     textAlign: "auto",
     fontStyle: "normal",
   },
+  nonPartTextStyle: { color: "#aaa" },
 };

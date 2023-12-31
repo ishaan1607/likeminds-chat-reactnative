@@ -1,11 +1,10 @@
-import {removeKey} from '../../commonFuctions';
-import {myClient} from '../../..';
+import { removeKey } from "../../commonFuctions";
 import {
   CLEAR_FILE_UPLOADING_MESSAGES,
   IS_FILE_UPLOADING,
   SET_FILE_UPLOADING_MESSAGES,
   UPDATE_FILE_UPLOADING_OBJECT,
-} from '../types/types';
+} from "../types/types";
 
 const initialState = {
   isFileUploading: false,
@@ -16,7 +15,7 @@ const initialState = {
 export function fileUploadReducer(state = initialState, action: any) {
   switch (action.type) {
     case IS_FILE_UPLOADING: {
-      const {fileUploadingStatus, fileUploadingID} = action.body;
+      const { fileUploadingStatus, fileUploadingID } = action.body;
       return {
         ...state,
         isFileUploading: fileUploadingStatus,
@@ -24,8 +23,8 @@ export function fileUploadReducer(state = initialState, action: any) {
       };
     }
     case SET_FILE_UPLOADING_MESSAGES: {
-      const {message = {}, ID} = action.body;
-      const obj = {[ID]: {...message}};
+      const { message = {}, ID } = action.body;
+      const obj = { [ID]: { ...message } };
       const dummyState = {
         ...state.uploadingFilesMessages,
         ...obj,
@@ -36,21 +35,21 @@ export function fileUploadReducer(state = initialState, action: any) {
       };
     }
     case CLEAR_FILE_UPLOADING_MESSAGES: {
-      const {ID} = action.body;
+      const { ID } = action.body;
 
       // removeKey removes the sent media from retry media list, ie, obj
       const obj = removeKey(ID, state.uploadingFilesMessages);
       const dummyState = {
         ...state,
-        uploadingFilesMessages: {...obj},
+        uploadingFilesMessages: { ...obj },
       };
 
       return dummyState;
     }
 
     case UPDATE_FILE_UPLOADING_OBJECT: {
-      const {message = {}, ID} = action.body;
-      const obj = {[ID]: {...message}};
+      const { message = {}, ID } = action.body;
+      const obj = { [ID]: { ...message } };
       const dummyState = {
         ...state.uploadingFilesMessages,
         ...obj,
@@ -58,7 +57,7 @@ export function fileUploadReducer(state = initialState, action: any) {
 
       return {
         ...state,
-        uploadingFilesMessages: {...dummyState},
+        uploadingFilesMessages: { ...dummyState },
       };
     }
     default:

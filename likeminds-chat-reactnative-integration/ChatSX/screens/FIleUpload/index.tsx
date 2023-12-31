@@ -39,7 +39,6 @@ import { CognitoIdentityCredentials, S3 } from "aws-sdk";
 import AWS from "aws-sdk";
 import { BUCKET, POOL_ID, REGION } from "../../awsExports";
 import { fetchResourceFromURI, generateGifName } from "../../commonFuctions";
-import { myClient } from "../../..";
 import { IMAGE_CROP_SCREEN } from "../../constants/Screens";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
@@ -47,6 +46,7 @@ import { GiphyMediaView } from "@giphy/react-native-sdk";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { generateVoiceNoteName } from "../../audio";
 import { createThumbnail } from "react-native-create-thumbnail";
+import { myClient } from "../../../";
 
 interface UploadResource {
   selectedImages: any;

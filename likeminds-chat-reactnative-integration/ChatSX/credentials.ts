@@ -1,4 +1,4 @@
-import { myClient } from "..";
+import { myClient } from "../";
 
 export class Credentials {
   private static _username: string = "";

@@ -11,7 +11,6 @@ import {
   AppState,
   Linking,
 } from "react-native";
-import { myClient } from "../../..";
 import { getNameInitials } from "../../commonFuctions";
 import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -31,6 +30,7 @@ import { DeepLinkRequest } from "../../components/ParseDeepLink/models";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../enums";
 import { Credentials } from "../../credentials";
+import { myClient } from "../../../";
 
 interface Props {
   navigation: any;

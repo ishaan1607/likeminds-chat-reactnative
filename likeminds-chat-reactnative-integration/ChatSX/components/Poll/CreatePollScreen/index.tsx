@@ -16,11 +16,11 @@ import {
   GET_CONVERSATIONS_SUCCESS,
   SHOW_TOAST,
 } from "../../../store/types/types";
-import { myClient } from "../../../..";
 import CreatePollUI from "../CreatePollUI";
 import { formatDate } from "../../../commonFuctions";
 import { CreatePoll, CreatePollStateProps } from "../models";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
+import { myClient } from "../../../../";
 
 const CreatePollScreen = ({ navigation, route }: CreatePoll) => {
   const [question, setQuestion] = useState<string>("");

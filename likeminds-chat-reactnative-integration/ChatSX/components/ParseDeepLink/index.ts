@@ -1,15 +1,15 @@
-import {myClient} from '../../..';
-import {PATH_REGEX, QUERY_REGEX} from '../../constants/Regex';
-import {getLinkingRoute} from '../../notifications/routes';
-import * as RootNavigation from '../../RootNavigation';
-import {isValidURI} from '../../shareUtils';
-import {DeepLinkRequest, DeepLinkResponse} from './models';
-import {CHATROOM} from '../../constants/Screens';
+import { PATH_REGEX, QUERY_REGEX } from "../../constants/Regex";
+import { getLinkingRoute } from "../../notifications/routes";
+import * as RootNavigation from "../../RootNavigation";
+import { isValidURI } from "../../shareUtils";
+import { DeepLinkRequest, DeepLinkResponse } from "./models";
+import { CHATROOM } from "../../constants/Screens";
+import { myClient } from "../../../";
 
 // this function is to parse deep link url
 export async function parseDeepLink(
   request: DeepLinkRequest,
-  responseCallback?: (response: DeepLinkResponse) => void,
+  responseCallback?: (response: DeepLinkResponse) => void
 ) {
   const uri = request.uri;
 
@@ -18,7 +18,7 @@ export async function parseDeepLink(
 
     const path = matches ? matches[1] : null;
 
-    if (path === '/chatroom' || path === 'chatroom') {
+    if (path === "/chatroom" || path === "chatroom") {
       const regexToExtractParams: RegExp = QUERY_REGEX;
       const params: Record<string, string> = {};
       let match: RegExpExecArray | null;
@@ -40,7 +40,7 @@ export async function parseDeepLink(
           isGuest: false,
         };
         const initiateUserResponse = await myClient?.initiateUser(
-          initiateUserRequest,
+          initiateUserRequest
         );
 
         if (initiateUserResponse?.success) {
@@ -59,31 +59,31 @@ export async function parseDeepLink(
             RootNavigation.navigate(routes.route, routes.params);
           }
 
-          responseCallback?.({success: true});
+          responseCallback?.({ success: true });
           return;
         } else {
           responseCallback?.({
             success: false,
-            errorMessage: 'URI parsing failed. Please try after some time',
+            errorMessage: "URI parsing failed. Please try after some time",
           });
           return;
         }
       } else {
         responseCallback?.({
           success: false,
-          errorMessage: 'URI not supported',
+          errorMessage: "URI not supported",
         });
         return;
       }
     } else {
       responseCallback?.({
         success: false,
-        errorMessage: 'URI not supported',
+        errorMessage: "URI not supported",
       });
       return;
     }
   } else {
-    responseCallback?.({success: false, errorMessage: 'URI not supported'});
+    responseCallback?.({ success: false, errorMessage: "URI not supported" });
     return;
   }
 }

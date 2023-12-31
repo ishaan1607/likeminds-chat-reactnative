@@ -12,7 +12,6 @@ import {
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
-import { myClient } from "../../..";
 import { StackActions } from "@react-navigation/native";
 import { SHOW_TOAST } from "../../store/types/types";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -28,6 +27,7 @@ import { FlashList } from "@shopify/flash-list";
 import { LoaderComponent } from "../LoaderComponent";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import { myClient } from "../../../";
 
 const CommonAllMembers = ({
   navigation,

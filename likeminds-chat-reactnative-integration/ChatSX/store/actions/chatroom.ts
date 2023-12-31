@@ -1,7 +1,6 @@
-import {Dispatch} from '@reduxjs/toolkit';
-import {Alert} from 'react-native';
-import {myClient} from '../../..';
-import {CALL_API} from '../apiMiddleware';
+import { Dispatch } from "@reduxjs/toolkit";
+import { Alert } from "react-native";
+import { CALL_API } from "../apiMiddleware";
 import {
   GET_CHATROOM,
   GET_CHATROOM_SUCCESS,
@@ -21,7 +20,8 @@ import {
   PAGINATED_CONVERSATIONS_START_SUCCESS,
   PAGINATED_CONVERSATIONS_SUCCESS,
   GET_CHATROOM_ACTIONS_SUCCESS,
-} from '../types/types';
+} from "../types/types";
+import { myClient } from "../../../";
 
 export const getConversations =
   (payload: any, showLoader: boolean) => async (dispatch: Dispatch) => {
