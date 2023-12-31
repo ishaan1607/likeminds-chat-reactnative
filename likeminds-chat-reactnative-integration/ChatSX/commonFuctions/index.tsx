@@ -44,6 +44,7 @@ export function getFullDate(time: any) {
   }
 }
 
+// this method is used to detect links from a message
 function detectLinks(message: string, isLongPress?: boolean) {
   const regex =
     /((?:https?:\/\/)?(?:www\.)?(?:\w+\.)+\w+(?:\/\S*)?|\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b)/i;
@@ -97,6 +98,7 @@ function detectLinks(message: string, isLongPress?: boolean) {
   }
 }
 
+// to get initials of a name
 export function getNameInitials(name: string) {
   let initials = "";
   const words = name.split(" ");
@@ -233,6 +235,7 @@ export const decode = (
   }
 };
 
+// this method is used to decode notifications
 export const decodeForNotifications = (text: string | undefined) => {
   if (!text) {
     return;
@@ -348,6 +351,7 @@ export function formatTime(recordedTime: number): string {
   }
 }
 
+// to fetch resource from given uri and create blob out of it
 export const fetchResourceFromURI = async (uri: string) => {
   const response = await fetch(uri);
   const blob = await response.blob();

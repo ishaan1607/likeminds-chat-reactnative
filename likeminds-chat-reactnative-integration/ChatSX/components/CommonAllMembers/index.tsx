@@ -8,21 +8,26 @@ import {
   ActivityIndicator,
   TextInput,
   Alert,
-} from 'react-native';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {styles} from './styles';
-import STYLES from '../../constants/Styles';
-import {myClient} from '../../..';
-import {StackActions} from '@react-navigation/native';
-import {SHOW_TOAST} from '../../store/types/types';
-import {useAppDispatch, useAppSelector} from '../../store';
-import {CHATROOM} from '../../constants/Screens';
-import {CANCEL_BUTTON, REQUEST_DM_LIMIT} from '../../constants/Strings';
-import {formatTime} from '../../commonFuctions';
-import {FlashList} from '@shopify/flash-list';
-import {LoaderComponent} from '../LoaderComponent';
-import {Events, Keys} from '../../enums';
-import {LMChatAnalytics} from '../../analytics/LMChatAnalytics';
+} from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { styles } from "./styles";
+import STYLES from "../../constants/Styles";
+import { myClient } from "../../..";
+import { StackActions } from "@react-navigation/native";
+import { SHOW_TOAST } from "../../store/types/types";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { CHATROOM } from "../../constants/Screens";
+import {
+  Add_Participants,
+  CANCEL_BUTTON,
+  REQUEST_DM_LIMIT,
+  Send_DM,
+} from "../../constants/Strings";
+import { formatTime } from "../../commonFuctions";
+import { FlashList } from "@shopify/flash-list";
+import { LoaderComponent } from "../LoaderComponent";
+import { Events, Keys } from "../../enums";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 
 const CommonAllMembers = ({
   navigation,
@@ -37,27 +42,28 @@ const CommonAllMembers = ({
   const [page, setPage] = useState(1);
   const [searchPage, setSearchPage] = useState(1);
   const [isSearch, setIsSearch] = useState(false);
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [isEmptyMessageShow, setIsEmptyMessageShow] = useState(false);
   const [isStopPagination, setIsStopPagination] = useState(false);
   const [selectedParticipants, setSelectedParticipants] = useState([] as any);
   const dispatch = useAppDispatch();
   const [count, setCount] = useState(1);
 
-  const {user, community} = useAppSelector(state => state.homefeed);
+  const { user, community } = useAppSelector((state) => state.homefeed);
 
   const setInitialHeader = () => {
     navigation.setOptions({
-      title: '',
+      title: "",
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
           <TouchableOpacity
             onPress={() => {
               navigation.goBack();
-            }}>
+            }}
+          >
             <Image
-              source={require('../../assets/images/back_arrow3x.png')}
+              source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
             />
           </TouchableOpacity>
@@ -70,8 +76,9 @@ const CommonAllMembers = ({
                       color: STYLES.$COLORS.PRIMARY,
                       fontSize: STYLES.$FONT_SIZES.LARGE,
                       fontFamily: STYLES.$FONT_TYPES.BOLD,
-                    }}>
-                    {'Send DM to...'}
+                    }}
+                  >
+                    {Send_DM}
                   </Text>
                 </View>
               ) : (
@@ -81,15 +88,17 @@ const CommonAllMembers = ({
                       color: STYLES.$COLORS.PRIMARY,
                       fontSize: STYLES.$FONT_SIZES.LARGE,
                       fontFamily: STYLES.$FONT_TYPES.BOLD,
-                    }}>
-                    {'Add Participants'}
+                    }}
+                  >
+                    {Add_Participants}
                   </Text>
                   <Text
                     style={{
                       color: STYLES.$COLORS.MSG,
                       fontSize: STYLES.$FONT_SIZES.SMALL,
                       fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                    }}>
+                    }}
+                  >
                     {`${selectedParticipants.length} selected`}
                   </Text>
                 </View>
@@ -104,12 +113,13 @@ const CommonAllMembers = ({
             setIsSearch(true);
           }}
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             padding: 5,
-          }}>
+          }}
+        >
           <Image
-            source={require('../../assets/images/search_icon3x.png')}
+            source={require("../../assets/images/search_icon3x.png")}
             style={styles.search}
           />
         </TouchableOpacity>
@@ -119,18 +129,19 @@ const CommonAllMembers = ({
 
   const setSearchHeader = () => {
     navigation.setOptions({
-      title: '',
+      title: "",
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
           <TouchableOpacity
             onPress={() => {
-              setSearch('');
+              setSearch("");
               setSearchPage(1);
               setIsSearch(false);
-            }}>
+            }}
+          >
             <Image
-              source={require('../../assets/images/back_arrow3x.png')}
+              source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
             />
           </TouchableOpacity>
@@ -148,12 +159,13 @@ const CommonAllMembers = ({
         <TouchableOpacity
           onPress={() => {}}
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             padding: 5,
-          }}>
+          }}
+        >
           <Image
-            source={require('../../assets/images/search_icon3x.png')}
+            source={require("../../assets/images/search_icon3x.png")}
             style={styles.search}
           />
         </TouchableOpacity>
@@ -230,7 +242,7 @@ const CommonAllMembers = ({
 
   //function fetch all members of the community.
   const fetchParticipants = async () => {
-    const res = await myClient?.getAllMembers({page: 1});
+    const res = await myClient?.getAllMembers({ page: 1 });
     setParticipants(res?.data?.members);
     setCount(0);
   };
@@ -257,21 +269,21 @@ const CommonAllMembers = ({
       showList == 1
         ? {
             search: search,
-            searchType: 'name',
+            searchType: "name",
             page: 1,
             pageSize: 10,
           }
         : showList == 2
         ? {
             search: search,
-            searchType: 'name',
+            searchType: "name",
             page: 1,
             pageSize: 10,
-            memberStates: '[1]',
+            memberStates: "[1]",
           }
         : {
             search: search,
-            searchType: 'name',
+            searchType: "name",
             page: 1,
             pageSize: 10,
           };
@@ -281,7 +293,7 @@ const CommonAllMembers = ({
     setSearchPage(1);
     setSearchedParticipants(res?.members);
     if (!!res && res?.members.length === 10) {
-      const changedPayload = {...initialPayload, page: 2};
+      const changedPayload = { ...initialPayload, page: 2 };
       const response = await myClient?.searchMembers(changedPayload);
       setSearchedParticipants((searchedParticipants: any) => [
         ...searchedParticipants,
@@ -305,14 +317,14 @@ const CommonAllMembers = ({
     navigation.dispatch(popAction);
     dispatch({
       type: SHOW_TOAST,
-      body: {isToast: true, msg: 'Invitation sent'},
+      body: { isToast: true, msg: "Invitation sent" },
     });
     LMChatAnalytics.track(
       Events.SECRET_CHATROOM_INVITE,
       new Map<string, string>([
         [Keys.CHATROOM_NAME, chatroomName?.toString()],
         [Keys.CHATROOM_ID, chatroomID?.toString()],
-      ]),
+      ])
     );
   };
 
@@ -323,22 +335,22 @@ const CommonAllMembers = ({
         showList == 1
           ? {
               search: search,
-              searchType: 'name',
+              searchType: "name",
               page: 1,
               pageSize: 10,
             }
           : showList == 2
           ? {
               search: search,
-              searchType: 'name',
+              searchType: "name",
               page: 1,
               pageSize: 10,
-              memberStates: '[1]',
+              memberStates: "[1]",
             }
           : {
               //for Add Participant screen in case of CM
               search: search,
-              searchType: 'name',
+              searchType: "name",
               page: 1,
               pageSize: 10,
             };
@@ -361,11 +373,11 @@ const CommonAllMembers = ({
               }
             : {
                 page: newPage,
-              },
+              }
         );
         return res?.data;
       } else {
-        const res = await myClient?.getAllMembers({page: newPage});
+        const res = await myClient?.getAllMembers({ page: newPage });
         return res?.data;
       }
     }
@@ -415,7 +427,7 @@ const CommonAllMembers = ({
   //pagination loader in the footer
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{paddingVertical: 20}}>
+      <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;
@@ -430,12 +442,12 @@ const CommonAllMembers = ({
     if (apiRes?.success === false) {
       dispatch({
         type: SHOW_TOAST,
-        body: {isToast: true, msg: `${apiRes?.errorMessage}`},
+        body: { isToast: true, msg: `${apiRes?.errorMessage}` },
       });
     } else {
       const clickedChatroomID = res?.chatroomId;
       if (clickedChatroomID) {
-        navigation.navigate(CHATROOM, {chatroomID: clickedChatroomID});
+        navigation.navigate(CHATROOM, { chatroomID: clickedChatroomID });
       } else {
         if (res?.isRequestDmLimitExceeded === false) {
           const payload = {
@@ -451,13 +463,13 @@ const CommonAllMembers = ({
                 Keys.RECEIVER_ID,
                 apiResponse?.data?.chatroom?.chatroomWithUser?.id?.toString(),
               ],
-            ]),
+            ])
           );
           const response = apiResponse?.data;
           if (apiResponse?.success === false) {
             dispatch({
               type: SHOW_TOAST,
-              body: {isToast: true, msg: `${apiResponse?.errorMessage}`},
+              body: { isToast: true, msg: `${apiResponse?.errorMessage}` },
             });
           } else {
             const createdChatroomID = response?.chatroom?.id;
@@ -479,9 +491,9 @@ const CommonAllMembers = ({
             [
               {
                 text: CANCEL_BUTTON,
-                style: 'default',
+                style: "default",
               },
-            ],
+            ]
           );
         }
       }
@@ -492,7 +504,7 @@ const CommonAllMembers = ({
     <View style={styles.page}>
       <FlashList
         data={isSearch && !!search ? searchedParticipants : participants}
-        renderItem={({item}: any) => {
+        renderItem={({ item }: any) => {
           return (
             <TouchableOpacity
               onPress={() => {
@@ -508,27 +520,28 @@ const CommonAllMembers = ({
                     const filteredArr = selectedParticipants.filter(
                       (val: any) => {
                         return val !== item?.id;
-                      },
+                      }
                     );
                     setSelectedParticipants([...filteredArr]);
                   }
                 }
               }}
               key={item?.id}
-              style={styles.participants}>
+              style={styles.participants}
+            >
               <View>
                 <Image
                   source={
                     item?.imageUrl
-                      ? {uri: item?.imageUrl}
-                      : require('../../assets/images/default_pic.png')
+                      ? { uri: item?.imageUrl }
+                      : require("../../assets/images/default_pic.png")
                   }
                   style={styles.avatar}
                 />
                 {selectedParticipants.includes(item?.id) && !isDM ? (
                   <View style={styles.selected}>
                     <Image
-                      source={require('../../assets/images/white_tick3x.png')}
+                      source={require("../../assets/images/white_tick3x.png")}
                       style={styles.smallIcon}
                     />
                   </View>
@@ -540,9 +553,8 @@ const CommonAllMembers = ({
                   {item?.name}
                   {item?.customTitle ? (
                     <Text
-                      style={
-                        styles.messageCustomTitle
-                      }>{` • ${item?.customTitle}`}</Text>
+                      style={styles.messageCustomTitle}
+                    >{` • ${item?.customTitle}`}</Text>
                   ) : null}
                 </Text>
               </View>
@@ -571,9 +583,10 @@ const CommonAllMembers = ({
               sendInvites();
             }
           }}
-          style={styles.sendBtn}>
+          style={styles.sendBtn}
+        >
           <Image
-            source={require('../../assets/images/send_arrow3x.png')}
+            source={require("../../assets/images/send_arrow3x.png")}
             style={styles.sendIcon}
           />
         </TouchableOpacity>

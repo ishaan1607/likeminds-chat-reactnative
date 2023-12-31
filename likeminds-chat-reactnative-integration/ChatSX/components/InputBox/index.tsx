@@ -540,6 +540,7 @@ const InputBox = ({
     };
   }, [message]);
 
+  // to handle video thumbnail
   const handleVideoThumbnail = async (images: any) => {
     const res = await getVideoThumbnail({
       selectedImages: images,
@@ -769,6 +770,7 @@ const InputBox = ({
     }
   };
 
+  // to select gif from list of GIFs
   const selectGIF = async (gif: GiphyMedia, message: string) => {
     const item = { ...gif, thumbnailUrl: "" };
 
@@ -869,6 +871,7 @@ const InputBox = ({
     }
   };
 
+  // this method is trigerred whenever user presses the send button
   const onSend = async (
     conversation: string,
     voiceNote?: any,
@@ -1480,6 +1483,7 @@ const InputBox = ({
     ) : null;
   };
 
+  // to detect link preview and call the decodeUrl API
   async function detectLinkPreview(link: string) {
     const payload = {
       url: link,
@@ -1491,6 +1495,7 @@ const InputBox = ({
     }
   }
 
+  // this mehthod is trigerred whenever there is any change in the input box
   const handleInputChange = async (event: string) => {
     const parts = event.split(LINK_PREVIEW_REGEX);
     if (parts?.length > 1) {
