@@ -7,43 +7,44 @@ import {
   FlatList,
   ActivityIndicator,
   TextInput,
-} from 'react-native';
-import React, {useEffect, useLayoutEffect, useState} from 'react';
-import {styles} from './styles';
-import STYLES from '../../constants/Styles';
-import {myClient} from '../../..';
-import {useAppSelector} from '../../store';
-import Layout from '../../constants/Layout';
-import {ADD_PARTICIPANTS} from '../../constants/Screens';
-import {FlashList} from '@shopify/flash-list';
-import {LoaderComponent} from '../../components/LoaderComponent';
-import {Events, Keys, Sources} from '../../enums';
-import {LMChatAnalytics} from '../../analytics/LMChatAnalytics';
+} from "react-native";
+import React, { useEffect, useLayoutEffect, useState } from "react";
+import { styles } from "./styles";
+import STYLES from "../../constants/Styles";
+import { myClient } from "../../..";
+import { useAppSelector } from "../../store";
+import Layout from "../../constants/Layout";
+import { ADD_PARTICIPANTS } from "../../constants/Screens";
+import { FlashList } from "@shopify/flash-list";
+import { LoaderComponent } from "../../components/LoaderComponent";
+import { Events, Keys, Sources } from "../../enums";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 
-const ViewParticipants = ({navigation, route}: any) => {
+const ViewParticipants = ({ navigation, route }: any) => {
   const [participants, setParticipants] = useState({} as any);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);
   const [isSearch, setIsSearch] = useState(false);
-  const [search, setSearch] = useState('');
-  const [totalChatroomCount, setTotalChatroomCount] = useState('');
+  const [search, setSearch] = useState("");
+  const [totalChatroomCount, setTotalChatroomCount] = useState("");
   const [count, setCount] = useState(1);
 
-  const {chatroomID, isSecret, chatroomName} = route.params;
-  const user = useAppSelector(state => state.homefeed.user);
+  const { chatroomID, isSecret, chatroomName } = route.params;
+  const user = useAppSelector((state) => state.homefeed.user);
 
   const setInitialHeader = () => {
     navigation.setOptions({
-      title: '',
+      title: "",
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
           <TouchableOpacity
             onPress={() => {
               navigation.goBack();
-            }}>
+            }}
+          >
             <Image
-              source={require('../../assets/images/back_arrow3x.png')}
+              source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
             />
           </TouchableOpacity>
@@ -54,15 +55,17 @@ const ViewParticipants = ({navigation, route}: any) => {
                   color: STYLES.$COLORS.PRIMARY,
                   fontSize: STYLES.$FONT_SIZES.LARGE,
                   fontFamily: STYLES.$FONT_TYPES.BOLD,
-                }}>
-                {'Participants'}
+                }}
+              >
+                {"Participants"}
               </Text>
               <Text
                 style={{
                   color: STYLES.$COLORS.MSG,
                   fontSize: STYLES.$FONT_SIZES.SMALL,
                   fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                }}>
+                }}
+              >
                 {`${totalChatroomCount} participants`}
               </Text>
             </View>
@@ -75,12 +78,13 @@ const ViewParticipants = ({navigation, route}: any) => {
             setIsSearch(true);
           }}
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             padding: 5,
-          }}>
+          }}
+        >
           <Image
-            source={require('../../assets/images/search_icon3x.png')}
+            source={require("../../assets/images/search_icon3x.png")}
             style={styles.search}
           />
         </TouchableOpacity>
@@ -90,17 +94,18 @@ const ViewParticipants = ({navigation, route}: any) => {
 
   const setSearchHeader = () => {
     navigation.setOptions({
-      title: '',
+      title: "",
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
           <TouchableOpacity
             onPress={() => {
-              setSearch('');
+              setSearch("");
               setIsSearch(false);
-            }}>
+            }}
+          >
             <Image
-              source={require('../../assets/images/back_arrow3x.png')}
+              source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
             />
           </TouchableOpacity>
@@ -118,12 +123,13 @@ const ViewParticipants = ({navigation, route}: any) => {
         <TouchableOpacity
           onPress={() => {}}
           style={{
-            justifyContent: 'center',
-            alignItems: 'center',
+            justifyContent: "center",
+            alignItems: "center",
             padding: 5,
-          }}>
+          }}
+        >
           <Image
-            source={require('../../assets/images/search_icon3x.png')}
+            source={require("../../assets/images/search_icon3x.png")}
             style={styles.search}
           />
         </TouchableOpacity>
@@ -146,7 +152,7 @@ const ViewParticipants = ({navigation, route}: any) => {
         [Keys.CHATROOM_ID, chatroomID?.toString()],
         [Keys.COMMUNITY_ID, user?.sdkClientInfo?.community],
         [Keys.SOURCE, Sources.CHATROOM_OVERFLOW_MENU],
-      ]),
+      ])
     );
 
     setTotalChatroomCount(res?.totalParticipantsCount);
@@ -177,7 +183,6 @@ const ViewParticipants = ({navigation, route}: any) => {
   }, [navigation]);
 
   useEffect(() => {
-    // setInitialHeader();
     if (isSearch) {
       setSearchHeader();
     } else {
@@ -201,7 +206,6 @@ const ViewParticipants = ({navigation, route}: any) => {
   }, [search]);
 
   useEffect(() => {
-    // setInitialHeader();
     if (isSearch) {
       setSearchHeader();
     } else {
@@ -247,7 +251,7 @@ const ViewParticipants = ({navigation, route}: any) => {
 
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{paddingVertical: 20}}>
+      <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;
@@ -271,41 +275,43 @@ const ViewParticipants = ({navigation, route}: any) => {
                   chatroomName: chatroomName,
                 });
               }}
-              style={styles.participants}>
+              style={styles.participants}
+            >
               <View
                 style={{
                   height: 50,
                   width: 50,
-                  display: 'flex',
-                  flexDirection: 'row',
-                  justifyContent: 'center',
-                  alignItems: 'center',
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
                   backgroundColor: STYLES.$COLORS.SECONDARY,
                   borderRadius: 30,
                   marginRight: 10,
-                }}>
+                }}
+              >
                 <Image
-                  source={require('../../assets/images/participants3x.png')}
+                  source={require("../../assets/images/participants3x.png")}
                   style={styles.icon}
                 />
               </View>
 
               <View style={styles.infoContainer}>
                 <Text style={styles.title} numberOfLines={1}>
-                  {'Add Participants'}
+                  {"Add Participants"}
                 </Text>
               </View>
             </TouchableOpacity>
           ) : null
         }
-        renderItem={({item}: any) => {
+        renderItem={({ item }: any) => {
           return (
             <View key={item?.id} style={styles.participants}>
               <Image
                 source={
                   item?.imageUrl
-                    ? {uri: item?.imageUrl}
-                    : require('../../assets/images/default_pic.png')
+                    ? { uri: item?.imageUrl }
+                    : require("../../assets/images/default_pic.png")
                 }
                 style={styles.avatar}
               />
@@ -314,9 +320,8 @@ const ViewParticipants = ({navigation, route}: any) => {
                   {item?.name}
                   {item?.customTitle ? (
                     <Text
-                      style={
-                        styles.messageCustomTitle
-                      }>{` • ${item?.customTitle}`}</Text>
+                      style={styles.messageCustomTitle}
+                    >{` • ${item?.customTitle}`}</Text>
                   ) : null}
                 </Text>
               </View>

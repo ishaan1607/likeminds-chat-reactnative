@@ -1,6 +1,6 @@
-import {Platform, StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
-import Layout from '../../constants/Layout';
+import { StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 export const styles = StyleSheet.create({
   page: {
@@ -8,15 +8,15 @@ export const styles = StyleSheet.create({
     flex: 1,
   },
   itemContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: STYLES.$PADDINGS.MEDIUM,
-    alignItems: 'center',
+    alignItems: "center",
     backgroundColor: STYLES.$COLORS.TERTIARY,
   },
   justifyCenter: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: STYLES.$PADDINGS.MEDIUM,
-    justifyContent: 'center',
+    justifyContent: "center",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     flex: 1,
   },
@@ -29,9 +29,8 @@ export const styles = StyleSheet.create({
   icon: {
     width: 30,
     height: 30,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginLeft: -3,
-    // backgroundColor: 'pink',
   },
   infoContainer: {
     flex: 1,
@@ -47,19 +46,19 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.PRIMARY,
   },
   headingContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 15,
   },
-  backBtn: {height: 40, width: 40, resizeMode: 'contain'},
-  search: {height: 20, width: 20, resizeMode: 'contain'},
-  chatRoomInfo: {gap: 5},
+  backBtn: { height: 40, width: 40, resizeMode: "contain" },
+  search: { height: 20, width: 20, resizeMode: "contain" },
+  chatRoomInfo: { gap: 5 },
   participants: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
     // backgroundColor: 'pink',
     paddingHorizontal: 15,
     paddingVertical: 10,
