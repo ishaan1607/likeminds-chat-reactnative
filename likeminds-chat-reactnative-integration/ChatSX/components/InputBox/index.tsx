@@ -2323,7 +2323,7 @@ const InputBox = ({
                   inputTextStyle={{
                     // fontSize: 16,
                     // height: 40,
-                    height: Math.max(25, inputHeight),
+                    height: Math.max(35, inputHeight),
                     elevation: 0,
                     backgroundColor: isUploadScreen
                       ? STYLES.$BACKGROUND_COLORS.DARK
@@ -2348,6 +2348,9 @@ const InputBox = ({
                       }, // The mention style in the input
                     },
                   ]}
+                  nonPartTypeTextStyle={{
+                    color: "#aaa",
+                  }}
                   inputText={message}
                   maxLength={
                     chatRequestState === 0 || chatRequestState === null

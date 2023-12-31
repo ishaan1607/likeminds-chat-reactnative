@@ -1,46 +1,45 @@
-import Layout from '../../constants/Layout';
-import {Platform, StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
+import Layout from "../../constants/Layout";
+import { Platform, StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
 
 export const styles = StyleSheet.create({
   headingContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 20,
-    marginTop: Platform.OS === 'ios' ? -5 : 0,
+    marginTop: Platform.OS === "ios" ? -5 : 0,
   },
   selectedHeadingContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 25,
   },
-  backBtn: {height: 40, width: 40, borderRadius: 10, resizeMode: 'contain'},
+  backBtn: { height: 40, width: 40, borderRadius: 10, resizeMode: "contain" },
   lightGreyBackground: {
-    color: '#c5c5c5',
+    color: "#c5c5c5",
   },
   lightGreyThumb: {
-    color: '#f4f3f4',
+    color: "#f4f3f4",
   },
   greyColor: {
-    color: 'grey',
+    color: "grey",
   },
   justifyCenter: {
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   primaryColor: {
-    // color: STYLES.$COLORS.PRIMARY,
-    color: 'hsl(222, 53%, 15%)',
+    color: "hsl(222, 53%, 15%)",
   },
   lightPrimaryColor: {
-    color: 'hsl(222, 40%, 40%)',
+    color: "hsl(222, 40%, 40%)",
   },
   whiteColor: {
     color: STYLES.$COLORS.TERTIARY,
   },
   blackColor: {
-    color: '#000000',
+    color: "#000000",
   },
   padding20: {
     padding: 20,
@@ -71,27 +70,26 @@ export const styles = StyleSheet.create({
   },
   centeredView: {
     flexGrow: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalViewParent: {
-    position: 'absolute',
+    position: "absolute",
     top: 50,
     flexGrow: 1,
     width: Layout.window.width,
     height: Layout.window.height,
   },
   addOptionsModalViewParent: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     flexGrow: 1,
     width: Layout.window.width,
     height: Layout.window.height / 3,
   },
   modalView: {
-    // margin: 10,
-    backgroundColor: '#e8ebf0',
+    backgroundColor: "#e8ebf0",
     borderRadius: 8,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -100,11 +98,10 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    height: '100%',
+    height: "100%",
   },
   alignModalElements: {
-    display: 'flex',
-    // marginVertical: 20,
+    display: "flex",
     flexGrow: 1,
   },
   font: {
@@ -143,20 +140,18 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.PRIMARY,
   },
   newPollText: {
-    color: 'black',
+    color: "black",
   },
   alignRow: {
-    display: 'flex',
-    flexDirection: 'row',
-
-    // flexGrow: 1,
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   justifySpace: {
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   textAlignCenter: {
-    textAlign: 'center',
+    textAlign: "center",
   },
   viewStyle: {
     width: Layout.window.width / 3,
@@ -193,7 +188,7 @@ export const styles = StyleSheet.create({
   optionIcon: {
     height: 25,
     width: 25,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     marginRight: 5,
     marginLeft: -5,
     tintColor: STYLES.$COLORS.PRIMARY,
@@ -203,31 +198,31 @@ export const styles = StyleSheet.create({
     width: 30,
     borderRadius: 50,
     backgroundColor: STYLES.$COLORS.PRIMARY,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
   },
   pollEndedTime: {
     borderRadius: 50,
     backgroundColor: STYLES.$COLORS.PRIMARY,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     paddingHorizontal: 10,
     paddingVertical: 5,
   },
   pollIcon: {
     height: 15,
     width: 15,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   placeHolder: {
-    color: '#D3D3D3',
+    color: "#D3D3D3",
   },
   postButton: {
     padding: 10,
     paddingHorizontal: 50,
     borderRadius: 50,
     backgroundColor: STYLES.$COLORS.PRIMARY,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   pollButton: {
     borderRadius: 8,
@@ -236,7 +231,7 @@ export const styles = StyleSheet.create({
   },
   greyPollButton: {
     borderRadius: 8,
-    borderColor: '#c5c5c5',
+    borderColor: "#c5c5c5",
     borderWidth: 1,
   },
   pollButtonBackground: {
@@ -244,12 +239,12 @@ export const styles = StyleSheet.create({
     padding: 13,
     borderRadius: 5,
   },
-  pollButtonPadding: {paddingVertical: 20, paddingHorizontal: 0},
+  pollButtonPadding: { paddingVertical: 20, paddingHorizontal: 0 },
   submitButton: {
     borderRadius: 50,
     width: 150,
     backgroundColor: STYLES.$COLORS.PRIMARY,
-    shadowColor: '#000',
+    shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
@@ -257,7 +252,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    alignSelf: 'center',
+    alignSelf: "center",
     padding: 12,
   },
   submitVoteButton: {
@@ -273,19 +268,19 @@ export const styles = StyleSheet.create({
   textInput: {
     padding: 12,
     borderRadius: 8,
-    borderColor: '#c5c5c5',
+    borderColor: "#c5c5c5",
     borderWidth: 1,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     fontSize: 14,
     color: STYLES.$COLORS.PRIMARY,
   },
   borderBottom: {
-    borderBottomColor: '#c5c5c5',
+    borderBottomColor: "#c5c5c5",
     borderBottomWidth: 1,
   },
-  greyBorder: {borderColor: '#c5c5c5'},
+  greyBorder: { borderColor: "#c5c5c5" },
   messageInfo: {
-    color: 'green',
+    color: "green",
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.BOLD,
     marginBottom: STYLES.$MARGINS.XS,
@@ -297,28 +292,27 @@ export const styles = StyleSheet.create({
   },
   messageDate: {
     fontSize: 10,
-    color: '#aaa',
-    // marginTop: 5,
-    textAlign: 'right',
+    color: "#aaa",
+    textAlign: "right",
   },
   alignTime: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
     marginTop: 3,
   },
   downArrow: {
     height: 20,
     width: 20,
-    resizeMode: 'contain',
-    tintColor: '#c5c5c5',
-    marginTop: Platform.OS === 'ios' ? -3 : 0,
+    resizeMode: "contain",
+    tintColor: "#c5c5c5",
+    marginTop: Platform.OS === "ios" ? -3 : 0,
   },
   selectedItem: {
-    height: '100%',
-    width: '100%',
+    height: "100%",
+    width: "100%",
     backgroundColor: STYLES.$COLORS.SELECTED_BLUE,
-    position: 'absolute',
+    position: "absolute",
     opacity: 0,
     zIndex: 1,
   },
@@ -326,31 +320,31 @@ export const styles = StyleSheet.create({
     backgroundColor: STYLES.$COLORS.PRIMARY,
     height: 25,
     width: 25,
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
     borderRadius: 15,
-    position: 'absolute',
+    position: "absolute",
     right: 10,
-    top: '25%',
+    top: "25%",
     zIndex: 1,
   },
   smallIcon: {
     width: 15,
     height: 15,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   editIcon: {
     height: 25,
     width: 25,
-    resizeMode: 'contain',
+    resizeMode: "contain",
     tintColor: STYLES.$COLORS.PRIMARY,
   },
   optionText: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     left: 5,
-    top: Platform.OS === 'ios' ? '35%' : '30%',
+    top: Platform.OS === "ios" ? "35%" : "30%",
   },
 });

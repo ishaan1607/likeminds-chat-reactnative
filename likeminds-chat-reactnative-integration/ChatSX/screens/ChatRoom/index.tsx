@@ -132,7 +132,6 @@ import { CognitoIdentityCredentials, S3 } from "aws-sdk";
 import AWS from "aws-sdk";
 import { FlashList } from "@shopify/flash-list";
 import WarningMessageModal from "../../customModals/WarningMessage";
-import { useQuery } from "@realm/react";
 import { Share } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
@@ -148,7 +147,6 @@ import {
 import { ChatroomType } from "../../enums";
 import { onShare } from "../../shareUtils";
 import { ChatroomActions, Events } from "../../enums";
-import { UserSchemaResponse } from "../../db/models";
 import TrackPlayer from "react-native-track-player";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import {
@@ -189,13 +187,7 @@ interface UploadResource {
 }
 
 const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
-  // const { myClient }: any = useAppSelector((state) => state.homefeed);
-
-  // console.log("myClient", myClient);
-
   const myClient = useLMChat();
-
-  console.log("myClientFromContext", myClient);
 
   const {
     chatroomID,
@@ -245,7 +237,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const [flashListMounted, setFlashListMounted] = useState(false);
 
   const reactionArr = ["❤️", "😂", "😮", "😢", "😠", "👍"];
-  const users = useQuery<UserSchemaResponse>(USER_SCHEMA_RO);
   const isFocused = useIsFocused();
 
   const dispatch = useAppDispatch();
@@ -940,14 +931,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   // this function fetch initiate API
   async function fetchInitAPI() {
     //this line of code is for the sample app only, pass your uuid instead of this.
-    const UUID =
-      Credentials.userUniqueId.length > 0
-        ? Credentials.userUniqueId
-        : users[0]?.userUniqueID;
-    const userName =
-      Credentials.username.length > 0
-        ? Credentials.username
-        : users[0]?.userName;
+    const UUID = Credentials.userUniqueId;
+    const userName = Credentials.username;
 
     const payload = {
       uuid: UUID,

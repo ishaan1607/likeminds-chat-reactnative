@@ -1,9 +1,9 @@
-import {View, Text, TouchableOpacity, Platform} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useAppDispatch} from '../../../store';
-import {styles} from '../styles';
-import uuid from 'react-native-uuid';
-import moment from 'moment';
+import { View, Text, TouchableOpacity, Platform } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useAppDispatch } from "../../../store";
+import { styles } from "../styles";
+import uuid from "react-native-uuid";
+import moment from "moment";
 import {
   DATE_TEXT,
   EMPTY_OPTIONS_WARNING,
@@ -11,19 +11,19 @@ import {
   POLLS_OPTIONS_WARNING,
   QUESTION_WARNING,
   TIME_TEXT,
-} from '../../../constants/Strings';
+} from "../../../constants/Strings";
 import {
   GET_CONVERSATIONS_SUCCESS,
   SHOW_TOAST,
-} from '../../../store/types/types';
-import {myClient} from '../../../..';
-import CreatePollUI from '../CreatePollUI';
-import {formatDate} from '../../../commonFuctions';
-import {CreatePoll, CreatePollStateProps} from '../models';
-import {GetConversationsRequestBuilder} from '@likeminds.community/chat-rn';
+} from "../../../store/types/types";
+import { myClient } from "../../../..";
+import CreatePollUI from "../CreatePollUI";
+import { formatDate } from "../../../commonFuctions";
+import { CreatePoll, CreatePollStateProps } from "../models";
+import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 
-const CreatePollScreen = ({navigation, route}: CreatePoll) => {
-  const [question, setQuestion] = useState<string>('');
+const CreatePollScreen = ({ navigation, route }: CreatePoll) => {
+  const [question, setQuestion] = useState<string>("");
   const [optionsArray, setOptionsArray] = useState<any>([]);
   const [showAdvancedOption, setShowAdvancedOption] = useState<boolean>(false);
   const [addOptionsEnabled, setAddOptionsEnabled] = useState<boolean>(false);
@@ -32,8 +32,8 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
   const [liveResultsEnabled, setLiveResultsEnabled] = useState<boolean>(false);
   const [userVoteFor, setUserVoteFor] = useState<number>(1);
   const [voteAllowedPerUser, setVoteAllowedPerUser] = useState<number>(1);
-  const [date, setDate] = useState('');
-  const [mode, setMode] = useState<string>('');
+  const [date, setDate] = useState("");
+  const [mode, setMode] = useState<string>("");
   const [show, setShow] = useState<boolean>(false);
   const [time, setTime] = useState(new Date());
   const [isActionAlertModalVisible, setIsActionAlertModalVisible] =
@@ -41,29 +41,30 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
   const [isOptionAlertModalVisible, setIsOptionAlertModalVisible] =
     useState(false);
   const [userVoteForOptionsArrValue, setUserVoteForOptionsArrValue] = useState(
-    [],
+    []
   );
   const PAGE_SIZE = 200;
 
-  const userCanVoteForArr = ['Exactly', 'At max', 'At least'];
+  const userCanVoteForArr = ["Exactly", "At max", "At least"];
 
   const dispatch = useAppDispatch();
-  const {chatroomID} = route.params;
-  const {conversationsLength} = route.params;
+  const { chatroomID } = route.params;
+  const { conversationsLength } = route.params;
 
   const setInitialHeader = () => {
     navigation.setOptions({
-      title: 'New Poll',
+      title: "New Poll",
       headerShadowVisible: false,
       headerTitleStyle: [styles.font, styles.newPollText],
-      headerStyle: {backgroundColor: styles.lightGreyThumb.color},
+      headerStyle: { backgroundColor: styles.lightGreyThumb.color },
       headerLeft: () => (
         <View style={[styles.alignRow, styles.header]}>
           <TouchableOpacity
             onPress={() => {
               navigation.goBack();
             }}
-            style={styles.viewStyle}>
+            style={styles.viewStyle}
+          >
             <Text style={[styles.font]}>Cancel</Text>
           </TouchableOpacity>
         </View>
@@ -83,11 +84,11 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
     const initialOptionArray = [
       {
         id: id_1,
-        text: '',
+        text: "",
       },
       {
         id: id_2,
-        text: '',
+        text: "",
       },
     ];
     setOptionsArray(initialOptionArray);
@@ -105,7 +106,7 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
     const newOptionsArr = [...optionsArray];
     const newOption = {
       id: uuid.v4(),
-      text: '',
+      text: "",
     };
     newOptionsArr.push(newOption);
     setOptionsArray(newOptionsArr);
@@ -120,7 +121,7 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
 
   // this function changes mode and set date and time
   const onChange = (event: any, selectedValue: any) => {
-    const isIOS = Platform.OS === 'ios';
+    const isIOS = Platform.OS === "ios";
     const newDate = new Date();
 
     // iOS DateTime Picker logic
@@ -220,8 +221,8 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
   // this functioin resets date and time
   const resetDateTimePicker = () => {
     setShow(false);
-    setMode('');
-    setDate('');
+    setMode("");
+    setDate("");
     setTime(new Date());
   };
 
@@ -242,17 +243,17 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
   async function postPoll() {
     const expiryTime = date ? formatDate(date, time) : null;
     try {
-      if (question?.trim() === '') {
+      if (question?.trim() === "") {
         dispatch({
           type: SHOW_TOAST,
-          body: {isToast: true, msg: QUESTION_WARNING},
+          body: { isToast: true, msg: QUESTION_WARNING },
         });
         return;
       }
       if (!expiryTime) {
         dispatch({
           type: SHOW_TOAST,
-          body: {isToast: true, msg: EXPIRY_TIME_WARNING},
+          body: { isToast: true, msg: EXPIRY_TIME_WARNING },
         });
         return;
       }
@@ -262,14 +263,14 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
         if (tempPollOptionsMap[item?.text] !== undefined) {
           dispatch({
             type: SHOW_TOAST,
-            body: {isToast: true, msg: POLLS_OPTIONS_WARNING},
+            body: { isToast: true, msg: POLLS_OPTIONS_WARNING },
           });
           shouldBreak = true;
         } else {
-          if (item?.text === '') {
+          if (item?.text === "") {
             dispatch({
               type: SHOW_TOAST,
-              body: {isToast: true, msg: EMPTY_OPTIONS_WARNING},
+              body: { isToast: true, msg: EMPTY_OPTIONS_WARNING },
             });
             shouldBreak = true;
           }
@@ -300,7 +301,7 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
 
       await myClient?.saveNewConversation(
         chatroomID?.toString(),
-        res?.data?.conversation,
+        res?.data?.conversation
       );
 
       const getConversationsPayload = GetConversationsRequestBuilder.builder()
@@ -309,12 +310,12 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
         .build();
 
       const conversations = await myClient?.getConversations(
-        getConversationsPayload,
+        getConversationsPayload
       );
 
       dispatch({
         type: GET_CONVERSATIONS_SUCCESS,
-        body: {conversations: conversations},
+        body: { conversations: conversations },
       });
       handleOnCancel();
     } catch (error) {
@@ -329,7 +330,7 @@ const CreatePollScreen = ({navigation, route}: CreatePoll) => {
     mode: mode,
     userCanVoteForArr: userCanVoteForArr,
     showAdvancedOption: showAdvancedOption,
-    formatedDateTime: date ? formatDate(date, time) : '',
+    formatedDateTime: date ? formatDate(date, time) : "",
     addOptionsEnabled: addOptionsEnabled,
     anonymousPollEnabled: anonymousPollEnabled,
     liveResultsEnabled: liveResultsEnabled,

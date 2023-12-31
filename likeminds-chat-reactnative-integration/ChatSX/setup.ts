@@ -5,7 +5,7 @@ import * as RootNavigation from "./RootNavigation";
 import messaging from "@react-native-firebase/messaging";
 import TrackPlayer from "react-native-track-player";
 import { playbackService } from "./audio";
-import { LMChatClient } from "@likeminds.community/chat-rn";
+import { ConversationState, LMChatClient } from "@likeminds.community/chat-rn";
 
 export const initMyClient = (apiKey: string) => {
   notifee.onBackgroundEvent(async ({ type, detail }) => {
@@ -28,8 +28,7 @@ export const initMyClient = (apiKey: string) => {
   TrackPlayer.registerPlaybackService(() => playbackService);
 
   const myClient = LMChatClient.setApiKey(apiKey)
-    .setPlatformCode("rn")
-    .setVersionCode(parseInt("23"))
+    .setfilterStateConversation([ConversationState.MEMBER_LEFT_SECRET_CHATROOM])
     .build();
 
   return myClient;

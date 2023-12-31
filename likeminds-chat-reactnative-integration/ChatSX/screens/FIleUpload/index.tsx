@@ -8,12 +8,12 @@ import {
   TextInput,
   BackHandler,
   LogBox,
-} from 'react-native';
-import {Image as CompressedImage} from 'react-native-compressor';
-import React, {useEffect, useLayoutEffect, useRef, useState} from 'react';
-import styles from './styles';
-import Layout from '../../constants/Layout';
-import InputBox from '../../components/InputBox';
+} from "react-native";
+import { Image as CompressedImage } from "react-native-compressor";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import styles from "./styles";
+import Layout from "../../constants/Layout";
+import InputBox from "../../components/InputBox";
 import {
   CLEAR_FILE_UPLOADING_MESSAGES,
   CLEAR_SELECTED_FILES_TO_UPLOAD,
@@ -21,10 +21,10 @@ import {
   SELECTED_FILE_TO_VIEW,
   SET_FILE_UPLOADING_MESSAGES,
   STATUS_BAR_STYLE,
-} from '../../store/types/types';
-import {useAppDispatch, useAppSelector} from '../../store';
-import STYLES from '../../constants/Styles';
-import VideoPlayer from 'react-native-media-console';
+} from "../../store/types/types";
+import { useAppDispatch, useAppSelector } from "../../store";
+import STYLES from "../../constants/Styles";
+import VideoPlayer from "react-native-media-console";
 import {
   AUDIO_TEXT,
   FAILED,
@@ -34,19 +34,19 @@ import {
   SUCCESS,
   VIDEO_TEXT,
   VOICE_NOTE_TEXT,
-} from '../../constants/Strings';
-import {CognitoIdentityCredentials, S3} from 'aws-sdk';
-import AWS from 'aws-sdk';
-import {BUCKET, POOL_ID, REGION} from '../../aws-exports';
-import {fetchResourceFromURI, generateGifName} from '../../commonFuctions';
-import {myClient} from '../../..';
-import {IMAGE_CROP_SCREEN} from '../../constants/Screens';
-import {Events, Keys} from '../../enums';
-import {LMChatAnalytics} from '../../analytics/LMChatAnalytics';
-import {GiphyMediaView} from '@giphy/react-native-sdk';
-import {TouchableWithoutFeedback} from 'react-native-gesture-handler';
-import {generateVoiceNoteName} from '../../audio';
-import {createThumbnail} from 'react-native-create-thumbnail';
+} from "../../constants/Strings";
+import { CognitoIdentityCredentials, S3 } from "aws-sdk";
+import AWS from "aws-sdk";
+import { BUCKET, POOL_ID, REGION } from "../../awsExports";
+import { fetchResourceFromURI, generateGifName } from "../../commonFuctions";
+import { myClient } from "../../..";
+import { IMAGE_CROP_SCREEN } from "../../constants/Screens";
+import { Events, Keys } from "../../enums";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import { GiphyMediaView } from "@giphy/react-native-sdk";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
+import { generateVoiceNoteName } from "../../audio";
+import { createThumbnail } from "react-native-create-thumbnail";
 
 interface UploadResource {
   selectedImages: any;
@@ -57,27 +57,29 @@ interface UploadResource {
   isRetry: boolean;
 }
 
-const FileUpload = ({navigation, route}: any) => {
+const FileUpload = ({ navigation, route }: any) => {
   const video = useRef<any>(null);
 
-  const {chatroomID, previousMessage = ''} = route?.params;
+  const { chatroomID, previousMessage = "" } = route?.params;
   const {
     selectedFilesToUpload = [],
     selectedFileToView = {},
     selectedFilesToUploadThumbnails = [],
-  }: any = useAppSelector(state => state.chatroom);
-  const {uploadingFilesMessages}: any = useAppSelector(state => state.upload);
+  }: any = useAppSelector((state) => state.chatroom);
+  const { uploadingFilesMessages }: any = useAppSelector(
+    (state) => state.upload
+  );
 
   const itemType = !!selectedFileToView?.data?.type
     ? selectedFileToView?.data?.type
-    : selectedFileToView?.type?.split('/')[0];
+    : selectedFileToView?.type?.split("/")[0];
 
-  const docItemType = selectedFileToView?.type?.split('/')[1];
+  const docItemType = selectedFileToView?.type?.split("/")[1];
 
   const isGif = itemType === GIF_TEXT ? true : false;
   const len = selectedFilesToUpload.length;
   const dispatch = useAppDispatch();
-  const {chatroomDBDetails}: any = useAppSelector(state => state.chatroom);
+  const { chatroomDBDetails }: any = useAppSelector((state) => state.chatroom);
 
   // Selected header of chatroom screen
   const setInitialHeader = () => {
@@ -101,15 +103,15 @@ const FileUpload = ({navigation, route}: any) => {
       });
       dispatch({
         type: STATUS_BAR_STYLE,
-        body: {color: STYLES.$STATUS_BAR_STYLE.default},
+        body: { color: STYLES.$STATUS_BAR_STYLE.default },
       });
       navigation.goBack();
       return true;
     }
 
     const backHandlerAndroid = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backActionCall,
+      "hardwareBackPress",
+      backActionCall
     );
 
     return () => backHandlerAndroid.remove();
@@ -130,15 +132,15 @@ const FileUpload = ({navigation, route}: any) => {
     uploadingFilesMessages,
     isRetry,
   }: UploadResource) => {
-    LogBox.ignoreLogs(['new NativeEventEmitter']);
+    LogBox.ignoreLogs(["new NativeEventEmitter"]);
     const s3 = new S3();
     for (let i = 0; i < selectedImages?.length; i++) {
       const item = selectedImages[i];
-      const attachmentType = isRetry ? item?.type : item?.type?.split('/')[0];
+      const attachmentType = isRetry ? item?.type : item?.type?.split("/")[0];
       const gifAttachmentType = item?.data?.type;
       const docAttachmentType = isRetry
         ? item?.type
-        : item?.type?.split('/')[1];
+        : item?.type?.split("/")[1];
       const thumbnailURL = item?.thumbnailUrl;
       const gifHeight = item?.data?.images?.fixed_width?.height;
       const gifWidth = item?.data?.images?.fixed_width?.width;
@@ -159,7 +161,7 @@ const FileUpload = ({navigation, route}: any) => {
 
       if (attachmentType === IMAGE_TEXT) {
         const compressedImgURI = await CompressedImage.compress(item.uri, {
-          compressionMethod: 'auto',
+          compressionMethod: "auto",
         });
         const compressedImg = await fetchResourceFromURI(compressedImgURI);
         uriFinal = compressedImg;
@@ -181,7 +183,7 @@ const FileUpload = ({navigation, route}: any) => {
         Bucket: BUCKET,
         Key: path,
         Body: uriFinal,
-        ACL: 'public-read-write',
+        ACL: "public-read-write",
         ContentType: item?.type, // Replace with the appropriate content type for your file
       };
 
@@ -190,8 +192,8 @@ const FileUpload = ({navigation, route}: any) => {
         Bucket: BUCKET,
         Key: thumbnailUrlPath,
         Body: thumbnailUrlImg,
-        ACL: 'public-read-write',
-        ContentType: 'image/jpeg', // Replace with the appropriate content type for your file
+        ACL: "public-read-write",
+        ContentType: "image/jpeg", // Replace with the appropriate content type for your file
       };
 
       try {
@@ -208,7 +210,7 @@ const FileUpload = ({navigation, route}: any) => {
         const awsResponse = data.Location;
 
         if (awsResponse) {
-          let fileType = '';
+          let fileType = "";
           if (docAttachmentType === PDF_TEXT) {
             fileType = PDF_TEXT;
           } else if (attachmentType === AUDIO_TEXT) {
@@ -262,7 +264,7 @@ const FileUpload = ({navigation, route}: any) => {
               [Keys.CHATROOM_TYPE, chatroomDBDetails?.type?.toString()],
               [Keys.MESSAGE_ID, conversationID?.toString()],
               [Keys.TYPE, attachmentType],
-            ]),
+            ])
           );
         }
       } catch (error) {
@@ -284,7 +286,7 @@ const FileUpload = ({navigation, route}: any) => {
 
         await myClient?.saveAttachmentUploadConversation(
           id?.toString(),
-          JSON.stringify(message),
+          JSON.stringify(message)
         );
         return error;
       }
@@ -302,7 +304,7 @@ const FileUpload = ({navigation, route}: any) => {
       },
     });
     await myClient?.removeAttactmentUploadConversationByKey(
-      conversationID?.toString(),
+      conversationID?.toString()
     );
   };
 
@@ -335,12 +337,13 @@ const FileUpload = ({navigation, route}: any) => {
                 });
                 dispatch({
                   type: STATUS_BAR_STYLE,
-                  body: {color: STYLES.$STATUS_BAR_STYLE.default},
+                  body: { color: STYLES.$STATUS_BAR_STYLE.default },
                 });
                 navigation.goBack();
-              }}>
+              }}
+            >
               <Image
-                source={require('../../assets/images/blue_back_arrow3x.png')}
+                source={require("../../assets/images/blue_back_arrow3x.png")}
                 style={styles.backBtn}
               />
             </TouchableOpacity>
@@ -352,9 +355,10 @@ const FileUpload = ({navigation, route}: any) => {
                     uri: selectedFileToView?.uri,
                     fileName: selectedFileToView?.fileName,
                   });
-                }}>
+                }}
+              >
                 <Image
-                  source={require('../../assets/images/crop_icon3x.png')}
+                  source={require("../../assets/images/crop_icon3x.png")}
                   style={styles.cropIcon}
                 />
               </TouchableOpacity>
@@ -365,31 +369,33 @@ const FileUpload = ({navigation, route}: any) => {
       <View style={styles.selectedFileToView}>
         {itemType === IMAGE_TEXT ? (
           <Image
-            source={{uri: selectedFileToView?.uri}}
+            source={{ uri: selectedFileToView?.uri }}
             style={styles.mainImage}
           />
         ) : itemType === VIDEO_TEXT ? (
+          /* jshint ignore:start */
           <View style={styles.video}>
             <VideoPlayer
-              source={{uri: selectedFileToView?.uri}}
+              // source={{ uri: selectedFileToView?.uri }}
               videoStyle={styles.videoPlayer}
               videoRef={video}
               disableBack={true}
               disableVolume={true}
               disableFullscreen={true}
-              paused={true}
+              // paused={true}
               showOnStart={true}
             />
           </View>
-        ) : docItemType === PDF_TEXT ? (
+        ) : /* jshint ignore:end */
+        docItemType === PDF_TEXT ? (
           <Image
-            source={{uri: selectedFileToView?.thumbnailUrl}}
+            source={{ uri: selectedFileToView?.thumbnailUrl }}
             style={styles.mainImage}
           />
         ) : isGif ? (
           <View>
             <Image
-              source={{uri: selectedFileToView?.url}}
+              source={{ uri: selectedFileToView?.url }}
               style={styles.mainImage}
             />
           </View>
@@ -413,50 +419,54 @@ const FileUpload = ({navigation, route}: any) => {
           <ScrollView
             contentContainerStyle={styles.bottomListOfImages}
             horizontal={true}
-            bounces={false}>
+            bounces={false}
+          >
             {len > 0 &&
               selectedFilesToUpload.map((item: any, index: any) => {
-                let fileType = item?.type?.split('/')[0];
+                let fileType = item?.type?.split("/")[0];
                 return (
                   <Pressable
                     key={item?.uri + index}
                     onPress={() => {
                       dispatch({
                         type: SELECTED_FILE_TO_VIEW,
-                        body: {image: item},
+                        body: { image: item },
                       });
                     }}
-                    style={({pressed}) => [
-                      {opacity: pressed ? 0.5 : 1.0},
+                    style={({ pressed }) => [
+                      { opacity: pressed ? 0.5 : 1.0 },
                       styles.imageItem,
                       {
                         borderColor:
                           docItemType === PDF_TEXT
                             ? selectedFileToView?.name === item?.name
-                              ? 'red'
-                              : 'black'
+                              ? "red"
+                              : "black"
                             : selectedFileToView?.fileName === item?.fileName
-                            ? 'red'
-                            : 'black',
+                            ? "red"
+                            : "black",
                         borderWidth: 1,
                       },
-                    ]}>
+                    ]}
+                  >
                     <Image
                       source={
                         itemType === VIDEO_TEXT
                           ? {
                               uri:
-                                'file://' +
+                                "file://" +
                                 selectedFilesToUploadThumbnails[index]?.uri,
                             }
-                          : {uri: selectedFilesToUploadThumbnails[index]?.uri}
+                          : { uri: selectedFilesToUploadThumbnails[index]?.uri }
                       }
                       style={styles.smallImage}
                     />
                     {fileType === VIDEO_TEXT ? (
-                      <View style={{position: 'absolute', bottom: 0, left: 5}}>
+                      <View
+                        style={{ position: "absolute", bottom: 0, left: 5 }}
+                      >
                         <Image
-                          source={require('../../assets/images/video_icon3x.png')}
+                          source={require("../../assets/images/video_icon3x.png")}
                           style={styles.videoIcon}
                         />
                       </View>

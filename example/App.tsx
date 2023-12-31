@@ -8,6 +8,7 @@
 import React, {useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
+  KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   ScrollView,
@@ -33,13 +34,14 @@ import {
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationRef} from './RootNavigation';
 import {
-  // CarouselScreen,
+  CarouselScreen,
   ChatRoom,
-  // CreatePollScreen,
-  // FileUpload,
-  // ImageCropScreen,
+  CreatePollScreen,
+  FileUpload,
+  ImageCropScreen,
   LMChatProvider,
-  // PollResult,
+  PollResult,
+  VideoPlayer,
 } from 'likeminds_chat_reactnative_integration';
 import {RealmProvider} from '@realm/react';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -47,7 +49,8 @@ import {UserSchemaRO} from './UserSchema';
 import {Provider as ReduxProvider} from 'react-redux';
 import {myClient} from '.';
 import {store} from 'likeminds_chat_reactnative_integration';
-// import {LMChatProvider} from './LMChatProvider';
+import {GiphySDK} from '@giphy/react-native-sdk';
+import {GIPHY_SDK_API_KEY} from 'likeminds_chat_reactnative_integration/ChatSX/awsExports';
 
 const Stack = createNativeStackNavigator();
 
@@ -58,50 +61,57 @@ function App(): React.JSX.Element {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  console.log('myClientgenerated', myClient);
+  // to configure gifphy sdk
+  useEffect(() => {
+    GiphySDK.configure({apiKey: GIPHY_SDK_API_KEY});
+  }, []);
 
   return (
     <ReduxProvider store={store}>
       <LMChatProvider myClient={myClient}>
-        <NavigationContainer ref={navigationRef} independent={true}>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="ChatRoom"
-              component={ChatRoom}
-              initialParams={{
-                chatroomID: '87584',
-                isInvited: false,
-                myClient: myClient,
-              }}
-            />
-            {/* <Stack.Screen
-              options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
-              name={'FileUpload'}
-              component={FileUpload}
-            /> */}
-            {/* <Stack.Screen name={VIDEO_PLAYER} component={VideoPlayer} /> */}
-            {/* <Stack.Screen
-              options={{gestureEnabled: false}}
-              name={'CarouselScreen'}
-              component={CarouselScreen}
-            />
-            <Stack.Screen
-              options={{gestureEnabled: false}}
-              name={'PollResult'}
-              component={PollResult}
-            />
-            <Stack.Screen
-              // options={{headerShown: false, gestureEnabled: false}}
-              name={'CreatePollScreen'}
-              component={CreatePollScreen}
-            /> */}
-            {/* <Stack.Screen
-              options={{headerShown: false}}
-              name={'ImageCropScreen'}
-              component={ImageCropScreen}
-            /> */}
-          </Stack.Navigator>
-        </NavigationContainer>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{flex: 1}}>
+          <NavigationContainer ref={navigationRef} independent={true}>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="ChatRoom"
+                component={ChatRoom}
+                initialParams={{
+                  chatroomID: '3844534',
+                  isInvited: false,
+                  myClient: myClient,
+                }}
+              />
+              <Stack.Screen
+                options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
+                name={'FileUpload'}
+                component={FileUpload}
+              />
+              <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
+              <Stack.Screen
+                options={{gestureEnabled: false}}
+                name={'CarouselScreen'}
+                component={CarouselScreen}
+              />
+              <Stack.Screen
+                options={{gestureEnabled: false}}
+                name={'PollResult'}
+                component={PollResult}
+              />
+              <Stack.Screen
+                // options={{headerShown: false, gestureEnabled: false}}
+                name={'CreatePollScreen'}
+                component={CreatePollScreen}
+              />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name={'ImageCropScreen'}
+                component={ImageCropScreen}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </KeyboardAvoidingView>
       </LMChatProvider>
     </ReduxProvider>
   );

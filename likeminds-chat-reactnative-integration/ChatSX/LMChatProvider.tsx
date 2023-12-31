@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useEffect } from "react";
 import { StyleSheet, View } from "react-native";
-import { RealmProvider } from "@realm/react";
-import { UserSchemaRO } from "./db/schemas/UserSchema";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppDispatch } from "./store";
 import { Credentials } from "./credentials";
@@ -64,28 +62,22 @@ export const LMChatProvider = ({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    console.log("myClient", myClient);
-
     // storing myClient followed by community details
     const callInitApi = async () => {
       const payload = {
-        uuid: "ajhdhjasd", // uuid
-        userName: "jhashjsa", // user name
+        uuid: "ajhdhjasd12345", // uuid
+        userName: "ajhdhjasd12345", // user name
         isGuest: false,
       };
 
       const response = await myClient?.initiateUser(payload);
 
-      console.log("response", response);
-
       dispatch({
         type: INIT_API_SUCCESS,
         body: { community: response?.data?.community },
       });
-      console.log("1234");
 
       const response1 = await myClient?.getMemberState();
-      console.log("response1343543", response1);
 
       dispatch({
         type: PROFILE_DATA_SUCCESS,
@@ -100,11 +92,9 @@ export const LMChatProvider = ({
 
   return (
     <LMChatContext.Provider value={myClient}>
-      <RealmProvider schema={[UserSchemaRO]}>
-        <GestureHandlerRootView style={styles.flexStyling}>
-          <View style={styles.flexStyling}>{children}</View>
-        </GestureHandlerRootView>
-      </RealmProvider>
+      <GestureHandlerRootView style={styles.flexStyling}>
+        <View style={styles.flexStyling}>{children}</View>
+      </GestureHandlerRootView>
     </LMChatContext.Provider>
   );
 };

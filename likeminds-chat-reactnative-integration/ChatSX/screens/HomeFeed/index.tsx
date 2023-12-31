@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useEffect} from 'react';
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,29 +10,27 @@ import {
   Image,
   AppState,
   Linking,
-} from 'react-native';
-import {myClient} from '../../..';
-import {getNameInitials} from '../../commonFuctions';
-import STYLES from '../../constants/Styles';
-import {useAppDispatch, useAppSelector} from '../../store';
-import {getMemberState, initAPI} from '../../store/actions/homefeed';
-import styles from './styles';
-import {UPDATE_FILE_UPLOADING_OBJECT} from '../../store/types/types';
-import {getUniqueId} from 'react-native-device-info';
-import {fetchFCMToken, requestUserPermission} from '../../notifications';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import GroupFeed from './Tabs/GroupFeed';
-import DMFeed from './Tabs/DMFeed';
-import {FAILED, USER_SCHEMA_RO} from '../../constants/Strings';
-import {DM_FEED, GROUP_FEED} from '../../constants/Screens';
-import {useIsFocused} from '@react-navigation/native';
-import {useQuery} from '@realm/react';
-import {parseDeepLink} from '../../components/ParseDeepLink';
-import {DeepLinkRequest} from '../../components/ParseDeepLink/models';
-import {UserSchemaResponse} from '../../db/models';
-import {LMChatAnalytics} from '../../analytics/LMChatAnalytics';
-import {Events, Keys} from '../../enums';
-import {Credentials} from '../../credentials';
+} from "react-native";
+import { myClient } from "../../..";
+import { getNameInitials } from "../../commonFuctions";
+import STYLES from "../../constants/Styles";
+import { useAppDispatch, useAppSelector } from "../../store";
+import { getMemberState, initAPI } from "../../store/actions/homefeed";
+import styles from "./styles";
+import { UPDATE_FILE_UPLOADING_OBJECT } from "../../store/types/types";
+import { getUniqueId } from "react-native-device-info";
+import { fetchFCMToken, requestUserPermission } from "../../notifications";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import GroupFeed from "./Tabs/GroupFeed";
+import DMFeed from "./Tabs/DMFeed";
+import { FAILED, USER_SCHEMA_RO } from "../../constants/Strings";
+import { DM_FEED, GROUP_FEED } from "../../constants/Screens";
+import { useIsFocused } from "@react-navigation/native";
+import { parseDeepLink } from "../../components/ParseDeepLink";
+import { DeepLinkRequest } from "../../components/ParseDeepLink/models";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import { Events, Keys } from "../../enums";
+import { Credentials } from "../../credentials";
 
 interface Props {
   navigation: any;
@@ -40,12 +38,12 @@ interface Props {
 
 const Tab = createMaterialTopTabNavigator();
 
-const HomeFeed = ({navigation}: Props) => {
+const HomeFeed = ({ navigation }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [communityId, setCommunityId] = useState('');
+  const [communityId, setCommunityId] = useState("");
   const [invitePage, setInvitePage] = useState(1);
-  const [FCMToken, setFCMToken] = useState('');
-  const [accessToken, setAccessToken] = useState('');
+  const [FCMToken, setFCMToken] = useState("");
+  const [accessToken, setAccessToken] = useState("");
   const dispatch = useAppDispatch();
   const isFocused = useIsFocused();
 
@@ -56,17 +54,16 @@ const HomeFeed = ({navigation}: Props) => {
     page,
     invitedChatrooms,
     community,
-  } = useAppSelector(state => state.homefeed);
-  const user = useAppSelector(state => state.homefeed.user);
-  const {uploadingFilesMessages} = useAppSelector(state => state.upload);
-  const users = useQuery<UserSchemaResponse>(USER_SCHEMA_RO);
+  } = useAppSelector((state) => state.homefeed);
+  const user = useAppSelector((state) => state.homefeed.user);
+  const { uploadingFilesMessages } = useAppSelector((state) => state.upload);
 
   const INITIAL_SYNC_PAGE = 1;
 
   const chatrooms = [...invitedChatrooms, ...myChatrooms];
   const setOptions = () => {
     navigation.setOptions({
-      title: '',
+      title: "",
       headerShadowVisible: false,
       headerLeft: () => (
         <TouchableOpacity>
@@ -75,7 +72,8 @@ const HomeFeed = ({navigation}: Props) => {
               color: STYLES.$COLORS.PRIMARY,
               fontSize: STYLES.$FONT_SIZES.XL,
               fontFamily: STYLES.$FONT_TYPES.BOLD,
-            }}>
+            }}
+          >
             Community
           </Text>
         </TouchableOpacity>
@@ -86,14 +84,15 @@ const HomeFeed = ({navigation}: Props) => {
             width: 35,
             height: 35,
             borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
-            backgroundColor: user?.imageUrl ? 'white' : 'purple',
-            justifyContent: 'center',
-            alignItems: 'center',
+            backgroundColor: user?.imageUrl ? "white" : "purple",
+            justifyContent: "center",
+            alignItems: "center",
             padding: 5,
-            paddingTop: Platform.OS === 'ios' ? 5 : 3,
-          }}>
+            paddingTop: Platform.OS === "ios" ? 5 : 3,
+          }}
+        >
           {user?.imageUrl ? (
-            <Image source={{uri: user?.imageUrl}} style={styles.avatar} />
+            <Image source={{ uri: user?.imageUrl }} style={styles.avatar} />
           ) : (
             <Text
               style={{
@@ -101,9 +100,10 @@ const HomeFeed = ({navigation}: Props) => {
                 fontSize: STYLES.$FONT_SIZES.LARGE,
                 fontFamily: STYLES.$FONT_TYPES.SEMI_BOLD,
                 paddingTop:
-                  Platform.OS === 'ios' ? 3 : Platform.OS === 'android' ? 0 : 0,
-              }}>
-              {user?.name ? getNameInitials(user?.name) : ''}
+                  Platform.OS === "ios" ? 3 : Platform.OS === "android" ? 0 : 0,
+              }}
+            >
+              {user?.name ? getNameInitials(user?.name) : ""}
             </Text>
           )}
         </TouchableOpacity>
@@ -118,7 +118,7 @@ const HomeFeed = ({navigation}: Props) => {
       const payload = {
         token: fcmToken,
         xDeviceId: deviceID,
-        xPlatformCode: Platform.OS === 'ios' ? 'ios' : 'an',
+        xPlatformCode: Platform.OS === "ios" ? "ios" : "an",
       };
       await myClient.registerDevice(payload);
     } catch (error) {
@@ -129,14 +129,8 @@ const HomeFeed = ({navigation}: Props) => {
   async function fetchData() {
     //this line of code is for the sample app only, pass your uuid instead of this.
 
-    const UUID =
-      Credentials.userUniqueId.length > 0
-        ? Credentials.userUniqueId
-        : users[0]?.userUniqueID;
-    const userName =
-      Credentials.username.length > 0
-        ? Credentials.username
-        : users[0]?.userName;
+    const UUID = Credentials.userUniqueId;
+    const userName = Credentials.username;
 
     const payload = {
       uuid: UUID, // uuid
@@ -152,7 +146,7 @@ const HomeFeed = ({navigation}: Props) => {
       await dispatch(getMemberState() as any);
       LMChatAnalytics.track(
         Events.COMMUNITY_TAB_CLICKED,
-        new Map<string, string>([[Keys.USER_ID, res?.user?.id]]),
+        new Map<string, string>([[Keys.USER_ID, res?.user?.id]])
       );
     }
 
@@ -164,15 +158,9 @@ const HomeFeed = ({navigation}: Props) => {
   }, [navigation, myClient]);
 
   useEffect(() => {
-    const listener = Linking.addEventListener('url', ({url}) => {
-      const uuid =
-        Credentials.userUniqueId.length > 0
-          ? Credentials.userUniqueId
-          : users[0]?.userUniqueID;
-      const userName =
-        Credentials.username.length > 0
-          ? Credentials.username
-          : users[0]?.userName;
+    const listener = Linking.addEventListener("url", ({ url }) => {
+      const uuid = Credentials.userUniqueId;
+      const userName = Credentials.username;
 
       const exampleRequest: DeepLinkRequest = {
         uri: url,
@@ -183,7 +171,7 @@ const HomeFeed = ({navigation}: Props) => {
 
       // Example usage to call parseDeepLink() method
 
-      parseDeepLink(exampleRequest, response => {
+      parseDeepLink(exampleRequest, (response) => {
         // Parsed response
       });
     });
@@ -255,7 +243,7 @@ const HomeFeed = ({navigation}: Props) => {
     }
   }, [user]);
 
-  const renderLabel = ({route}: any) => (
+  const renderLabel = ({ route }: any) => (
     <Text style={styles.font}>{route.title}</Text>
   );
 
@@ -265,12 +253,13 @@ const HomeFeed = ({navigation}: Props) => {
         <Tab.Navigator
           screenOptions={{
             tabBarLabelStyle: styles.font,
-            tabBarIndicatorStyle: {backgroundColor: STYLES.$COLORS.PRIMARY},
-          }}>
+            tabBarIndicatorStyle: { backgroundColor: STYLES.$COLORS.PRIMARY },
+          }}
+        >
           <Tab.Screen
             name={GROUP_FEED}
             options={{
-              tabBarLabel: ({focused}) => (
+              tabBarLabel: ({ focused }) => (
                 <Text
                   style={[
                     styles.font,
@@ -279,7 +268,8 @@ const HomeFeed = ({navigation}: Props) => {
                         ? STYLES.$COLORS.PRIMARY
                         : STYLES.$COLORS.MSG,
                     },
-                  ]}>
+                  ]}
+                >
                   Groups
                 </Text>
               ),
@@ -288,7 +278,7 @@ const HomeFeed = ({navigation}: Props) => {
           />
           <Tab.Screen
             name={DM_FEED}
-            options={{tabBarLabel: 'DMs'}}
+            options={{ tabBarLabel: "DMs" }}
             component={DMFeed}
           />
         </Tab.Navigator>
