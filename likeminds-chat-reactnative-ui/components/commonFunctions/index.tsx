@@ -78,7 +78,7 @@ function detectLinks(message: string, isLongPress?: boolean) {
 export const decode = (
   text: string | undefined,
   enableClick: boolean,
-  nonPartTypeTextStyle?: StyleProp<TextStyle>,
+  plainTextStyle?: StyleProp<TextStyle>,
   chatroomName?: string,
   communityId?: string,
   isLongPress?: boolean,
@@ -126,9 +126,7 @@ export const decode = (
         {arr.map((val, index) => (
           <Text
             style={
-              nonPartTypeTextStyle
-                ? nonPartTypeTextStyle
-                : defaultStyles.nonPartTextStyle
+              plainTextStyle ? plainTextStyle : defaultStyles.nonPartTextStyle
             }
             key={val.key + index}
           >

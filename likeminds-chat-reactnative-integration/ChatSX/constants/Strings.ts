@@ -78,6 +78,16 @@ export const POLL_RESULT_TEXT = "Poll Results";
 export const NO_RESPONSES = "No Response";
 export const OKAY = "Okay";
 
+export const Storage_Permission = "Storage Permission";
+export const App_Permission_For_Storage =
+  "App needs permission to access your storage";
+export const Ask_Me_Later = "Ask Me Later";
+export const Cancel = "Cancel";
+export const Ok = "OK";
+export const App_Permission_To_Read_Files =
+  "App needs access to your storage to read files. Please go to app settings and grant permission.";
+export const Open_Settings = "Open Settings";
+
 export const ANONYMOUS_POLL_TITLE = "Anonymous poll";
 export const ANONYMOUS_POLL_SUB_TITLE =
   "This being an anonymous poll, the names of the voters can not be disclosed";

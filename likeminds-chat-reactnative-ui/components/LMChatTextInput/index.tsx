@@ -40,7 +40,7 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
   secureText,
   disabled,
   autoFocus,
-  nonPartTypeTextStyle,
+  plainTextStyle,
   ...textInputProps
 }) => {
   const textInput = useRef<TextInput | null>(null);
@@ -159,9 +159,7 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
                 {text}
               </Text>
             ) : (
-              <Text key={index}>
-                {decode(text, true, nonPartTypeTextStyle)}
-              </Text>
+              <Text key={index}>{decode(text, true, plainTextStyle)}</Text>
             )
           )}
         </Text>
