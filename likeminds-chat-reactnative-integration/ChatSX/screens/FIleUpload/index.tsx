@@ -46,7 +46,7 @@ import { GiphyMediaView } from "@giphy/react-native-sdk";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 import { generateVoiceNoteName } from "../../audio";
 import { createThumbnail } from "react-native-create-thumbnail";
-import { myClient } from "../../../";
+import { Client } from "../../client";
 
 interface UploadResource {
   selectedImages: any;
@@ -58,6 +58,7 @@ interface UploadResource {
 }
 
 const FileUpload = ({ navigation, route }: any) => {
+  const myClient = Client.myClient;
   const video = useRef<any>(null);
 
   const { chatroomID, previousMessage = "" } = route?.params;

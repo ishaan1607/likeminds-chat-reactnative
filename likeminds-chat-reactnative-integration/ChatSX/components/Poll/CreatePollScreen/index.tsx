@@ -20,9 +20,10 @@ import CreatePollUI from "../CreatePollUI";
 import { formatDate } from "../../../commonFuctions";
 import { CreatePoll, CreatePollStateProps } from "../models";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
-import { myClient } from "../../../../";
+import { Client } from "../../../client";
 
 const CreatePollScreen = ({ navigation, route }: CreatePoll) => {
+  const myClient = Client.myClient;
   const [question, setQuestion] = useState<string>("");
   const [optionsArray, setOptionsArray] = useState<any>([]);
   const [showAdvancedOption, setShowAdvancedOption] = useState<boolean>(false);

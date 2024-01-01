@@ -27,7 +27,7 @@ import { FlashList } from "@shopify/flash-list";
 import { LoaderComponent } from "../LoaderComponent";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
-import { myClient } from "../../../";
+import { Client } from "../../client";
 
 const CommonAllMembers = ({
   navigation,
@@ -36,6 +36,7 @@ const CommonAllMembers = ({
   chatroomName,
   showList,
 }: any) => {
+  const myClient = Client.myClient;
   const [participants, setParticipants] = useState([] as any);
   const [searchedParticipants, setSearchedParticipants] = useState([] as any);
   const [isLoading, setIsLoading] = useState(false);

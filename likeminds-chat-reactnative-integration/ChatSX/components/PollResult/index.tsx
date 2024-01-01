@@ -5,7 +5,7 @@ import styles from "./styles";
 import STYLES from "../../constants/Styles";
 import { FlashList } from "@shopify/flash-list";
 import { NO_RESPONSES, POLL_RESULT_TEXT } from "../../constants/Strings";
-import { myClient } from "../../../";
+import { Client } from "../../client";
 
 const PollStack = createMaterialTopTabNavigator();
 
@@ -122,7 +122,7 @@ const TabScreenUI = ({ pollID, conversationID }: any) => {
       conversationId: conversationID,
     };
 
-    const res: any = await myClient.getPollUsers({
+    const res: any = await Client.myClient.getPollUsers({
       pollId: parseInt(pollID!),
       conversationId: conversationID,
     });

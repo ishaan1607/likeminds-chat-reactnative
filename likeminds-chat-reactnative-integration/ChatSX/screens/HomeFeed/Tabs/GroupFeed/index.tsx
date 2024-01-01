@@ -42,7 +42,7 @@ import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { LMChatAnalytics } from "../../../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../../../enums";
-import { myClient } from "../../../../../";
+import { Client } from "../../../../client";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -51,6 +51,7 @@ interface Props {
 }
 
 const GroupFeed = ({ navigation }: Props) => {
+  const myClient = Client.myClient;
   const [isLoading, setIsLoading] = useState(false);
   const [shimmerIsLoading, setShimmerIsLoading] = useState(true);
   const [invitePage, setInvitePage] = useState(1);

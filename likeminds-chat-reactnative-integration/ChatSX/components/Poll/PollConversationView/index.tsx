@@ -21,7 +21,7 @@ import {
   PollConversationViewProps,
   PollConversationViewState,
 } from "../models";
-import { myClient } from "../../../../";
+import { Client } from "../../../client";
 
 const PollConversationView = ({
   navigation,
@@ -30,6 +30,7 @@ const PollConversationView = ({
   openKeyboard,
   longPressOpenKeyboard,
 }: PollConversationViewProps) => {
+  const myClient = Client.myClient;
   const [selectedPolls, setSelectedPolls] = useState<any>([]);
   const [showSelected, setShowSelected] = useState(false);
   const [shouldShowSubmitPollButton, setShouldShowSubmitPollButton] =

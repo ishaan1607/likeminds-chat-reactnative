@@ -142,7 +142,7 @@ import {
   convertToMentionValues,
   replaceMentionValues,
 } from "likeminds_chat_reactnative_ui/components/LMChatTextInput/utils";
-import { myClient } from "../../../";
+import { Client } from "../../client";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
@@ -167,6 +167,7 @@ const InputBox = ({
   currentChatroomTopic,
   isGif,
 }: InputBoxProps) => {
+  const myClient = Client.myClient;
   const [isKeyBoardFocused, setIsKeyBoardFocused] = useState(false);
   const [message, setMessage] = useState(previousMessage);
   const [formattedConversation, setFormattedConversation] =

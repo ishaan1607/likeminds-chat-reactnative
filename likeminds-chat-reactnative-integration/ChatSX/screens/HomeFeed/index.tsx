@@ -30,7 +30,7 @@ import { DeepLinkRequest } from "../../components/ParseDeepLink/models";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../enums";
 import { Credentials } from "../../credentials";
-import { myClient } from "../../../";
+import { Client } from "../../client";
 
 interface Props {
   navigation: any;
@@ -39,6 +39,7 @@ interface Props {
 const Tab = createMaterialTopTabNavigator();
 
 const HomeFeed = ({ navigation }: Props) => {
+  const myClient = Client.myClient;
   const [isLoading, setIsLoading] = useState(false);
   const [communityId, setCommunityId] = useState("");
   const [invitePage, setInvitePage] = useState(1);

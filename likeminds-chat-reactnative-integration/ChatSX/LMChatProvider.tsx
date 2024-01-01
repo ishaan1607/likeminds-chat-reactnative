@@ -15,6 +15,7 @@ import { setupPlayer } from "./audio";
 import { LMChatClient } from "@likeminds.community/chat-rn";
 import { GiphySDK } from "@giphy/react-native-sdk";
 import { GIPHY_SDK_API_KEY } from "./awsExports";
+import { Client } from "./client";
 
 interface LMProviderProps {
   myClient: LMChatClient;
@@ -73,6 +74,9 @@ export const LMChatProvider = ({
   const dispatch = useAppDispatch();
 
   useEffect(() => {
+    //setting client in Client class
+    Client.setMyClient(myClient);
+
     // storing myClient followed by community details
     const callInitApi = async () => {
       const payload = {
