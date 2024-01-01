@@ -135,11 +135,11 @@ type LMChatTexInputProps = Omit<TextInputProps, "onChange"> & {
     | "web-search"
     // for android only
     | "visible-password";
+  plainTextStyle?: StyleProp<TextStyle>;
   multilineField?: boolean; // this represents if the input text should be multi lined or not
   secureText?: boolean; // this represents if the text entered should be hidden or visible for sensitive text like passwords
   disabled?: boolean; // this represents if the text input is editable or not
   autoFocus?: boolean; // checks if the text input shoud be on focus or not
-  children: React.ReactNode;
 };
 
 export type {
