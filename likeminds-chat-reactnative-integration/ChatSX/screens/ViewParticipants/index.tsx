@@ -18,9 +18,10 @@ import { FlashList } from "@shopify/flash-list";
 import { LoaderComponent } from "../../components/LoaderComponent";
 import { Events, Keys, Sources } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
-import { myClient } from "../../../";
+import { Client } from "../../client";
 
 const ViewParticipants = ({ navigation, route }: any) => {
+  const myClient = Client.myClient;
   const [participants, setParticipants] = useState({} as any);
   const [isLoading, setIsLoading] = useState(false);
   const [page, setPage] = useState(1);

@@ -51,7 +51,7 @@ import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { Events, Keys, Sources } from "../../../../enums";
 import { LMChatAnalytics } from "../../../../analytics/LMChatAnalytics";
-import { myClient } from "../../../../../";
+import { Client } from "../../../../client";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -60,6 +60,7 @@ interface Props {
 }
 
 const DMFeed = ({ navigation }: Props) => {
+  const myClient = Client.myClient;
   const [isLoading, setIsLoading] = useState(false);
   const [shimmerIsLoading, setShimmerIsLoading] = useState(true);
   const [showDM, setShowDM] = useState(false);

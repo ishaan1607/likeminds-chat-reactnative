@@ -9,7 +9,9 @@ import {
   UPDATE_EXPLORE_FEED_CHAT_SUCCESS,
 } from "../types/types";
 import { Dispatch } from "@reduxjs/toolkit";
-import { myClient } from "../../../";
+import { Client } from "../../client";
+
+const myClient = Client.myClient;
 
 export const getExploreFeedData =
   (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {

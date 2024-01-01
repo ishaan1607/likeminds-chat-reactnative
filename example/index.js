@@ -6,7 +6,8 @@ import App from './App';
 import {name as appName} from './app.json';
 import {initMyClient} from 'likeminds_chat_reactnative_integration';
 
-const myClient = initMyClient('c9a0a9cc-4844-4088-8fda-3146c61979a8');
+// proivde apiKey below to initMyClient
+const myClient = initMyClient('');
 
 AppRegistry.registerComponent(appName, () => App);
 

@@ -33,7 +33,9 @@ import {
   UPDATE_INVITES_SUCCESS,
 } from "../types/types";
 import { Dispatch } from "@reduxjs/toolkit";
-import { myClient } from "../../../";
+import { Client } from "../../client";
+
+const myClient = Client.myClient;
 
 export const initAPI = (payload: any) => async (dispatch: Dispatch) => {
   try {

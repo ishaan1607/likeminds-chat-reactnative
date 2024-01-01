@@ -4,13 +4,14 @@ import * as RootNavigation from "../../RootNavigation";
 import { isValidURI } from "../../shareUtils";
 import { DeepLinkRequest, DeepLinkResponse } from "./models";
 import { CHATROOM } from "../../constants/Screens";
-import { myClient } from "../../../";
+import { Client } from "../../client";
 
 // this function is to parse deep link url
 export async function parseDeepLink(
   request: DeepLinkRequest,
   responseCallback?: (response: DeepLinkResponse) => void
 ) {
+  const myClient = Client.myClient;
   const uri = request.uri;
 
   if (isValidURI(uri)) {

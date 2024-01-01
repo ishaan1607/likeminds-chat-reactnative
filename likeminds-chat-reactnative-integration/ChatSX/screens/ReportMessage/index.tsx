@@ -16,12 +16,14 @@ import { useAppDispatch } from "../../store";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { getConversationType } from "../../utils/analyticsUtils";
-import { myClient } from "../../../";
+import { Client } from "../../client";
+
 interface Props {
   navigation: any;
   route: any;
 }
 const ReportScreen = ({ navigation, route }: Props) => {
+  const myClient = Client.myClient;
   const [reasons, setReasons] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const [otherReason, setOtherReason] = useState("");

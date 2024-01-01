@@ -1,7 +1,9 @@
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
 import { UserInfo } from "../db/models";
 import { GetConversationsType } from "../enums";
-import { myClient } from "../../";
+import { Client } from "../client";
+
+const myClient = Client.myClient;
 
 // This method is to create a temporary state message for updation of chatroom topic
 export const createTemporaryStateMessage = (

@@ -21,7 +21,9 @@ import {
   PAGINATED_CONVERSATIONS_SUCCESS,
   GET_CHATROOM_ACTIONS_SUCCESS,
 } from "../types/types";
-import { myClient } from "../../../";
+import { Client } from "../../client";
+
+const myClient = Client.myClient;
 
 export const getConversations =
   (payload: any, showLoader: boolean) => async (dispatch: Dispatch) => {

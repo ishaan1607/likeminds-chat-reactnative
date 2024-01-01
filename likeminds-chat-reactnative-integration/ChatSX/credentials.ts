@@ -1,4 +1,4 @@
-import { myClient } from "../";
+import { Client } from "./client";
 
 export class Credentials {
   private static _username: string = "";
@@ -7,7 +7,7 @@ export class Credentials {
   static setCredentials(username: string, userUniqueId: string): void {
     Credentials._username = username;
     Credentials._userUniqueId = userUniqueId;
-    myClient.setUserSchema(userUniqueId, username);
+    Client.myClient.setUserSchema(userUniqueId, username);
   }
 
   static get username(): string {
