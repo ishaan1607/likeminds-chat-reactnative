@@ -1,14 +1,16 @@
-import {Conversation} from '@likeminds.community/chat-rn/dist/shared/responseModels/Conversation';
-import {UserInfo} from '../db/models';
-import {myClient} from '../..';
-import {GetConversationsType} from '../enums';
+import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
+import { UserInfo } from "../db/models";
+import { GetConversationsType } from "../enums";
+import { Client } from "../client";
+
+const myClient = Client.myClient;
 
 // This method is to create a temporary state message for updation of chatroom topic
 export const createTemporaryStateMessage = (
   currentChatroomTopic: Conversation,
-  user: UserInfo,
+  user: UserInfo
 ) => {
-  const temporaryStateMessage = {...currentChatroomTopic};
+  const temporaryStateMessage = { ...currentChatroomTopic };
   if (
     temporaryStateMessage?.hasFiles == false ||
     (temporaryStateMessage?.hasFiles == true &&
@@ -19,11 +21,11 @@ export const createTemporaryStateMessage = (
     temporaryStateMessage.state = 12;
     const currentDate = new Date();
     const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     };
-    const formattedDate = currentDate.toLocaleDateString('en-GB', options);
+    const formattedDate = currentDate.toLocaleDateString("en-GB", options);
     temporaryStateMessage.date = formattedDate;
     temporaryStateMessage.id = Date.now()?.toString();
     temporaryStateMessage.attachments = [];
@@ -39,11 +41,11 @@ export const createTemporaryStateMessage = (
     temporaryStateMessage.state = 12;
     const currentDate = new Date();
     const options: Intl.DateTimeFormatOptions = {
-      day: 'numeric',
-      month: 'short',
-      year: 'numeric',
+      day: "numeric",
+      month: "short",
+      year: "numeric",
     };
-    const formattedDate = currentDate.toLocaleDateString('en-GB', options);
+    const formattedDate = currentDate.toLocaleDateString("en-GB", options);
     temporaryStateMessage.date = formattedDate;
     temporaryStateMessage.id = Date.now()?.toString();
     temporaryStateMessage.attachments = [];
@@ -59,12 +61,12 @@ export const createTemporaryStateMessage = (
 // This method is to get above, current and below conversation and create a new conversation
 export const getCurrentConversation = async (
   currentChatroomTopic: Conversation,
-  chatroomId: string,
+  chatroomId: string
 ) => {
   let topicConversation;
   if (currentChatroomTopic?.id) {
     topicConversation = await myClient?.getConversation(
-      currentChatroomTopic?.id,
+      currentChatroomTopic?.id
     );
   }
   const payload = {
@@ -78,7 +80,7 @@ export const getCurrentConversation = async (
   const belowConversations = await myClient?.getConversations(payload);
   let newConversation = aboveConversations.concat(
     topicConversation,
-    belowConversations,
+    belowConversations
   );
   newConversation = newConversation.reverse();
   return newConversation;

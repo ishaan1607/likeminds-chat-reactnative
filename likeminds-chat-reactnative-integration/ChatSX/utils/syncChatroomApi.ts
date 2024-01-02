@@ -1,5 +1,8 @@
-import { myClient } from "../..";
 import { SyncChatroomRequest } from "@likeminds.community/chat-rn";
+import { useLMChat } from "../LMChatProvider";
+import { Client } from "../client";
+
+const myClient = Client.myClient;
 
 // Sync Chatrrom API
 async function syncChatroomAPI(

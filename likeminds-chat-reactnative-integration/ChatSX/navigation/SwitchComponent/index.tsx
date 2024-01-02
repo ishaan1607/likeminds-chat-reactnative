@@ -14,7 +14,7 @@ import {
   StackActions,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import ChatRoom from "../../screens/ChatRoom";
+import { ChatRoom } from "../../screens/ChatRoom";
 import { useAppDispatch, useAppSelector } from "../../store";
 import ReportScreen from "../../screens/ReportMessage";
 import ImageScreen from "../../components/ImageScreen";
@@ -163,7 +163,6 @@ const SwitchComponent = () => {
             component={PollResult}
           />
           <Stack.Screen
-            // options={{headerShown: false, gestureEnabled: false}}
             name={CREATE_POLL_SCREEN}
             component={CreatePollScreen}
           />

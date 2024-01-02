@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   Image,
   Switch,
-} from 'react-native';
-import React from 'react';
-import {styles} from '../styles';
+} from "react-native";
+import React from "react";
+import { styles } from "../styles";
 import {
   ANONYMOUS_POLL_TEXT,
   DATE_PLACEHOLDER,
@@ -18,12 +18,12 @@ import {
   POST_TITLE,
   SELECT_OPTION,
   USER_CAN_VOTE_FOR,
-} from '../../../constants/Strings';
-import {Platform} from 'react-native';
-import ActionAlertModal from '../../../customModals/ActionListModel';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {CreatePollProps} from '../models';
-import STYLES from '../../../constants/Styles';
+} from "../../../constants/Strings";
+import { Platform } from "react-native";
+import ActionAlertModal from "../../../customModals/ActionListModel";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import { CreatePollProps } from "../models";
+import STYLES from "../../../constants/Styles";
 
 const CreatePollUI = ({
   hue,
@@ -69,17 +69,19 @@ const CreatePollUI = ({
   return (
     <View>
       <ScrollView
-        keyboardShouldPersistTaps={'handled'}
-        contentContainerStyle={{paddingBottom: 50}}
-        bounces={false}>
+        keyboardShouldPersistTaps={"handled"}
+        contentContainerStyle={{ paddingBottom: 50 }}
+        bounces={false}
+      >
         {/* Poll question */}
         <View style={styles.pollQuestion}>
           <View>
             <Text
               style={[
                 styles.font,
-                hue ? {color: `hsl(${hue}, 53%, 15%)`} : null,
-              ]}>
+                hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+              ]}
+            >
               Poll question
             </Text>
           </View>
@@ -101,8 +103,9 @@ const CreatePollUI = ({
             <Text
               style={[
                 styles.font,
-                hue ? {color: `hsl(${hue}, 53%, 15%)`} : null,
-              ]}>
+                hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+              ]}
+            >
               Answer options
             </Text>
           </View>
@@ -116,7 +119,8 @@ const CreatePollUI = ({
                     styles.justifySpace,
                     styles.borderBottom,
                     styles.paddingHorizontal15,
-                  ]}>
+                  ]}
+                >
                   <TextInput
                     value={option?.text}
                     placeholder={OPTION_TEXT}
@@ -124,7 +128,7 @@ const CreatePollUI = ({
                       styles.font,
                       styles.option,
                       styles.blackColor,
-                      {flex: 1},
+                      { flex: 1 },
                     ]}
                     placeholderTextColor="#c5c5c5"
                     onChangeText={(e: any) => {
@@ -135,13 +139,14 @@ const CreatePollUI = ({
                     <TouchableOpacity
                       onPress={() => {
                         removeAnOption(index);
-                      }}>
+                      }}
+                    >
                       <Image
                         style={[
                           styles.pollIcon,
-                          {tintColor: styles.blackColor.color},
+                          { tintColor: styles.blackColor.color },
                         ]}
-                        source={require('../../../assets/images/cross_icon3x.png')}
+                        source={require("../../../assets/images/cross_icon3x.png")}
                       />
                     </TouchableOpacity>
                   ) : null}
@@ -156,20 +161,22 @@ const CreatePollUI = ({
               styles.alignRow,
               styles.marginSpace,
               styles.paddingHorizontal15,
-            ]}>
+            ]}
+          >
             <Image
               style={[
                 styles.optionIcon,
-                hue ? {tintColor: `hsl(${hue}, 53%, 15%)`} : null,
+                hue ? { tintColor: `hsl(${hue}, 53%, 15%)` } : null,
               ]}
-              source={require('../../../assets/images/add_options3x.png')}
+              source={require("../../../assets/images/add_options3x.png")}
             />
             <Text
               style={[
                 styles.text,
                 styles.addOptionText,
-                hue ? {color: `hsl(${hue}, 53%, 15%)`} : null,
-              ]}>
+                hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+              ]}
+            >
               Add an option...
             </Text>
           </TouchableOpacity>
@@ -181,8 +188,9 @@ const CreatePollUI = ({
             <Text
               style={[
                 styles.font,
-                hue ? {color: `hsl(${hue}, 53%, 15%)`} : null,
-              ]}>
+                hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+              ]}
+            >
               Poll expires on
             </Text>
           </View>
@@ -190,31 +198,35 @@ const CreatePollUI = ({
             <TouchableOpacity
               onPress={() => {
                 showDatePicker();
-              }}>
+              }}
+            >
               <View
                 style={[
                   styles.alignRow,
                   styles.justifySpace,
-                  {marginBottom: 10},
-                ]}>
+                  { marginBottom: 10 },
+                ]}
+              >
                 <Text
                   style={[
                     styles.font,
                     formatedDateTime ? styles.blackColor : styles.placeHolder,
-                  ]}>
+                  ]}
+                >
                   {formatedDateTime ? formatedDateTime : DATE_PLACEHOLDER}
                 </Text>
                 {formatedDateTime ? (
                   <TouchableOpacity
                     onPress={() => {
                       resetDateTimePicker();
-                    }}>
+                    }}
+                  >
                     <Image
                       style={[
                         styles.pollIcon,
-                        {tintColor: styles.blackColor.color},
+                        { tintColor: styles.blackColor.color },
                       ]}
-                      source={require('../../../assets/images/cross_icon3x.png')}
+                      source={require("../../../assets/images/cross_icon3x.png")}
                     />
                   </TouchableOpacity>
                 ) : null}
@@ -225,11 +237,11 @@ const CreatePollUI = ({
                   testID="dateTimePicker"
                   timeZoneOffsetInMinutes={timeZoneOffsetInMinutes}
                   value={date ? date : new Date()}
-                  mode={Platform.OS === 'ios' ? 'datetime' : mode}
+                  mode={Platform.OS === "ios" ? "datetime" : mode}
                   is24Hour={true}
                   display="default"
                   onChange={onChange}
-                  minimumDate={mode === 'date' ? new Date() : undefined}
+                  minimumDate={mode === "date" ? new Date() : undefined}
                   accentColor={STYLES.$COLORS.PRIMARY}
                 />
               )}
@@ -247,21 +259,23 @@ const CreatePollUI = ({
           ]}
           onPress={() => {
             handleShowAdvanceOption();
-          }}>
+          }}
+        >
           <Text
             style={[
               styles.font,
               styles.lightGreyBackground,
               styles.textAlignCenter,
-            ]}>
+            ]}
+          >
             ADVANCED
           </Text>
           <Image
             style={styles.downArrow}
             source={
               !showAdvancedOption
-                ? require('../../../assets/images/expand_arrow3x.png')
-                : require('../../../assets/images/minimize_arrow3x.png')
+                ? require("../../../assets/images/expand_arrow3x.png")
+                : require("../../../assets/images/minimize_arrow3x.png")
             }
           />
         </TouchableOpacity>
@@ -276,7 +290,8 @@ const CreatePollUI = ({
                 styles.paddingVertical10,
                 styles.borderBottom,
                 styles.paddingHorizontal15,
-              ]}>
+              ]}
+            >
               <Text style={[styles.font, styles.blackColor]}>
                 Allow voters to add the option
               </Text>
@@ -306,7 +321,8 @@ const CreatePollUI = ({
                 styles.paddingVertical10,
                 styles.borderBottom,
                 styles.paddingHorizontal15,
-              ]}>
+              ]}
+            >
               <Text style={[styles.font, styles.blackColor]}>
                 {ANONYMOUS_POLL_TEXT}
               </Text>
@@ -336,7 +352,8 @@ const CreatePollUI = ({
                 styles.paddingVertical10,
                 styles.borderBottom,
                 styles.paddingHorizontal15,
-              ]}>
+              ]}
+            >
               <Text style={[styles.font, styles.blackColor]}>
                 {LIVE_RESULT_TEXT}
               </Text>
@@ -365,7 +382,8 @@ const CreatePollUI = ({
                   styles.alignRow,
                   styles.justifySpace,
                   styles.marginSpace,
-                ]}>
+                ]}
+              >
                 <Text style={[styles.smallText, styles.greyColor]}>
                   {USER_CAN_VOTE_FOR}
                 </Text>
@@ -375,30 +393,37 @@ const CreatePollUI = ({
                   styles.alignRow,
                   styles.justifySpace,
                   styles.marginSpace,
-                ]}>
+                ]}
+              >
                 <TouchableOpacity
                   onPress={() => {
                     handleOpenActionModal();
                   }}
                   style={[
-                    {flexGrow: 1},
+                    { flexGrow: 1 },
                     styles.alignRow,
                     styles.justifySpace,
-                    {marginRight: 30},
-                  ]}>
+                    { marginRight: 30 },
+                  ]}
+                >
                   <Text style={[styles.text, styles.blackColor]}>
                     {userCanVoteForArr[userVoteFor]}
                   </Text>
                   <Image
                     style={styles.pollIcon}
-                    source={require('../../../assets/images/sort_down3x.png')}
+                    source={require("../../../assets/images/sort_down3x.png")}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
                     handleOpenOptionModal();
                   }}
-                  style={[styles.alignRow, styles.justifySpace, {flexGrow: 1}]}>
+                  style={[
+                    styles.alignRow,
+                    styles.justifySpace,
+                    { flexGrow: 1 },
+                  ]}
+                >
                   <Text style={[styles.text, styles.blackColor]}>
                     {!voteAllowedPerUser
                       ? SELECT_OPTION
@@ -410,7 +435,7 @@ const CreatePollUI = ({
                   </Text>
                   <Image
                     style={styles.pollIcon}
-                    source={require('../../../assets/images/sort_down3x.png')}
+                    source={require("../../../assets/images/sort_down3x.png")}
                   />
                 </TouchableOpacity>
               </View>
@@ -426,8 +451,9 @@ const CreatePollUI = ({
           style={[
             styles.extraMarginSpace,
             styles.postButton,
-            hue ? {backgroundColor: `hsl(${hue}, 53%, 15%)`} : null,
-          ]}>
+            hue ? { backgroundColor: `hsl(${hue}, 53%, 15%)` } : null,
+          ]}
+        >
           <Text style={[styles.font, styles.whiteColor]}>{POST_TITLE}</Text>
         </TouchableOpacity>
 

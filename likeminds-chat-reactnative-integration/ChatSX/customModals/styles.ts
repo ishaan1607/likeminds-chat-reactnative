@@ -46,7 +46,6 @@ export const styles = StyleSheet.create({
   rejectButton: {
     padding: 10,
     alignItems: "flex-end",
-    // width: 90,
   },
   buttonText: {
     fontSize: STYLES.$FONT_SIZES.REGULAR,
@@ -61,7 +60,6 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.MSG,
   },
   okButton: {
-    // backgroundColor: '#2ecc71',
     borderBottomRightRadius: 10,
   },
 });

@@ -20,7 +20,6 @@ export const styles = StyleSheet.create({
     alignSelf: "flex-end",
     borderRadius: 15,
     backgroundColor: "#fff",
-    // elevation: 2,
   },
   sentMessage: {
     alignSelf: "flex-end",

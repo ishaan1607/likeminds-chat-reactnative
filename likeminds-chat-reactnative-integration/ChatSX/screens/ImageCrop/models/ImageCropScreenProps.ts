@@ -1,16 +1,16 @@
-import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {RootStackParamList} from '../../../navigation/SwitchComponent/models';
+import { NavigationProp, RouteProp } from "@react-navigation/native";
+import { RootStackParamList } from "../../../navigation/SwitchComponent/models";
 
 type ImageCropScreenNavigationProp = NavigationProp<
   RootStackParamList,
-  'ImageCropScreen'
+  "ImageCropScreen"
 >;
 type ImageCropScreenRouteProp = RouteProp<
   RootStackParamList,
-  'ImageCropScreen'
+  "ImageCropScreen"
 >;
 
 export interface ImageCropScreenProps {
-  navigation: ImageCropScreenNavigationProp;
-  route: ImageCropScreenRouteProp;
+  navigation: any;
+  route: any;
 }

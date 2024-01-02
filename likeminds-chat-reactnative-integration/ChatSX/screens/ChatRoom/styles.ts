@@ -136,7 +136,6 @@ export const styles = StyleSheet.create({
     marginTop: Platform.OS === "ios" ? 45 : 10,
     backgroundColor: "white",
     borderRadius: 8,
-    // width: 200,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -149,9 +148,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
-  emojiModalView: {
-    // marginTop: Platform.OS === 'ios' ? 45 : 10,
-  },
+  emojiModalView: {},
   reactionFiltersView: {
     paddingHorizontal: 10,
     paddingVertical: 10,

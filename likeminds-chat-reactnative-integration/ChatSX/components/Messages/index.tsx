@@ -1,5 +1,5 @@
 import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
-import React, { useEffect, useState, useLayoutEffect, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
 import { decode } from "../../commonFuctions";
@@ -13,17 +13,13 @@ import {
   SET_POSITION,
 } from "../../store/types/types";
 import { PollConversationView } from "../Poll";
-import { useQuery } from "@realm/react";
-import { myClient } from "../../..";
 import { ChatroomChatRequestState, Events, Keys } from "../../enums";
 import { ChatroomType } from "../../enums";
-import { UserSchemaResponse } from "../../db/models";
-import { USER_SCHEMA_RO } from "../../constants/Strings";
 import LinkPreview from "../LinkPreview";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Credentials } from "../../credentials";
+import { useLMChatStyles } from "../../LMChatProvider";
 import ReactionList from "../ReactionList";
-import { LMChat } from "../../LMChatProvider";
 
 interface Messages {
   item: any;
@@ -56,12 +52,11 @@ const Messages = ({
 }: Messages) => {
   const { user } = useAppSelector((state) => state.homefeed);
 
-  const { stateArr, conversations, chatroomDBDetails }: any = useAppSelector(
-    (state) => state.chatroom
-  );
+  const { stateArr, conversations, chatroomDBDetails, selectedMessages }: any =
+    useAppSelector((state) => state.chatroom);
 
-  const LMChatContext = useContext(LMChat);
-  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+  const LMChatContextStyles = useLMChatStyles();
+  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
 
   //styling props
   const borderRadius = chatBubbleStyles?.borderRadius;
@@ -151,11 +146,7 @@ const Messages = ({
   const conversationCreator = item?.member?.sdkClientInfo?.uuid;
   const chatroomWithUserUuid = user?.sdkClientInfo?.uuid;
   const chatroomWithUserMemberId = user?.id;
-  const users = useQuery<UserSchemaResponse>(USER_SCHEMA_RO);
-  const currentUserUuid =
-    Credentials.userUniqueId.length > 0
-      ? Credentials.userUniqueId
-      : users[0]?.userUniqueID;
+  const currentUserUuid = Credentials.userUniqueId;
 
   // Method to trim the initial DM connection message based on loggedInMember id
   const answerTrimming = (answer: string) => {

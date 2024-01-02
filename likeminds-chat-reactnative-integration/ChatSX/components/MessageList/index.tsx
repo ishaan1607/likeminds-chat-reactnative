@@ -31,11 +31,11 @@ import {
   paginatedConversationsStart,
 } from "../../store/actions/chatroom";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
-import { myClient } from "../../..";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
 import { CAPITAL_GIF_TEXT, VOICE_NOTE_STRING } from "../../constants/Strings";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
-import { LMChat } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../LMChatProvider";
+import { Client } from "../../client";
 
 const MessageList = forwardRef(
   (
@@ -70,14 +70,15 @@ const MessageList = forwardRef(
       stateArr,
       currentChatroomTopic,
     }: any = useAppSelector((state) => state.chatroom);
+    const myClient = Client.myClient;
     const { uploadingFilesMessages }: any = useAppSelector(
       (state) => state.upload
     );
     const { user } = useAppSelector((state) => state.homefeed);
     const PAGE_SIZE = 200;
 
-    const LMChatContext = useContext(LMChat);
-    const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+    const LMChatContextStyles = useLMChatStyles();
+    const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
 
     //styling props
     const selectedBackgroundColor = chatBubbleStyles?.selectedBackgroundColor;

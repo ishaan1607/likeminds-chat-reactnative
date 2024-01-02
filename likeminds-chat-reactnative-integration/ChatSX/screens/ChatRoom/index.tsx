@@ -19,7 +19,6 @@ import {
   AppState,
 } from "react-native";
 import { Image as CompressedImage } from "react-native-compressor";
-import { myClient } from "../../..";
 import { SyncConversationRequest } from "@likeminds.community/chat-rn";
 import {
   copySelectedMessages,
@@ -45,10 +44,8 @@ import {
   CLEAR_SELECTED_FILES_TO_UPLOAD,
   CLEAR_SELECTED_FILE_TO_VIEW,
   CLEAR_SELECTED_MESSAGES,
-  FIREBASE_CONVERSATIONS_SUCCESS,
   GET_CHATROOM_ACTIONS_SUCCESS,
   GET_CHATROOM_DB_SUCCESS,
-  GET_CHATROOM_SUCCESS,
   GET_CONVERSATIONS_SUCCESS,
   LONG_PRESSED,
   REACTION_SENT,
@@ -69,7 +66,7 @@ import {
 } from "../../store/types/types";
 import { getExploreFeedData } from "../../store/actions/explorefeed";
 import Layout from "../../constants/Layout";
-import EmojiPicker, { EmojiKeyboard } from "rn-emoji-keyboard";
+import { EmojiKeyboard } from "rn-emoji-keyboard";
 import {
   CHATROOM,
   EXPLORE_FEED,
@@ -98,7 +95,6 @@ import {
   REQUEST_DM_LIMIT,
   WARNING_MSG_PRIVATE_CHATROOM,
   WARNING_MSG_PUBLIC_CHATROOM,
-  USER_SCHEMA_RO,
   VOICE_NOTE_TEXT,
 } from "../../constants/Strings";
 import { DM_ALL_MEMBERS } from "../../constants/Screens";
@@ -109,7 +105,6 @@ import { BUCKET, POOL_ID, REGION } from "../../aws-exports";
 import { CognitoIdentityCredentials, S3 } from "aws-sdk";
 import AWS from "aws-sdk";
 import WarningMessageModal from "../../customModals/WarningMessage";
-import { useQuery } from "@realm/react";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import {
@@ -121,7 +116,6 @@ import {
 import { ChatroomType } from "../../enums";
 import { onShare } from "../../shareUtils";
 import { ChatroomActions, Events } from "../../enums";
-import { UserSchemaResponse } from "../../db/models";
 import TrackPlayer from "react-native-track-player";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import {
@@ -132,6 +126,7 @@ import { createTemporaryStateMessage } from "../../utils/chatroomUtils";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
 import MessageList from "../../components/MessageList";
+import { useLMChat } from "../../LMChatProvider";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -140,7 +135,7 @@ interface Data {
   title: string;
 }
 
-interface ChatRoom {
+interface ChatRoomProps {
   navigation: any;
   route: any;
 }
@@ -154,7 +149,17 @@ interface UploadResource {
   isRetry: boolean;
 }
 
-const ChatRoom = ({ navigation, route }: ChatRoom) => {
+const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
+  const myClient = useLMChat();
+
+  const {
+    chatroomID,
+    previousChatroomID,
+    navigationFromNotification,
+    deepLinking,
+  } = route.params;
+
+  const flatlistRef = useRef<any>(null);
   const refInput = useRef<any>();
 
   const db = myClient?.firebaseInstance();
@@ -184,21 +189,10 @@ const ChatRoom = ({ navigation, route }: ChatRoom) => {
   const [isRealmDataPresent, setIsRealmDataPresent] = useState(false);
 
   const reactionArr = ["❤️", "😂", "😮", "😢", "😠", "👍"];
-  const users = useQuery<UserSchemaResponse>(USER_SCHEMA_RO);
-
-  const {
-    chatroomID,
-    isInvited,
-    previousChatroomID,
-    navigationFromNotification,
-    updatedAt,
-    deepLinking,
-  } = route.params;
   const isFocused = useIsFocused();
 
   const dispatch = useAppDispatch();
   const {
-    conversations = [],
     chatroomDetails,
     chatroomDBDetails,
     isLongPress,
@@ -212,6 +206,8 @@ const ChatRoom = ({ navigation, route }: ChatRoom) => {
   const { user, community, memberRights } = useAppSelector(
     (state) => state.homefeed
   );
+
+  const { conversations = [] }: any = useAppSelector((state) => state.chatroom);
 
   const { uploadingFilesMessages }: any = useAppSelector(
     (state) => state.upload
@@ -886,14 +882,8 @@ const ChatRoom = ({ navigation, route }: ChatRoom) => {
   // this function fetch initiate API
   async function fetchInitAPI() {
     //this line of code is for the sample app only, pass your uuid instead of this.
-    const UUID =
-      Credentials.userUniqueId.length > 0
-        ? Credentials.userUniqueId
-        : users[0]?.userUniqueID;
-    const userName =
-      Credentials.username.length > 0
-        ? Credentials.username
-        : users[0]?.userName;
+    const UUID = Credentials.userUniqueId;
+    const userName = Credentials.username;
 
     const payload = {
       uuid: UUID,
@@ -2771,7 +2761,6 @@ const ChatRoom = ({ navigation, route }: ChatRoom) => {
                   });
                   dispatch({ type: SELECTED_MESSAGES, body: [] });
                   setReportModalVisible(false);
-                  // handleReportModalClose()
                 }}
                 style={styles.filtersView}
               >
@@ -2932,4 +2921,4 @@ const ChatRoom = ({ navigation, route }: ChatRoom) => {
   );
 };
 
-export default ChatRoom;
+export { ChatRoom };

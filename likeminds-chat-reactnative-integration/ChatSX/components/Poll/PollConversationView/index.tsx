@@ -1,10 +1,9 @@
-import {View, Text} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {useAppDispatch, useAppSelector} from '../../../store';
-import {POLL_RESULT} from '../../../constants/Screens';
-import {SHOW_TOAST} from '../../../store/types/types';
-import {firebaseConversation} from '../../../store/actions/chatroom';
-import {myClient} from '../../../..';
+import { View, Text } from "react-native";
+import React, { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "../../../store";
+import { POLL_RESULT } from "../../../constants/Screens";
+import { SHOW_TOAST } from "../../../store/types/types";
+import { firebaseConversation } from "../../../store/actions/chatroom";
 import {
   ANONYMOUS_POLL_SUB_TITLE,
   ANONYMOUS_POLL_TITLE,
@@ -13,12 +12,16 @@ import {
   POLL_MULTIPLE_STATE_LEAST,
   POLL_MULTIPLE_STATE_MAX,
   POLL_SUBMITTED_SUCCESSFULLY,
-} from '../../../constants/Strings';
-import moment from 'moment';
-import PollConversationUI from '../PollConversationUI';
-import AnonymousPollModal from '../../../customModals/AnonymousPoll';
-import AddOptionsModal from '../../../customModals/AddOptionModal';
-import {PollConversationViewProps, PollConversationViewState} from '../models';
+} from "../../../constants/Strings";
+import moment from "moment";
+import PollConversationUI from "../PollConversationUI";
+import AnonymousPollModal from "../../../customModals/AnonymousPoll";
+import AddOptionsModal from "../../../customModals/AddOptionModal";
+import {
+  PollConversationViewProps,
+  PollConversationViewState,
+} from "../models";
+import { Client } from "../../../client";
 
 const PollConversationView = ({
   navigation,
@@ -27,6 +30,7 @@ const PollConversationView = ({
   openKeyboard,
   longPressOpenKeyboard,
 }: PollConversationViewProps) => {
+  const myClient = Client.myClient;
   const [selectedPolls, setSelectedPolls] = useState<any>([]);
   const [showSelected, setShowSelected] = useState(false);
   const [shouldShowSubmitPollButton, setShouldShowSubmitPollButton] =
@@ -35,7 +39,7 @@ const PollConversationView = ({
   const [showResultsButton, setShowResultsButton] = useState(false);
   const [isAddPollOptionModalVisible, setIsAddPollOptionModalVisible] =
     useState(false);
-  const [addOptionInputField, setAddOptionInputField] = useState('');
+  const [addOptionInputField, setAddOptionInputField] = useState("");
   const [hasPollEnded, setHasPollEnded] = useState(false);
   const [shouldShowVotes, setShouldShowVotes] = useState(false);
   const [pollVoteCount, setPollVoteCount] = useState(0);
@@ -43,7 +47,7 @@ const PollConversationView = ({
     useState(false);
   const [pollsArr, setPollsArr] = useState(item?.polls);
 
-  const {user} = useAppSelector(item => item.homefeed);
+  const { user } = useAppSelector((item) => item.homefeed);
 
   const dispatch = useAppDispatch();
 
@@ -224,7 +228,7 @@ const PollConversationView = ({
     const res = await dispatch(firebaseConversation(payload, false) as any);
     await myClient?.updatePollVotes(
       res?.conversations,
-      user?.sdkClientInfo?.community,
+      user?.sdkClientInfo?.community
     );
   }
 
@@ -236,7 +240,7 @@ const PollConversationView = ({
       }
 
       setIsAddPollOptionModalVisible(false);
-      setAddOptionInputField('');
+      setAddOptionInputField("");
 
       const pollObject = {
         text: addOptionInputField,
@@ -257,7 +261,7 @@ const PollConversationView = ({
     if (Date.now() > item?.expiryTime) {
       dispatch({
         type: SHOW_TOAST,
-        body: {isToast: true, msg: POLL_ENDED_WARNING},
+        body: { isToast: true, msg: POLL_ENDED_WARNING },
       });
       return;
     }
@@ -270,7 +274,7 @@ const PollConversationView = ({
         return poll?.isSelected;
       });
       const selectedIndex = newSelectedPolls.findIndex(
-        index => index === pollIndex,
+        (index) => index === pollIndex
       );
       newSelectedPolls.splice(selectedIndex, 1);
     } else {
@@ -296,7 +300,7 @@ const PollConversationView = ({
           await reloadConversation();
           dispatch({
             type: SHOW_TOAST,
-            body: {isToast: true, msg: POLL_SUBMITTED_SUCCESSFULLY},
+            body: { isToast: true, msg: POLL_SUBMITTED_SUCCESSFULLY },
           });
         } else {
           // for instant poll selection only for once
@@ -310,7 +314,7 @@ const PollConversationView = ({
             await reloadConversation();
             dispatch({
               type: SHOW_TOAST,
-              body: {isToast: true, msg: POLL_SUBMITTED_SUCCESSFULLY},
+              body: { isToast: true, msg: POLL_SUBMITTED_SUCCESSFULLY },
             });
           }
         }
@@ -353,7 +357,7 @@ const PollConversationView = ({
         setSelectedPolls([]);
         dispatch({
           type: SHOW_TOAST,
-          body: {isToast: true, msg: POLL_SUBMITTED_SUCCESSFULLY},
+          body: { isToast: true, msg: POLL_SUBMITTED_SUCCESSFULLY },
         });
       } catch (error) {
         // process error
@@ -375,21 +379,21 @@ const PollConversationView = ({
     switch (item?.multipleSelectState) {
       case POLL_MULTIPLE_STATE_EXACTLY: {
         const string = `Select exactly ${multipleSelectNo} options.`;
-        return val ? string : '*' + string;
+        return val ? string : "*" + string;
       }
 
       case POLL_MULTIPLE_STATE_MAX: {
         const string = `Select at most ${multipleSelectNo} options.`;
-        return val ? string : '*' + string;
+        return val ? string : "*" + string;
       }
 
       case POLL_MULTIPLE_STATE_LEAST: {
         const string = `Select at least ${multipleSelectNo} options.`;
-        return val ? string : '*' + string;
+        return val ? string : "*" + string;
       }
 
       default: {
-        return '';
+        return "";
       }
     }
   };

@@ -6,7 +6,7 @@ import { useAppSelector } from "../../store";
 import { decode } from "../../commonFuctions";
 import { LinkPreviewProps } from "./models";
 import LinkPreviewBox from "../linkPreviewBox";
-import { LMChat } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../LMChatProvider";
 
 const LinkPreview = ({
   description,
@@ -20,8 +20,8 @@ const LinkPreview = ({
 }: LinkPreviewProps) => {
   const { user } = useAppSelector((state) => state.homefeed);
 
-  const LMChatContext = useContext(LMChat);
-  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+  const LMChatContextStyles = useLMChatStyles();
+  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
 
   //styling props
   const borderRadius = chatBubbleStyles?.borderRadius;

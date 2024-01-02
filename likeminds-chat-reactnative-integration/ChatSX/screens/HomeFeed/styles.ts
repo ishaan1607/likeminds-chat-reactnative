@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
+import { StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
 
 const styles = StyleSheet.create({
   page: {
@@ -7,8 +7,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatar: {
-    // width: STYLES.$AVATAR.WIDTH,
-    // height: STYLES.$AVATAR.HEIGHT,
     width: 36,
     height: 36,
     borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
@@ -17,7 +15,7 @@ const styles = StyleSheet.create({
   font: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    textTransform: 'none',
+    textTransform: "none",
   },
 });
 

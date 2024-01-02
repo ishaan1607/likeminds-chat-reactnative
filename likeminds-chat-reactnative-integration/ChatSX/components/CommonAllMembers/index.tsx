@@ -12,17 +12,22 @@ import {
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
-import { myClient } from "../../..";
 import { StackActions } from "@react-navigation/native";
 import { SHOW_TOAST } from "../../store/types/types";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { CHATROOM } from "../../constants/Screens";
-import { CANCEL_BUTTON, REQUEST_DM_LIMIT } from "../../constants/Strings";
+import {
+  Add_Participants,
+  CANCEL_BUTTON,
+  REQUEST_DM_LIMIT,
+  Send_DM,
+} from "../../constants/Strings";
 import { formatTime } from "../../commonFuctions";
 import { FlashList } from "@shopify/flash-list";
 import { LoaderComponent } from "../LoaderComponent";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import { Client } from "../../client";
 
 const CommonAllMembers = ({
   navigation,
@@ -31,6 +36,7 @@ const CommonAllMembers = ({
   chatroomName,
   showList,
 }: any) => {
+  const myClient = Client.myClient;
   const [participants, setParticipants] = useState([] as any);
   const [searchedParticipants, setSearchedParticipants] = useState([] as any);
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +79,7 @@ const CommonAllMembers = ({
                       fontFamily: STYLES.$FONT_TYPES.BOLD,
                     }}
                   >
-                    {"Send DM to..."}
+                    {Send_DM}
                   </Text>
                 </View>
               ) : (
@@ -85,7 +91,7 @@ const CommonAllMembers = ({
                       fontFamily: STYLES.$FONT_TYPES.BOLD,
                     }}
                   >
-                    {"Add Participants"}
+                    {Add_Participants}
                   </Text>
                   <Text
                     style={{

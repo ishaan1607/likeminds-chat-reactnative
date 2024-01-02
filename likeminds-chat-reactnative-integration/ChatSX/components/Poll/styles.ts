@@ -87,7 +87,6 @@ export const styles = StyleSheet.create({
     height: Layout.window.height / 3,
   },
   modalView: {
-    // margin: 10,
     backgroundColor: "#e8ebf0",
     borderRadius: 8,
     shadowColor: "#000",
@@ -103,7 +102,6 @@ export const styles = StyleSheet.create({
   },
   alignModalElements: {
     display: "flex",
-    // marginVertical: 20,
     flexGrow: 1,
   },
   font: {
@@ -147,8 +145,6 @@ export const styles = StyleSheet.create({
   alignRow: {
     display: "flex",
     flexDirection: "row",
-
-    // flexGrow: 1,
     alignItems: "center",
   },
   justifySpace: {
@@ -297,7 +293,6 @@ export const styles = StyleSheet.create({
   messageDate: {
     fontSize: 10,
     color: "#aaa",
-    // marginTop: 5,
     textAlign: "right",
   },
   alignTime: {

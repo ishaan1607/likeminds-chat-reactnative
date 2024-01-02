@@ -68,7 +68,6 @@ const ExploreFeed = ({ navigation }: Props) => {
   }, [navigation]);
 
   async function fetchData() {
-    // let payload = {chatroomID: 69285, page: 1000};
     dispatch({ type: SET_EXPLORE_FEED_PAGE, body: 1 });
     const payload = {
       orderType: filterState,
@@ -113,7 +112,6 @@ const ExploreFeed = ({ navigation }: Props) => {
   const handleLoadMore = () => {
     if (!isLoading) {
       if (chats.length > 0 && chats.length % 10 === 0) {
-        // Alert.alert(`${page} handleLoadMore`)
         const newPage = page + 1;
         dispatch({ type: SET_EXPLORE_FEED_PAGE, body: newPage });
         loadData(newPage);

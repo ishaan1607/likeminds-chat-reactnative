@@ -1,4 +1,4 @@
-import React, {useEffect, useLayoutEffect, useState} from 'react';
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import {
   Alert,
   Button,
@@ -8,25 +8,27 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-} from 'react-native';
-import {myClient} from '../../..';
-import STYLES from '../../constants/Styles';
-import styles from './styles';
-import {SHOW_TOAST} from '../../store/types/types';
-import {useAppDispatch} from '../../store';
-import {Events, Keys} from '../../enums';
-import {LMChatAnalytics} from '../../analytics/LMChatAnalytics';
-import {getConversationType} from '../../utils/analyticsUtils';
+} from "react-native";
+import STYLES from "../../constants/Styles";
+import styles from "./styles";
+import { SHOW_TOAST } from "../../store/types/types";
+import { useAppDispatch } from "../../store";
+import { Events, Keys } from "../../enums";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import { getConversationType } from "../../utils/analyticsUtils";
+import { Client } from "../../client";
+
 interface Props {
   navigation: any;
   route: any;
 }
-const ReportScreen = ({navigation, route}: Props) => {
+const ReportScreen = ({ navigation, route }: Props) => {
+  const myClient = Client.myClient;
   const [reasons, setReasons] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
-  const [otherReason, setOtherReason] = useState('');
+  const [otherReason, setOtherReason] = useState("");
   const [selectedId, setSelectedId] = useState(-1);
-  const [selectedTagReason, setSelectedTagReason] = useState('');
+  const [selectedTagReason, setSelectedTagReason] = useState("");
 
   const {
     conversationID,
@@ -39,35 +41,27 @@ const ReportScreen = ({navigation, route}: Props) => {
 
   const setInitialHeader = () => {
     navigation.setOptions({
-      title: '',
+      title: "",
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
-          {/* <TouchableOpacity onPress={navigation.goBack}>
-            <Image
-              source={require('../../assets/images/back_arrow3x.png')}
-              style={styles.backBtn}
-            />
-          </TouchableOpacity> */}
           <View style={styles.chatRoomInfo}>
             <Text
               style={{
                 color: STYLES.$COLORS.RED,
                 fontSize: STYLES.$FONT_SIZES.LARGE,
                 fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-              }}>
-              {'Report Message'}
+              }}
+            >
+              {"Report Message"}
             </Text>
           </View>
         </View>
       ),
       headerRight: () => (
-        <TouchableOpacity
-          onPress={navigation.goBack}
-          // setModalVisible(!modalVisible);
-        >
+        <TouchableOpacity onPress={navigation.goBack}>
           <Image
-            source={require('../../assets/images/close_icon.png')}
+            source={require("../../assets/images/close_icon.png")}
             style={styles.threeDots}
           />
         </TouchableOpacity>
@@ -98,19 +92,19 @@ const ReportScreen = ({navigation, route}: Props) => {
       const call = await myClient?.postReport({
         conversationId: Number(conversationID),
         tagId: Number(selectedId),
-        reason: otherReason != '' ? otherReason : '',
+        reason: otherReason != "" ? otherReason : "",
       });
       dispatch({
         type: SHOW_TOAST,
-        body: {isToast: true, msg: 'Reported succesfully'},
+        body: { isToast: true, msg: "Reported succesfully" },
       });
       LMChatAnalytics.track(
         Events.MESSAGE_REPORTED,
         new Map<string, string>([
           [Keys.TYPE, getConversationType(selectedMessages)],
           [Keys.CHATROOM_ID, chatroomID?.toString()],
-          [Keys.REASON, otherReason != '' ? otherReason : selectedTagReason],
-        ]),
+          [Keys.REASON, otherReason != "" ? otherReason : selectedTagReason],
+        ])
       );
     } catch (error) {
       //  Alert.alert('API failed')
@@ -118,7 +112,7 @@ const ReportScreen = ({navigation, route}: Props) => {
   };
   return (
     <View style={styles.page}>
-      <View style={{gap: 15}}>
+      <View style={{ gap: 15 }}>
         <Text style={styles.textHeading}>
           Please specify the problem to continue
         </Text>
@@ -129,10 +123,11 @@ const ReportScreen = ({navigation, route}: Props) => {
       <View
         style={{
           // flex: 1,
-          flexDirection: 'row',
-          flexWrap: 'wrap',
+          flexDirection: "row",
+          flexWrap: "wrap",
           marginTop: 24,
-        }}>
+        }}
+      >
         {reasons.map((res: any, index: number) => {
           return (
             <Pressable
@@ -141,24 +136,27 @@ const ReportScreen = ({navigation, route}: Props) => {
                 setSelectedIndex(index);
                 setSelectedId(res?.id);
                 setSelectedTagReason(res?.name);
-              }}>
+              }}
+            >
               <View
                 style={[
                   styles.reasonsBtn,
                   {
                     backgroundColor:
-                      index == selectedIndex ? STYLES.$COLORS.PRIMARY : 'white',
+                      index == selectedIndex ? STYLES.$COLORS.PRIMARY : "white",
                     borderColor: STYLES.$COLORS.MSG,
                   },
-                ]}>
+                ]}
+              >
                 <Text
                   style={[
                     styles.btnText,
                     {
                       color:
-                        selectedIndex == index ? 'white' : STYLES.$COLORS.MSG,
+                        selectedIndex == index ? "white" : STYLES.$COLORS.MSG,
                     },
-                  ]}>
+                  ]}
+                >
                   {res.name}
                 </Text>
               </View>
@@ -171,9 +169,10 @@ const ReportScreen = ({navigation, route}: Props) => {
           style={{
             marginTop: 24,
             // flex: 3,
-          }}>
+          }}
+        >
           <TextInput
-            onChangeText={e => {
+            onChangeText={(e) => {
               setOtherReason(e);
             }}
             style={{
@@ -197,7 +196,8 @@ const ReportScreen = ({navigation, route}: Props) => {
           onPress={() => {
             reportMessage();
             navigation.goBack();
-          }}>
+          }}
+        >
           <Text style={styles.reportBtnText}>REPORT</Text>
         </TouchableOpacity>
       </View>

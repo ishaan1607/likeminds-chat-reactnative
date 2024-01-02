@@ -26,7 +26,7 @@ import {
 } from "../../constants/Strings";
 import AttachmentConversations from "../AttachmentConversations";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
-import { LMChat } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../LMChatProvider";
 
 interface ReplyConversations {
   item: any;
@@ -53,8 +53,8 @@ export const ReplyBox = ({ item, chatroomName }: ReplyBox) => {
   const isGif = item?.attachments[0]?.type === GIF_TEXT ? true : false;
   const answer = isGif ? generateGifString(item?.answer) : item?.answer;
 
-  const LMChatContext = useContext(LMChat);
-  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+  const LMChatContextStyles = useLMChatStyles();
+  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
 
   //styling props
   chatBubbleStyles?.receivedMessageBackgroundColor;
@@ -169,8 +169,8 @@ const ReplyConversations = ({
   const { user } = useAppSelector((state) => state.homefeed);
   const [flashListMounted, setFlashListMounted] = useState(false);
 
-  const LMChatContext = useContext(LMChat);
-  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+  const LMChatContextStyles = useLMChatStyles();
+  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
 
   //styling props
   const borderRadius = chatBubbleStyles?.borderRadius;

@@ -8,9 +8,7 @@ export const styles = StyleSheet.create({
     borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
     marginRight: STYLES.$MARGINS.SMALL,
   },
-  container: {
-    // marginTop: StatusBar.currentHeight,
-  },
+  container: {},
   scene: {
     flex: 1,
   },

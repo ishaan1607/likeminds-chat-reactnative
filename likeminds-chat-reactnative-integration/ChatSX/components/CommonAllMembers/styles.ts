@@ -34,7 +34,6 @@ export const styles = StyleSheet.create({
     height: 30,
     resizeMode: "contain",
     marginLeft: -3,
-    // backgroundColor: 'pink',
   },
   infoContainer: {
     flex: 1,
@@ -63,18 +62,15 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: 'pink',
     paddingHorizontal: 15,
     paddingVertical: 10,
   },
   input: {
-    // flexGrow: 1,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     color: STYLES.$COLORS.SECONDARY,
     paddingVertical: 10,
     marginBottom: 2,
-    // backgroundColor: 'pink',
     width: Layout.window.width - 150,
   },
   selected: {

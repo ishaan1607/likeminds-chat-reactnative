@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
   participants: {
     display: "flex",
     flexDirection: "row",
-    // justifyContent: 'center',
     alignItems: "center",
     paddingHorizontal: 15,
     paddingVertical: 10,

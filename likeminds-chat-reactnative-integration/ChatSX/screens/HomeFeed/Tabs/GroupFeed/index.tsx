@@ -1,4 +1,4 @@
-import React, {useState, useLayoutEffect, useEffect} from 'react';
+import React, { useState, useLayoutEffect, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,19 +8,18 @@ import {
   Alert,
   ActivityIndicator,
   Image,
-} from 'react-native';
-import {myClient} from '../../../../..';
-import HomeFeedExplore from '../../../../components/HomeFeedExplore';
-import HomeFeedItem from '../../../../components/HomeFeedItem';
-import STYLES from '../../../../constants/Styles';
-import {onValue, ref} from '@firebase/database';
-import {useAppDispatch, useAppSelector} from '../../../../store';
+} from "react-native";
+import HomeFeedExplore from "../../../../components/HomeFeedExplore";
+import HomeFeedItem from "../../../../components/HomeFeedItem";
+import STYLES from "../../../../constants/Styles";
+import { onValue, ref } from "@firebase/database";
+import { useAppDispatch, useAppSelector } from "../../../../store";
 import {
   getInvites,
   updateHomeFeedData,
   updateInvites,
-} from '../../../../store/actions/homefeed';
-import styles from './styles';
+} from "../../../../store/actions/homefeed";
+import styles from "./styles";
 import {
   GET_HOMEFEED_CHAT_SUCCESS,
   GET_SYNC_HOMEFEED_CHAT_SUCCESS,
@@ -29,17 +28,21 @@ import {
   INSERT_GROUPFEED_CHATROOM,
   UPDATE_GROUPFEED_CHATROOM,
   DELETE_GROUPFEED_CHATROOM,
-} from '../../../../store/types/types';
-import {getUniqueId} from 'react-native-device-info';
-import {fetchFCMToken, requestUserPermission} from '../../../../notifications';
-import {useIsFocused} from '@react-navigation/native';
-import {FlashList} from '@shopify/flash-list';
-import Realm from 'realm';
-import {paginatedSyncAPI} from '../../../../utils/syncChatroomApi';
-import LinearGradient from 'react-native-linear-gradient';
-import {createShimmerPlaceholder} from 'react-native-shimmer-placeholder';
-import {LMChatAnalytics} from '../../../../analytics/LMChatAnalytics';
-import {Events, Keys} from '../../../../enums';
+} from "../../../../store/types/types";
+import { getUniqueId } from "react-native-device-info";
+import {
+  fetchFCMToken,
+  requestUserPermission,
+} from "../../../../notifications";
+import { useIsFocused } from "@react-navigation/native";
+import { FlashList } from "@shopify/flash-list";
+import Realm from "realm";
+import { paginatedSyncAPI } from "../../../../utils/syncChatroomApi";
+import LinearGradient from "react-native-linear-gradient";
+import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
+import { LMChatAnalytics } from "../../../../analytics/LMChatAnalytics";
+import { Events, Keys } from "../../../../enums";
+import { Client } from "../../../../client";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -47,11 +50,12 @@ interface Props {
   navigation: any;
 }
 
-const GroupFeed = ({navigation}: Props) => {
+const GroupFeed = ({ navigation }: Props) => {
+  const myClient = Client.myClient;
   const [isLoading, setIsLoading] = useState(false);
   const [shimmerIsLoading, setShimmerIsLoading] = useState(true);
   const [invitePage, setInvitePage] = useState(1);
-  const [FCMToken, setFCMToken] = useState('');
+  const [FCMToken, setFCMToken] = useState("");
   const isFocused = useIsFocused();
   const dispatch = useAppDispatch();
 
@@ -63,8 +67,8 @@ const GroupFeed = ({navigation}: Props) => {
     invitedChatrooms,
     community,
     groupFeedChatrooms,
-  } = useAppSelector(state => state.homefeed);
-  const user = useAppSelector(state => state.homefeed.user);
+  } = useAppSelector((state) => state.homefeed);
+  const user = useAppSelector((state) => state.homefeed.user);
   const db = myClient?.firebaseInstance();
 
   groupFeedChatrooms = [...invitedChatrooms, ...groupFeedChatrooms];
@@ -76,7 +80,7 @@ const GroupFeed = ({navigation}: Props) => {
 
   const getExploreTabCount = async () => {
     const exploreTabCount = await myClient?.getExploreTabCount();
-    dispatch({type: GET_HOMEFEED_CHAT_SUCCESS, body: exploreTabCount?.data});
+    dispatch({ type: GET_HOMEFEED_CHAT_SUCCESS, body: exploreTabCount?.data });
   };
 
   useEffect(() => {
@@ -91,7 +95,7 @@ const GroupFeed = ({navigation}: Props) => {
       setShimmerIsLoading(false);
       dispatch({
         type: SET_INITIAL_GROUPFEED_CHATROOM,
-        body: {groupFeedChatrooms: existingChatrooms},
+        body: { groupFeedChatrooms: existingChatrooms },
       });
     }
   };
@@ -123,7 +127,7 @@ const GroupFeed = ({navigation}: Props) => {
           new Map<string, string>([
             [Keys.SYNC_COMPLETE, true?.toString()],
             [Keys.TIME_TAKEN, (endTime - startTime)?.toString()],
-          ]),
+          ])
         );
       }
       setShimmerIsLoading(false);
@@ -136,7 +140,7 @@ const GroupFeed = ({navigation}: Props) => {
 
   useEffect(() => {
     const query = ref(db, `/community/${community?.id}`);
-    return onValue(query, snapshot => {
+    return onValue(query, (snapshot) => {
       if (snapshot.exists()) {
         if (!user?.sdkClientInfo?.community) {
           return;
@@ -154,7 +158,7 @@ const GroupFeed = ({navigation}: Props) => {
 
   async function fetchData() {
     const invitesRes = await dispatch(
-      getInvites({channelType: 1, page: 1, pageSize: 10}, false) as any,
+      getInvites({ channelType: 1, page: 1, pageSize: 10 }, false) as any
     );
 
     if (invitesRes?.userInvites) {
@@ -164,9 +168,9 @@ const GroupFeed = ({navigation}: Props) => {
         };
       } else {
         await dispatch(
-          updateInvites({channelType: 1, page: 2, pageSize: 10}, false) as any,
+          updateInvites({ channelType: 1, page: 2, pageSize: 10 }, false) as any
         );
-        setInvitePage(invitePage => {
+        setInvitePage((invitePage) => {
           return invitePage + 1;
         });
       }
@@ -217,11 +221,11 @@ const GroupFeed = ({navigation}: Props) => {
         setIsLoading(true);
         await dispatch(
           updateInvites(
-            {channelType: 1, page: invitePage + 1, pageSize: 10},
-            false,
-          ) as any,
+            { channelType: 1, page: invitePage + 1, pageSize: 10 },
+            false
+          ) as any
         );
-        setInvitePage(invitePage => {
+        setInvitePage((invitePage) => {
           return invitePage + 1;
         });
         setIsLoading(false);
@@ -231,7 +235,7 @@ const GroupFeed = ({navigation}: Props) => {
         groupFeedChatrooms?.length === 10 * page
       ) {
         const newPage = page + 1;
-        dispatch({type: SET_PAGE, body: newPage});
+        dispatch({ type: SET_PAGE, body: newPage });
         loadData(newPage);
       }
     }
@@ -239,7 +243,7 @@ const GroupFeed = ({navigation}: Props) => {
 
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{paddingVertical: 20}}>
+      <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;
@@ -251,86 +255,92 @@ const GroupFeed = ({navigation}: Props) => {
         <>
           <View
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
               marginTop: 50,
-            }}>
+            }}
+          >
             <View
               style={{
-                width: '20%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+                width: "20%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ShimmerPlaceHolder
                 style={{
                   width: 50,
-                  alignItmes: 'center',
-                  justifyContent: 'center',
+                  alignItmes: "center",
+                  justifyContent: "center",
                   borderRadius: 50,
                   height: 50,
                 }}
               />
             </View>
-            <View style={{width: '100%'}}>
-              <ShimmerPlaceHolder style={{width: '70%'}} />
-              <ShimmerPlaceHolder style={{marginTop: 10, width: '50%'}} />
+            <View style={{ width: "100%" }}>
+              <ShimmerPlaceHolder style={{ width: "70%" }} />
+              <ShimmerPlaceHolder style={{ marginTop: 10, width: "50%" }} />
             </View>
           </View>
           <View
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
               marginTop: 50,
-            }}>
+            }}
+          >
             <View
               style={{
-                width: '20%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+                width: "20%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ShimmerPlaceHolder
                 style={{
                   width: 50,
-                  alignItmes: 'center',
-                  justifyContent: 'center',
+                  alignItmes: "center",
+                  justifyContent: "center",
                   borderRadius: 50,
                   height: 50,
                 }}
               />
             </View>
-            <View style={{width: '100%'}}>
-              <ShimmerPlaceHolder style={{width: '70%'}} />
-              <ShimmerPlaceHolder style={{marginTop: 10, width: '50%'}} />
+            <View style={{ width: "100%" }}>
+              <ShimmerPlaceHolder style={{ width: "70%" }} />
+              <ShimmerPlaceHolder style={{ marginTop: 10, width: "50%" }} />
             </View>
           </View>
           <View
             style={{
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
               marginTop: 50,
-            }}>
+            }}
+          >
             <View
               style={{
-                width: '20%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+                width: "20%",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <ShimmerPlaceHolder
                 style={{
                   width: 50,
-                  alignItmes: 'center',
-                  justifyContent: 'center',
+                  alignItmes: "center",
+                  justifyContent: "center",
                   borderRadius: 50,
                   height: 50,
                 }}
               />
             </View>
-            <View style={{width: '100%'}}>
-              <ShimmerPlaceHolder style={{width: '70%'}} />
-              <ShimmerPlaceHolder style={{marginTop: 10, width: '50%'}} />
+            <View style={{ width: "100%" }}>
+              <ShimmerPlaceHolder style={{ width: "70%" }} />
+              <ShimmerPlaceHolder style={{ marginTop: 10, width: "50%" }} />
             </View>
           </View>
         </>
@@ -344,7 +354,7 @@ const GroupFeed = ({navigation}: Props) => {
               navigation={navigation}
             />
           )}
-          renderItem={({item}: any) => {
+          renderItem={({ item }: any) => {
             const lastConversation = item?.lastConversation;
             const deletedBy =
               lastConversation?.deletedByUserId !== null

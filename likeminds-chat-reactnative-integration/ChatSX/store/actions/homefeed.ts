@@ -1,5 +1,5 @@
-import {CALL_API} from '../apiMiddleware';
-import {Alert} from 'react-native';
+import { CALL_API } from "../apiMiddleware";
+import { Alert } from "react-native";
 import {
   ACCEPT_INVITE,
   ACCEPT_INVITE_FAILED,
@@ -31,9 +31,11 @@ import {
   UPDATE_INVITES,
   UPDATE_INVITES_FAILED,
   UPDATE_INVITES_SUCCESS,
-} from '../types/types';
-import {myClient} from '../../..';
-import {Dispatch} from '@reduxjs/toolkit';
+} from "../types/types";
+import { Dispatch } from "@reduxjs/toolkit";
+import { Client } from "../../client";
+
+const myClient = Client.myClient;
 
 export const initAPI = (payload: any) => async (dispatch: Dispatch) => {
   try {
