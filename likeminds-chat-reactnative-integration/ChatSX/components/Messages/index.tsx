@@ -1,4 +1,11 @@
-import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Pressable,
+  TextStyle,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
@@ -184,12 +191,14 @@ const Messages = ({
                 ]}
               >
                 <Text
-                  style={[
-                    styles.deletedMsg,
-                    deletedMessagesTextStyles
-                      ? { ...deletedMessagesTextStyles }
-                      : null,
-                  ]}
+                  style={
+                    [
+                      styles.deletedMsg,
+                      deletedMessagesTextStyles
+                        ? { ...deletedMessagesTextStyles }
+                        : null,
+                    ] as TextStyle
+                  }
                 >
                   You deleted this message
                 </Text>
@@ -205,12 +214,14 @@ const Messages = ({
                 ]}
               >
                 <Text
-                  style={[
-                    styles.deletedMsg,
-                    deletedMessagesTextStyles
-                      ? { ...deletedMessagesTextStyles }
-                      : null,
-                  ]}
+                  style={
+                    [
+                      styles.deletedMsg,
+                      deletedMessagesTextStyles
+                        ? { ...deletedMessagesTextStyles }
+                        : null,
+                    ] as TextStyle
+                  }
                 >
                   This message has been deleted by {conversationDeletorName}
                 </Text>
@@ -226,12 +237,14 @@ const Messages = ({
                 ]}
               >
                 <Text
-                  style={[
-                    styles.deletedMsg,
-                    deletedMessagesTextStyles
-                      ? { ...deletedMessagesTextStyles }
-                      : null,
-                  ]}
+                  style={
+                    [
+                      styles.deletedMsg,
+                      deletedMessagesTextStyles
+                        ? { ...deletedMessagesTextStyles }
+                        : null,
+                    ] as TextStyle
+                  }
                 >
                   This message has been deleted by Community Manager
                 </Text>
@@ -248,12 +261,14 @@ const Messages = ({
               ]}
             >
               <Text
-                style={[
-                  styles.deletedMsg,
-                  deletedMessagesTextStyles
-                    ? { ...deletedMessagesTextStyles }
-                    : null,
-                ]}
+                style={
+                  [
+                    styles.deletedMsg,
+                    deletedMessagesTextStyles
+                      ? { ...deletedMessagesTextStyles }
+                      : null,
+                  ] as TextStyle
+                }
               >
                 You deleted this message
               </Text>
@@ -269,12 +284,14 @@ const Messages = ({
               ]}
             >
               <Text
-                style={[
-                  styles.deletedMsg,
-                  deletedMessagesTextStyles
-                    ? { ...deletedMessagesTextStyles }
-                    : null,
-                ]}
+                style={
+                  [
+                    styles.deletedMsg,
+                    deletedMessagesTextStyles
+                      ? { ...deletedMessagesTextStyles }
+                      : null,
+                  ] as TextStyle
+                }
               >
                 This message has been deleted by {conversationDeletorName}
               </Text>
@@ -387,16 +404,18 @@ const Messages = ({
                     ]}
                   >
                     <Text
-                      style={[
-                        styles.textCenterAlign,
-                        {
-                          color: STYLES.$COLORS.FONT_PRIMARY,
-                          fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                        },
-                        stateMessagesTextStyles
-                          ? { ...stateMessagesTextStyles }
-                          : null,
-                      ]}
+                      style={
+                        [
+                          styles.textCenterAlign,
+                          {
+                            color: STYLES.$COLORS.FONT_PRIMARY,
+                            fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                          },
+                          stateMessagesTextStyles
+                            ? { ...stateMessagesTextStyles }
+                            : null,
+                        ] as TextStyle
+                      }
                     >
                       {`${item?.answer} `}
                       <Text

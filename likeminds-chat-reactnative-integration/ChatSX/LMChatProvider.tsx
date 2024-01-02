@@ -15,6 +15,7 @@ import {
   INIT_API_SUCCESS,
   PROFILE_DATA_SUCCESS,
   STORE_MY_CLIENT,
+  UPDATE_FILE_UPLOADING_OBJECT,
 } from "./store/types/types";
 import notifee from "@notifee/react-native";
 import { getRoute } from "./notifications/routes";
@@ -24,13 +25,15 @@ import { LMChatClient } from "@likeminds.community/chat-rn";
 import { GiphySDK } from "@giphy/react-native-sdk";
 import { GIPHY_SDK_API_KEY } from "./awsExports";
 import { Client } from "./client";
+import { FAILED } from "./constants/Strings";
 
 interface ReactionListStylesProps {
-  reactionSize: number;
-  reactionLeftItemStroke: string;
-  reactionRightItemStroke: string;
-  reactionItemBorderRadius: number;
-  gap: number;
+  reactionSize?: number;
+  reactionLeftItemStroke?: string;
+  reactionRightItemStroke?: string;
+  reactionItemBorderRadius?: number;
+  gap?: number;
+  selectedMessageBackgroundColor?: string;
 }
 
 interface TextStyles {
@@ -40,31 +43,82 @@ interface TextStyles {
 }
 
 interface ChatBubbleStylesProps {
-  borderRadius: number;
-  sentMessageBackgroundColor: string;
-  receivedMessageBackgroundColor: string;
-  selectedBackgroundColor: string;
-  selectedMessageBackgroundColor: string;
-  textStyles: TextStyles;
-  linkTextColor: string;
-  taggingTextColor: string;
-  stateMessagesBackgroundColor: string;
-  stateMessagesTextStyles: TextStyles;
-  deletedMessagesTextStyles: TextStyles;
+  borderRadius?: number;
+  sentMessageBackgroundColor?: string;
+  receivedMessageBackgroundColor?: string;
+  selectedBackgroundColor?: string;
+  selectedMessageBackgroundColor?: string;
+  textStyles?: TextStyles;
+  linkTextColor?: string;
+  taggingTextColor?: string;
+  stateMessagesBackgroundColor?: string;
+  stateMessagesTextStyles?: TextStyles;
+  deletedMessagesTextStyles?: TextStyles;
+}
+
+interface InputBoxStyles {
+  placeholderTextColor?: string;
+  inputTextStyle?: {
+    width?: string;
+    height?: number;
+    elevation?: number;
+    backgroundColor?: string;
+  };
+  selectionColor?: string;
+  partsTextStyle?: {
+    color?: string;
+  };
+  sendIconStyles?: {
+    width?: number;
+    height?: number;
+    resizeMode?: string;
+    marginLeft?: number;
+  };
+  attachmentIconStyles?: {
+    width?: number;
+    height?: number;
+    resizeMode?: string;
+  };
+  micIconStyles?: {
+    width?: number;
+    height?: number;
+    resizeMode?: string;
+  };
+  cameraIconStyles?: {
+    width?: number;
+    height?: number;
+    resizeMode?: string;
+  };
+  galleryIconStyles?: {
+    width?: number;
+    height?: number;
+    resizeMode?: string;
+  };
+  documentIconStyles?: {
+    width?: number;
+    height?: number;
+    resizeMode?: string;
+  };
+  pollIconStyles?: {
+    width?: number;
+    height?: number;
+    resizeMode?: string;
+  };
 }
 
 interface ThemeStyles {
-  hue: number;
-  fontColor: string;
-  primaryColor: string;
-  secondaryColor: string;
-  lightBackgroundColor: string;
+  hue?: number;
+  fontColor?: string;
+  primaryColor?: string;
+  secondaryColor?: string;
+  lightBackgroundColor?: string;
 }
 
 // Define the context type
 export interface ThemeContextProps {
   reactionListStyles?: ReactionListStylesProps;
   chatBubbleStyles?: ChatBubbleStylesProps;
+  inputBoxStyles?: InputBoxStyles;
 }
 
 // Create the theme context
@@ -80,6 +134,7 @@ interface LMProviderProps {
   userUniqueId: string;
   reactionListStyles?: ReactionListStylesProps;
   chatBubbleStyles?: ChatBubbleStylesProps;
+  inputBoxStyles?: InputBoxStyles;
   themeStyles?: ThemeStyles;
 }
 
@@ -110,6 +165,7 @@ export const LMChatProvider = ({
   userUniqueId,
   reactionListStyles,
   chatBubbleStyles,
+  inputBoxStyles,
   themeStyles,
 }: LMProviderProps): JSX.Element => {
   //To navigate onPress notification while android app is in background state / quit state.
@@ -138,6 +194,33 @@ export const LMChatProvider = ({
   // to configure gifphy sdk
   useEffect(() => {
     GiphySDK.configure({ apiKey: GIPHY_SDK_API_KEY });
+  }, []);
+
+  useEffect(() => {
+    const func = async () => {
+      const res: any = await myClient?.getAllAttachmentUploadConversations();
+      if (res) {
+        const len = res.length;
+        if (len > 0) {
+          for (let i = 0; i < len; i++) {
+            const data = res[i];
+            const uploadingFilesMessagesSavedObject = JSON.parse(data?.value);
+            dispatch({
+              type: UPDATE_FILE_UPLOADING_OBJECT,
+              body: {
+                message: {
+                  ...uploadingFilesMessagesSavedObject,
+                  isInProgress: FAILED,
+                },
+                ID: data?.key,
+              },
+            });
+          }
+        }
+      }
+    };
+
+    func();
   }, []);
 
   // to get dispatch
@@ -186,7 +269,7 @@ export const LMChatProvider = ({
   return (
     <LMChatContext.Provider value={myClient}>
       <LMChatStylesContext.Provider
-        value={{ reactionListStyles, chatBubbleStyles }}
+        value={{ reactionListStyles, chatBubbleStyles, inputBoxStyles }}
       >
         <GestureHandlerRootView style={styles.flexStyling}>
           <View style={styles.flexStyling}>{children}</View>

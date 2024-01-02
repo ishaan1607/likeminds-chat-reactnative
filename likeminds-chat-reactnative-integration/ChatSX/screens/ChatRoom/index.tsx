@@ -101,7 +101,7 @@ import { DM_ALL_MEMBERS } from "../../constants/Screens";
 import ApproveDMRequestModal from "../../customModals/ApproveDMRequest";
 import BlockDMRequestModal from "../../customModals/BlockDMRequest";
 import RejectDMRequestModal from "../../customModals/RejectDMRequest";
-import { BUCKET, POOL_ID, REGION } from "../../aws-exports";
+import { BUCKET, POOL_ID, REGION } from "../../awsExports";
 import { CognitoIdentityCredentials, S3 } from "aws-sdk";
 import AWS from "aws-sdk";
 import WarningMessageModal from "../../customModals/WarningMessage";
@@ -313,25 +313,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              dispatch({
-                type: CLEAR_CHATROOM_CONVERSATION,
-                body: { conversations: [] },
-              });
-              dispatch({
-                type: CLEAR_CHATROOM_DETAILS,
-                body: { chatroomDBDetails: {} },
-              });
-              dispatch({ type: SET_IS_REPLY, body: { isReply: false } });
-              dispatch({
-                type: SET_REPLY_MESSAGE,
-                body: { replyMessage: "" },
-              });
-              Keyboard.dismiss();
-              backAction();
-            }}
-          >
+          <TouchableOpacity onPress={() => {}}>
             <Image
               source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
@@ -2073,7 +2055,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       }
 
       //for video thumbnail
-      let thumbnailUrlImg = null;
+      let thumbnailUrlImg: any;
       if (thumbnailURL && attachmentType === VIDEO_TEXT) {
         thumbnailUrlImg = await fetchResourceFromURI(thumbnailURL);
       }
@@ -2096,7 +2078,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       };
 
       try {
-        let getVideoThumbnailData = null;
+        let getVideoThumbnailData: any;
 
         if (thumbnailURL && attachmentType === VIDEO_TEXT) {
           getVideoThumbnailData = await s3.upload(thumnnailUrlParams).promise();
@@ -2657,47 +2639,47 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                     onPress={async () => {
                       if (val?.id === ChatroomActions.VIEW_PARTICIPANTS) {
                         setModalVisible(false);
-                        navigation.navigate(VIEW_PARTICIPANTS, {
-                          chatroomID: chatroomID,
-                          isSecret: isSecret,
-                          chatroomName: chatroomName,
-                        });
+                        // navigation.navigate(VIEW_PARTICIPANTS, {
+                        //   chatroomID: chatroomID,
+                        //   isSecret: isSecret,
+                        //   chatroomName: chatroomName,
+                        // });
                       } else if (
                         val?.id === ChatroomActions.LEAVE_CHATROOM ||
                         val?.id === ChatroomActions.LEAVE_SECRET_CHATROOM
                       ) {
-                        showWarningModal();
+                        // showWarningModal();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.JOIN_CHATROOM) {
                         if (!isSecret) {
-                          joinChatroom();
+                          // joinChatroom();
                         }
                         setModalVisible(false);
                       } else if (
                         val?.id === ChatroomActions.MUTE_NOTIFICATIONS
                       ) {
-                        await muteNotifications();
+                        // await muteNotifications();
                         setModalVisible(false);
                       } else if (
                         val?.id === ChatroomActions.UNMUTE_NOTIFICATIONS
                       ) {
-                        await unmuteNotifications();
+                        // await unmuteNotifications();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.VIEW_PROFILE) {
                         //View Profile code
                       } else if (val?.id === ChatroomActions.BLOCK_MEMBER) {
-                        await handleBlockMember();
+                        // await handleBlockMember();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.UNBLOCK_MEMBER) {
-                        await unblockMember();
+                        // await unblockMember();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.SHARE) {
                         // Share flow
-                        onShare(
-                          chatroomID,
-                          chatroomType,
-                          chatroomDBDetails?.isSecret
-                        );
+                        // onShare(
+                        //   chatroomID,
+                        //   chatroomType,
+                        //   chatroomDBDetails?.isSecret
+                        // );
                       }
                     }}
                     key={val?.id}

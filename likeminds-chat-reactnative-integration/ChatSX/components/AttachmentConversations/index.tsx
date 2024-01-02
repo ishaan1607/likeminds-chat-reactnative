@@ -45,7 +45,7 @@ import { onPausePlay, onResumePlay, startPlay, stopPlay } from "../../audio";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../enums";
 import ReactNativeBlobUtil from "react-native-blob-util";
-import { Base64 } from "../../aws-exports";
+import { Base64 } from "../../awsExports";
 import { onSeekTo } from "../../audio/Controls";
 import { useLMChatStyles } from "../../LMChatProvider";
 
@@ -1034,7 +1034,7 @@ export const ImageConversations = ({
     (state) => state.chatroom
   );
 
-  const LMChatContext = useContext(LMChat);
+  const LMChatContext = useLMChatStyles();
   const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
 
   //styling props
@@ -1100,7 +1100,7 @@ export const ImageConversations = ({
     }
   };
 
-  let firstImageSource = null;
+  let firstImageSource: any;
 
   if (firstAttachment) {
     if (
@@ -1121,7 +1121,7 @@ export const ImageConversations = ({
     }
   }
 
-  let secondImageSource = null;
+  let secondImageSource: any;
 
   if (secondAttachment) {
     if (
@@ -1142,7 +1142,7 @@ export const ImageConversations = ({
     }
   }
 
-  let thirdImageSource = null;
+  let thirdImageSource: any;
 
   if (thirdAttachment) {
     if (
@@ -1163,7 +1163,7 @@ export const ImageConversations = ({
     }
   }
 
-  let fourthImageSource = null;
+  let fourthImageSource: any;
 
   if (fourthAttachment) {
     if (

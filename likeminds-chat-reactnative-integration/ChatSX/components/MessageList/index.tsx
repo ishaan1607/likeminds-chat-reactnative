@@ -56,7 +56,7 @@ const MessageList = forwardRef(
     const [shouldLoadMoreChatEnd, setShouldLoadMoreChatEnd] = useState(true);
     const [shouldLoadMoreChatStart, setShouldLoadMoreChatStart] =
       useState(true);
-    const [response, setResponse] = useState([]);
+    const [response, setResponse] = useState<any>([]);
     const [flashListMounted, setFlashListMounted] = useState(false);
     const [isFound, setIsFound] = useState(false);
 

@@ -1,4 +1,11 @@
-import { View, Text, Image, TouchableOpacity, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Pressable,
+  TextStyle,
+} from "react-native";
 import React, { useContext, useState } from "react";
 import STYLES from "../../constants/Styles";
 import { styles } from "./styles";
@@ -109,7 +116,12 @@ export const ReplyBox = ({ item, chatroomName }: ReplyBox) => {
           ) : null
         ) : null}
         <Text
-          style={[styles.messageText, textStyles ? { ...textStyles } : null]}
+          style={
+            [
+              styles.messageText,
+              textStyles ? { ...textStyles } : null,
+            ] as TextStyle
+          }
         >
           {decode({
             text: !!answer
@@ -138,10 +150,12 @@ export const ReplyBox = ({ item, chatroomName }: ReplyBox) => {
         {!!item?.hasFiles && item?.attachments.length > 1 ? (
           <View>
             <Text
-              style={[
-                styles.messageText,
-                textStyles ? { ...textStyles } : null,
-              ]}
+              style={
+                [
+                  styles.messageText,
+                  textStyles ? { ...textStyles } : null,
+                ] as TextStyle
+              }
             >{` (+${item?.attachments.length - 1} more)`}</Text>
           </View>
         ) : null}
@@ -327,10 +341,12 @@ const ReplyConversations = ({
         ) : (
           <View>
             <View
-              style={[
-                styles.messageText,
-                textStyles ? { ...textStyles } : null,
-              ]}
+              style={
+                [
+                  styles.messageText,
+                  textStyles ? { ...textStyles } : null,
+                ] as TextStyle
+              }
             >
               {decode({
                 text: item?.answer,

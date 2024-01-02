@@ -11,6 +11,7 @@ import {
   TouchableWithoutFeedback,
   PermissionsAndroid,
   Vibration,
+  ImageStyle,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { styles } from "./styles";
@@ -143,6 +144,7 @@ import {
   replaceMentionValues,
 } from "likeminds_chat_reactnative_ui/components/LMChatTextInput/utils";
 import { Client } from "../../client";
+import { useLMChatStyles } from "../../LMChatProvider";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
@@ -168,6 +170,9 @@ const InputBox = ({
   isGif,
 }: InputBoxProps) => {
   const myClient = Client.myClient;
+  const LMChatContext = useLMChatStyles();
+  const inputBoxStyles = LMChatContext?.inputBoxStyles;
+
   const [isKeyBoardFocused, setIsKeyBoardFocused] = useState(false);
   const [message, setMessage] = useState(previousMessage);
   const [formattedConversation, setFormattedConversation] =
@@ -2325,15 +2330,8 @@ const InputBox = ({
                 ) : null}
                 <LMChatTextInput
                   placeholderText="Type here..."
-                  placeholderTextColor="#aaa"
-                  inputTextStyle={{
-                    width: "100%",
-                    height: Math.max(35, inputHeight),
-                    elevation: 0,
-                    backgroundColor: isUploadScreen
-                      ? STYLES.$BACKGROUND_COLORS.DARK
-                      : STYLES.$BACKGROUND_COLORS.LIGHT,
-                  }}
+                  placeholderTextColor={inputBoxStyles?.placeholderTextColor}
+                  inputTextStyle={inputBoxStyles?.inputTextStyle}
                   onContentSizeChange={(event) => {
                     setInputHeight(event.nativeEvent.contentSize.height);
                   }}
@@ -2341,13 +2339,11 @@ const InputBox = ({
                   inputRef={myRef}
                   onType={handleInputChange}
                   autoFocus={false}
-                  selectionColor="red"
+                  selectionColor={inputBoxStyles?.selectionColor}
                   partTypes={[
                     {
                       trigger: "@",
-                      textStyle: {
-                        color: "#007AFF",
-                      }, // The mention style in the input
+                      textStyle: inputBoxStyles?.partsTextStyle, // The mention style in the input
                     },
                   ]}
                   inputText={message}
@@ -2374,7 +2370,11 @@ const InputBox = ({
               >
                 <LMChatIcon
                   assetPath={require("../../assets/images/open_files3x.png")}
-                  iconStyle={styles.emoji}
+                  iconStyle={
+                    inputBoxStyles?.attachmentIconStyles
+                      ? (inputBoxStyles.attachmentIconStyles as ImageStyle)
+                      : styles.emoji
+                  }
                 />
               </TouchableOpacity>
             ) : null}
@@ -2431,7 +2431,11 @@ const InputBox = ({
           >
             <LMChatIcon
               assetPath={require("../../assets/images/send_button3x.png")}
-              iconStyle={styles.send}
+              iconStyle={
+                inputBoxStyles?.sendIconStyles
+                  ? (inputBoxStyles.sendIconStyles as ImageStyle)
+                  : styles.send
+              }
             />
           </TouchableOpacity>
         ) : (
@@ -2459,7 +2463,7 @@ const InputBox = ({
                   )}
 
                   <Animated.View style={[styles.sendButton, panStyle]}>
-                    <TouchableWithoutFeedback
+                    <Pressable
                       onPress={() => {
                         setIsVoiceNoteIconPress(true);
                         Vibration.vibrate(0.5 * 100);
@@ -2468,15 +2472,19 @@ const InputBox = ({
                     >
                       <LMChatIcon
                         assetPath={require("../../assets/images/mic_icon3x.png")}
-                        iconStyle={styles.mic}
+                        iconStyle={
+                          inputBoxStyles?.micIconStyles
+                            ? (inputBoxStyles.micIconStyles as ImageStyle)
+                            : styles.mic
+                        }
                       />
-                    </TouchableWithoutFeedback>
+                    </Pressable>
                   </Animated.View>
                 </Animated.View>
               </GestureDetector>
             ) : (
               <Animated.View style={[styles.sendButton, panStyle]}>
-                <TouchableWithoutFeedback
+                <Pressable
                   onPress={askPermission}
                   onLongPress={askPermission}
                   style={[styles.sendButton, { position: "absolute" }]}
@@ -2485,7 +2493,7 @@ const InputBox = ({
                     assetPath={require("../../assets/images/mic_icon3x.png")}
                     iconStyle={styles.mic}
                   />
-                </TouchableWithoutFeedback>
+                </Pressable>
               </Animated.View>
             )}
           </View>
@@ -2517,7 +2525,11 @@ const InputBox = ({
                   >
                     <LMChatIcon
                       assetPath={require("../../assets/images/camera_icon3x.png")}
-                      iconStyle={styles.emoji}
+                      iconStyle={
+                        inputBoxStyles?.cameraIconStyles
+                          ? (inputBoxStyles.cameraIconStyles as ImageStyle)
+                          : styles.emoji
+                      }
                     />
                   </TouchableOpacity>
                   <LMChatTextView textStyle={styles.iconText}>
@@ -2536,7 +2548,11 @@ const InputBox = ({
                   >
                     <LMChatIcon
                       assetPath={require("../../assets/images/select_image_icon3x.png")}
-                      iconStyle={styles.emoji}
+                      iconStyle={
+                        inputBoxStyles?.galleryIconStyles
+                          ? (inputBoxStyles.galleryIconStyles as ImageStyle)
+                          : styles.emoji
+                      }
                     />
                   </TouchableOpacity>
                   <LMChatTextView textStyle={styles.iconText}>
@@ -2555,7 +2571,11 @@ const InputBox = ({
                   >
                     <LMChatIcon
                       assetPath={require("../../assets/images/select_doc_icon3x.png")}
-                      iconStyle={styles.emoji}
+                      iconStyle={
+                        inputBoxStyles?.documentIconStyles
+                          ? (inputBoxStyles.documentIconStyles as ImageStyle)
+                          : styles.emoji
+                      }
                     />
                   </TouchableOpacity>
                   <LMChatTextView textStyle={styles.iconText}>
@@ -2576,7 +2596,11 @@ const InputBox = ({
                     >
                       <LMChatIcon
                         assetPath={require("../../assets/images/poll_icon3x.png")}
-                        iconStyle={styles.emoji}
+                        iconStyle={
+                          inputBoxStyles?.pollIconStyles
+                            ? (inputBoxStyles.pollIconStyles as ImageStyle)
+                            : styles.emoji
+                        }
                       />
                     </TouchableOpacity>
                     <LMChatTextView textStyle={styles.iconText}>

@@ -1,4 +1,4 @@
-import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, ViewStyle } from "react-native";
 import React, { useState } from "react";
 import { LMChatIcon } from "../LMChatIcon";
 import { LMChatButtonProps } from "./types";
@@ -27,7 +27,12 @@ export const LMChatButton = ({
     <TouchableOpacity
       disabled={isClickable}
       hitSlop={{ top: 10, bottom: 10 }}
-      style={StyleSheet.flatten([defaultStyles.buttonViewStyle, buttonStyle])}
+      style={
+        StyleSheet.flatten([
+          defaultStyles.buttonViewStyle,
+          buttonStyle,
+        ]) as ViewStyle
+      }
       activeOpacity={0.8}
       onPress={(event) => {
         onTap(event);

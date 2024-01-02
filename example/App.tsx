@@ -35,40 +35,90 @@ function App(): React.JSX.Element {
   const userUniqueId = '';
 
   const themeStyles = {
-    // hue: 0,
-    // fontColor: 'red',
-    // primaryColor: 'green',
-    // secondaryColor: 'green',
-    // lightBackgroundColor: '#d7f7ed',
-  }
+    hue: 10,
+    fontColor: 'black',
+    primaryColor: 'green',
+    secondaryColor: 'green',
+    lightBackgroundColor: '#d7f7ed',
+  };
 
   const reactionListStyles = {
-    // reactionSize: 0,
-    // reactionLeftItemStroke: 'pink',
-    // reactionRightItemStroke: 'yellow',
-    // reactionItemBorderRadius: 5,
-    // gap: 5,
+    reactionSize: 0,
+    reactionLeftItemStroke: 'pink',
+    reactionRightItemStroke: 'yellow',
+    reactionItemBorderRadius: 5,
+    gap: 5,
   };
 
   const chatBubbleStyles = {
-    // borderRadius: 5,
-    // sentMessageBackgroundColor: 'blue',
-    // receivedMessageBackgroundColor: 'pink',
-    // selectedBackgroundColor: 'grey',
-    // selectedMessageBackgroundColor: 'purple',
-    // textStyles: {
-    //   fontSize: 10,
-    //   fontStyle: 'italic',
-    //   fontFamily: 'SofiaPro-SemiBold',
-    // },
-    // linkTextColor: 'red',
-    // taggingTextColor: 'yellow',
-    // stateMessagesBackgroundColor: 'pink',
-    // stateMessagesTextStyles:{
-    //   fontSize: 10,
-    //   fontStyle: 'italic',
-    //   fontFamily: 'SofiaPro-SemiBold',
-    // },
+    borderRadius: 5,
+    sentMessageBackgroundColor: 'yellow',
+    receivedMessageBackgroundColor: 'pink',
+    selectedBackgroundColor: 'grey',
+    selectedMessageBackgroundColor: 'purple',
+    textStyles: {
+      fontSize: 10,
+      fontStyle: 'italic',
+      fontFamily: 'SofiaPro-SemiBold',
+    },
+    linkTextColor: 'red',
+    taggingTextColor: 'yellow',
+    stateMessagesBackgroundColor: 'pink',
+    stateMessagesTextStyles: {
+      fontSize: 10,
+      fontStyle: 'italic',
+      fontFamily: 'SofiaPro-SemiBold',
+    },
+  };
+
+  const inputBoxStyles = {
+    placeholderTextColor: '#aaa',
+    inputTextStyle: {
+      width: '100%',
+      height: 35,
+      elevation: 0,
+      backgroundColor: '#ffffff',
+    },
+    selectionColor: 'green',
+    partsTextStyle: {
+      color: '#007AFF',
+    },
+    sendIconStyles: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+      marginLeft: 5,
+    },
+    attachmentIconStyles: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+    },
+    micIconStyles: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+    },
+    cameraIconStyles: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+    },
+    galleryIconStyles: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+    },
+    documentIconStyles: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+    },
+    pollIconStyles: {
+      width: 22,
+      height: 22,
+      resizeMode: 'contain',
+    },
   };
 
   return (
@@ -77,8 +127,9 @@ function App(): React.JSX.Element {
         myClient={myClient}
         userName={userName}
         userUniqueId={userUniqueId}
-        chatBubbleStyles={chatBubbleStyles} 
-        reactionListStyles={reactionListStyles} 
+        chatBubbleStyles={chatBubbleStyles}
+        reactionListStyles={reactionListStyles}
+        inputBoxStyles={inputBoxStyles}
         themeStyles={themeStyles}>
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
