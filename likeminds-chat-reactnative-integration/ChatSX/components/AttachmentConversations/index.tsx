@@ -187,7 +187,7 @@ const AttachmentConversations = ({
   };
 
   // handle gif on press
-  const handleOnPress = (event: any, url: string, index: number) => {
+  const handleOnPress = (event: any, url?: string, index?: number) => {
     const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
@@ -424,7 +424,7 @@ const AttachmentConversations = ({
           >
             {!isGifPlaying && !item?.isInProgress ? (
               <TouchableOpacity
-                onPress={() => handleOnPress}
+                onPress={handleOnPress}
                 onLongPress={handleLongPress}
                 style={[
                   {

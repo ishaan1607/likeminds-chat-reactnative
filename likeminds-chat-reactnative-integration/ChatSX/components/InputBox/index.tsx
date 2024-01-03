@@ -12,6 +12,7 @@ import {
   PermissionsAndroid,
   Vibration,
   ImageStyle,
+  TextStyle,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { styles } from "./styles";
@@ -2331,7 +2332,17 @@ const InputBox = ({
                 <LMChatTextInput
                   placeholderText="Type here..."
                   placeholderTextColor={inputBoxStyles?.placeholderTextColor}
-                  inputTextStyle={inputBoxStyles?.inputTextStyle}
+                  inputTextStyle={
+                    [
+                      inputBoxStyles?.inputTextStyle,
+                      {
+                        height: Math.max(35, inputHeight),
+                        color: isUploadScreen
+                          ? STYLES.$BACKGROUND_COLORS.LIGHT
+                          : STYLES.$BACKGROUND_COLORS.DARK,
+                      },
+                    ] as TextStyle
+                  }
                   onContentSizeChange={(event) => {
                     setInputHeight(event.nativeEvent.contentSize.height);
                   }}
