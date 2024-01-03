@@ -31,7 +31,6 @@ import {
 import { removeDuplicateObjects } from "../../utils/homeFeedUtils";
 import { ChatroomChatRequestState } from "../../enums";
 import { ChatroomType } from "../../enums";
-import LMChatClient from "@likeminds.community/chat-js-beta";
 
 const initialState = {
   myChatrooms: [] as any,
@@ -49,15 +48,10 @@ const initialState = {
   statusBarStyle: Styles.$STATUS_BAR_STYLE.default,
   groupFeedChatrooms: [] as any,
   dmFeedChatrooms: [] as any,
-  myClient: {} as LMChatClient,
 };
 
 export function homefeedReducer(state = initialState, action: any) {
   switch (action?.type) {
-    case STORE_MY_CLIENT: {
-      const { myClient = {} } = action.body;
-      return { ...state, myClient: myClient };
-    }
     case SET_PAGE: {
       const page = action.body;
       return {
