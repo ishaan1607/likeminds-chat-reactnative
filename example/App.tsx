@@ -33,6 +33,7 @@ const Stack = createNativeStackNavigator();
 function App(): React.JSX.Element {
   const userName = '';
   const userUniqueId = '';
+  const chatroomId = '';
 
   const themeStyles = {
     hue: 10,
@@ -140,7 +141,7 @@ function App(): React.JSX.Element {
                 name="ChatRoom"
                 component={ChatRoom}
                 initialParams={{
-                  chatroomID: '3844534',
+                  chatroomID: chatroomId,
                   isInvited: false,
                   myClient: myClient,
                 }}
