@@ -1159,9 +1159,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         const firebaseData = snapshot.val();
         const conversationID = firebaseData?.collabcard?.answer_id;
         if (conversationID) {
-          if (!user?.sdkClientInfo?.community) {
-            return;
-          }
           const maxTimeStamp = Math.floor(Date.now() * 1000);
           await firebaseConversationSyncAPI(
             INITIAL_SYNC_PAGE,
