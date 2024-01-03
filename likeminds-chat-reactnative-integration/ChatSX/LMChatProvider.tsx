@@ -65,6 +65,9 @@ interface InputBoxStyles {
     backgroundColor?: string;
   };
   selectionColor?: string;
+  plainTextStyle?: {
+    color?: string;
+  };
   partsTextStyle?: {
     color?: string;
   };

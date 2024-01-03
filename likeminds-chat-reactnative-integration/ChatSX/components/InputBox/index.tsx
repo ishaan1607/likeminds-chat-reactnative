@@ -2332,6 +2332,7 @@ const InputBox = ({
                   placeholderText="Type here..."
                   placeholderTextColor={inputBoxStyles?.placeholderTextColor}
                   inputTextStyle={inputBoxStyles?.inputTextStyle}
+                  plainTextStyle={inputBoxStyles?.plainTextStyle}
                   onContentSizeChange={(event) => {
                     setInputHeight(event.nativeEvent.contentSize.height);
                   }}
