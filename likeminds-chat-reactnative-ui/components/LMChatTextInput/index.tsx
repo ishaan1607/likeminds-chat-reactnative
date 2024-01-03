@@ -22,7 +22,6 @@ import {
 } from "./utils";
 import { LMChatTexInputProps } from "./types";
 import { decode } from "../commonFunctions";
-import defaultStyles from "../constants/defaultStyles";
 
 export const LMChatTextInput: FC<LMChatTexInputProps> = ({
   inputText,
@@ -130,40 +129,37 @@ export const LMChatTextInput: FC<LMChatTexInputProps> = ({
   };
 
   return (
-    <View style={inputTextStyle}>
-      <TextInput
-        ref={handleTextInputRef}
-        onChangeText={onChangeInput}
-        autoFocus={autoFocus}
-        onContentSizeChange={onContentSizeChange}
-        onSelectionChange={handleSelectionChange}
-        placeholderTextColor={
-          placeholderTextColor ? placeholderTextColor : "#000"
-        }
-        style={defaultStyles.textInputWithoutRightIcon}
-        placeholder={placeholderText}
-        autoCapitalize={autoCapitalize ? autoCapitalize : "none"}
-        keyboardType={keyboardType ? keyboardType : "default"}
-        multiline={multilineField ? multilineField : false}
-        secureTextEntry={secureText ? secureText : false}
-        editable={disabled ? disabled : true}
-        {...textInputProps}
-      >
-        <Text>
-          {parts.map(({ text, partType, data }, index) =>
-            partType ? (
-              <Text
-                key={`${index}-${data?.trigger ?? "pattern"}`}
-                style={partType.textStyle ?? defaultMentionTextStyle}
-              >
-                {text}
-              </Text>
-            ) : (
-              <Text key={index}>{decode(text, true, plainTextStyle)}</Text>
-            )
-          )}
-        </Text>
-      </TextInput>
-    </View>
+    <TextInput
+      {...textInputProps}
+      ref={handleTextInputRef}
+      onChangeText={onChangeInput}
+      autoFocus={autoFocus}
+      onContentSizeChange={onContentSizeChange}
+      onSelectionChange={handleSelectionChange}
+      placeholderTextColor={
+        placeholderTextColor ? placeholderTextColor : "#000"
+      }
+      placeholder={placeholderText}
+      autoCapitalize={autoCapitalize ? autoCapitalize : "none"}
+      keyboardType={keyboardType ? keyboardType : "default"}
+      multiline={multilineField ? multilineField : false}
+      secureTextEntry={secureText ? secureText : false}
+      editable={disabled ? disabled : true}
+    >
+      <Text>
+        {parts.map(({ text, partType, data }, index) =>
+          partType ? (
+            <Text
+              key={`${index}-${data?.trigger ?? "pattern"}`}
+              style={partType.textStyle ?? defaultMentionTextStyle}
+            >
+              {text}
+            </Text>
+          ) : (
+            <Text key={index}>{decode(text, true, plainTextStyle)}</Text>
+          )
+        )}
+      </Text>
+    </TextInput>
   );
 };

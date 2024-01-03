@@ -171,6 +171,8 @@ export const LMChatProvider = ({
   inputBoxStyles,
   themeStyles,
 }: LMProviderProps): JSX.Element => {
+  const [isInitiated, setIsInitiated] = useState(false);
+
   //To navigate onPress notification while android app is in background state / quit state.
   useEffect(() => {
     async function bootstrap() {
@@ -259,6 +261,7 @@ export const LMChatProvider = ({
           memberRights: response1?.data?.memberRights,
         },
       });
+      setIsInitiated(true);
     };
     callInitApi();
   }, []);
@@ -269,7 +272,7 @@ export const LMChatProvider = ({
     }
   }, []);
 
-  return (
+  return isInitiated ? (
     <LMChatContext.Provider value={myClient}>
       <LMChatStylesContext.Provider
         value={{ reactionListStyles, chatBubbleStyles, inputBoxStyles }}
@@ -279,6 +282,8 @@ export const LMChatProvider = ({
         </GestureHandlerRootView>
       </LMChatStylesContext.Provider>
     </LMChatContext.Provider>
+  ) : (
+    <></>
   );
 };
 

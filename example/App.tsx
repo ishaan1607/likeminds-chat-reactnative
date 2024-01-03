@@ -74,12 +74,7 @@ function App(): React.JSX.Element {
 
   const inputBoxStyles = {
     placeholderTextColor: '#aaa',
-    inputTextStyle: {
-      width: '100%',
-      height: 35,
-      elevation: 0,
-    },
-    selectionColor: 'green',
+    selectionColor: '#aaa',
     partsTextStyle: {
       color: '#007AFF',
     },
@@ -162,7 +157,6 @@ function App(): React.JSX.Element {
                 component={PollResult}
               />
               <Stack.Screen
-                // options={{headerShown: false, gestureEnabled: false}}
                 name={'CreatePollScreen'}
                 component={CreatePollScreen}
               />

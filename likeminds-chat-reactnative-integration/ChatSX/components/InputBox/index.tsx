@@ -2037,7 +2037,7 @@ const InputBox = ({
                 extraData={{
                   value: [message, userTaggingList],
                 }}
-                estimatedItemSize={15}
+                estimatedItemSize={50}
                 keyboardShouldPersistTaps={"handled"}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={1}
@@ -2332,11 +2332,12 @@ const InputBox = ({
                 <LMChatTextInput
                   placeholderText="Type here..."
                   placeholderTextColor={inputBoxStyles?.placeholderTextColor}
-                  inputTextStyle={
+                  plainTextStyle={inputBoxStyles?.plainTextStyle}
+                  style={
                     [
-                      inputBoxStyles?.inputTextStyle,
+                      inputBoxStyles?.inputTextStyle || styles.input,
                       {
-                        height: Math.max(35, inputHeight),
+                        height: Math.max(25, inputHeight),
                         color: isUploadScreen
                           ? STYLES.$BACKGROUND_COLORS.LIGHT
                           : STYLES.$BACKGROUND_COLORS.DARK,
