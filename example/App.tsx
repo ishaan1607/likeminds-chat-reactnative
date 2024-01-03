@@ -78,7 +78,6 @@ function App(): React.JSX.Element {
       width: '100%',
       height: 35,
       elevation: 0,
-      backgroundColor: '#ffffff',
     },
     selectionColor: 'green',
     partsTextStyle: {
