@@ -19,17 +19,30 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 25,
   },
-  backBtn: { height: 40, width: 40, borderRadius: 10, resizeMode: "contain" },
-  selectedBackBtn: { height: 20, width: 20, resizeMode: "contain" },
+  backBtn: {
+    height: 40,
+    width: 40,
+    borderRadius: 10,
+    resizeMode: "contain",
+    tintColor: STYLES.$COLORS.SECONDARY,
+  },
+  selectedBackBtn: {
+    height: 20,
+    width: 20,
+    resizeMode: "contain",
+    tintColor: STYLES.$COLORS.SECONDARY,
+  },
   threeDots: {
     height: 20,
     width: 30,
     resizeMode: "contain",
+    tintColor: STYLES.$COLORS.SECONDARY,
   },
   editIcon: {
     height: 25,
     width: 30,
     resizeMode: "contain",
+    tintColor: STYLES.$COLORS.SECONDARY,
   },
   chatRoomInfo: {
     gap: 5,
@@ -148,7 +161,7 @@ export const styles = StyleSheet.create({
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   statusMessage: {
     padding: 10,
@@ -186,7 +199,7 @@ export const styles = StyleSheet.create({
   inviteBtnText: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   avatar: {
     width: 40,
@@ -266,7 +279,7 @@ export const styles = StyleSheet.create({
     alignItems: "flex-end",
   },
   attachment_msg: {
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     marginRight: 5,
@@ -275,7 +288,7 @@ export const styles = StyleSheet.create({
     lineHeight: 18,
   },
   gif_attachment_msg: {
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     marginRight: 5,
@@ -287,7 +300,7 @@ export const styles = StyleSheet.create({
     marginLeft: 5,
   },
   deletedMessage: {
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     fontStyle: "italic",

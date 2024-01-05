@@ -1,4 +1,4 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, Text, TextStyle } from "react-native";
 import React from "react";
 import { LMChatTextViewProps } from "./types";
 import defaultStyles from "../constants/defaultStyles";
@@ -17,7 +17,9 @@ export const LMChatTextView = ({
       selectable={selectable ? selectable : true} // default selectable value is true
       numberOfLines={maxLines}
       onTextLayout={onTextLayout}
-      style={StyleSheet.flatten([defaultStyles.textStyle, textStyle])}
+      style={
+        StyleSheet.flatten([defaultStyles.textStyle, textStyle]) as TextStyle
+      }
       {...textViewProps}
     >
       {children}

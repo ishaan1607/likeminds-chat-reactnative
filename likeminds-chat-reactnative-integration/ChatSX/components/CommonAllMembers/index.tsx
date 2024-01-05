@@ -74,7 +74,7 @@ const CommonAllMembers = ({
                 <View>
                   <Text
                     style={{
-                      color: STYLES.$COLORS.PRIMARY,
+                      color: STYLES.$COLORS.FONT_PRIMARY,
                       fontSize: STYLES.$FONT_SIZES.LARGE,
                       fontFamily: STYLES.$FONT_TYPES.BOLD,
                     }}
@@ -86,7 +86,7 @@ const CommonAllMembers = ({
                 <View>
                   <Text
                     style={{
-                      color: STYLES.$COLORS.PRIMARY,
+                      color: STYLES.$COLORS.FONT_PRIMARY,
                       fontSize: STYLES.$FONT_SIZES.LARGE,
                       fontFamily: STYLES.$FONT_TYPES.BOLD,
                     }}

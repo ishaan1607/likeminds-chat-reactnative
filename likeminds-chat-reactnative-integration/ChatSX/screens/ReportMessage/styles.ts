@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
+import { StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
 
 const styles = StyleSheet.create({
   page: {
@@ -9,25 +9,25 @@ const styles = StyleSheet.create({
     paddingTop: 8,
   },
   headingContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     gap: 15,
   },
-  backBtn: {height: 35, width: 40, borderRadius: 10, resizeMode: 'contain'},
-  chatRoomInfo: {gap: 5},
+  backBtn: { height: 35, width: 40, borderRadius: 10, resizeMode: "contain" },
+  chatRoomInfo: { gap: 5 },
   threeDots: {
     height: 10,
     width: 10,
-    resizeMode: 'contain',
+    resizeMode: "contain",
   },
   textHeading: {
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.BOLD,
   },
   text: {
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
@@ -44,9 +44,9 @@ const styles = StyleSheet.create({
     borderColor: STYLES.$COLORS.MSG,
   },
   reportBtnParent: {
-    justifyContent: 'center',
-    alignSelf: 'center',
-    position: 'absolute',
+    justifyContent: "center",
+    alignSelf: "center",
+    position: "absolute",
     bottom: 40,
   },
   reportBtn: {
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
   },
   reportBtnText: {
-    color: 'white',
+    color: "white",
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.BOLD,
   },

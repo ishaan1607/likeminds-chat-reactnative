@@ -27,7 +27,7 @@ export const styles = StyleSheet.create({
   messageText: {
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     maxWidth: Layout.window.width - 150,
   },
   messageDate: {

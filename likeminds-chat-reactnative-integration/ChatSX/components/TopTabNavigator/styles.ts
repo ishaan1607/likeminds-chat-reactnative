@@ -15,7 +15,7 @@ export const styles = StyleSheet.create({
   textHeading: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.SEMI_BOLD,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   text: {
     fontSize: STYLES.$FONT_SIZES.SMALL,

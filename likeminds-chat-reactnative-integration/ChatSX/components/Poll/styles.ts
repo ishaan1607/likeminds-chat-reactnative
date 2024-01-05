@@ -30,10 +30,10 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   primaryColor: {
-    color: "hsl(222, 53%, 15%)",
+    color: STYLES.$COLORS.PRIMARY,
   },
   lightPrimaryColor: {
-    color: "hsl(222, 40%, 40%)",
+    color: STYLES.$COLORS.SECONDARY,
   },
   whiteColor: {
     color: STYLES.$COLORS.TERTIARY,
@@ -107,37 +107,37 @@ export const styles = StyleSheet.create({
   font: {
     fontSize: 16,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   text: {
     fontSize: 16,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   mediumText: {
     fontSize: 13,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   boldText: {
     fontSize: 16,
     fontFamily: STYLES.$FONT_TYPES.BOLD,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   mediumBoldText: {
     fontSize: 16,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   smallText: {
     fontSize: 12,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   smallTextMedium: {
     fontSize: 12,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   newPollText: {
     color: "black",
@@ -272,7 +272,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     fontSize: 14,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   borderBottom: {
     borderBottomColor: "#c5c5c5",

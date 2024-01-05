@@ -1,21 +1,21 @@
-import {View, Vibration} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import { View, Vibration } from "react-native";
+import React, { useEffect, useState } from "react";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
   withSpring,
   withTiming,
-} from 'react-native-reanimated';
+} from "react-native-reanimated";
 import {
   Gesture,
   GestureDetector,
   GestureUpdateEvent,
   PanGestureHandlerEventPayload,
-} from 'react-native-gesture-handler';
-import {SET_IS_REPLY, SET_REPLY_MESSAGE} from '../../store/types/types';
-import {useAppDispatch} from '../../store';
-import STYLES from '../../constants/Styles';
-import {SwipeableParams} from './model';
+} from "react-native-gesture-handler";
+import { SET_IS_REPLY, SET_REPLY_MESSAGE } from "../../store/types/types";
+import { useAppDispatch } from "../../store";
+import STYLES from "../../constants/Styles";
+import { SwipeableParams } from "./model";
 
 const Swipeable = ({
   onFocusKeyboard,
@@ -31,14 +31,14 @@ const Swipeable = ({
   // to open reply box after swipe
   useEffect(() => {
     if (isReplyBoxOpen) {
-      const replyMessage = {...item};
+      const replyMessage = { ...item };
       pressed.value = false;
       Vibration.vibrate(0.5 * 100);
       dispatch({
         type: SET_REPLY_MESSAGE,
-        body: {replyMessage: replyMessage},
+        body: { replyMessage: replyMessage },
       });
-      dispatch({type: SET_IS_REPLY, body: {isReply: true}});
+      dispatch({ type: SET_IS_REPLY, body: { isReply: true } });
       onFocusKeyboard();
       x.value = withSpring(0);
     }
@@ -58,9 +58,9 @@ const Swipeable = ({
 
   // this method handles onUpdate callback of pan gesture
   const onUpdatePanGesture = (
-    event: GestureUpdateEvent<PanGestureHandlerEventPayload>,
+    event: GestureUpdateEvent<PanGestureHandlerEventPayload>
   ) => {
-    'worklet';
+    "worklet";
     if (event.translationX >= 75) {
       setIsReplyBoxOpen(true);
     } else if (event.translationX > 0) {
@@ -74,7 +74,7 @@ const Swipeable = ({
 
   // this method handles onEnd callback of pan gesture
   const onEndPanGesture = () => {
-    'worklet';
+    "worklet";
     x.value = withSpring(0);
     pressed.value = false;
     setIsReplyBoxOpen(false);
@@ -85,7 +85,7 @@ const Swipeable = ({
     .runOnJS(true)
     .enabled(!isStateIncluded)
     .activeOffsetX([-10, 10])
-    .onStart(event => {
+    .onStart((event) => {
       const deltaX = event.translationX;
 
       if (deltaX > 0) {
@@ -95,20 +95,21 @@ const Swipeable = ({
     .onUpdate(onUpdatePanGesture)
     .onEnd(onEndPanGesture)
     .onFinalize(() => {
-      'worklet';
+      "worklet";
       pressed.value = false;
       setIsReplyBoxOpen(false);
     });
 
+  const REPLY_ICON_VIEW_BACKGROUND_COLOR = STYLES.$COLORS.MSG;
   const replyIconViewStyle = useAnimatedStyle(() => {
     return {
       height: pressed.value ? 35 : 0,
       width: pressed.value ? 35 : 0,
       borderRadius: pressed.value ? 30 : 0,
-      backgroundColor: STYLES.$COLORS.MSG,
-      position: 'absolute',
+      backgroundColor: REPLY_ICON_VIEW_BACKGROUND_COLOR,
+      position: "absolute",
       left: pressed.value ? x.value - 50 : 10,
-      transform: [{scale: withTiming(pressed.value ? 1 : 0)}],
+      transform: [{ scale: withTiming(pressed.value ? 1 : 0) }],
     };
   }, [x]);
 
@@ -116,9 +117,9 @@ const Swipeable = ({
     return {
       height: 20,
       width: 20,
-      resizeMode: 'contain',
-      tintColor: 'white',
-      transform: [{scale: withTiming(pressed.value ? 1 : 0)}],
+      resizeMode: "contain",
+      tintColor: "white",
+      transform: [{ scale: withTiming(pressed.value ? 1 : 0) }],
     };
   }, [x]);
   return (
@@ -126,18 +127,24 @@ const Swipeable = ({
       <GestureDetector gesture={panGesture}>
         <View
           style={{
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            position: 'relative',
-          }}>
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            position: "relative",
+          }}
+        >
           <Animated.View
             style={[
-              {display: 'flex', alignItems: 'center', justifyContent: 'center'},
+              {
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              },
               replyIconViewStyle,
-            ]}>
+            ]}
+          >
             <Animated.Image
-              source={require('../../assets/images/reply_icon3x.png')}
+              source={require("../../assets/images/reply_icon3x.png")}
               style={[replyIconStyle]}
             />
           </Animated.View>

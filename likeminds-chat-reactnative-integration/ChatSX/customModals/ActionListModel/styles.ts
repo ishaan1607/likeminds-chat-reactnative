@@ -1,17 +1,17 @@
-import {Platform, StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
+import { Platform, StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
 
 export const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
   },
   modalView: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     marginHorizontal: 20,
-    backgroundColor: 'white',
+    backgroundColor: "white",
     borderRadius: 8,
     opacity: 1,
     maxHeight: 250,
@@ -23,6 +23,6 @@ export const styles = StyleSheet.create({
   filterText: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
 });

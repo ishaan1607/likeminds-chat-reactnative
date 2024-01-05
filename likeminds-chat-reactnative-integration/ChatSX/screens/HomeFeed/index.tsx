@@ -70,7 +70,7 @@ const HomeFeed = ({ navigation }: Props) => {
         <TouchableOpacity>
           <Text
             style={{
-              color: STYLES.$COLORS.PRIMARY,
+              color: STYLES.$COLORS.FONT_PRIMARY,
               fontSize: STYLES.$FONT_SIZES.XL,
               fontFamily: STYLES.$FONT_TYPES.BOLD,
             }}
@@ -279,7 +279,22 @@ const HomeFeed = ({ navigation }: Props) => {
           />
           <Tab.Screen
             name={DM_FEED}
-            options={{ tabBarLabel: "DMs" }}
+            options={{
+              tabBarLabel: ({ focused }) => (
+                <Text
+                  style={[
+                    styles.font,
+                    {
+                      color: focused
+                        ? STYLES.$COLORS.PRIMARY
+                        : STYLES.$COLORS.MSG,
+                    },
+                  ]}
+                >
+                  DMs
+                </Text>
+              ),
+            }}
             component={DMFeed}
           />
         </Tab.Navigator>

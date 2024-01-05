@@ -44,8 +44,12 @@ export function getFullDate(time: any) {
   }
 }
 
-// this method is used to detect links from a message
-function detectLinks(message: string, isLongPress?: boolean) {
+function detectLinks(
+  message: string,
+  isLongPress?: boolean,
+  textStyles?: any,
+  linkTextColor?: string
+) {
   const regex =
     /((?:https?:\/\/)?(?:www\.)?(?:\w+\.)+\w+(?:\/\S*)?|\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b)/i;
 
@@ -77,11 +81,15 @@ function detectLinks(message: string, isLongPress?: boolean) {
                 }}
               >
                 <Text
-                  style={{
-                    color: STYLES.$COLORS.LIGHT_BLUE,
-                    fontSize: STYLES.$FONT_SIZES.MEDIUM,
-                    fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                  }}
+                  style={[
+                    {
+                      color: STYLES.$COLORS.LIGHT_BLUE,
+                      fontSize: STYLES.$FONT_SIZES.MEDIUM,
+                      fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                    },
+                    textStyles ? { ...textStyles } : null,
+                    linkTextColor ? { color: linkTextColor } : null,
+                  ]}
                 >
                   {val}
                 </Text>
@@ -110,21 +118,38 @@ export function getNameInitials(name: string) {
   return initials;
 }
 
+interface DecodeProps {
+  text: string | undefined;
+  enableClick: boolean;
+  chatroomName: string;
+  communityId: string;
+  isLongPress?: boolean;
+  memberUuid?: string;
+  chatroomWithUserUuid?: string;
+  chatroomWithUserMemberId?: string;
+  textStyles?: any;
+  taggingTextColor?: string;
+  linkTextColor?: string;
+}
+
 // naruto: naruto|route://member_profile/88226?member_id=__id__&community_id=__community__>>
 // test string = '<<Sanjay kumar 🤖|route://member/1260>> <<Ishaan Jain|route://member/1003>> Hey google.com';
 // This decode function helps us to decode tagged messages like the above test string in to readable format.
 // This function has two responses: one for Homefeed screen and other is for chat screen(Pressable ones are for chat screen).
 // The REGEX_USER_SPLITTING is used to split the text into different parts based on the regex specified and then using a for loop tags are shown differently along with name and route
-export const decode = (
-  text: string | undefined,
-  enableClick: boolean,
-  chatroomName: string,
-  communityId: string,
-  isLongPress?: boolean,
-  memberUuid?: string,
-  chatroomWithUserUuid?: string,
-  chatroomWithUserMemberId?: string
-) => {
+export const decode = ({
+  text,
+  enableClick,
+  chatroomName,
+  communityId,
+  isLongPress,
+  memberUuid,
+  chatroomWithUserUuid,
+  chatroomWithUserMemberId,
+  textStyles,
+  taggingTextColor,
+  linkTextColor,
+}: DecodeProps) => {
   if (!text) {
     return;
   }
@@ -175,10 +200,13 @@ export const decode = (
       <Text>
         {arr.map((val, index) => (
           <Text
-            style={{
-              color: STYLES.$COLORS.PRIMARY,
-              fontFamily: STYLES.$FONT_TYPES.LIGHT,
-            }}
+            style={[
+              {
+                color: STYLES.$COLORS.FONT_PRIMARY,
+                fontFamily: STYLES.$FONT_TYPES.LIGHT,
+              },
+              textStyles ? { ...textStyles } : null,
+            ]}
             key={val.key + index}
           >
             {/* key should be unique so we are passing `val(abc) + index(number) = abc2` to make it unique */}
@@ -190,16 +218,20 @@ export const decode = (
                     Alert.alert(`navigate to the route ${val?.route}`);
                   }
                 }}
-                style={{
-                  color: STYLES.$COLORS.LIGHT_BLUE,
-                  fontSize: STYLES.$FONT_SIZES.MEDIUM,
-                  fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                }}
+                style={[
+                  {
+                    color: STYLES.$COLORS.LIGHT_BLUE,
+                    fontSize: STYLES.$FONT_SIZES.MEDIUM,
+                    fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                  },
+                  textStyles ? { ...textStyles } : null,
+                  taggingTextColor ? { color: taggingTextColor } : null,
+                ]}
               >
                 {val.key}
               </Text>
             ) : (
-              detectLinks(val.key, isLongPress)
+              detectLinks(val.key, isLongPress, textStyles, linkTextColor)
             )}
           </Text>
         ))}
@@ -209,7 +241,7 @@ export const decode = (
         {arr.map((val, index) => (
           <Text
             style={{
-              color: STYLES.$COLORS.PRIMARY,
+              color: STYLES.$COLORS.FONT_PRIMARY,
               fontFamily: STYLES.$FONT_TYPES.LIGHT,
             }}
             key={val.key + index}
@@ -217,7 +249,7 @@ export const decode = (
             {val.route ? (
               <Text
                 style={{
-                  color: STYLES.$COLORS.PRIMARY,
+                  color: STYLES.$COLORS.FONT_PRIMARY,
                   fontFamily: STYLES.$FONT_TYPES.BOLD,
                 }}
               >
@@ -351,10 +383,36 @@ export function formatTime(recordedTime: number): string {
   }
 }
 
+export function uriToBlob(uri: string): Promise<Blob> {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+
+    // If successful -> return with blob
+    xhr.onload = function () {
+      resolve(xhr.response);
+    };
+
+    // reject on error
+    xhr.onerror = function () {
+      reject(new Error("uriToBlob failed"));
+    };
+
+    // Set the response type to 'blob' - this means the server's response
+    // will be accessed as a binary object
+    xhr.responseType = "blob";
+
+    // Initialize the request. The third argument set to 'true' denotes
+    // that the request is asynchronous
+    xhr.open("GET", uri, true);
+
+    // Send the request. The 'null' argument means that no body content is given for the request
+    xhr.send(null);
+  });
+}
+
 // to fetch resource from given uri and create blob out of it
 export const fetchResourceFromURI = async (uri: string) => {
-  const response = await fetch(uri);
-  const blob = await response.blob();
+  const blob = await uriToBlob(uri);
   return blob;
 };
 
@@ -441,7 +499,7 @@ export const getPdfThumbnail = async (selectedFile: any) => {
 //this function detect "@" mentions/tags while typing.
 export function detectMentions(input: string) {
   const mentionRegex = /(?:^|\s)@(\w+)/g;
-  const matches: any[] = [];
+  const matches = [];
   let match;
 
   while ((match = mentionRegex.exec(input)) !== null) {

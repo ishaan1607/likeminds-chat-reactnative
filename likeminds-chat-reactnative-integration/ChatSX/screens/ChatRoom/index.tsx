@@ -7,44 +7,29 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   View,
   Text,
-  StyleSheet,
-  TextInput,
   TouchableOpacity,
   Keyboard,
   Image,
   Pressable,
-  ActivityIndicator,
   Alert,
   Modal,
   BackHandler,
   Platform,
   LogBox,
   AppState,
-  ScrollViewProps,
 } from "react-native";
 import { Image as CompressedImage } from "react-native-compressor";
 import { SyncConversationRequest } from "@likeminds.community/chat-rn";
 import {
-  SHOW_LIST_REGEX,
   copySelectedMessages,
-  decode,
   fetchResourceFromURI,
   formatTime,
-  generateGifString,
 } from "../../commonFuctions";
 import InputBox from "../../components/InputBox";
-import Messages from "../../components/Messages";
 import ToastMessage from "../../components/ToastMessage";
 import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store";
-import {
-  firebaseConversation,
-  getChatroom,
-  getConversations,
-  paginatedConversations,
-  paginatedConversationsEnd,
-  paginatedConversationsStart,
-} from "../../store/actions/chatroom";
+import { getChatroom } from "../../store/actions/chatroom";
 import { styles } from "./styles";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { DataSnapshot, onValue, ref } from "firebase/database";
@@ -59,10 +44,8 @@ import {
   CLEAR_SELECTED_FILES_TO_UPLOAD,
   CLEAR_SELECTED_FILE_TO_VIEW,
   CLEAR_SELECTED_MESSAGES,
-  FIREBASE_CONVERSATIONS_SUCCESS,
   GET_CHATROOM_ACTIONS_SUCCESS,
   GET_CHATROOM_DB_SUCCESS,
-  GET_CHATROOM_SUCCESS,
   GET_CONVERSATIONS_SUCCESS,
   LONG_PRESSED,
   REACTION_SENT,
@@ -76,20 +59,14 @@ import {
   SET_FILE_UPLOADING_MESSAGES,
   SET_IS_REPLY,
   SET_PAGE,
-  SET_POSITION,
   SET_REPLY_MESSAGE,
   SET_TEMP_STATE_MESSAGE,
   SHOW_TOAST,
-  TO_BE_DELETED,
   UPDATE_CHAT_REQUEST_STATE,
 } from "../../store/types/types";
-import {
-  START_CHATROOM_LOADING,
-  STOP_CHATROOM_LOADING,
-} from "../../store/types/loader";
 import { getExploreFeedData } from "../../store/actions/explorefeed";
 import Layout from "../../constants/Layout";
-import EmojiPicker, { EmojiKeyboard } from "rn-emoji-keyboard";
+import { EmojiKeyboard } from "rn-emoji-keyboard";
 import {
   CHATROOM,
   EXPLORE_FEED,
@@ -118,28 +95,20 @@ import {
   REQUEST_DM_LIMIT,
   WARNING_MSG_PRIVATE_CHATROOM,
   WARNING_MSG_PUBLIC_CHATROOM,
-  USER_SCHEMA_RO,
   VOICE_NOTE_TEXT,
-  CAPITAL_GIF_TEXT,
-  VOICE_NOTE_STRING,
 } from "../../constants/Strings";
 import { DM_ALL_MEMBERS } from "../../constants/Screens";
 import ApproveDMRequestModal from "../../customModals/ApproveDMRequest";
 import BlockDMRequestModal from "../../customModals/BlockDMRequest";
 import RejectDMRequestModal from "../../customModals/RejectDMRequest";
-import { BUCKET, POOL_ID, REGION } from "../../aws-exports";
+import { BUCKET, POOL_ID, REGION } from "../../awsExports";
 import { CognitoIdentityCredentials, S3 } from "aws-sdk";
 import AWS from "aws-sdk";
-import { FlashList } from "@shopify/flash-list";
 import WarningMessageModal from "../../customModals/WarningMessage";
-import { Share } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import { paginatedSyncAPI } from "../../utils/syncChatroomApi";
 import {
   ChatroomChatRequestState,
-  DocumentType,
-  GetConversationsType,
   Keys,
   MemberState,
   Sources,
@@ -153,16 +122,11 @@ import {
   getChatroomType,
   getConversationType,
 } from "../../utils/analyticsUtils";
-import { GetConversationsRequest } from "@likeminds.community/chat-rn/dist/localDb/models/requestModels/GetConversationsRequest";
-import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
-import {
-  createTemporaryStateMessage,
-  getCurrentConversation,
-} from "../../utils/chatroomUtils";
+import { createTemporaryStateMessage } from "../../utils/chatroomUtils";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
-import Swipeable from "../../components/Swipeable";
-import { useLMChat } from "../../LMChatProvider";
+import MessageList from "../../components/MessageList";
+import { useLMChat } from "../../lmChatProvider";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -190,10 +154,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
 
   const {
     chatroomID,
-    isInvited,
     previousChatroomID,
     navigationFromNotification,
-    updatedAt,
     deepLinking,
   } = route.params;
 
@@ -203,15 +165,11 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const db = myClient?.firebaseInstance();
 
   const [replyChatID, setReplyChatID] = useState<number>();
-  const [endPage, setEndPage] = useState(1);
-  const [startPage, setStartPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [isToast, setIsToast] = useState(false);
   const [msg, setMsg] = useState("");
-  const [apiRes, setApiRes] = useState();
   const [reportModalVisible, setReportModalVisible] = useState(false);
-  const [shouldLoadMoreChat, setShouldLoadMoreChat] = useState(true);
   const [isReact, setIsReact] = useState(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [DMApproveAlertModalVisible, setDMApproveAlertModalVisible] =
@@ -228,12 +186,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     useState(false);
   const [appState, setAppState] = useState(AppState.currentState);
   const [shimmerIsLoading, setShimmerIsLoading] = useState(true);
-  const [shouldLoadMoreChatEnd, setShouldLoadMoreChatEnd] = useState(true);
-  const [shouldLoadMoreChatStart, setShouldLoadMoreChatStart] = useState(true);
-  const [lastScrollOffset, setLastScrollOffset] = useState(true);
-  const [response, setResponse] = useState<any>([]);
   const [isRealmDataPresent, setIsRealmDataPresent] = useState(false);
-  const [flashListMounted, setFlashListMounted] = useState(false);
 
   const reactionArr = ["❤️", "😂", "😮", "😢", "😠", "👍"];
   const isFocused = useIsFocused();
@@ -242,7 +195,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const {
     chatroomDetails,
     chatroomDBDetails,
-    messageSent,
     isLongPress,
     selectedMessages,
     stateArr,
@@ -361,25 +313,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
-          <TouchableOpacity
-            onPress={() => {
-              dispatch({
-                type: CLEAR_CHATROOM_CONVERSATION,
-                body: { conversations: [] },
-              });
-              dispatch({
-                type: CLEAR_CHATROOM_DETAILS,
-                body: { chatroomDBDetails: {} },
-              });
-              dispatch({ type: SET_IS_REPLY, body: { isReply: false } });
-              dispatch({
-                type: SET_REPLY_MESSAGE,
-                body: { replyMessage: "" },
-              });
-              Keyboard.dismiss();
-              backAction();
-            }}
-          >
+          <TouchableOpacity onPress={() => {}}>
             <Image
               source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
@@ -405,7 +339,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                   ellipsizeMode="tail"
                   numberOfLines={1}
                   style={{
-                    color: STYLES.$COLORS.PRIMARY,
+                    color: STYLES.$COLORS.FONT_PRIMARY,
                     fontSize: STYLES.$FONT_SIZES.LARGE,
                     fontFamily: STYLES.$FONT_TYPES.BOLD,
                     maxWidth: 150,
@@ -473,7 +407,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
           <View style={styles.chatRoomInfo}>
             <Text
               style={{
-                color: STYLES.$COLORS.PRIMARY,
+                color: STYLES.$COLORS.FONT_PRIMARY,
                 fontSize: STYLES.$FONT_SIZES.LARGE,
                 fontFamily: STYLES.$FONT_TYPES.BOLD,
               }}
@@ -1172,15 +1106,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     }
   }, [chatroomDBDetails]);
 
-  // this useEffect scroll to Index of latest message when we send the message.
-  useEffect(() => {
-    if (conversations?.length > 0) {
-      flatlistRef?.current?.scrollToIndex({
-        animated: false,
-        index: 0,
-      });
-    }
-  }, [messageSent]);
   // this useEffect update headers when we longPress or update selectedMessages array.
   useEffect(() => {
     if (selectedMessages?.length === 0) {
@@ -1234,9 +1159,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         const firebaseData = snapshot.val();
         const conversationID = firebaseData?.collabcard?.answer_id;
         if (conversationID) {
-          if (!user?.sdkClientInfo?.community) {
-            return;
-          }
           const maxTimeStamp = Math.floor(Date.now() * 1000);
           await firebaseConversationSyncAPI(
             INITIAL_SYNC_PAGE,
@@ -1298,95 +1220,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       setIsChatroomTopic(true);
     }
   }, [selectedMessages]);
-
-  //function calls paginatedConversations action which internally calls getConversation to update conversation array with the new data.
-  async function paginatedData(newPage: number) {
-    const payload = {
-      chatroomID: chatroomID,
-      conversationID: conversations[conversations?.length - 1]?.id,
-      scrollDirection: 0,
-      paginateBy: 50,
-      topNavigate: false,
-    };
-    const response = await dispatch(
-      paginatedConversations(payload, true) as any
-    );
-    return response;
-  }
-
-  // function shows loader in between calling the API and getting the response
-  const loadData = async (newPage?: number) => {
-    setIsLoading(true);
-    const payload = GetConversationsRequestBuilder.builder()
-      .setChatroomId(chatroomID?.toString())
-      .setLimit(PAGE_SIZE)
-      .setMedianConversation(conversations[conversations.length - 1])
-      .build();
-    const newConversations = await myClient.getConversations(payload);
-    dispatch({
-      type: GET_CONVERSATIONS_SUCCESS,
-      body: { conversations: [...conversations, ...newConversations] },
-    });
-    if (newConversations.length == 0) {
-      setShouldLoadMoreChatEnd(false);
-    }
-    if (newConversations) {
-      setIsLoading(false);
-    }
-  };
-
-  // function shows loader in between calling the API and getting the response
-  const loadStartData = async (newPage?: number) => {
-    setIsLoading(true);
-    const payload = GetConversationsRequestBuilder.builder()
-      .setChatroomId(chatroomID?.toString())
-      .setLimit(PAGE_SIZE)
-      .setMedianConversation(conversations[0])
-      .setType(GetConversationsType.BELOW)
-      .build();
-
-    let newConversations = await myClient.getConversations(payload);
-    newConversations = newConversations.reverse();
-    dispatch({
-      type: GET_CONVERSATIONS_SUCCESS,
-      body: { conversations: [...newConversations, ...conversations] },
-    });
-
-    if (newConversations.length !== 0 && !isFound) {
-      const length = newConversations.length;
-      let index = length;
-      if (
-        conversations[index + 1].attachmentCount == 0 &&
-        conversations[index + 1].polls == undefined
-      ) {
-        index = length - 2;
-      } else if (length < PAGE_SIZE) {
-        index = length;
-      } else {
-        index = length + 8;
-      }
-      scrollToVisibleIndex(index);
-    }
-    if (newConversations.length == 0) {
-      setShouldLoadMoreChatStart(false);
-    }
-    if (newConversations) {
-      setIsLoading(false);
-    }
-  };
-
-  //function checks the pagination logic, if it verifies the condition then call loadData
-  const handleLoadMore = () => {
-    loadData();
-  };
-
-  const renderFooter = () => {
-    return isLoading ? (
-      <View style={{ paddingVertical: 20 }}>
-        <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
-      </View>
-    ) : null;
-  };
 
   const handleModalClose = () => {
     setModalVisible(false);
@@ -2219,7 +2052,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       }
 
       //for video thumbnail
-      let thumbnailUrlImg = null;
+      let thumbnailUrlImg: any;
       if (thumbnailURL && attachmentType === VIDEO_TEXT) {
         thumbnailUrlImg = await fetchResourceFromURI(thumbnailURL);
       }
@@ -2242,7 +2075,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       };
 
       try {
-        let getVideoThumbnailData = null;
+        let getVideoThumbnailData: any;
 
         if (thumbnailURL && attachmentType === VIDEO_TEXT) {
           getVideoThumbnailData = await s3.upload(thumnnailUrlParams).promise();
@@ -2477,548 +2310,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     );
   };
 
-  // Function calls paginatedConversationsEnd action which internally calls getConversations to update conversation array with the new data.
-  async function endOfPaginatedData() {
-    const payload = {
-      chatroomID: chatroomID,
-      conversationID: conversations[conversations?.length - 1]?.id,
-      scrollDirection: 0, //scroll up -> 0
-      paginateBy: 50,
-      topNavigate: false,
-    };
-    const response = await dispatch(
-      paginatedConversationsEnd(payload, true) as any
-    );
-    return response;
-  }
-
-  // Function shows loader in between calling the API and getting the response
-  const endLoadData = async () => {
-    setIsLoading(true);
-    const res = await endOfPaginatedData();
-
-    // To check if its the end of list (top of list in our case)
-    if (res?.conversations?.length == 0) {
-      setShouldLoadMoreChatEnd(false);
-    }
-
-    if (res) {
-      setIsLoading(false);
-    }
-  };
-
-  // Function checks the pagination logic, if it verifies the condition then call endLoadData
-  const handleOnEndReached = () => {
-    if (!isLoading && conversations?.length > 0) {
-      // checking if conversations length is greater the 15 as it convered all the screen sizes of mobiles, and pagination API will never call if screen is not full messages.
-      if (conversations?.length > 15) {
-        const newPage = endPage + 1;
-        setEndPage(newPage);
-        endLoadData();
-      }
-    }
-  };
-
-  // Function calls paginatedConversationsStart action which internally calls getConversations to update conversation array with the new data.
-  async function startOfPaginatedData() {
-    const payload = {
-      chatroomID: chatroomID,
-      conversationID: conversations[0]?.id,
-      scrollDirection: 1, //scroll down -> 1
-      paginateBy: 50,
-      topNavigate: false,
-    };
-    const response = await dispatch(
-      paginatedConversationsStart(payload, true) as any
-    );
-    return response;
-  }
-
-  // This is for scrolling down mainly ie whenever response changes this useEffect will be triggered and it'll calculate the index of the last message before prepending of new data and scroll to that index
-  useEffect(() => {
-    setTimeout(() => {
-      if (response) {
-        const len = response?.conversations?.length;
-        if (len != 0 && len != undefined) {
-          let index = len;
-          if (
-            conversations[index + 1].attachmentCount == 0 &&
-            conversations[index + 1].polls == undefined
-          ) {
-            index = len - 2;
-          }
-          scrollToVisibleIndex(index);
-        }
-        setIsLoading(false);
-      }
-    }, 1500);
-  }, [response]);
-
-  const scrollToVisibleIndex = (index: number) => {
-    if (flatlistRef.current) {
-      flatlistRef.current.scrollToIndex({
-        animated: false,
-        index: index,
-      });
-    }
-  };
-
-  // function shows loader in between calling the API and getting the response
-  const startLoadData = async () => {
-    setIsLoading(true);
-    const res = await startOfPaginatedData();
-
-    // To check if its the start of list (bottom of list in our case)
-    if (res?.conversations?.length == 0) {
-      setShouldLoadMoreChatStart(false);
-    }
-    setResponse(res);
-  };
-
-  // Function checks the pagination logic, if it verifies the condition then call startLoadData
-  const handleOnStartReached = () => {
-    if (!isLoading && conversations?.length > 0) {
-      // Checking if conversations length is greater the 15 as it convered all the screen sizes of mobiles, and pagination API will never call if screen is not full messages.
-      if (conversations?.length > 15) {
-        const newPage = startPage + 1;
-        setStartPage(newPage);
-        startLoadData();
-      }
-    }
-  };
-
-  const onStartReached = () => {
-    loadStartData();
-  };
-
-  const onEndReached = () => {
-    handleOnEndReached();
-  };
-
-  // For Scrolling Up
-  const handleOnScroll: ScrollViewProps["onScroll"] = (event) => {
-    const offset = event.nativeEvent.contentOffset.y;
-    const visibleLength = event.nativeEvent.layoutMeasurement.height;
-    const contentLength = event.nativeEvent.contentSize.height;
-    const onStartReachedThreshold = 10;
-    const onEndReachedThreshold = 10;
-
-    // Check if scroll has reached start of list.
-    const isScrollAtStart = offset < onStartReachedThreshold;
-    // Check if scroll has reached end of list.
-    const isScrollAtEnd =
-      contentLength - visibleLength - offset < onEndReachedThreshold;
-
-    if (isScrollAtStart && shouldLoadMoreChatStart && !isFound) {
-      renderFooter();
-      onStartReached();
-    }
-
-    if (isScrollAtEnd && shouldLoadMoreChatEnd) {
-      renderFooter();
-      handleLoadMore();
-    }
-  };
-
-  const renderAllMedia = (
-    imageCount: number,
-    videosCount: number,
-    pdfCount: number,
-    val: Conversation
-  ) => {
-    return (
-      <View style={styles.alignCenter}>
-        <Text numberOfLines={2} style={styles.attachment_msg}>
-          <Text style={styles.attachment_msg}>{imageCount}</Text>{" "}
-          <Image
-            source={require("../../assets/images/image_icon3x.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          <Text style={styles.attachment_msg}>{videosCount}</Text>{" "}
-          <Image
-            source={require("../../assets/images/video_icon3x.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          <Text style={styles.attachment_msg}>{pdfCount}</Text>{" "}
-          <Image
-            source={require("../../assets/images/document_icon3x.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          {decode(
-            val?.answer,
-            false,
-            chatroomName,
-            user?.sdkClientInfo?.community
-          )}
-        </Text>
-      </View>
-    );
-  };
-
-  const renderImageVideo = (
-    imageCount: number,
-    videosCount: number,
-    val: Conversation
-  ) => {
-    return (
-      <View style={styles.alignCenter}>
-        <Text numberOfLines={2} style={styles.attachment_msg}>
-          <Text style={styles.attachment_msg}>{imageCount}</Text>{" "}
-          <Image
-            source={require("../../assets/images/image_icon3x.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          <Text style={styles.attachment_msg}>{videosCount}</Text>{" "}
-          <Image
-            source={require("../../assets/images/video_icon3x.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          {decode(
-            val?.answer,
-            false,
-            chatroomName,
-            user?.sdkClientInfo?.community
-          )}
-        </Text>
-      </View>
-    );
-  };
-
-  const renderVideoPdf = (
-    videosCount: number,
-    pdfCount: number,
-    val: Conversation
-  ) => {
-    return (
-      <View style={styles.alignCenter}>
-        <Text numberOfLines={2} style={styles.attachment_msg}>
-          <Text style={styles.attachment_msg}>{videosCount}</Text>{" "}
-          <Image
-            source={require("../../assets/images/video_icon3x.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          <Text style={styles.attachment_msg}>{pdfCount}</Text>{" "}
-          <Image
-            source={require("../../assets/images/document_icon3x.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          {decode(
-            val?.answer,
-            false,
-            chatroomName,
-            user?.sdkClientInfo?.community
-          )}
-        </Text>
-      </View>
-    );
-  };
-
-  const renderImagePdf = (
-    imageCount: number,
-    pdfCount: number,
-    val: Conversation
-  ) => {
-    return (
-      <View style={styles.alignCenter}>
-        <Text numberOfLines={2} style={styles.attachment_msg}>
-          <Text style={styles.attachment_msg}>{imageCount}</Text>{" "}
-          <Image
-            source={require("../../assets/images/image_icon3x.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          <Text style={styles.attachment_msg}>{pdfCount}</Text>{" "}
-          <Image
-            source={require("../../assets/images/document_icon3x.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          {decode(
-            val?.answer,
-            false,
-            chatroomName,
-            user?.sdkClientInfo?.community
-          )}
-        </Text>
-      </View>
-    );
-  };
-
-  const renderPdf = (pdfCount: number, val: Conversation) => {
-    return (
-      <View style={[styles.alignCenter]}>
-        {!val?.answer ? (
-          <Text style={styles.attachment_msg}>
-            {pdfCount > 1 && (
-              <Text style={styles.attachment_msg}>{pdfCount}</Text>
-            )}{" "}
-            <Image
-              source={require("../../assets/images/document_icon3x.png")}
-              style={styles.chatroomTopicIcon}
-            />{" "}
-            {pdfCount > 1 ? "Documents" : "Document"}
-          </Text>
-        ) : (
-          <Text numberOfLines={2} style={styles.attachment_msg}>
-            {pdfCount > 1 && (
-              <>
-                <Text style={styles.attachment_msg}>{pdfCount}</Text>
-                &nbsp;
-              </>
-            )}
-            <Image
-              source={require("../../assets/images/document_icon3x.png")}
-              style={styles.chatroomTopicIcon}
-            />{" "}
-            {decode(
-              val?.answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
-          </Text>
-        )}
-      </View>
-    );
-  };
-
-  const renderVideo = (videosCount: number, val: Conversation) => {
-    return (
-      <View
-        style={[
-          styles.alignCenter,
-          {
-            marginBottom: -2,
-          },
-        ]}
-      >
-        {!val?.answer ? (
-          <Text style={styles.attachment_msg}>
-            {videosCount > 1 && (
-              <Text style={styles.attachment_msg}>{videosCount}</Text>
-            )}{" "}
-            <Image
-              source={require("../../assets/images/video_icon3x.png")}
-              style={styles.chatroomTopicIcon}
-            />{" "}
-            {videosCount > 1 ? "Videos" : "Video"}
-          </Text>
-        ) : (
-          <Text numberOfLines={2} style={styles.attachment_msg}>
-            {videosCount > 1 && (
-              <>
-                <Text style={styles.attachment_msg}>{videosCount}</Text>
-                &nbsp;
-              </>
-            )}
-            <Image
-              source={require("../../assets/images/video_icon3x.png")}
-              style={styles.chatroomTopicIcon}
-            />{" "}
-            {decode(
-              val?.answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
-          </Text>
-        )}
-      </View>
-    );
-  };
-
-  const renderImage = (imageCount: number, val: Conversation) => {
-    return (
-      <View style={[styles.alignCenter]}>
-        {!val?.answer ? (
-          <Text style={styles.attachment_msg}>
-            {imageCount > 1 && (
-              <Text style={styles.attachment_msg}>{imageCount}</Text>
-            )}{" "}
-            <Image
-              source={require("../../assets/images/image_icon3x.png")}
-              style={styles.chatroomTopicIcon}
-            />{" "}
-            {imageCount > 1 ? "Photos" : "Photo"}
-          </Text>
-        ) : (
-          <Text numberOfLines={2} style={styles.attachment_msg}>
-            {imageCount > 1 && (
-              <>
-                <Text style={styles.attachment_msg}>{imageCount}</Text>
-                &nbsp;
-              </>
-            )}
-            <Image
-              source={require("../../assets/images/image_icon3x.png")}
-              style={styles.chatroomTopicIcon}
-            />{" "}
-            {decode(
-              val?.answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
-          </Text>
-        )}
-      </View>
-    );
-  };
-
-  const renderPoll = (val: Conversation) => {
-    return (
-      <View style={[styles.alignCenter]}>
-        <Text numberOfLines={2} style={styles.attachment_msg}>
-          <Image
-            source={require("../../assets/images/poll_icon3x.png")}
-            style={[
-              styles.chatroomTopicIcon,
-              { tintColor: STYLES.$COLORS.PRIMARY },
-            ]}
-          />{" "}
-          {decode(
-            val?.answer,
-            false,
-            chatroomName,
-            user?.sdkClientInfo?.community
-          )}
-        </Text>
-      </View>
-    );
-  };
-
-  const renderGif = (val: Conversation) => {
-    let answer = generateGifString(val?.answer);
-    return (
-      <View style={[styles.alignCenter]}>
-        {!answer ? (
-          <View style={styles.gif_attachment_msg}>
-            <View style={styles.gifView}>
-              <Text style={styles.gifText}>{CAPITAL_GIF_TEXT}</Text>
-            </View>
-            <Text style={styles.attachment_msg}>
-              <View style={styles.sub_attachment_msg} />
-              {CAPITAL_GIF_TEXT}
-            </Text>
-          </View>
-        ) : (
-          <Text numberOfLines={2} style={styles.attachment_msg}>
-            <View style={styles.gifView}>
-              <Text style={styles.gifText}>{CAPITAL_GIF_TEXT}</Text>
-            </View>
-            <View style={styles.sub_attachment_msg} />
-            {decode(
-              answer,
-              false,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
-          </Text>
-        )}
-      </View>
-    );
-  };
-
-  const renderVoiceNote = (val: Conversation) => {
-    return (
-      <View style={[styles.alignCenter]}>
-        <Text numberOfLines={2} style={styles.attachment_msg}>
-          <Image
-            source={require("../../assets/images/mic_icon3x.png")}
-            style={[
-              styles.chatroomTopicIcon,
-              { tintColor: STYLES.$COLORS.PRIMARY },
-            ]}
-          />
-          {VOICE_NOTE_STRING}
-        </Text>
-      </View>
-    );
-  };
-
-  const renderLink = (val: Conversation) => {
-    return (
-      <View
-        style={[
-          styles.alignCenter,
-          {
-            marginBottom: -2,
-          },
-        ]}
-      >
-        <Text numberOfLines={2} style={styles.attachment_msg}>
-          <Image
-            source={require("../../assets/images/link_icon.png")}
-            style={styles.chatroomTopicIcon}
-          />{" "}
-          {decode(
-            val?.answer,
-            false,
-            chatroomName,
-            user?.sdkClientInfo?.community
-          )}
-        </Text>
-      </View>
-    );
-  };
-
-  // To get icon along with count along with answer
-  const getIconAttachment = (conversation: Conversation) => {
-    const attachments = conversation?.attachments;
-    let imageCount = 0;
-    let videosCount = 0;
-    let pdfCount = 0;
-    let gifCount = 0;
-    let voiceNoteCount = 0;
-    const ogTags = conversation?.ogTags;
-
-    if (attachments?.length) {
-      for (let i = 0; i < attachments?.length; i++) {
-        if (attachments[i].type == DocumentType.IMAGE) {
-          imageCount++;
-        } else if (attachments[i].type == DocumentType.VIDEO) {
-          videosCount++;
-        } else if (attachments[i].type == DocumentType.PDF) {
-          pdfCount++;
-        } else if (attachments[i].type == DocumentType.GIF_TEXT) {
-          gifCount++;
-        } else if (attachments[i].type == DocumentType.VOICE_NOTE) {
-          voiceNoteCount++;
-        } else {
-          continue;
-        }
-      }
-    }
-
-    if (imageCount > 0 && videosCount > 0 && pdfCount > 0) {
-      return renderAllMedia(imageCount, videosCount, pdfCount, conversation);
-    } else if (imageCount > 0 && videosCount > 0) {
-      return renderImageVideo(imageCount, videosCount, conversation);
-    } else if (videosCount > 0 && pdfCount > 0) {
-      return renderVideoPdf(videosCount, pdfCount, conversation);
-    } else if (imageCount > 0 && pdfCount > 0) {
-      return renderImagePdf(imageCount, pdfCount, conversation);
-    } else if (pdfCount > 0) {
-      return renderPdf(pdfCount, conversation);
-    } else if (videosCount > 0) {
-      return renderVideo(videosCount, conversation);
-    } else if (imageCount > 0) {
-      return renderImage(imageCount, conversation);
-    } else if (conversation?.state === 10) {
-      return renderPoll(conversation);
-    } else if (gifCount) {
-      return renderGif(conversation);
-    } else if (voiceNoteCount) {
-      return renderVoiceNote(conversation);
-    } else if (ogTags) {
-      return renderLink(conversation);
-    } else {
-      return (
-        <Text style={styles.deletedMessage}>
-          This message is not supported yet
-        </Text>
-      );
-    }
-  };
-
   return (
     <View style={styles.container}>
       {shimmerIsLoading ? (
@@ -3105,282 +2396,16 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         </View>
       ) : (
         <>
-          <FlashList
-            ref={flatlistRef}
-            data={conversations}
-            keyExtractor={(item: any, index) => {
-              const isArray = Array.isArray(item);
-              return isArray ? `${index}` : `${item?.id}`;
-            }}
-            extraData={{
-              value: [
-                selectedMessages,
-                uploadingFilesMessages,
-                stateArr,
-                conversations,
-              ],
-            }}
-            estimatedItemSize={250}
-            renderItem={({ item: value, index }: any) => {
-              const uploadingFilesMessagesIDArr = Object.keys(
-                uploadingFilesMessages
-              );
-              let item = { ...value };
-              if (uploadingFilesMessagesIDArr.includes(value?.id?.toString())) {
-                item = uploadingFilesMessages[value?.id];
-              }
-
-              const isStateIncluded = stateArr.includes(item?.state);
-
-              let isIncluded = selectedMessages.some(
-                (val: any) => val?.id === item?.id && !isStateIncluded
-              );
-
-              if (isFound && item?.id == currentChatroomTopic?.id) {
-                isIncluded = true;
-              }
-
-              return (
-                <View>
-                  {index < conversations?.length &&
-                  conversations[index]?.date !==
-                    conversations[index + 1]?.date ? (
-                    <View style={[styles.statusMessage]}>
-                      <Text
-                        style={{
-                          color: STYLES.$COLORS.PRIMARY,
-                          fontSize: STYLES.$FONT_SIZES.SMALL,
-                          fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                        }}
-                      >
-                        {item?.date}
-                      </Text>
-                    </View>
-                  ) : null}
-
-                  <Swipeable
-                    onFocusKeyboard={() => {
-                      refInput.current.focus();
-                    }}
-                    item={item}
-                    isStateIncluded={isStateIncluded}
-                  >
-                    <Pressable
-                      onLongPress={(event) => {
-                        const { pageX, pageY } = event.nativeEvent;
-                        dispatch({
-                          type: SET_POSITION,
-                          body: { pageX: pageX, pageY: pageY },
-                        });
-                        handleLongPress(
-                          isStateIncluded,
-                          isIncluded,
-                          item,
-                          selectedMessages
-                        );
-                      }}
-                      delayLongPress={200}
-                      onPress={function (event) {
-                        const { pageX, pageY } = event.nativeEvent;
-                        dispatch({
-                          type: SET_POSITION,
-                          body: { pageX: pageX, pageY: pageY },
-                        });
-                        handleClick(
-                          isStateIncluded,
-                          isIncluded,
-                          item,
-                          false,
-                          selectedMessages
-                        );
-                      }}
-                      style={isIncluded ? { backgroundColor: "#d7e6f7" } : null}
-                    >
-                      <Messages
-                        chatroomName={chatroomName}
-                        chatroomID={chatroomID}
-                        chatroomType={chatroomType}
-                        onScrollToIndex={(index: any) => {
-                          flatlistRef.current?.scrollToIndex({
-                            animated: true,
-                            index,
-                          });
-                        }}
-                        isIncluded={isIncluded}
-                        item={item}
-                        navigation={navigation}
-                        openKeyboard={() => {
-                          handleClick(
-                            isStateIncluded,
-                            isIncluded,
-                            item,
-                            true,
-                            selectedMessages
-                          );
-                        }}
-                        longPressOpenKeyboard={() => {
-                          handleLongPress(
-                            isStateIncluded,
-                            isIncluded,
-                            item,
-                            selectedMessages
-                          );
-                        }}
-                        removeReaction={(
-                          item: any,
-                          reactionArr: any,
-                          removeFromList?: any
-                        ) => {
-                          removeReaction(item, reactionArr, removeFromList);
-                        }}
-                        handleTapToUndo={() => {
-                          onTapToUndo();
-                        }}
-                        handleFileUpload={handleFileUpload}
-                      />
-                    </Pressable>
-                  </Swipeable>
-                </View>
-              );
-            }}
-            onScroll={handleOnScroll}
-            ListHeaderComponent={renderFooter}
-            ListFooterComponent={renderFooter}
-            keyboardShouldPersistTaps={"handled"}
-            inverted
+          <MessageList
+            chatroomID={chatroomID}
+            handleLongPress={handleLongPress}
+            handleClick={handleClick}
+            removeReaction={removeReaction}
+            onTapToUndo={onTapToUndo}
+            handleFileUpload={handleFileUpload}
+            navigation={navigation}
+            ref={refInput}
           />
-          {!(Object.keys(currentChatroomTopic).length === 0) &&
-          chatroomType !== ChatroomType.DMCHATROOM ? (
-            <Pressable
-              style={styles.chatroomTop}
-              onPress={async () => {
-                const index = conversations.findIndex(
-                  (element: any) => element?.id == currentChatroomTopic?.id
-                );
-                if (index >= 0) {
-                  if (!flashListMounted) {
-                    setTimeout(() => {
-                      flatlistRef.current?.scrollToIndex({
-                        animated: true,
-                        index,
-                      });
-                      setIsFound(true);
-                      setFlashListMounted(true);
-                    }, 1000);
-                  } else {
-                    flatlistRef.current?.scrollToIndex({
-                      animated: true,
-                      index,
-                    });
-                    setIsFound(true);
-                  }
-                } else {
-                  const newConversation = await getCurrentConversation(
-                    currentChatroomTopic,
-                    chatroomID?.toString()
-                  );
-                  dispatch({
-                    type: GET_CONVERSATIONS_SUCCESS,
-                    body: { conversations: newConversation },
-                  });
-                  const index = newConversation.findIndex(
-                    (element) => element?.id == currentChatroomTopic?.id
-                  );
-                  if (index >= 0) {
-                    flatlistRef.current?.scrollToIndex({
-                      animated: true,
-                      index,
-                    });
-                    setIsFound(true);
-                  }
-                }
-              }}
-            >
-              <View style={styles.chatroomTopic}>
-                <View>
-                  <Image
-                    source={
-                      currentChatroomTopic?.member?.imageUrl
-                        ? { uri: currentChatroomTopic?.member?.imageUrl }
-                        : require("../../assets/images/default_pic.png")
-                    }
-                    style={styles.chatroomTopicAvatar}
-                  />
-                </View>
-                <View style={styles.chatRoomTopicInfo}>
-                  <Text
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                    style={{
-                      color: STYLES.$COLORS.PRIMARY,
-                      fontSize: STYLES.$FONT_SIZES.LARGE,
-                      fontFamily: STYLES.$FONT_TYPES.BOLD,
-                    }}
-                  >
-                    Current Topic
-                  </Text>
-
-                  {currentChatroomTopic?.hasFiles == true ? (
-                    getIconAttachment(currentChatroomTopic)
-                  ) : currentChatroomTopic?.state === 10 ? (
-                    getIconAttachment(currentChatroomTopic)
-                  ) : currentChatroomTopic?.ogTags?.url !== null &&
-                    currentChatroomTopic?.ogTags ? (
-                    getIconAttachment(currentChatroomTopic)
-                  ) : (
-                    <Text
-                      ellipsizeMode="tail"
-                      numberOfLines={2}
-                      style={{
-                        color: STYLES.$COLORS.MSG,
-                        fontSize: STYLES.$FONT_SIZES.MEDIUM,
-                        fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                        lineHeight: 18,
-                      }}
-                    >
-                      {decode(
-                        currentChatroomTopic?.answer,
-                        false,
-                        chatroomName,
-                        user?.sdkClientInfo?.community
-                      )}
-                    </Text>
-                  )}
-                </View>
-                <View>
-                  {currentChatroomTopic?.attachmentCount > 0 &&
-                  currentChatroomTopic?.attachments.length > 0 &&
-                  currentChatroomTopic?.attachments[0]?.type !==
-                    DocumentType.PDF &&
-                  currentChatroomTopic?.attachments[0]?.type !==
-                    DocumentType.VOICE_NOTE ? (
-                    <Image
-                      source={{
-                        uri:
-                          currentChatroomTopic?.attachments[0]?.type ==
-                          DocumentType.IMAGE
-                            ? currentChatroomTopic?.attachments[0]?.url
-                            : currentChatroomTopic?.attachments[0]
-                                ?.thumbnailUrl,
-                      }}
-                      style={styles.chatroomTopicAttachment}
-                    />
-                  ) : currentChatroomTopic?.ogTags?.url !== null &&
-                    currentChatroomTopic?.ogTags?.image !== "" &&
-                    currentChatroomTopic?.ogTags !== undefined &&
-                    currentChatroomTopic?.ogTags !== null &&
-                    Object.keys(currentChatroomTopic).length !== 0 ? (
-                    <Image
-                      source={{
-                        uri: currentChatroomTopic?.ogTags?.image,
-                      }}
-                      style={styles.chatroomTopicAttachment}
-                    />
-                  ) : null}
-                </View>
-              </View>
-            </Pressable>
-          ) : null}
         </>
       )}
 
@@ -3611,47 +2636,47 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                     onPress={async () => {
                       if (val?.id === ChatroomActions.VIEW_PARTICIPANTS) {
                         setModalVisible(false);
-                        navigation.navigate(VIEW_PARTICIPANTS, {
-                          chatroomID: chatroomID,
-                          isSecret: isSecret,
-                          chatroomName: chatroomName,
-                        });
+                        // navigation.navigate(VIEW_PARTICIPANTS, {
+                        //   chatroomID: chatroomID,
+                        //   isSecret: isSecret,
+                        //   chatroomName: chatroomName,
+                        // });
                       } else if (
                         val?.id === ChatroomActions.LEAVE_CHATROOM ||
                         val?.id === ChatroomActions.LEAVE_SECRET_CHATROOM
                       ) {
-                        showWarningModal();
+                        // showWarningModal();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.JOIN_CHATROOM) {
                         if (!isSecret) {
-                          joinChatroom();
+                          // joinChatroom();
                         }
                         setModalVisible(false);
                       } else if (
                         val?.id === ChatroomActions.MUTE_NOTIFICATIONS
                       ) {
-                        await muteNotifications();
+                        // await muteNotifications();
                         setModalVisible(false);
                       } else if (
                         val?.id === ChatroomActions.UNMUTE_NOTIFICATIONS
                       ) {
-                        await unmuteNotifications();
+                        // await unmuteNotifications();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.VIEW_PROFILE) {
                         //View Profile code
                       } else if (val?.id === ChatroomActions.BLOCK_MEMBER) {
-                        await handleBlockMember();
+                        // await handleBlockMember();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.UNBLOCK_MEMBER) {
-                        await unblockMember();
+                        // await unblockMember();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.SHARE) {
                         // Share flow
-                        onShare(
-                          chatroomID,
-                          chatroomType,
-                          chatroomDBDetails?.isSecret
-                        );
+                        // onShare(
+                        //   chatroomID,
+                        //   chatroomType,
+                        //   chatroomDBDetails?.isSecret
+                        // );
                       }
                     }}
                     key={val?.id}
@@ -3715,7 +2740,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                   });
                   dispatch({ type: SELECTED_MESSAGES, body: [] });
                   setReportModalVisible(false);
-                  // handleReportModalClose()
                 }}
                 style={styles.filtersView}
               >

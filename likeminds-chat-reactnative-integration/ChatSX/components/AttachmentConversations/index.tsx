@@ -45,8 +45,9 @@ import { onPausePlay, onResumePlay, startPlay, stopPlay } from "../../audio";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../enums";
 import ReactNativeBlobUtil from "react-native-blob-util";
-import { Base64 } from "../../aws-exports";
+import { Base64 } from "../../awsExports";
 import { onSeekTo } from "../../audio/Controls";
+import { useLMChatStyles } from "../../lmChatProvider";
 
 interface AttachmentConversations {
   item: any;
@@ -88,6 +89,26 @@ const AttachmentConversations = ({
   const { selectedMessages, stateArr, isLongPress }: any = useAppSelector(
     (state) => state.chatroom
   );
+
+  const LMChatContext = useLMChatStyles();
+  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+
+  //styling props
+  const borderRadius = chatBubbleStyles?.borderRadius;
+  const sentMessageBackgroundColor =
+    chatBubbleStyles?.sentMessageBackgroundColor;
+  const receivedMessageBackgroundColor =
+    chatBubbleStyles?.receivedMessageBackgroundColor;
+  const selectedMessageBackgroundColor =
+    chatBubbleStyles?.selectedMessageBackgroundColor;
+  const textStyles = chatBubbleStyles?.textStyles;
+  const linkTextColor = chatBubbleStyles?.linkTextColor;
+  const taggingTextColor = chatBubbleStyles?.taggingTextColor;
+
+  const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
+    ? selectedMessageBackgroundColor
+    : STYLES.$COLORS.SELECTED_BLUE;
+  // styling props ended
 
   // to stop the audio if move out of the chatroom
   useEffect(() => {
@@ -166,7 +187,7 @@ const AttachmentConversations = ({
   };
 
   // handle gif on press
-  const handleOnPress = (event: any, url: string, index: number) => {
+  const handleOnPress = (event: any, url?: string, index?: number) => {
     const { pageX, pageY } = event.nativeEvent;
     dispatch({
       type: SET_POSITION,
@@ -218,8 +239,21 @@ const AttachmentConversations = ({
             width: isReplyConversation ? "100%" : "80%",
             padding: isReplyConversation ? 0 : 10,
           },
-          isTypeSent ? styles.sentMessage : styles.receivedMessage,
-          isIncluded ? { backgroundColor: STYLES.$COLORS.SELECTED_BLUE } : null,
+          borderRadius ? { borderRadius: borderRadius } : null,
+          isTypeSent
+            ? [
+                styles.sentMessage,
+                sentMessageBackgroundColor
+                  ? { backgroundColor: sentMessageBackgroundColor }
+                  : null,
+              ]
+            : [
+                styles.receivedMessage,
+                receivedMessageBackgroundColor
+                  ? { backgroundColor: receivedMessageBackgroundColor }
+                  : null,
+              ],
+          isIncluded ? { backgroundColor: SELECTED_BACKGROUND_COLOR } : null,
         ]}
       >
         {!!(item?.member?.id == user?.id) || isReply ? null : (
@@ -382,7 +416,7 @@ const AttachmentConversations = ({
             style={
               isIncluded
                 ? {
-                    backgroundColor: STYLES.$COLORS.SELECTED_BLUE,
+                    backgroundColor: SELECTED_BACKGROUND_COLOR,
                     opacity: 0.7,
                   }
                 : null
@@ -390,7 +424,7 @@ const AttachmentConversations = ({
           >
             {!isGifPlaying && !item?.isInProgress ? (
               <TouchableOpacity
-                onPress={() => handleOnPress}
+                onPress={handleOnPress}
                 onLongPress={handleLongPress}
                 style={[
                   {
@@ -479,12 +513,15 @@ const AttachmentConversations = ({
 
         {isAnswer ? (
           <View style={styles.messageText as any}>
-            {decode(
-              isGif ? generateGifString(item?.answer) : item?.answer,
-              true,
-              chatroomName,
-              user?.sdkClientInfo?.community
-            )}
+            {decode({
+              text: isGif ? generateGifString(item?.answer) : item?.answer,
+              enableClick: true,
+              chatroomName: chatroomName,
+              communityId: user?.sdkClientInfo?.community,
+              textStyles: textStyles,
+              linkTextColor: linkTextColor,
+              taggingTextColor: taggingTextColor,
+            })}
           </View>
         ) : null}
         <View style={styles.alignTime}>
@@ -997,6 +1034,17 @@ export const ImageConversations = ({
     (state) => state.chatroom
   );
 
+  const LMChatContext = useLMChatStyles();
+  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+
+  //styling props
+  const selectedMessageBackgroundColor =
+    chatBubbleStyles?.selectedMessageBackgroundColor;
+
+  const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
+    ? selectedMessageBackgroundColor
+    : STYLES.$COLORS.SELECTED_BLUE;
+
   // handle on long press on attachment
   const handleLongPress = (event: any) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -1052,7 +1100,7 @@ export const ImageConversations = ({
     }
   };
 
-  let firstImageSource = null;
+  let firstImageSource: any;
 
   if (firstAttachment) {
     if (
@@ -1073,7 +1121,7 @@ export const ImageConversations = ({
     }
   }
 
-  let secondImageSource = null;
+  let secondImageSource: any;
 
   if (secondAttachment) {
     if (
@@ -1094,7 +1142,7 @@ export const ImageConversations = ({
     }
   }
 
-  let thirdImageSource = null;
+  let thirdImageSource: any;
 
   if (thirdAttachment) {
     if (
@@ -1115,7 +1163,7 @@ export const ImageConversations = ({
     }
   }
 
-  let fourthImageSource = null;
+  let fourthImageSource: any;
 
   if (fourthAttachment) {
     if (
@@ -1461,7 +1509,7 @@ export const ImageConversations = ({
             position: "absolute",
             height: 150,
             width: "100%",
-            backgroundColor: STYLES.$COLORS.SELECTED_BLUE,
+            backgroundColor: SELECTED_BACKGROUND_COLOR,
             opacity: 0.5,
           }}
         />
@@ -1471,7 +1519,7 @@ export const ImageConversations = ({
             position: "absolute",
             height: 310,
             width: "100%",
-            backgroundColor: STYLES.$COLORS.SELECTED_BLUE,
+            backgroundColor: SELECTED_BACKGROUND_COLOR,
             opacity: 0.5,
           }}
         />

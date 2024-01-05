@@ -1,4 +1,4 @@
-import { Image, View, StyleSheet } from "react-native";
+import { Image, View, StyleSheet, ImageStyle } from "react-native";
 import React from "react";
 import { LMChatIconProps } from "./types";
 import defaultStyles from "../constants/defaultStyles";
@@ -30,15 +30,19 @@ export const LMChatIcon = ({
                   uri: iconUrl,
                 }
           }
-          style={StyleSheet.flatten([
-            iconStyle,
-            {
-              width: width ? width : defaultStyles.iconStyle.width,
-              height: height ? height : defaultStyles.iconStyle.height,
-              tintColor: color,
-              resizeMode: boxFit ? boxFit : defaultStyles.iconStyle.resizeMode,
-            },
-          ])}
+          style={
+            StyleSheet.flatten([
+              {
+                width: width ? width : defaultStyles.iconStyle.width,
+                height: height ? height : defaultStyles.iconStyle.height,
+                tintColor: color,
+                resizeMode: boxFit
+                  ? boxFit
+                  : defaultStyles.iconStyle.resizeMode,
+              },
+              iconStyle,
+            ]) as ImageStyle
+          }
         />
       </View>
     </>

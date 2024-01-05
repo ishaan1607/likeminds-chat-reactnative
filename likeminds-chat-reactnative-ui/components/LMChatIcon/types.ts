@@ -1,4 +1,4 @@
-import { ImageStyle, ViewStyle } from "react-native";
+import { ImageResizeMode, ImageStyle, ViewStyle } from "react-native";
 
 export interface LMChatIconProps {
   iconUrl?: string; // this represents the url the icon

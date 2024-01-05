@@ -55,7 +55,7 @@ const ExploreFeed = ({ navigation }: Props) => {
           </TouchableOpacity>
           <Text
             style={{
-              color: STYLES.$COLORS.PRIMARY,
+              color: STYLES.$COLORS.FONT_PRIMARY,
               fontSize: STYLES.$FONT_SIZES.XL,
               fontFamily: STYLES.$FONT_TYPES.BOLD,
             }}

@@ -31,7 +31,7 @@ const PollResult = ({ navigation, route }: any) => {
           <View style={styles.chatRoomInfo}>
             <Text
               style={{
-                color: STYLES.$COLORS.PRIMARY,
+                color: STYLES.$COLORS.FONT_PRIMARY,
                 fontSize: STYLES.$FONT_SIZES.LARGE,
                 fontFamily: STYLES.$FONT_TYPES.BOLD,
               }}

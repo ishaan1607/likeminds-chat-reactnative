@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: STYLES.$FONT_SIZES.LARGE,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
   },
   secondaryTitle: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,

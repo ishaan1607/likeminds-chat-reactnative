@@ -1,4 +1,12 @@
-import React, { createContext, useContext, useEffect } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  useMemo,
+  useState,
+  useContext,
+  useEffect,
+} from "react";
+import STYLES from "./constants/Styles";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppDispatch } from "./store";
@@ -7,6 +15,7 @@ import {
   INIT_API_SUCCESS,
   PROFILE_DATA_SUCCESS,
   STORE_MY_CLIENT,
+  UPDATE_FILE_UPLOADING_OBJECT,
 } from "./store/types/types";
 import notifee from "@notifee/react-native";
 import { getRoute } from "./notifications/routes";
@@ -16,13 +25,15 @@ import { LMChatClient } from "@likeminds.community/chat-rn";
 import { GiphySDK } from "@giphy/react-native-sdk";
 import { GIPHY_SDK_API_KEY } from "./awsExports";
 import { Client } from "./client";
+import { FAILED } from "./constants/Strings";
+import { LMChatProviderProps, ThemeContextProps } from "./type";
 
-interface LMProviderProps {
-  myClient: LMChatClient;
-  children: React.ReactNode;
-  userName: string;
-  userUniqueId: string;
-}
+// Create the theme context
+export const LMChatStylesContext = createContext<ThemeContextProps | undefined>(
+  undefined
+);
+
+//PropTypes for the LMChatProvider component
 
 // Create a context for LMChatProvider
 const LMChatContext = createContext<LMChatClient | undefined>(undefined);
@@ -36,12 +47,26 @@ export const useLMChat = () => {
   return context;
 };
 
+export const useLMChatStyles = () => {
+  const context = useContext(LMChatStylesContext);
+  if (!context) {
+    throw new Error("useLMChatStyles must be used within an LMChatProvider");
+  }
+  return context;
+};
+
 export const LMChatProvider = ({
   myClient,
   children,
   userName,
   userUniqueId,
-}: LMProviderProps): JSX.Element => {
+  reactionListStyles,
+  chatBubbleStyles,
+  inputBoxStyles,
+  themeStyles,
+}: LMChatProviderProps): JSX.Element => {
+  const [isInitiated, setIsInitiated] = useState(false);
+
   //To navigate onPress notification while android app is in background state / quit state.
   useEffect(() => {
     async function bootstrap() {
@@ -70,6 +95,33 @@ export const LMChatProvider = ({
     GiphySDK.configure({ apiKey: GIPHY_SDK_API_KEY });
   }, []);
 
+  useEffect(() => {
+    const func = async () => {
+      const res: any = await myClient?.getAllAttachmentUploadConversations();
+      if (res) {
+        const len = res.length;
+        if (len > 0) {
+          for (let i = 0; i < len; i++) {
+            const data = res[i];
+            const uploadingFilesMessagesSavedObject = JSON.parse(data?.value);
+            dispatch({
+              type: UPDATE_FILE_UPLOADING_OBJECT,
+              body: {
+                message: {
+                  ...uploadingFilesMessagesSavedObject,
+                  isInProgress: FAILED,
+                },
+                ID: data?.key,
+              },
+            });
+          }
+        }
+      }
+    };
+
+    func();
+  }, []);
+
   // to get dispatch
   const dispatch = useAppDispatch();
 
@@ -87,32 +139,45 @@ export const LMChatProvider = ({
 
       Credentials.setCredentials(userName, userUniqueId);
 
-      const response = await myClient?.initiateUser(payload);
+      const initiateApiResponse = await myClient?.initiateUser(payload);
 
       dispatch({
         type: INIT_API_SUCCESS,
-        body: { community: response?.data?.community },
+        body: { community: initiateApiResponse?.data?.community },
       });
 
-      const response1 = await myClient?.getMemberState();
+      const getMemberStateResponse = await myClient?.getMemberState();
 
       dispatch({
         type: PROFILE_DATA_SUCCESS,
         body: {
-          member: response1?.data?.member,
-          memberRights: response1?.data?.memberRights,
+          member: getMemberStateResponse?.data?.member,
+          memberRights: getMemberStateResponse?.data?.memberRights,
         },
       });
+      setIsInitiated(true);
     };
     callInitApi();
   }, []);
 
-  return (
+  useMemo(() => {
+    if (themeStyles) {
+      STYLES.setTheme(themeStyles);
+    }
+  }, []);
+
+  return isInitiated ? (
     <LMChatContext.Provider value={myClient}>
-      <GestureHandlerRootView style={styles.flexStyling}>
-        <View style={styles.flexStyling}>{children}</View>
-      </GestureHandlerRootView>
+      <LMChatStylesContext.Provider
+        value={{ reactionListStyles, chatBubbleStyles, inputBoxStyles }}
+      >
+        <GestureHandlerRootView style={styles.flexStyling}>
+          <View style={styles.flexStyling}>{children}</View>
+        </GestureHandlerRootView>
+      </LMChatStylesContext.Provider>
     </LMChatContext.Provider>
+  ) : (
+    <></>
   );
 };
 

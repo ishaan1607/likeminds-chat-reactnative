@@ -18,13 +18,13 @@ export const styles = StyleSheet.create({
   title: {
     fontSize: STYLES.$FONT_SIZES.XXL,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     marginBottom: 20,
   },
   message: {
     fontSize: 15,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    color: STYLES.$COLORS.PRIMARY,
+    color: STYLES.$COLORS.FONT_PRIMARY,
     marginBottom: 20,
     lineHeight: 20,
     fontWeight: "400",

@@ -1,5 +1,4 @@
 import { SyncChatroomRequest } from "@likeminds.community/chat-rn";
-import { useLMChat } from "../LMChatProvider";
 import { Client } from "../client";
 
 const myClient = Client.myClient;
