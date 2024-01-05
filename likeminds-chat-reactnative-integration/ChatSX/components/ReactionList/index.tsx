@@ -11,7 +11,7 @@ import STYLES from "../../constants/Styles";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../enums";
 import { styles } from "./styles";
-import { useLMChatStyles } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../lmChatProvider";
 
 const ReactionList = ({
   item,

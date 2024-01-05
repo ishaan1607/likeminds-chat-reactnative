@@ -47,7 +47,7 @@ import { Events, Keys } from "../../enums";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import { Base64 } from "../../awsExports";
 import { onSeekTo } from "../../audio/Controls";
-import { useLMChatStyles } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../lmChatProvider";
 
 interface AttachmentConversations {
   item: any;

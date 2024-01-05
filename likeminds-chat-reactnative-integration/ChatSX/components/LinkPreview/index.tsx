@@ -6,7 +6,7 @@ import { useAppSelector } from "../../store";
 import { decode } from "../../commonFuctions";
 import { LinkPreviewProps } from "./models";
 import LinkPreviewBox from "../linkPreviewBox";
-import { useLMChatStyles } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../lmChatProvider";
 
 const LinkPreview = ({
   description,

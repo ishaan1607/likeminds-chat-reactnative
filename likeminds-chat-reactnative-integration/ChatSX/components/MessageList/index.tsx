@@ -34,7 +34,7 @@ import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
 import { CAPITAL_GIF_TEXT, VOICE_NOTE_STRING } from "../../constants/Strings";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
-import { useLMChatStyles } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../lmChatProvider";
 import { Client } from "../../client";
 
 const MessageList = forwardRef(

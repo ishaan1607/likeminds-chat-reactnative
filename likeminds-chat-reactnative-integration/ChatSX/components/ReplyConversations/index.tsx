@@ -33,7 +33,7 @@ import {
 } from "../../constants/Strings";
 import AttachmentConversations from "../AttachmentConversations";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
-import { useLMChatStyles } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../lmChatProvider";
 
 interface ReplyConversations {
   item: any;

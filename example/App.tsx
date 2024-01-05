@@ -35,6 +35,7 @@ function App(): React.JSX.Element {
   const userUniqueId = '';
   const chatroomId = '';
 
+  // themeStyling
   const themeStyles = {
     hue: 10,
     fontColor: 'black',
@@ -43,6 +44,7 @@ function App(): React.JSX.Element {
     lightBackgroundColor: '#d7f7ed',
   };
 
+  // styling for reactionList
   const reactionListStyles = {
     reactionSize: 0,
     reactionLeftItemStroke: 'pink',
@@ -51,6 +53,7 @@ function App(): React.JSX.Element {
     gap: 5,
   };
 
+  // styling for chatBubble
   const chatBubbleStyles = {
     borderRadius: 5,
     sentMessageBackgroundColor: 'yellow',
@@ -72,6 +75,7 @@ function App(): React.JSX.Element {
     },
   };
 
+  // styling for inputBox
   const inputBoxStyles = {
     placeholderTextColor: '#aaa',
     selectionColor: '#aaa',

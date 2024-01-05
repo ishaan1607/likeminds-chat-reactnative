@@ -26,103 +26,7 @@ import { GiphySDK } from "@giphy/react-native-sdk";
 import { GIPHY_SDK_API_KEY } from "./awsExports";
 import { Client } from "./client";
 import { FAILED } from "./constants/Strings";
-
-interface ReactionListStylesProps {
-  reactionSize?: number;
-  reactionLeftItemStroke?: string;
-  reactionRightItemStroke?: string;
-  reactionItemBorderRadius?: number;
-  gap?: number;
-  selectedMessageBackgroundColor?: string;
-}
-
-interface TextStyles {
-  fontSize: number;
-  fontStyle: string;
-  fontFamily: string;
-}
-
-interface ChatBubbleStylesProps {
-  borderRadius?: number;
-  sentMessageBackgroundColor?: string;
-  receivedMessageBackgroundColor?: string;
-  selectedBackgroundColor?: string;
-  selectedMessageBackgroundColor?: string;
-  textStyles?: TextStyles;
-  linkTextColor?: string;
-  taggingTextColor?: string;
-  stateMessagesBackgroundColor?: string;
-  stateMessagesTextStyles?: TextStyles;
-  deletedMessagesTextStyles?: TextStyles;
-}
-
-interface InputBoxStyles {
-  placeholderTextColor?: string;
-  inputTextStyle?: {
-    width?: string;
-    height?: number;
-    elevation?: number;
-    backgroundColor?: string;
-  };
-  selectionColor?: string;
-  plainTextStyle?: {
-    color?: string;
-  };
-  partsTextStyle?: {
-    color?: string;
-  };
-  sendIconStyles?: {
-    width?: number;
-    height?: number;
-    resizeMode?: string;
-    marginLeft?: number;
-  };
-  attachmentIconStyles?: {
-    width?: number;
-    height?: number;
-    resizeMode?: string;
-  };
-  micIconStyles?: {
-    width?: number;
-    height?: number;
-    resizeMode?: string;
-  };
-  cameraIconStyles?: {
-    width?: number;
-    height?: number;
-    resizeMode?: string;
-  };
-  galleryIconStyles?: {
-    width?: number;
-    height?: number;
-    resizeMode?: string;
-  };
-  documentIconStyles?: {
-    width?: number;
-    height?: number;
-    resizeMode?: string;
-  };
-  pollIconStyles?: {
-    width?: number;
-    height?: number;
-    resizeMode?: string;
-  };
-}
-
-interface ThemeStyles {
-  hue?: number;
-  fontColor?: string;
-  primaryColor?: string;
-  secondaryColor?: string;
-  lightBackgroundColor?: string;
-}
-
-// Define the context type
-export interface ThemeContextProps {
-  reactionListStyles?: ReactionListStylesProps;
-  chatBubbleStyles?: ChatBubbleStylesProps;
-  inputBoxStyles?: InputBoxStyles;
-}
+import { LMChatProviderProps, ThemeContextProps } from "./type";
 
 // Create the theme context
 export const LMChatStylesContext = createContext<ThemeContextProps | undefined>(
@@ -130,16 +34,6 @@ export const LMChatStylesContext = createContext<ThemeContextProps | undefined>(
 );
 
 //PropTypes for the LMChatProvider component
-interface LMProviderProps {
-  myClient: LMChatClient;
-  children: React.ReactNode;
-  userName: string;
-  userUniqueId: string;
-  reactionListStyles?: ReactionListStylesProps;
-  chatBubbleStyles?: ChatBubbleStylesProps;
-  inputBoxStyles?: InputBoxStyles;
-  themeStyles?: ThemeStyles;
-}
 
 // Create a context for LMChatProvider
 const LMChatContext = createContext<LMChatClient | undefined>(undefined);
@@ -170,7 +64,7 @@ export const LMChatProvider = ({
   chatBubbleStyles,
   inputBoxStyles,
   themeStyles,
-}: LMProviderProps): JSX.Element => {
+}: LMChatProviderProps): JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
 
   //To navigate onPress notification while android app is in background state / quit state.
@@ -245,20 +139,20 @@ export const LMChatProvider = ({
 
       Credentials.setCredentials(userName, userUniqueId);
 
-      const response = await myClient?.initiateUser(payload);
+      const initiateApiResponse = await myClient?.initiateUser(payload);
 
       dispatch({
         type: INIT_API_SUCCESS,
-        body: { community: response?.data?.community },
+        body: { community: initiateApiResponse?.data?.community },
       });
 
-      const response1 = await myClient?.getMemberState();
+      const getMemberStateResponse = await myClient?.getMemberState();
 
       dispatch({
         type: PROFILE_DATA_SUCCESS,
         body: {
-          member: response1?.data?.member,
-          memberRights: response1?.data?.memberRights,
+          member: getMemberStateResponse?.data?.member,
+          memberRights: getMemberStateResponse?.data?.memberRights,
         },
       });
       setIsInitiated(true);

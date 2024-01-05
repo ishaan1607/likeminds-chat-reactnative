@@ -126,7 +126,7 @@ import { createTemporaryStateMessage } from "../../utils/chatroomUtils";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
 import MessageList from "../../components/MessageList";
-import { useLMChat } from "../../LMChatProvider";
+import { useLMChat } from "../../lmChatProvider";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 

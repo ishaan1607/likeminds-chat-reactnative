@@ -145,7 +145,7 @@ import {
   replaceMentionValues,
 } from "likeminds_chat_reactnative_ui/components/LMChatTextInput/utils";
 import { Client } from "../../client";
-import { useLMChatStyles } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../lmChatProvider";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
@@ -2332,7 +2332,14 @@ const InputBox = ({
                 <LMChatTextInput
                   placeholderText="Type here..."
                   placeholderTextColor={inputBoxStyles?.placeholderTextColor}
-                  plainTextStyle={inputBoxStyles?.plainTextStyle}
+                  plainTextStyle={[
+                    inputBoxStyles?.plainTextStyle,
+                    {
+                      color: !isUploadScreen
+                        ? STYLES.$BACKGROUND_COLORS.LIGHT
+                        : STYLES.$BACKGROUND_COLORS.DARK,
+                    },
+                  ]}
                   style={
                     [
                       inputBoxStyles?.inputTextStyle || styles.input,

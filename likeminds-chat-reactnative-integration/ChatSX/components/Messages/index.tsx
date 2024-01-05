@@ -25,7 +25,7 @@ import { ChatroomType } from "../../enums";
 import LinkPreview from "../LinkPreview";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Credentials } from "../../credentials";
-import { useLMChatStyles } from "../../LMChatProvider";
+import { useLMChatStyles } from "../../lmChatProvider";
 import ReactionList from "../ReactionList";
 
 interface Messages {
