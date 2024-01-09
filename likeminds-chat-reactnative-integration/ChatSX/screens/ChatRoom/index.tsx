@@ -223,7 +223,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const chatRequestState = chatroomDBDetails?.chatRequestState;
   const chatroomDBDetailsLength = Object.keys(chatroomDBDetails)?.length;
   const [isChatroomTopic, setIsChatroomTopic] = useState(false);
-  const [isFound, setIsFound] = useState(false);
 
   AWS.config.update({
     region: REGION, // Replace with your AWS region, e.g., 'us-east-1'
@@ -894,15 +893,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       body: { replyMessage: "" },
     });
   }, []);
-
-  // This useEffect is used to highlight the chatroom topic conversation for 1 sec on scrolling to it
-  useEffect(() => {
-    if (isFound) {
-      setTimeout(() => {
-        setIsFound(false);
-      }, 1000);
-    }
-  }, [isFound]);
 
   // local handling for chatroom topic updation's state message
   useEffect(() => {
