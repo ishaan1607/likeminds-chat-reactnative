@@ -21,25 +21,39 @@ import { SET_EXPLORE_FEED_PAGE } from "../../store/types/types";
 import styles from "./styles";
 import { FlashList } from "@shopify/flash-list";
 import { LoaderComponent } from "../../components/LoaderComponent";
+import {
+  ExploreFeedContextProvider,
+  useExploreFeedContext,
+} from "../../context/ExploreFeedContext";
+import { useNavigation } from "@react-navigation/native";
 
 interface Props {
   navigation: any;
 }
 
-const ExploreFeed = ({ navigation }: Props) => {
+const ExploreFeed = () => {
+  return (
+    <ExploreFeedContextProvider>
+      <ExploreFeedComponent />
+    </ExploreFeedContextProvider>
+  );
+};
+
+const ExploreFeedComponent = () => {
+  const navigation = useNavigation();
   const {
-    exploreChatrooms = [],
-    page,
+    exploreChatrooms,
     pinnedChatroomsCount,
-  }: any = useAppSelector((state) => state.explorefeed);
-  const { community }: any = useAppSelector((state) => state.homefeed);
-  const [chats, setChats] = useState(exploreChatrooms);
-  const [filterState, setFilterState] = useState(0);
-  const [isPinned, setIsPinned] = useState(false);
-  // const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+    chats,
+    filterState,
+    isPinned,
+    setIsPinned,
+    setFilterState,
+    setChats,
+    handleLoadMore,
+    renderFooter,
+  } = useExploreFeedContext();
   const { count } = useAppSelector((state) => state.loader);
-  const dispatch = useAppDispatch();
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -66,66 +80,6 @@ const ExploreFeed = ({ navigation }: Props) => {
       ),
     });
   }, [navigation]);
-
-  async function fetchData() {
-    dispatch({ type: SET_EXPLORE_FEED_PAGE, body: 1 });
-    const payload = {
-      orderType: filterState,
-      page: 1,
-    };
-    const response = await dispatch(getExploreFeedData(payload, true) as any);
-    return response;
-  }
-
-  async function updateData(newPage: number) {
-    const payload = {
-      orderType: filterState,
-      page: newPage,
-    };
-    const response = await dispatch(updateExploreFeedData(payload) as any);
-    return response;
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, [filterState]);
-
-  useEffect(() => {
-    if (isPinned) {
-      const pinnedChats = exploreChatrooms.filter((item: any) =>
-        item?.isPinned ? item : null
-      );
-      setChats(pinnedChats);
-    } else {
-      setChats(exploreChatrooms);
-    }
-  }, [exploreChatrooms]);
-
-  const loadData = async (newPage: number) => {
-    setIsLoading(true);
-    const res = await updateData(newPage);
-    if (res) {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLoadMore = () => {
-    if (!isLoading) {
-      if (chats.length > 0 && chats.length % 10 === 0) {
-        const newPage = page + 1;
-        dispatch({ type: SET_EXPLORE_FEED_PAGE, body: newPage });
-        loadData(newPage);
-      }
-    }
-  };
-
-  const renderFooter = () => {
-    return isLoading ? (
-      <View style={{ paddingVertical: 20 }}>
-        <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
-      </View>
-    ) : null;
-  };
 
   return (
     <View style={styles.page}>
