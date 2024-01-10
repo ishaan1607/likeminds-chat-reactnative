@@ -127,6 +127,7 @@ import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
 import MessageList from "../../components/MessageList";
 import { useLMChat } from "../../lmChatProvider";
+import { Client } from "../../client";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -150,7 +151,7 @@ interface UploadResource {
 }
 
 const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
-  const myClient = useLMChat();
+  const myClient = Client.myClient;
 
   const {
     chatroomID,

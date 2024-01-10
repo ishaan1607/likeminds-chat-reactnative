@@ -23,10 +23,9 @@ import {
   LMChatProvider,
   PollResult,
   VideoPlayer,
+  LMOverlayProvider,
 } from 'likeminds_chat_reactnative_integration';
-import {Provider as ReduxProvider} from 'react-redux';
 import {myClient} from '.';
-import {store} from 'likeminds_chat_reactnative_integration';
 
 const Stack = createNativeStackNavigator();
 
@@ -122,61 +121,58 @@ function App(): React.JSX.Element {
   // };
 
   return (
-    <ReduxProvider store={store}>
-      <LMChatProvider
-        myClient={myClient}
-        userName={userName}
-        userUniqueId={userUniqueId}
-        cohortId={cohortId}
-        // chatBubbleStyles={chatBubbleStyles}
-        // reactionListStyles={reactionListStyles}
-        // inputBoxStyles={inputBoxStyles}
-        // themeStyles={themeStyles}
-      >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{flex: 1}}>
-          <NavigationContainer ref={navigationRef} independent={true}>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="ChatRoom"
-                component={ChatRoom}
-                initialParams={{
-                  chatroomID: chatroomId,
-                  isInvited: false,
-                  myClient: myClient,
-                }}
-              />
-              <Stack.Screen
-                options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
-                name={'FileUpload'}
-                component={FileUpload}
-              />
-              <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
-              <Stack.Screen
-                options={{gestureEnabled: false}}
-                name={'CarouselScreen'}
-                component={CarouselScreen}
-              />
-              <Stack.Screen
-                options={{gestureEnabled: false}}
-                name={'PollResult'}
-                component={PollResult}
-              />
-              <Stack.Screen
-                name={'CreatePollScreen'}
-                component={CreatePollScreen}
-              />
-              <Stack.Screen
-                options={{headerShown: false}}
-                name={'ImageCropScreen'}
-                component={ImageCropScreen}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </KeyboardAvoidingView>
-      </LMChatProvider>
-    </ReduxProvider>
+    <LMOverlayProvider
+      myClient={myClient}
+      userName={userName}
+      userUniqueId={userUniqueId}
+      cohortId={cohortId}
+      // chatBubbleStyles={chatBubbleStyles}
+      // reactionListStyles={reactionListStyles}
+      // inputBoxStyles={inputBoxStyles}
+      // themeStyles={themeStyles}
+    >
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={{flex: 1}}>
+        <NavigationContainer ref={navigationRef} independent={true}>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="ChatRoom"
+              component={ChatRoom}
+              initialParams={{
+                chatroomID: chatroomId,
+                isInvited: false,
+              }}
+            />
+            <Stack.Screen
+              options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
+              name={'FileUpload'}
+              component={FileUpload}
+            />
+            <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
+            <Stack.Screen
+              options={{gestureEnabled: false}}
+              name={'CarouselScreen'}
+              component={CarouselScreen}
+            />
+            <Stack.Screen
+              options={{gestureEnabled: false}}
+              name={'PollResult'}
+              component={PollResult}
+            />
+            <Stack.Screen
+              name={'CreatePollScreen'}
+              component={CreatePollScreen}
+            />
+            <Stack.Screen
+              options={{headerShown: false}}
+              name={'ImageCropScreen'}
+              component={ImageCropScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </KeyboardAvoidingView>
+    </LMOverlayProvider>
   );
 }
 

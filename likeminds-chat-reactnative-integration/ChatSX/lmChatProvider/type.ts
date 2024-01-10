@@ -1,6 +1,6 @@
 import { LMChatClient } from "@likeminds.community/chat-rn";
 
-interface ReactionListStylesProps {
+export interface ReactionListStylesProps {
   reactionSize?: number;
   reactionLeftItemStroke?: string;
   reactionRightItemStroke?: string;
@@ -15,7 +15,7 @@ interface TextStyles {
   fontFamily: string;
 }
 
-interface ChatBubbleStylesProps {
+export interface ChatBubbleStylesProps {
   borderRadius?: number;
   sentMessageBackgroundColor?: string;
   receivedMessageBackgroundColor?: string;
@@ -29,7 +29,7 @@ interface ChatBubbleStylesProps {
   deletedMessagesTextStyles?: TextStyles;
 }
 
-interface InputBoxStyles {
+export interface InputBoxStyles {
   placeholderTextColor?: string;
   inputTextStyle?: {
     width?: string;
@@ -82,7 +82,7 @@ interface InputBoxStyles {
   };
 }
 
-interface ThemeStyles {
+export interface ThemeStyles {
   hue?: number;
   fontColor?: string;
   primaryColor?: string;
