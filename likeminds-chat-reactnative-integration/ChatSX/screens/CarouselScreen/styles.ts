@@ -1,62 +1,62 @@
-import {Platform, StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
-import Layout from '../../constants/Layout';
+import { Platform, StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 const styles = StyleSheet.create({
   header: {
-    display: 'flex',
+    display: "flex",
     flex: 1,
-    top: Platform.OS === 'ios' ? 70 : 30,
-    justifyContent: 'center',
-    position: 'absolute',
+    top: Platform.OS === "ios" ? Layout.normalize(70) : Layout.normalize(30),
+    justifyContent: "center",
+    position: "absolute",
     left: 0,
     right: 0,
     zIndex: 1,
     opacity: 0.8,
   },
   headerElement: {
-    backgroundColor: 'black',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
+    backgroundColor: "black",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     flex: 1,
-    paddingVertical: 10,
+    paddingVertical: Layout.normalize(10),
   },
   image: {
     width: Layout.window.width,
     height:
-      Platform.OS === 'ios' ? Layout.window.height - 100 : Layout.window.height,
-    resizeMode: 'contain',
+      Platform.OS === "ios" ? Layout.window.height - 100 : Layout.window.height,
+    resizeMode: "contain",
   },
   video: {
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
     width: Layout.window.width,
     height:
-      Platform.OS === 'ios' ? Layout.window.height - 100 : Layout.window.height,
+      Platform.OS === "ios" ? Layout.window.height - 100 : Layout.window.height,
   },
   videoPlayer: {
     width: Layout.window.width,
     height:
-      Platform.OS === 'ios' ? Layout.window.height - 100 : Layout.window.height,
+      Platform.OS === "ios" ? Layout.window.height - 100 : Layout.window.height,
   },
   headingContainer: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    position: 'absolute',
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    position: "absolute",
     left: 0,
     zIndex: 1,
     flex: 1,
   },
   backBtn: {
-    height: 20,
-    width: 20,
-    resizeMode: 'contain',
+    height: Layout.normalize(20),
+    width: Layout.normalize(20),
+    resizeMode: "contain",
     tintColor: STYLES.$COLORS.TERTIARY,
-    padding: 5,
+    padding: Layout.normalize(5),
   },
-  chatRoomInfo: {gap: 5},
+  chatRoomInfo: { gap: Layout.normalize(5) },
 });
 
 export default styles;
