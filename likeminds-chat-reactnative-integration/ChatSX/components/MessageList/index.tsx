@@ -1,23 +1,10 @@
-import {
-  View,
-  Text,
-  Pressable,
-  Image,
-  ScrollViewProps,
-  ActivityIndicator,
-} from "react-native";
-import React, {
-  forwardRef,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { View, Text, Pressable, Image } from "react-native";
+import React from "react";
 import { FlashList } from "@shopify/flash-list";
 import Swipeable from "../Swipeable";
 import Messages from "../Messages";
-import { decode, generateGifString } from "../../commonFuctions";
-import { ChatroomType, DocumentType, GetConversationsType } from "../../enums";
+import { decode } from "../../commonFuctions";
+import { ChatroomType, DocumentType } from "../../enums";
 import { useAppDispatch, useAppSelector } from "../../store";
 import STYLES from "../../constants/Styles";
 import {
@@ -25,17 +12,8 @@ import {
   SET_POSITION,
 } from "../../store/types/types";
 import { styles } from "./styles";
-import {
-  paginatedConversations,
-  paginatedConversationsEnd,
-  paginatedConversationsStart,
-} from "../../store/actions/chatroom";
-import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
-import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
-import { CAPITAL_GIF_TEXT, VOICE_NOTE_STRING } from "../../constants/Strings";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
 import { useLMChatStyles } from "../../lmChatProvider";
-import { Client } from "../../client";
 import {
   ChatroomContextValues,
   useChatroomContext,
@@ -59,7 +37,6 @@ const MessageList = () => {
 
 const MessageListComponent = () => {
   const {
-    navigation,
     conversations,
     chatroomID,
     user,
@@ -70,11 +47,8 @@ const MessageListComponent = () => {
     chatroomName,
     refInput,
 
-    removeReaction,
     handleLongPress,
     handleClick,
-    onTapToUndo,
-    handleFileUpload,
   }: ChatroomContextValues = useChatroomContext();
 
   const {
@@ -313,48 +287,7 @@ const MessageListComponent = () => {
                           : null
                       }
                     >
-                      <Messages
-                        chatroomName={chatroomName}
-                        chatroomID={chatroomID}
-                        chatroomType={chatroomType}
-                        onScrollToIndex={(index: any) => {
-                          flatlistRef.current?.scrollToIndex({
-                            animated: true,
-                            index,
-                          });
-                        }}
-                        isIncluded={isIncluded}
-                        item={item}
-                        navigation={navigation}
-                        openKeyboard={() => {
-                          handleClick(
-                            isStateIncluded,
-                            isIncluded,
-                            item,
-                            true,
-                            selectedMessages
-                          );
-                        }}
-                        longPressOpenKeyboard={() => {
-                          handleLongPress(
-                            isStateIncluded,
-                            isIncluded,
-                            item,
-                            selectedMessages
-                          );
-                        }}
-                        removeReaction={(
-                          item: any,
-                          reactionArr: any,
-                          removeFromList?: any
-                        ) => {
-                          removeReaction(item, reactionArr, removeFromList);
-                        }}
-                        handleTapToUndo={() => {
-                          onTapToUndo();
-                        }}
-                        handleFileUpload={handleFileUpload}
-                      />
+                      <Messages isIncluded={isIncluded} item={item} />
                     </Pressable>
                   </Swipeable>
                 </View>

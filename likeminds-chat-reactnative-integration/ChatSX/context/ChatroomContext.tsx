@@ -224,7 +224,9 @@ export interface ChatroomContextValues {
   onReplyPrivatelyClick: (uuid: string, conversationID: number) => void;
 }
 
-const ChatroomContext = createContext<any | undefined>(undefined);
+const ChatroomContext = createContext<ChatroomContextValues | undefined>(
+  undefined
+);
 
 export const useChatroomContext = () => {
   const context = useContext(ChatroomContext);

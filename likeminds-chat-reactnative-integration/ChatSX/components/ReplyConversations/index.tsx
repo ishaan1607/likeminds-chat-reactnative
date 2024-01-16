@@ -34,6 +34,9 @@ import {
 import AttachmentConversations from "../AttachmentConversations";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
 import { useLMChatStyles } from "../../lmChatProvider";
+import { useMessageContext } from "../../context/MessageContext";
+import { useChatroomContext } from "../../context/ChatroomContext";
+import { useMessageListContext } from "../../context/MessageListContext";
 
 interface ReplyConversations {
   item: any;
@@ -164,19 +167,7 @@ export const ReplyBox = ({ item, chatroomName }: ReplyBox) => {
   );
 };
 
-const ReplyConversations = ({
-  isIncluded,
-  item,
-  isTypeSent,
-  onScrollToIndex,
-  openKeyboard,
-  longPressOpenKeyboard,
-  reactionArr,
-  navigation,
-  handleFileUpload,
-  chatroomID,
-  chatroomName,
-}: ReplyConversations) => {
+const ReplyConversations = () => {
   const dispatch = useAppDispatch();
   const { conversations, selectedMessages, stateArr, isLongPress }: any =
     useAppSelector((state) => state.chatroom);
@@ -203,14 +194,18 @@ const ReplyConversations = ({
     : STYLES.$COLORS.SELECTED_BLUE;
   // styling props ended
 
-  const handleLongPress = (event: any) => {
-    const { pageX, pageY } = event.nativeEvent;
-    dispatch({
-      type: SET_POSITION,
-      body: { pageX: pageX, pageY: pageY },
-    });
-    longPressOpenKeyboard();
-  };
+  const {
+    isIncluded,
+    item,
+    isTypeSent,
+    reactionArr,
+    handleLongPress,
+    handleOnPress: openKeyboard,
+  } = useMessageContext();
+
+  const { chatroomID, chatroomName } = useChatroomContext();
+
+  const { scrollToIndex: onScrollToIndex } = useMessageListContext();
 
   const handleOnPress = async () => {
     const isStateIncluded = stateArr.includes(item?.state);
@@ -322,22 +317,7 @@ const ReplyConversations = ({
           />
         </TouchableOpacity>
         {item?.attachmentCount > 0 ? (
-          <AttachmentConversations
-            isReplyConversation={true}
-            navigation={navigation}
-            isIncluded={isIncluded}
-            item={item}
-            isTypeSent={isTypeSent}
-            openKeyboard={() => {
-              openKeyboard();
-            }}
-            longPressOpenKeyboard={() => {
-              longPressOpenKeyboard();
-            }}
-            handleFileUpload={handleFileUpload}
-            isReply={true}
-            chatroomName={chatroomName}
-          />
+          <AttachmentConversations isReplyConversation={true} isReply={true} />
         ) : (
           <View>
             <View
@@ -372,14 +352,7 @@ const ReplyConversations = ({
         <Pressable
           onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={(event) => {
-            const { pageX, pageY } = event.nativeEvent;
-            dispatch({
-              type: SET_POSITION,
-              body: { pageX: pageX, pageY: pageY },
-            });
-            openKeyboard();
-          }}
+          onPress={openKeyboard}
         >
           <Image
             style={{

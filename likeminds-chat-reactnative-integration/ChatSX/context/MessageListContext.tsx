@@ -50,6 +50,7 @@ interface MessageListContextValues {
   handleOnScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
   renderFooter: () => React.JSX.Element | null;
   getIconAttachment: (conversation: Conversation) => React.JSX.Element | null;
+  scrollToIndex: (index: any) => any;
 }
 
 const MessageListContext = createContext<MessageListContextValues | undefined>(
@@ -189,6 +190,14 @@ export const MessageListContextProvider = ({
   //function checks the pagination logic, if it verifies the condition then call loadData
   const handleLoadMore = () => {
     loadData();
+  };
+
+  // function scroll to specific message
+  const scrollToIndex = (index: any) => {
+    flatlistRef.current?.scrollToIndex({
+      animated: true,
+      index,
+    });
   };
 
   const renderFooter = () => {
@@ -742,6 +751,7 @@ export const MessageListContextProvider = ({
     handleOnScroll,
     renderFooter,
     getIconAttachment,
+    scrollToIndex,
   };
 
   return (

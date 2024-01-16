@@ -6,26 +6,26 @@ import React, {
   useContext,
   useEffect,
 } from "react";
-import STYLES from "./constants/Styles";
+import STYLES from "../constants/Styles";
 import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useAppDispatch } from "./store";
-import { Credentials } from "./credentials";
+import { useAppDispatch } from "../store";
+import { Credentials } from "../credentials";
 import {
   INIT_API_SUCCESS,
   PROFILE_DATA_SUCCESS,
   STORE_MY_CLIENT,
   UPDATE_FILE_UPLOADING_OBJECT,
-} from "./store/types/types";
+} from "../store/types/types";
 import notifee from "@notifee/react-native";
-import { getRoute } from "./notifications/routes";
-import * as RootNavigation from "./RootNavigation";
-import { setupPlayer } from "./audio";
+import { getRoute } from "../notifications/routes";
+import * as RootNavigation from "../RootNavigation";
+import { setupPlayer } from "../audio";
 import { LMChatClient } from "@likeminds.community/chat-rn";
 import { GiphySDK } from "@giphy/react-native-sdk";
-import { GIPHY_SDK_API_KEY } from "./awsExports";
-import { Client } from "./client";
-import { FAILED } from "./constants/Strings";
+import { GIPHY_SDK_API_KEY } from "../awsExports";
+import { Client } from "../client";
+import { FAILED } from "../constants/Strings";
 import { LMChatProviderProps, ThemeContextProps } from "./type";
 
 // Create the theme context

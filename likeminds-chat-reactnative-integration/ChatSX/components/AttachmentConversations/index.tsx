@@ -48,36 +48,32 @@ import ReactNativeBlobUtil from "react-native-blob-util";
 import { Base64 } from "../../awsExports";
 import { onSeekTo } from "../../audio/Controls";
 import { useLMChatStyles } from "../../lmChatProvider";
+import { useMessageContext } from "../../context/MessageContext";
+import { useChatroomContext } from "../../context/ChatroomContext";
 
 interface AttachmentConversations {
-  item: any;
-  isTypeSent: boolean;
-  isIncluded: boolean;
-  navigation: any;
-  openKeyboard: any;
-  longPressOpenKeyboard: any;
   isReplyConversation?: any;
-  handleFileUpload: any;
   isReply?: any;
-  chatroomName: string;
 }
 
 const AttachmentConversations = ({
-  item,
-  isTypeSent,
-  isIncluded,
-  navigation,
-  openKeyboard,
-  longPressOpenKeyboard,
   isReplyConversation,
-  handleFileUpload,
   isReply,
-  chatroomName,
 }: AttachmentConversations) => {
   const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
   const [isGifPlaying, setIsGifPlaying] = useState(false);
   const progress = useProgress();
   const activeTrack = useActiveTrack();
+
+  const {
+    isIncluded,
+    item,
+    isTypeSent,
+    handleLongPress,
+    handleOnPress: openKeyboard,
+  } = useMessageContext();
+
+  const { navigation, handleFileUpload, chatroomName } = useChatroomContext();
 
   let firstAttachment = item?.attachments[0];
   const isAudioActive =
@@ -176,16 +172,6 @@ const AttachmentConversations = ({
     }, 2000);
   };
 
-  // handle gif on long press
-  const handleLongPress = (event: any) => {
-    const { pageX, pageY } = event.nativeEvent;
-    dispatch({
-      type: SET_POSITION,
-      body: { pageX: pageX, pageY: pageY },
-    });
-    longPressOpenKeyboard();
-  };
-
   // handle gif on press
   const handleOnPress = (event: any, url?: string, index?: number) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -267,31 +253,11 @@ const AttachmentConversations = ({
           </Text>
         )}
         {firstAttachment?.type === IMAGE_TEXT ? (
-          <ImageConversations
-            isIncluded={isIncluded}
-            item={item}
-            isTypeSent={isTypeSent}
-            navigation={navigation}
-            longPressOpenKeyboard={longPressOpenKeyboard}
-            handleFileUpload={handleFileUpload}
-          />
+          <ImageConversations />
         ) : firstAttachment?.type === PDF_TEXT ? (
-          <PDFConversations
-            isIncluded={isIncluded}
-            item={item}
-            isTypeSent={isTypeSent}
-            longPressOpenKeyboard={longPressOpenKeyboard}
-            handleFileUpload={handleFileUpload}
-          />
+          <PDFConversations />
         ) : firstAttachment?.type === VIDEO_TEXT ? (
-          <ImageConversations
-            isIncluded={isIncluded}
-            item={item}
-            isTypeSent={isTypeSent}
-            navigation={navigation}
-            longPressOpenKeyboard={longPressOpenKeyboard}
-            handleFileUpload={handleFileUpload}
-          />
+          <ImageConversations />
         ) : firstAttachment?.type === AUDIO_TEXT ? (
           <View>
             <Text style={styles.deletedMsg}>
@@ -534,23 +500,9 @@ const AttachmentConversations = ({
 
       {!isTypeSent && !(firstAttachment?.type === AUDIO_TEXT) ? (
         <Pressable
-          onLongPress={(event) => {
-            const { pageX, pageY } = event.nativeEvent;
-            dispatch({
-              type: SET_POSITION,
-              body: { pageX: pageX, pageY: pageY },
-            });
-            longPressOpenKeyboard();
-          }}
+          onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={(event) => {
-            const { pageX, pageY } = event.nativeEvent;
-            dispatch({
-              type: SET_POSITION,
-              body: { pageX: pageX, pageY: pageY },
-            });
-            openKeyboard();
-          }}
+          onPress={openKeyboard}
         >
           <Image
             style={{
@@ -568,21 +520,10 @@ const AttachmentConversations = ({
 
 export default AttachmentConversations;
 
-interface PDFConversations {
-  item: any;
-  isTypeSent: boolean;
-  isIncluded: boolean;
-  longPressOpenKeyboard: any;
-  handleFileUpload: any;
-}
+export const VideoConversations = () => {
+  const { isIncluded, item, handleLongPress } = useMessageContext();
+  const { handleFileUpload } = useChatroomContext();
 
-export const VideoConversations = ({
-  item,
-  isTypeSent,
-  isIncluded,
-  longPressOpenKeyboard,
-  handleFileUpload,
-}: PDFConversations) => {
   const firstAttachment = item?.attachments[0];
   const secondAttachment = item?.attachments[1];
   const dispatch = useAppDispatch();
@@ -590,15 +531,6 @@ export const VideoConversations = ({
     (state) => state.chatroom
   );
   const [isFullList, setIsFullList] = useState(false);
-
-  const handleLongPress = (event: any) => {
-    const { pageX, pageY } = event.nativeEvent;
-    dispatch({
-      type: SET_POSITION,
-      body: { pageX: pageX, pageY: pageY },
-    });
-    longPressOpenKeyboard();
-  };
 
   const handleOnPress = (event: any, url: string) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -791,31 +723,16 @@ export const VideoConversations = ({
   );
 };
 
-export const PDFConversations = ({
-  item,
-  isTypeSent,
-  isIncluded,
-  longPressOpenKeyboard,
-  handleFileUpload,
-}: PDFConversations) => {
+export const PDFConversations = () => {
+  const { isIncluded, item, handleLongPress } = useMessageContext();
+  const { handleFileUpload } = useChatroomContext();
   const firstAttachment = item?.attachments[0];
   const secondAttachment = item?.attachments[1];
   const dispatch = useAppDispatch();
   const { selectedMessages, stateArr, isLongPress }: any = useAppSelector(
     (state) => state.chatroom
   );
-  const { isFileUploading, fileUploadingID }: any = useAppSelector(
-    (state) => state.upload
-  );
   const [isFullList, setIsFullList] = useState(false);
-  const handleLongPress = (event: any) => {
-    const { pageX, pageY } = event.nativeEvent;
-    dispatch({
-      type: SET_POSITION,
-      body: { pageX: pageX, pageY: pageY },
-    });
-    longPressOpenKeyboard();
-  };
 
   const handleOnPress = (event: any, url: string) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -1008,23 +925,10 @@ export const PDFConversations = ({
   );
 };
 
-interface ImageConversations {
-  item: any;
-  isTypeSent: boolean;
-  isIncluded: boolean;
-  navigation: any;
-  longPressOpenKeyboard: any;
-  handleFileUpload: any;
-}
+export const ImageConversations = () => {
+  const { isIncluded, item, handleLongPress } = useMessageContext();
+  const { navigation, handleFileUpload } = useChatroomContext();
 
-export const ImageConversations = ({
-  item,
-  isTypeSent,
-  isIncluded,
-  navigation,
-  longPressOpenKeyboard,
-  handleFileUpload,
-}: ImageConversations) => {
   const firstAttachment = item?.attachments[0];
   const secondAttachment = item?.attachments[1];
   const thirdAttachment = item?.attachments[2];
@@ -1044,16 +948,6 @@ export const ImageConversations = ({
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
     : STYLES.$COLORS.SELECTED_BLUE;
-
-  // handle on long press on attachment
-  const handleLongPress = (event: any) => {
-    const { pageX, pageY } = event.nativeEvent;
-    dispatch({
-      type: SET_POSITION,
-      body: { pageX: pageX, pageY: pageY },
-    });
-    longPressOpenKeyboard();
-  };
 
   // handle on press on attachment
   const handleOnPress = (event: any, url: string, index: number) => {

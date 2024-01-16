@@ -7,18 +7,19 @@ import { decode } from "../../commonFuctions";
 import { LinkPreviewProps } from "./models";
 import LinkPreviewBox from "../linkPreviewBox";
 import { useLMChatStyles } from "../../lmChatProvider";
+import { useChatroomContext } from "../../context/ChatroomContext";
+import { useMessageContext } from "../../context/MessageContext";
 
-const LinkPreview = ({
-  description,
-  title,
-  image,
-  url,
-  isTypeSent,
-  isIncluded,
-  item,
-  chatroomName,
-}: LinkPreviewProps) => {
+const LinkPreview = () => {
   const { user } = useAppSelector((state) => state.homefeed);
+
+  const { isIncluded, item, isTypeSent } = useMessageContext();
+  const { chatroomName } = useChatroomContext();
+
+  const description = item?.ogTags?.description;
+  const title = item?.ogTags?.title;
+  const image = item?.ogTags?.image;
+  const url = item?.ogTags?.url;
 
   const LMChatContextStyles = useLMChatStyles();
   const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
