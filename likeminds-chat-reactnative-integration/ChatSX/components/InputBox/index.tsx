@@ -139,13 +139,13 @@ import {
   LMChatLoader,
   LMChatTextInput,
   LMChatTextView,
-} from "likeminds_chat_reactnative_ui";
+} from "../../uiComponents";
+import { Client } from "../../client";
+import { useLMChatStyles } from "../../lmChatProvider";
 import {
   convertToMentionValues,
   replaceMentionValues,
-} from "likeminds_chat_reactnative_ui/components/LMChatTextInput/utils";
-import { Client } from "../../client";
-import { useLMChatStyles } from "../../lmChatProvider";
+} from "../../uiComponents/LMChatTextInput/utils";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
