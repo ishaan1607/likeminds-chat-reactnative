@@ -25,7 +25,9 @@ import {
   CANCEL_BUTTON,
   CAPITAL_GIF_TEXT,
   CONFIRM_BUTTON,
+  DELETED_MESSAGE,
   IMAGE_TEXT,
+  MESSAGE_NOT_SUPPORTED,
   PDF_TEXT,
   VIDEO_TEXT,
 } from "../../constants/Strings";
@@ -365,11 +367,7 @@ const HomeFeedItem: React.FC<Props> = ({
         </View>
       );
     } else {
-      return (
-        <Text style={styles.deletedMessage}>
-          This message is not supported yet
-        </Text>
-      );
+      return <Text style={styles.deletedMessage}>{MESSAGE_NOT_SUPPORTED}</Text>;
     }
   };
 
@@ -437,9 +435,7 @@ const HomeFeedItem: React.FC<Props> = ({
             {deletedBy !== "null" &&
             deletedBy !== null &&
             deletedBy !== undefined ? (
-              <Text style={styles.deletedMessage}>
-                {"This message has been deleted"}
-              </Text>
+              <Text style={styles.deletedMessage}>{DELETED_MESSAGE}</Text>
             ) : (
               <Text
                 style={[

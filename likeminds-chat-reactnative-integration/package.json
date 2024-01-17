@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@giphy/react-native-sdk": "3.2.1",
-    "@likeminds.community/chat-rn": "^1.4.0",
+    "@likeminds.community/chat-rn": "1.4.0",
     "@notifee/react-native": "7.6.1",
     "@react-native-async-storage/async-storage": "1.18.1",
     "@react-native-clipboard/clipboard": "1.11.2",
@@ -26,13 +26,13 @@
     "@react-native-community/slider": "4.4.3",
     "@react-native-firebase/app": "18.1.0",
     "@react-native-firebase/messaging": "18.1.0",
-    "@react-native/babel-preset": "^0.74.0",
+    "@react-native/babel-preset": "0.74.0",
     "@react-navigation/material-top-tabs": "6.6.2",
     "@react-navigation/native": "6.1.2",
     "@react-navigation/native-stack": "6.9.8",
     "@reduxjs/toolkit": "1.9.2",
     "@shopify/flash-list": "1.4.3",
-    "@types/react-native-video": "^5.0.14",
+    "@types/react-native-video": "5.0.14",
     "aws-sdk": "2.1380.0",
     "buffer": "6.0.3",
     "diff": "5.1.0",
@@ -75,6 +75,6 @@
     "preset": "react-native"
   },
   "devDependencies": {
-    "microbundle": "^0.15.1"
+    "microbundle": "0.15.1"
   }
 }

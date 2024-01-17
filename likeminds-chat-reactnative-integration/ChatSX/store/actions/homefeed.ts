@@ -19,9 +19,6 @@ import {
   PROFILE_DATA,
   PROFILE_DATA_FAILED,
   PROFILE_DATA_SUCCESS,
-  REJECT_INVITE,
-  REJECT_INVITE_FAILED,
-  REJECT_INVITE_SUCCESS,
   UPDATE_DMFEED_CHAT,
   UPDATE_DMFEED_CHAT_FAILED,
   UPDATE_DMFEED_CHAT_SUCCESS,
@@ -105,46 +102,6 @@ export const updateInvites =
       Alert.alert(`${error}`);
     }
   };
-
-// export const acceptInvite = (payload: any, showLoader?:boolean) => (async (dispatch: Dispatch) => {
-//   try {
-//     return await dispatch({
-//       type: ACCEPT_INVITE_SUCCESS,
-//       [CALL_API]: {
-//         func: Client.myClient?.inviteAction(payload),
-//         body: payload,
-//         types: [
-//           ACCEPT_INVITE,
-//           ACCEPT_INVITE_SUCCESS,
-//           ACCEPT_INVITE_FAILED,
-//         ],
-//         showLoader: showLoader,
-//       },
-//     });
-//   } catch (error) {
-//     Alert.alert(`${error}`)
-//   }
-// });
-
-// export const rejectInvite = (payload: any, showLoader?:boolean) => (async (dispatch: Dispatch) => {
-//   try {
-//     return await dispatch({
-//       type: REJECT_INVITE_SUCCESS,
-//       [CALL_API]: {
-//         func: Client.myClient?.inviteAction(payload),
-//         body: payload,
-//         types: [
-//           REJECT_INVITE,
-//           REJECT_INVITE_SUCCESS,
-//           REJECT_INVITE_FAILED,
-//         ],
-//         showLoader: showLoader,
-//       },
-//     });
-//   } catch (error) {
-//     Alert.alert(`${error}`)
-//   }
-// });
 
 export const getHomeFeedData =
   (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {
