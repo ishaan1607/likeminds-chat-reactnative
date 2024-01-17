@@ -1,6 +1,7 @@
 import { initMyClient } from "./ChatSX/setup";
 import { ChatRoom } from "./ChatSX/screens/ChatRoom";
 import { LMChatProvider } from "./ChatSX/lmChatProvider";
+import { LMOverlayProvider } from "./ChatSX/lmOverlayProvider";
 import FileUpload from "./ChatSX/screens/FIleUpload";
 import CarouselScreen from "./ChatSX/screens/CarouselScreen";
 import PollResult from "./ChatSX/components/PollResult";
@@ -12,6 +13,7 @@ import store from "./ChatSX/store";
 export {
   ChatRoom,
   LMChatProvider,
+  LMOverlayProvider,
   store,
   FileUpload,
   CarouselScreen,

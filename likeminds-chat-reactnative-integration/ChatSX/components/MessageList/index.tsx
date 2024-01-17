@@ -91,6 +91,15 @@ const MessageList = forwardRef(
     const chatroomType = chatroomDBDetails?.type;
     const chatroomWithUser = chatroomDBDetails?.chatroomWithUser;
 
+    // This useEffect is used to highlight the chatroom topic conversation for 1 sec on scrolling to it
+    useEffect(() => {
+      if (isFound) {
+        setTimeout(() => {
+          setIsFound(false);
+        }, 1000);
+      }
+    }, [isFound]);
+
     {
       /* `{? = then}`, `{: = else}`  */
     }
