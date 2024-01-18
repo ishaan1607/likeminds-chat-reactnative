@@ -5,18 +5,13 @@
  * @format
  */
 
-import React, {useEffect} from 'react';
+import React from 'react';
 import {KeyboardAvoidingView, Platform} from 'react-native';
-import {
-  NavigationContainer,
-  createNavigationContainerRef,
-  StackActions,
-} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationRef} from './RootNavigation';
 import {
   CarouselScreen,
-  ChatRoom,
   CreatePollScreen,
   FileUpload,
   ImageCropScreen,
@@ -27,33 +22,40 @@ import {
 import {Provider as ReduxProvider} from 'react-redux';
 import {myClient} from '.';
 import {store} from 'likeminds_chat_reactnative_integration';
+import ChatroomScreen from './screens/Chatroom';
 
 const Stack = createNativeStackNavigator();
 
 function App(): React.JSX.Element {
-  const userName = '';
-  const userUniqueId = '';
-  const chatroomId = '';
+  const userName = 'Jai';
+  const userUniqueId = 'Jai';
+  const chatroomId = '4033778';
 
   // themeStyling
-  const themeStyles = {
+  {
+    /* const themeStyles = {
     hue: 10,
     fontColor: 'black',
     primaryColor: 'green',
     secondaryColor: 'green',
     lightBackgroundColor: '#d7f7ed',
-  };
+  }; */
+  }
 
   // styling for reactionList
-  const reactionListStyles = {
+  {
+    /* const reactionListStyles = {
     reactionSize: 0,
     reactionLeftItemStroke: 'pink',
     reactionRightItemStroke: 'yellow',
     reactionItemBorderRadius: 5,
     gap: 5,
-  };
+  }; */
+  }
 
   // styling for chatBubble
+  {
+    /* 
   const chatBubbleStyles = {
     borderRadius: 5,
     sentMessageBackgroundColor: 'yellow',
@@ -74,11 +76,16 @@ function App(): React.JSX.Element {
       fontFamily: 'SofiaPro-SemiBold',
     },
   };
+*/
+  }
 
   // styling for inputBox
+  {
+    /* 
   const inputBoxStyles = {
     placeholderTextColor: '#aaa',
     selectionColor: '#aaa',
+    plainTextStyle: {color: 'black'},
     partsTextStyle: {
       color: '#007AFF',
     },
@@ -119,6 +126,8 @@ function App(): React.JSX.Element {
       resizeMode: 'contain',
     },
   };
+  */
+  }
 
   return (
     <ReduxProvider store={store}>
@@ -126,10 +135,11 @@ function App(): React.JSX.Element {
         myClient={myClient}
         userName={userName}
         userUniqueId={userUniqueId}
-        chatBubbleStyles={chatBubbleStyles}
-        reactionListStyles={reactionListStyles}
-        inputBoxStyles={inputBoxStyles}
-        themeStyles={themeStyles}>
+        // chatBubbleStyles={chatBubbleStyles}
+        // reactionListStyles={reactionListStyles}
+        // inputBoxStyles={inputBoxStyles}
+        // themeStyles={themeStyles}
+      >
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{flex: 1}}>
@@ -137,11 +147,10 @@ function App(): React.JSX.Element {
             <Stack.Navigator>
               <Stack.Screen
                 name="ChatRoom"
-                component={ChatRoom}
+                component={ChatroomScreen}
                 initialParams={{
                   chatroomID: chatroomId,
                   isInvited: false,
-                  myClient: myClient,
                 }}
               />
               <Stack.Screen

@@ -9,7 +9,6 @@ import {
   Pressable,
   Platform,
 } from 'react-native';
-import {myClient} from '../../..';
 import {decode, getFullDate} from '../../commonFuctions';
 import {useAppDispatch, useAppSelector} from '../../store';
 import {
@@ -35,6 +34,7 @@ import {paginatedSyncAPI} from '../../utils/syncChatroomApi';
 import {ChatroomChatRequestState} from '../../enums';
 import {ChatroomType} from '../../enums';
 import {DocumentType} from '../../enums';
+import { Client } from '../../client';
 
 interface Props {
   avatar: string;
@@ -73,6 +73,7 @@ const HomeFeedItem: React.FC<Props> = ({
 }) => {
   const dispatch = useAppDispatch();
   const {user} = useAppSelector(state => state.homefeed);
+  const myClient = Client.myClient;
 
   const showJoinAlert = () =>
     Alert.alert(
