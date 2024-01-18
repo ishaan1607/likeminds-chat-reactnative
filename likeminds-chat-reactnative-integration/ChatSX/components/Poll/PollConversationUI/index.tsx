@@ -105,7 +105,13 @@ const PollConversationUI = ({
         </Text>
 
         {multipleSelectNo > 1 ? (
-          <Text style={[styles.smallText, styles.greyColor, { marginTop: 5 }]}>
+          <Text
+            style={[
+              styles.smallText,
+              styles.greyColor,
+              { marginTop: Layout.normalize(5) },
+            ]}
+          >
             {stringManipulation()}
           </Text>
         ) : null}
