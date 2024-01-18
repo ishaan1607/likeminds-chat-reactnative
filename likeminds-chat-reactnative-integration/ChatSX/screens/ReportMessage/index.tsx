@@ -169,7 +169,6 @@ const ReportScreen = ({ navigation, route }: Props) => {
         <View
           style={{
             marginTop: Layout.normalize(24),
-            // flex: 3,
           }}
         >
           <TextInput

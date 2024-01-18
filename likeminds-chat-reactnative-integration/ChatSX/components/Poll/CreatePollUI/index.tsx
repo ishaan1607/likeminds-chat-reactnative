@@ -205,7 +205,7 @@ const CreatePollUI = ({
                 style={[
                   styles.alignRow,
                   styles.justifySpace,
-                  { marginBottom: 10 },
+                  { marginBottom: Layout.normalize(10) },
                 ]}
               >
                 <Text
@@ -404,7 +404,7 @@ const CreatePollUI = ({
                     { flexGrow: 1 },
                     styles.alignRow,
                     styles.justifySpace,
-                    { marginRight: 30 },
+                    { marginRight: Layout.normalize(30) },
                   ]}
                 >
                   <Text style={[styles.text, styles.blackColor]}>

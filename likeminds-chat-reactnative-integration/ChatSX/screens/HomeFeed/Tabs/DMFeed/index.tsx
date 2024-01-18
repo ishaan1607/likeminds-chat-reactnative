@@ -276,7 +276,10 @@ const DMFeed = ({ navigation }: Props) => {
           <Text
             style={[
               styles.subTitle,
-              { marginBottom: 30, paddingHorizontal: 10 },
+              {
+                marginBottom: Layout.normalize(30),
+                paddingHorizontal: Layout.normalize(10),
+              },
             ]}
           >
             {DM_INFO}

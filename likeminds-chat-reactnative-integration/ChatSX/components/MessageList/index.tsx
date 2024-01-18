@@ -548,7 +548,7 @@ const MessageList = forwardRef(
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
           ]}
         >
@@ -702,7 +702,7 @@ const MessageList = forwardRef(
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
           ]}
         >

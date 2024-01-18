@@ -6,6 +6,7 @@ import STYLES from "../../constants/Styles";
 import { FlashList } from "@shopify/flash-list";
 import { NO_RESPONSES, POLL_RESULT_TEXT } from "../../constants/Strings";
 import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 const PollStack = createMaterialTopTabNavigator();
 
@@ -94,7 +95,7 @@ const PollResult = ({ navigation, route }: any) => {
                         styles.font,
                         {
                           color: STYLES.$COLORS.MSG,
-                          marginTop: 5,
+                          marginTop: Layout.normalize(5),
                         },
                       ]}
                     >

@@ -267,7 +267,7 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
           ]}
         >
@@ -276,7 +276,15 @@ const HomeFeedItem: React.FC<Props> = ({
           )}
           <Image
             source={require("../../assets/images/video_icon3x.png")}
-            style={[styles.icon, { height: Platform.OS === "ios" ? 15 : 10 }]}
+            style={[
+              styles.icon,
+              {
+                height:
+                  Platform.OS === "ios"
+                    ? Layout.normalize(15)
+                    : Layout.normalize(10),
+              },
+            ]}
           />
           <Text style={styles.attachment_msg}>
             {videosCount > 1 ? "Videos" : "Video"}
@@ -289,7 +297,7 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
           ]}
         >
@@ -311,7 +319,7 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
           ]}
         >
@@ -328,8 +336,8 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
-              gap: 5,
+              marginBottom: Layout.normalize(-2),
+              gap: Layout.normalize(5),
             },
           ]}
         >
@@ -355,7 +363,7 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
           ]}
         >
@@ -513,7 +521,7 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.unreadCountContainer,
             { backgroundColor: "transparent" },
-            unreadCount > 0 ? { right: 45 } : null,
+            unreadCount > 0 ? { right: Layout.normalize(45) } : null,
           ]}
         >
           <Image

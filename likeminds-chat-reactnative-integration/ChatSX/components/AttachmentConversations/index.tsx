@@ -432,7 +432,7 @@ const AttachmentConversations = ({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    height: 150,
+                    height: Layout.normalize(150),
                     position: "absolute",
                     width: "100%",
                     zIndex: 1,

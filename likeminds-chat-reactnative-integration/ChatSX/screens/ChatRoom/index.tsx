@@ -2796,11 +2796,11 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 styles.reactionModalView,
                 {
                   top:
-                    position.y > Layout.window.height / 2
+                    position.y > Layout.window.height / Layout.normalize(2)
                       ? Platform.OS === "ios"
-                        ? position.y - 150
-                        : position.y - 100
-                      : position.y - 10,
+                        ? position.y - Layout.normalize(150)
+                        : position.y - Layout.normalize(100)
+                      : position.y - Layout.normalize(10),
                 },
               ]}
             >
@@ -2824,8 +2824,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                    paddingHorizontal: 10,
-                    marginTop: 8,
+                    paddingHorizontal: Layout.normalize(10),
+                    marginTop: Layout.normalize(8),
                   },
                 ]}
                 onPress={() => {

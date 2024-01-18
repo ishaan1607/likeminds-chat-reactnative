@@ -146,6 +146,7 @@ import {
   convertToMentionValues,
   replaceMentionValues,
 } from "../../uiComponents/LMChatTextInput/utils";
+import Layout from "../../constants/Layout";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
@@ -1906,7 +1907,13 @@ const InputBox = ({
           style={[
             styles.tapAndHold,
             {
-              bottom: isKeyBoardFocused ? (isIOS ? 65 : 110) : isIOS ? 80 : 70,
+              bottom: isKeyBoardFocused
+                ? isIOS
+                  ? Layout.normalize(65)
+                  : Layout.normalize(110)
+                : isIOS
+                ? Layout.normalize(80)
+                : Layout.normalize(70),
             },
           ]}
         >
@@ -1923,11 +1930,11 @@ const InputBox = ({
             ? {
                 marginBottom: isKeyBoardFocused
                   ? Platform.OS === "android"
-                    ? 45
-                    : 5
+                    ? Layout.normalize(45)
+                    : Layout.normalize(5)
                   : isIOS
-                  ? 20
-                  : 5,
+                  ? Layout.normalize(20)
+                  : Layout.normalize(5),
               }
             : null,
         ]}
@@ -2001,8 +2008,8 @@ const InputBox = ({
                         style={[
                           styles.infoContainer,
                           {
-                            borderBottomWidth: 0.2,
-                            gap: isIOS ? 5 : 0,
+                            borderBottomWidth: Layout.normalize(0.2),
+                            gap: isIOS ? Layout.normalize(5) : 0,
                           },
                         ]}
                       >
@@ -2147,7 +2154,7 @@ const InputBox = ({
               (isReply && !isUploadScreen) || isEditable || isUserTagging
                 ? {
                     borderWidth: 0,
-                    margin: isIOS ? 0 : 2,
+                    margin: isIOS ? 0 : Layout.normalize(2),
                   }
                 : null,
             ]}
@@ -2188,7 +2195,7 @@ const InputBox = ({
                   {
                     paddingVertical: 0,
                     marginVertical: 0,
-                    marginHorizontal: 10,
+                    marginHorizontal: Layout.normalize(10),
                   },
                 ]}
               >
@@ -2307,9 +2314,9 @@ const InputBox = ({
                   styles.inputParent,
                   isUploadScreen
                     ? {
-                        marginHorizontal: 5,
+                        marginHorizontal: Layout.normalize(5),
                       }
-                    : { marginHorizontal: 15 },
+                    : { marginHorizontal: Layout.normalize(15) },
                 ]}
               >
                 {!isUploadScreen &&
@@ -2381,7 +2388,10 @@ const InputBox = ({
             !voiceNotes?.recordTime &&
             !isDeleteAnimation ? (
               <TouchableOpacity
-                style={[styles.emojiButton, { marginLeft: 15 }]}
+                style={[
+                  styles.emojiButton,
+                  { marginLeft: Layout.normalize(15) },
+                ]}
                 onPress={() => {
                   Keyboard.dismiss();
                   setModalVisible(true);

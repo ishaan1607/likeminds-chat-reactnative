@@ -1,12 +1,13 @@
-import {View, Text, TouchableOpacity, Image, Pressable} from 'react-native';
-import React from 'react';
-import {styles} from '../styles';
+import { View, Text, TouchableOpacity, Image, Pressable } from "react-native";
+import React from "react";
+import { styles } from "../styles";
 import {
   ADD_OPTION_TEXT,
   EDIT_POLL_TEXT,
   SUBMIT_VOTE_TITLE,
-} from '../../../constants/Strings';
-import {PollConversationUIProps} from '../models';
+} from "../../../constants/Strings";
+import { PollConversationUIProps } from "../models";
+import Layout from "../../../constants/Layout";
 
 const PollConversationUI = ({
   text,
@@ -59,9 +60,8 @@ const PollConversationUI = ({
           {member?.name}
           {member?.customTitle ? (
             <Text
-              style={
-                styles.messageCustomTitle
-              }>{` • ${member?.customTitle}`}</Text>
+              style={styles.messageCustomTitle}
+            >{` • ${member?.customTitle}`}</Text>
           ) : null}
         </Text>
       )}
@@ -70,10 +70,8 @@ const PollConversationUI = ({
       <View style={[styles.alignRow, styles.gap]}>
         <Text style={[styles.smallText, styles.greyColor]}>{pollTypeText}</Text>
         <Text
-          style={[
-            styles.smallText,
-            styles.greyColor,
-          ]}>{`• ${submitTypeText}`}</Text>
+          style={[styles.smallText, styles.greyColor]}
+        >{`• ${submitTypeText}`}</Text>
       </View>
 
       {/* Poll question */}
@@ -82,20 +80,22 @@ const PollConversationUI = ({
           <View
             style={[
               styles.pollIconParent,
-              hue ? {backgroundColor: `hsl(${hue}, 53%, 15%)`} : null,
-            ]}>
+              hue ? { backgroundColor: `hsl(${hue}, 53%, 15%)` } : null,
+            ]}
+          >
             <Image
-              source={require('../../../assets/images/poll_icon3x.png')}
+              source={require("../../../assets/images/poll_icon3x.png")}
               style={styles.pollIcon}
             />
           </View>
           <View
             style={[
               styles.pollEndedTime,
-              hue ? {backgroundColor: `hsl(${hue}, 53%, 15%)`} : null,
-            ]}>
+              hue ? { backgroundColor: `hsl(${hue}, 53%, 15%)` } : null,
+            ]}
+          >
             <Text style={[styles.smallText, styles.whiteColor]}>
-              {hasPollEnded ? 'Poll Ended' : 'Poll Ends ' + expiryTime}
+              {hasPollEnded ? "Poll Ended" : "Poll Ends " + expiryTime}
             </Text>
           </View>
         </View>
@@ -105,7 +105,7 @@ const PollConversationUI = ({
         </Text>
 
         {multipleSelectNo > 1 ? (
-          <Text style={[styles.smallText, styles.greyColor, {marginTop: 5}]}>
+          <Text style={[styles.smallText, styles.greyColor, { marginTop: 5 }]}>
             {stringManipulation()}
           </Text>
         ) : null}
@@ -128,34 +128,41 @@ const PollConversationUI = ({
                   setShowSelected(!showSelected);
                   setSelectedPollOptions(index);
                 }}
-                style={({pressed}) => [
+                style={({ pressed }) => [
                   isSelected || element?.isSelected
                     ? styles.pollButton
                     : styles.greyPollButton,
-                  {opacity: pressed ? 0.5 : 1},
-                  hue ? {borderColor: `hsl(${hue}, 47%, 31%)`} : null,
-                ]}>
+                  { opacity: pressed ? 0.5 : 1 },
+                  hue ? { borderColor: `hsl(${hue}, 47%, 31%)` } : null,
+                ]}
+              >
                 <View
                   style={[
                     voteCount < 0
                       ? [
                           {
-                            width: '100%',
-                            backgroundColor: 'white',
+                            width: "100%",
+                            backgroundColor: "white",
                           },
-                          {padding: 0, margin: 0, borderRadius: 8},
+                          {
+                            padding: 0,
+                            margin: 0,
+                            borderRadius: Layout.normalize(8),
+                          },
                         ]
                       : null,
-                  ]}>
+                  ]}
+                >
                   <Text
-                    style={[styles.text, styles.blackColor, styles.optionText]}>
+                    style={[styles.text, styles.blackColor, styles.optionText]}
+                  >
                     {element?.text}
                   </Text>
 
                   {isSelected ? (
                     <View style={styles.selected}>
                       <Image
-                        source={require('../../../assets/images/white_tick3x.png')}
+                        source={require("../../../assets/images/white_tick3x.png")}
                         style={styles.smallIcon}
                       />
                     </View>
@@ -167,12 +174,12 @@ const PollConversationUI = ({
                             {
                               width: `${
                                 element?.percentage > 98
-                                  ? 98
+                                  ? Layout.normalize(98)
                                   : element?.percentage
                               }%`,
                               backgroundColor: hue
                                 ? `hsl(${hue}, 60%, 85%)`
-                                : 'hsl(222, 60%, 85%)',
+                                : "hsl(222, 60%, 85%)",
                             },
                             styles.pollButtonBackground,
                             styles.pollButtonPadding,
@@ -192,15 +199,15 @@ const PollConversationUI = ({
                 <Pressable
                   onPress={() => {
                     onNavigate(element?.text);
-                  }}>
+                  }}
+                >
                   <Text
                     style={[
                       styles.smallText,
-                      {marginLeft: 5},
+                      { marginLeft: Layout.normalize(5) },
                       voteCount < 1 ? styles.greyColor : null,
-                    ]}>{`${voteCount} ${
-                    voteCount > 1 ? 'votes' : 'vote'
-                  }`}</Text>
+                    ]}
+                  >{`${voteCount} ${voteCount > 1 ? "votes" : "vote"}`}</Text>
                 </Pressable>
               ) : null}
             </View>
@@ -218,13 +225,18 @@ const PollConversationUI = ({
             onPress={() => {
               setIsAddPollOptionModalVisible(true);
             }}
-            style={({pressed}) => [
+            style={({ pressed }) => [
               styles.pollButton,
-              {opacity: pressed ? 0.5 : 1, padding: 12},
-              hue ? {borderColor: `hsl(${hue}, 47%, 31%)`} : null,
-            ]}>
+              {
+                opacity: pressed ? Layout.normalize(0.5) : Layout.normalize(1),
+                padding: Layout.normalize(12),
+              },
+              hue ? { borderColor: `hsl(${hue}, 47%, 31%)` } : null,
+            ]}
+          >
             <Text
-              style={[styles.text, styles.blackColor, styles.textAlignCenter]}>
+              style={[styles.text, styles.blackColor, styles.textAlignCenter]}
+            >
               {ADD_OPTION_TEXT}
             </Text>
           </Pressable>
@@ -235,14 +247,16 @@ const PollConversationUI = ({
       {toShowResults === true ? (
         <Pressable
           onPress={() => {
-            onNavigate('');
-          }}>
+            onNavigate("");
+          }}
+        >
           <Text
             style={[
               styles.mediumText,
               styles.extraMarginSpace,
-              hue ? {color: `hsl(${hue}, 53%, 15%)`} : null,
-            ]}>
+              hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
+            ]}
+          >
             {pollAnswerText}
           </Text>
         </Pressable>
@@ -262,24 +276,26 @@ const PollConversationUI = ({
               styles.submitVoteButton,
               styles.alignRow,
               !shouldShowSubmitPollButton ? styles.greyBorder : null,
-              {backgroundColor: styles.whiteColor.color},
-              hue ? {backgroundColor: `hsl(${hue}, 47%, 31%)`} : null,
-            ]}>
+              { backgroundColor: styles.whiteColor.color },
+              hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
+            ]}
+          >
             <Image
               style={[
                 styles.editIcon,
                 !shouldShowSubmitPollButton
-                  ? {tintColor: styles.greyColor.color}
+                  ? { tintColor: styles.greyColor.color }
                   : null,
               ]}
-              source={require('../../../assets/images/submit_click3x.png')}
+              source={require("../../../assets/images/submit_click3x.png")}
             />
             <Text
               style={[
                 styles.textAlignCenter,
                 styles.smallTextMedium,
                 !shouldShowSubmitPollButton ? styles.greyColor : null,
-              ]}>
+              ]}
+            >
               {SUBMIT_VOTE_TITLE}
             </Text>
           </TouchableOpacity>
@@ -302,12 +318,16 @@ const PollConversationUI = ({
             styles.submitVoteButton,
             styles.alignRow,
             styles.justifyCenter,
-            {backgroundColor: styles.whiteColor.color, marginTop: 10},
-            hue ? {backgroundColor: `hsl(${hue}, 47%, 31%)`} : null,
-          ]}>
+            {
+              backgroundColor: styles.whiteColor.color,
+              marginTop: Layout.normalize(10),
+            },
+            hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
+          ]}
+        >
           <Image
             style={[styles.editIcon]}
-            source={require('../../../assets/images/edit_icon3x.png')}
+            source={require("../../../assets/images/edit_icon3x.png")}
           />
           <Text style={[styles.textAlignCenter, styles.smallTextMedium]}>
             {EDIT_POLL_TEXT}
@@ -318,7 +338,7 @@ const PollConversationUI = ({
       {/* Poll timestamp and show edited text if edited */}
       <View style={styles.alignTime}>
         {isEdited ? (
-          <Text style={styles.messageDate}>{'Edited • '}</Text>
+          <Text style={styles.messageDate}>{"Edited • "}</Text>
         ) : null}
         <Text style={styles.messageDate}>{createdAt}</Text>
       </View>
