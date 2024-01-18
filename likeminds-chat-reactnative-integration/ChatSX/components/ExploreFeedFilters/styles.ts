@@ -7,7 +7,6 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     padding: STYLES.$PADDINGS.MEDIUM,
     alignItems: "center",
-    // justifyContent: 'center',
     backgroundColor: STYLES.$COLORS.TERTIARY,
   },
   alignHeader: {
@@ -54,8 +53,6 @@ export const styles = StyleSheet.create({
 
   centeredView: {
     flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
     marginTop: Layout.normalize(20),
   },
   modalView: {
@@ -87,7 +84,6 @@ export const styles = StyleSheet.create({
   button: {
     borderRadius: Layout.normalize(20),
     padding: Layout.normalize(10),
-    // elevation: 2,
   },
   buttonOpen: {
     backgroundColor: "#F194FF",

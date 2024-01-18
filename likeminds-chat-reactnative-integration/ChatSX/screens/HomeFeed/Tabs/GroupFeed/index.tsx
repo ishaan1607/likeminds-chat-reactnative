@@ -43,6 +43,7 @@ import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import { LMChatAnalytics } from "../../../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../../../enums";
 import { Client } from "../../../../client";
+import Layout from "../../../../constants/Layout";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -243,7 +244,7 @@ const GroupFeed = ({ navigation }: Props) => {
 
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{ paddingVertical: 20 }}>
+      <View style={{ paddingVertical: Layout.normalize(20) }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;
@@ -258,7 +259,7 @@ const GroupFeed = ({ navigation }: Props) => {
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
-              marginTop: 50,
+              marginTop: Layout.normalize(50),
             }}
           >
             <View
@@ -270,17 +271,19 @@ const GroupFeed = ({ navigation }: Props) => {
             >
               <ShimmerPlaceHolder
                 style={{
-                  width: 50,
+                  width: Layout.normalize(50),
                   alignItmes: "center",
                   justifyContent: "center",
-                  borderRadius: 50,
-                  height: 50,
+                  borderRadius: Layout.normalize(50),
+                  height: Layout.normalize(50),
                 }}
               />
             </View>
             <View style={{ width: "100%" }}>
               <ShimmerPlaceHolder style={{ width: "70%" }} />
-              <ShimmerPlaceHolder style={{ marginTop: 10, width: "50%" }} />
+              <ShimmerPlaceHolder
+                style={{ marginTop: Layout.normalize(10), width: "50%" }}
+              />
             </View>
           </View>
           <View
@@ -288,7 +291,7 @@ const GroupFeed = ({ navigation }: Props) => {
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
-              marginTop: 50,
+              marginTop: Layout.normalize(50),
             }}
           >
             <View
@@ -300,17 +303,19 @@ const GroupFeed = ({ navigation }: Props) => {
             >
               <ShimmerPlaceHolder
                 style={{
-                  width: 50,
+                  width: Layout.normalize(50),
                   alignItmes: "center",
                   justifyContent: "center",
-                  borderRadius: 50,
-                  height: 50,
+                  borderRadius: Layout.normalize(50),
+                  height: Layout.normalize(50),
                 }}
               />
             </View>
             <View style={{ width: "100%" }}>
               <ShimmerPlaceHolder style={{ width: "70%" }} />
-              <ShimmerPlaceHolder style={{ marginTop: 10, width: "50%" }} />
+              <ShimmerPlaceHolder
+                style={{ marginTop: Layout.normalize(10), width: "50%" }}
+              />
             </View>
           </View>
           <View
@@ -318,7 +323,7 @@ const GroupFeed = ({ navigation }: Props) => {
               display: "flex",
               flexDirection: "row",
               alignItems: "center",
-              marginTop: 50,
+              marginTop: Layout.normalize(50),
             }}
           >
             <View
@@ -330,17 +335,19 @@ const GroupFeed = ({ navigation }: Props) => {
             >
               <ShimmerPlaceHolder
                 style={{
-                  width: 50,
+                  width: Layout.normalize(50),
                   alignItmes: "center",
                   justifyContent: "center",
-                  borderRadius: 50,
-                  height: 50,
+                  borderRadius: Layout.normalize(50),
+                  height: Layout.normalize(50),
                 }}
               />
             </View>
             <View style={{ width: "100%" }}>
               <ShimmerPlaceHolder style={{ width: "70%" }} />
-              <ShimmerPlaceHolder style={{ marginTop: 10, width: "50%" }} />
+              <ShimmerPlaceHolder
+                style={{ marginTop: Layout.normalize(10), width: "50%" }}
+              />
             </View>
           </View>
         </>

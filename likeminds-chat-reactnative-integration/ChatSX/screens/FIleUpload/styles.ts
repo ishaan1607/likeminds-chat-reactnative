@@ -68,11 +68,11 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     width: Layout.window.width,
-    height: Layout.window.height / 1.6,
+    height: Layout.window.height / Layout.normalize(1.6),
   },
   videoPlayer: {
     width: Layout.window.width,
-    height: Layout.window.height / 1.6,
+    height: Layout.window.height / Layout.normalize(1.6),
   },
   videoIcon: {
     height: Layout.normalize(20),

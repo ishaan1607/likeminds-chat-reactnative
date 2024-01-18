@@ -36,6 +36,7 @@ import { CAPITAL_GIF_TEXT, VOICE_NOTE_STRING } from "../../constants/Strings";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
 import { useLMChatStyles } from "../../lmChatProvider";
 import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 const MessageList = forwardRef(
   (
@@ -241,7 +242,7 @@ const MessageList = forwardRef(
 
     const renderFooter = () => {
       return isLoading ? (
-        <View style={{ paddingVertical: 20 }}>
+        <View style={{ paddingVertical: Layout.normalize(20) }}>
           <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
         </View>
       ) : null;
@@ -1020,7 +1021,7 @@ const MessageList = forwardRef(
                       color: STYLES.$COLORS.MSG,
                       fontSize: STYLES.$FONT_SIZES.MEDIUM,
                       fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                      lineHeight: 18,
+                      lineHeight: Layout.normalize(18),
                     }}
                   >
                     {decode({

@@ -25,7 +25,9 @@ const styles = StyleSheet.create({
   image: {
     width: Layout.window.width,
     height:
-      Platform.OS === "ios" ? Layout.window.height - 100 : Layout.window.height,
+      Platform.OS === "ios"
+        ? Layout.window.height - Layout.normalize(100)
+        : Layout.window.height,
     resizeMode: "contain",
   },
   video: {
@@ -33,12 +35,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     width: Layout.window.width,
     height:
-      Platform.OS === "ios" ? Layout.window.height - 100 : Layout.window.height,
+      Platform.OS === "ios"
+        ? Layout.window.height - Layout.normalize(100)
+        : Layout.window.height,
   },
   videoPlayer: {
     width: Layout.window.width,
     height:
-      Platform.OS === "ios" ? Layout.window.height - 100 : Layout.window.height,
+      Platform.OS === "ios"
+        ? Layout.window.height - Layout.normalize(100)
+        : Layout.window.height,
   },
   headingContainer: {
     display: "flex",

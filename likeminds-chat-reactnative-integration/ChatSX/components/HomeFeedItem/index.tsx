@@ -476,7 +476,13 @@ const HomeFeedItem: React.FC<Props> = ({
         ) : null}
       </View>
       {!lastConversation && !!inviteReceiver ? (
-        <View style={{ display: "flex", flexDirection: "row", gap: 10 }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: Layout.normalize(10),
+          }}
+        >
           <TouchableOpacity
             onPress={() => {
               showRejectAlert();

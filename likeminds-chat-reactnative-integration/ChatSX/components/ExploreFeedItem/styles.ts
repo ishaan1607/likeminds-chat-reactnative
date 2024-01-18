@@ -37,7 +37,6 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.MSG,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
-    // display:'flex'
   },
   info: {
     color: STYLES.$COLORS.MSG,
@@ -98,8 +97,6 @@ export const styles = StyleSheet.create({
     marginTop: STYLES.$MARGINS.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     color: STYLES.$COLORS.MSG,
-    // fontWeight:'500',
-    // marginRight:STYLES.$MARGINS.SMALL,
     width: Layout.normalize(290),
   },
   pinnedIconParent: {
@@ -123,8 +120,6 @@ export const styles = StyleSheet.create({
     backgroundColor: "red",
     height: Layout.normalize(15),
     width: Layout.normalize(25),
-    // padding: 2,
-    // paddingVertical: Platform.OS === 'ios' ? 2 : 0,
     borderRadius: Layout.normalize(3),
     display: "flex",
     justifyContent: "center",

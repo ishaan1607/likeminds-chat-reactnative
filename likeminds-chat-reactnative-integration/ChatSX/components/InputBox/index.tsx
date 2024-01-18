@@ -1484,7 +1484,7 @@ const InputBox = ({
   //pagination loader in the footer
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{ paddingVertical: 20 }}>
+      <View style={{ paddingVertical: Layout.normalize(20) }}>
         <LMChatLoader color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;

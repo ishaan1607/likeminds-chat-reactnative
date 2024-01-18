@@ -34,6 +34,7 @@ import {
 import AttachmentConversations from "../AttachmentConversations";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
 import { useLMChatStyles } from "../../lmChatProvider";
+import Layout from "../../constants/Layout";
 
 interface ReplyConversations {
   item: any;
@@ -383,8 +384,8 @@ const ReplyConversations = ({
         >
           <Image
             style={{
-              height: 25,
-              width: 25,
+              height: Layout.normalize(25),
+              width: Layout.normalize(25),
               resizeMode: "contain",
             }}
             source={require("../../assets/images/add_more_emojis3x.png")}

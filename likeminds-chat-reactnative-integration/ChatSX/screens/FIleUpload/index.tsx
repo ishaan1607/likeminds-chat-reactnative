@@ -464,7 +464,11 @@ const FileUpload = ({ navigation, route }: any) => {
                     />
                     {fileType === VIDEO_TEXT ? (
                       <View
-                        style={{ position: "absolute", bottom: 0, left: 5 }}
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: Layout.normalize(5),
+                        }}
                       >
                         <Image
                           source={require("../../assets/images/video_icon3x.png")}

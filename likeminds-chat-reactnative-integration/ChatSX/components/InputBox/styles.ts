@@ -2,13 +2,6 @@ import { StyleSheet, PixelRatio, Platform } from "react-native";
 import Layout from "../../constants/Layout";
 import STYLES from "../../constants/Styles";
 
-// const pixelRatio =
-//   PixelRatio.get() >= 3
-//     ? 2
-//     : PixelRatio.get() <= 2.625
-//     ? 2.75
-//     : PixelRatio.get();
-
 export const styles = StyleSheet.create({
   textInput: {
     display: "flex",

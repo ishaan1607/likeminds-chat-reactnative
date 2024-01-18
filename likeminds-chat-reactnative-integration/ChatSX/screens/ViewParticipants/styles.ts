@@ -76,7 +76,7 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.SECONDARY,
     paddingVertical: Layout.normalize(10),
     marginBottom: Layout.normalize(2),
-    width: Layout.window.width - 150,
+    width: Layout.window.width - Layout.normalize(150),
   },
   messageCustomTitle: {
     color: STYLES.$COLORS.SECONDARY,
