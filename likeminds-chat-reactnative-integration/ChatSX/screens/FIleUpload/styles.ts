@@ -1,72 +1,85 @@
-import {Platform, StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
-import Layout from '../../constants/Layout';
+import { Platform, StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 const styles = StyleSheet.create({
-  page: {flex: 1, flexDirection: 'column', backgroundColor: 'black'},
+  page: { flex: 1, flexDirection: "column", backgroundColor: "black" },
   headingContainer: {
-    position: 'absolute',
+    position: "absolute",
     zIndex: 1,
-    top: Platform.OS === 'ios' ? 60 : 20,
-    left: 10,
-    width: '100%',
-    right: 10,
+    top: Platform.OS === "ios" ? Layout.normalize(60) : Layout.normalize(20),
+    left: Layout.normalize(10),
+    width: "100%",
+    right: Layout.normalize(10),
   },
   headingItems: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
     flex: 1,
   },
   backBtn: {
-    height: 20,
-    width: 20,
-    resizeMode: 'contain',
-    tintColor: 'white',
-    padding: 5,
+    height: Layout.normalize(20),
+    width: Layout.normalize(20),
+    resizeMode: "contain",
+    tintColor: "white",
+    padding: Layout.normalize(5),
   },
   cropIcon: {
-    height: 25,
-    width: 25,
-    resizeMode: 'contain',
-    tintColor: 'white',
-    marginRight: Platform.OS === 'ios' ? 0 : 15,
+    height: Layout.normalize(25),
+    width: Layout.normalize(25),
+    resizeMode: "contain",
+    tintColor: "white",
+    marginRight: Platform.OS === "ios" ? 0 : Layout.normalize(15),
   },
   mainImage: {
     height: Layout.window.height,
     width: Layout.window.width,
-    resizeMode: 'contain',
-    backgroundColor: 'black',
+    resizeMode: "contain",
+    backgroundColor: "black",
   },
   imageItem: {
-    backgroundColor: 'black',
-    padding: 5,
-    display: 'flex',
-    flexDirection: 'row',
-    height: 50,
+    backgroundColor: "black",
+    padding: Layout.normalize(5),
+    display: "flex",
+    flexDirection: "row",
+    height: Layout.normalize(50),
   },
-  smallImage: {height: 40, width: 40, resizeMode: 'cover'},
+  smallImage: {
+    height: Layout.normalize(40),
+    width: Layout.normalize(40),
+    resizeMode: "cover",
+  },
   touchableBackButton: {
-    padding: 10,
+    padding: Layout.normalize(10),
   },
-  selectedFileToView: {flexGrow: 1, display: 'flex', justifyContent: 'center'},
-  bottomBar: {position: 'absolute', bottom: 30},
+  selectedFileToView: {
+    flexGrow: 1,
+    display: "flex",
+    justifyContent: "center",
+  },
+  bottomBar: { position: "absolute", bottom: Layout.normalize(30) },
   bottomListOfImages: {
-    height: 50,
-    alignSelf: 'flex-end',
-    marginHorizontal: 10,
+    height: Layout.normalize(50),
+    alignSelf: "flex-end",
+    marginHorizontal: Layout.normalize(10),
   },
   video: {
-    display: 'flex',
-    justifyContent: 'center',
+    display: "flex",
+    justifyContent: "center",
     width: Layout.window.width,
-    height: Layout.window.height / 1.6,
+    height: Layout.window.height / Layout.normalize(1.6),
   },
   videoPlayer: {
     width: Layout.window.width,
-    height: Layout.window.height / 1.6,
+    height: Layout.window.height / Layout.normalize(1.6),
   },
-  videoIcon: {height: 20, width: 20, resizeMode: 'contain', tintColor: 'white'},
+  videoIcon: {
+    height: Layout.normalize(20),
+    width: Layout.normalize(20),
+    resizeMode: "contain",
+    tintColor: "white",
+  },
 });
 
 export default styles;

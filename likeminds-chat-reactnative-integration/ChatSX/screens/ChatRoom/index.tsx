@@ -342,7 +342,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                     color: STYLES.$COLORS.FONT_PRIMARY,
                     fontSize: STYLES.$FONT_SIZES.LARGE,
                     fontFamily: STYLES.$FONT_TYPES.BOLD,
-                    maxWidth: 150,
+                    maxWidth: Layout.normalize(150),
                   }}
                 >
                   {chatroomName}
@@ -2304,23 +2304,32 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   return (
     <View style={styles.container}>
       {shimmerIsLoading ? (
-        <View style={{ marginTop: 10 }}>
+        <View style={{ marginTop: Layout.normalize(10) }}>
           <View
             style={{
               backgroundColor: "#e8e8e877",
-              width: 200,
-              paddingLeft: 8,
-              paddingVertical: 15,
-              borderTopRightRadius: 12,
-              borderTopLeftRadius: 12,
-              borderBottomRightRadius: 12,
+              width: Layout.normalize(200),
+              paddingLeft: Layout.normalize(8),
+              paddingVertical: Layout.normalize(15),
+              borderTopRightRadius: Layout.normalize(12),
+              borderTopLeftRadius: Layout.normalize(12),
+              borderBottomRightRadius: Layout.normalize(12),
             }}
           >
             <ShimmerPlaceHolder
-              style={{ width: 150, height: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(150),
+                height: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
             <ShimmerPlaceHolder
-              style={{ width: 120, height: 10, marginTop: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(120),
+                height: Layout.normalize(10),
+                marginTop: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
           </View>
 
@@ -2328,39 +2337,57 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
             style={{
               backgroundColor: "#e8e8e877",
               alignSelf: "flex-end",
-              width: 200,
-              paddingLeft: 8,
-              paddingVertical: 15,
-              borderTopRightRadius: 12,
-              borderTopLeftRadius: 12,
-              borderBottomLeftRadius: 12,
-              marginTop: 10,
+              width: Layout.normalize(200),
+              paddingLeft: Layout.normalize(8),
+              paddingVertical: Layout.normalize(15),
+              borderTopRightRadius: Layout.normalize(12),
+              borderTopLeftRadius: Layout.normalize(12),
+              borderBottomLeftRadius: Layout.normalize(12),
+              marginTop: Layout.normalize(10),
             }}
           >
             <ShimmerPlaceHolder
-              style={{ width: 150, height: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(150),
+                height: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
             <ShimmerPlaceHolder
-              style={{ width: 120, height: 10, marginTop: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(120),
+                height: Layout.normalize(10),
+                marginTop: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
           </View>
           <View
             style={{
               backgroundColor: "#e8e8e877",
-              width: 200,
-              paddingLeft: 8,
-              paddingVertical: 15,
-              borderTopRightRadius: 12,
-              borderTopLeftRadius: 12,
-              borderBottomRightRadius: 12,
-              marginTop: 10,
+              width: Layout.normalize(200),
+              paddingLeft: Layout.normalize(8),
+              paddingVertical: Layout.normalize(15),
+              borderTopRightRadius: Layout.normalize(12),
+              borderTopLeftRadius: Layout.normalize(12),
+              borderBottomRightRadius: Layout.normalize(12),
+              marginTop: Layout.normalize(10),
             }}
           >
             <ShimmerPlaceHolder
-              style={{ width: 150, height: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(150),
+                height: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
             <ShimmerPlaceHolder
-              style={{ width: 120, height: 10, marginTop: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(120),
+                height: Layout.normalize(10),
+                marginTop: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
           </View>
 
@@ -2368,20 +2395,29 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
             style={{
               backgroundColor: "#e8e8e877",
               alignSelf: "flex-end",
-              width: 200,
-              paddingLeft: 8,
-              paddingVertical: 15,
-              borderTopRightRadius: 12,
-              borderTopLeftRadius: 12,
-              borderBottomLeftRadius: 12,
-              marginTop: 10,
+              width: Layout.normalize(200),
+              paddingLeft: Layout.normalize(8),
+              paddingVertical: Layout.normalize(15),
+              borderTopRightRadius: Layout.normalize(12),
+              borderTopLeftRadius: Layout.normalize(12),
+              borderBottomLeftRadius: Layout.normalize(12),
+              marginTop: Layout.normalize(10),
             }}
           >
             <ShimmerPlaceHolder
-              style={{ width: 150, height: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(150),
+                height: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
             <ShimmerPlaceHolder
-              style={{ width: 120, height: 10, marginTop: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(120),
+                height: Layout.normalize(10),
+                marginTop: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
           </View>
         </View>
@@ -2475,14 +2511,14 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 isRealmDataPresent ? (
                 <View
                   style={{
-                    padding: 20,
+                    padding: Layout.normalize(20),
                     backgroundColor: STYLES.$COLORS.TERTIARY,
                   }}
                 >
                   <Text
                     style={styles.inviteText}
                   >{`${chatroomDBDetails?.header} invited you to join this secret group.`}</Text>
-                  <View style={{ marginTop: 10 }}>
+                  <View style={{ marginTop: Layout.normalize(10) }}>
                     <TouchableOpacity
                       onPress={() => {
                         showJoinAlert();
@@ -2491,9 +2527,9 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
-                        gap: 10,
+                        gap: Layout.normalize(10),
                         flexGrow: 1,
-                        paddingVertical: 10,
+                        paddingVertical: Layout.normalize(10),
                       }}
                     >
                       <Image
@@ -2510,9 +2546,9 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
-                        gap: 10,
+                        gap: Layout.normalize(10),
                         flexGrow: 1,
-                        paddingVertical: 10,
+                        paddingVertical: Layout.normalize(10),
                       }}
                     >
                       <Image
@@ -2760,11 +2796,11 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 styles.reactionModalView,
                 {
                   top:
-                    position.y > Layout.window.height / 2
+                    position.y > Layout.window.height / Layout.normalize(2)
                       ? Platform.OS === "ios"
-                        ? position.y - 150
-                        : position.y - 100
-                      : position.y - 10,
+                        ? position.y - Layout.normalize(150)
+                        : position.y - Layout.normalize(100)
+                      : position.y - Layout.normalize(10),
                 },
               ]}
             >
@@ -2788,8 +2824,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                    paddingHorizontal: 10,
-                    marginTop: 8,
+                    paddingHorizontal: Layout.normalize(10),
+                    marginTop: Layout.normalize(8),
                   },
                 ]}
                 onPress={() => {
@@ -2799,8 +2835,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   style={{
-                    height: 25,
-                    width: 25,
+                    height: Layout.normalize(25),
+                    width: Layout.normalize(25),
                     resizeMode: "contain",
                   }}
                   source={require("../../assets/images/add_more_emojis3x.png")}
@@ -2828,7 +2864,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         >
           <View>
             <Pressable onPress={() => {}} style={[styles.emojiModalView]}>
-              <View style={{ height: 350 }}>
+              <View style={{ height: Layout.normalize(350) }}>
                 <EmojiKeyboard
                   categoryPosition="top"
                   onEmojiSelected={handlePick}

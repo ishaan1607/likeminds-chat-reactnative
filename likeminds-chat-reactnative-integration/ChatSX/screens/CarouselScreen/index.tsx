@@ -89,7 +89,7 @@ const CarouselScreen = ({ navigation, route }: any) => {
         <View style={styles.headingContainer}>
           <View style={styles.headerElement}>
             <TouchableOpacity
-              style={{ padding: 10 }}
+              style={{ padding: Layout.normalize(10) }}
               onPress={() => {
                 navigation.goBack();
                 dispatch({

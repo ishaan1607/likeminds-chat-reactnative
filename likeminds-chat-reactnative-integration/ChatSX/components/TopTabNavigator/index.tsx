@@ -118,7 +118,7 @@ export const PeopleWhoReacted = ({
 const renderTabBar = (props: any) => (
   <TabBar
     {...props}
-    tabStyle={{ width: 70, color: STYLES.$COLORS.SECONDARY }}
+    tabStyle={{ width: Layout.normalize(70), color: STYLES.$COLORS.SECONDARY }}
     labelStyle={[
       styles.textHeading,
       { color: STYLES.$COLORS.LIGHT_BLUE, textTransform: "capitalize" },

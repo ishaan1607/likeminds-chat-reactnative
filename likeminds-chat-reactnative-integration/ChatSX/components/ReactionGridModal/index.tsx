@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { styles } from "./styles";
 import MyTabs from "../TopTabNavigator";
+import Layout from "../../constants/Layout";
 
 interface ReactionGridModal {
   modalVisible: boolean;
@@ -46,7 +47,13 @@ const ReactionGridModal = ({
         <View style={styles.modalParent}>
           <Pressable onPress={() => {}} style={[styles.modalView]}>
             <View style={styles.bar} />
-            <View style={{ padding: 20, paddingTop: 10, height: "100%" }}>
+            <View
+              style={{
+                padding: Layout.normalize(20),
+                paddingTop: Layout.normalize(10),
+                height: "100%",
+              }}
+            >
               <Text style={styles.text}>Reactions</Text>
               <MyTabs
                 defaultReactionArr={defaultReactionArr}

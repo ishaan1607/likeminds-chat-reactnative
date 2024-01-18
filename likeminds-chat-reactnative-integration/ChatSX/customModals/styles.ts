@@ -1,5 +1,6 @@
 import { Platform, StyleSheet } from "react-native";
 import STYLES from "../constants/Styles";
+import Layout from "../constants/Layout";
 
 export const styles = StyleSheet.create({
   // alert Modal design
@@ -11,22 +12,22 @@ export const styles = StyleSheet.create({
   },
   modalContainer: {
     backgroundColor: "#fff",
-    padding: 25,
-    paddingBottom: 20,
+    padding: Layout.normalize(25),
+    paddingBottom: Layout.normalize(20),
     width: "80%",
   },
   title: {
     fontSize: STYLES.$FONT_SIZES.XXL,
     fontFamily: STYLES.$FONT_TYPES.MEDIUM,
     color: STYLES.$COLORS.FONT_PRIMARY,
-    marginBottom: 20,
+    marginBottom: Layout.normalize(20),
   },
   message: {
-    fontSize: 15,
+    fontSize: Layout.normalize(15),
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     color: STYLES.$COLORS.FONT_PRIMARY,
-    marginBottom: 20,
-    lineHeight: 20,
+    marginBottom: Layout.normalize(20),
+    lineHeight: Layout.normalize(20),
     fontWeight: "400",
   },
   buttonContainer: {
@@ -36,15 +37,15 @@ export const styles = StyleSheet.create({
   rejectButtonContainer: {
     flexDirection: "column",
     alignItems: "flex-end",
-    gap: 15,
+    gap: Layout.normalize(15),
   },
   button: {
-    padding: 10,
+    padding: Layout.normalize(10),
     alignItems: "flex-end",
-    width: 90,
+    width: Layout.normalize(90),
   },
   rejectButton: {
-    padding: 10,
+    padding: Layout.normalize(10),
     alignItems: "flex-end",
   },
   buttonText: {
@@ -54,12 +55,12 @@ export const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   cancelButton: {
-    borderBottomLeftRadius: 10,
+    borderBottomLeftRadius: Layout.normalize(10),
   },
   cancelButtonText: {
     color: STYLES.$COLORS.MSG,
   },
   okButton: {
-    borderBottomRightRadius: 10,
+    borderBottomRightRadius: Layout.normalize(10),
   },
 });
