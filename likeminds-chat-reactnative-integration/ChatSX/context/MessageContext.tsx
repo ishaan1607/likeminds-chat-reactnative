@@ -24,7 +24,7 @@ interface MessageContextProps {
   isIncluded: boolean;
 }
 
-interface MessageContextValues {
+export interface MessageContextValues {
   reactionArr: string[];
   isTypeSent: boolean;
   userIdStringified: string;

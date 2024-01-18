@@ -40,7 +40,7 @@ interface MessageListContextProps {
   children: ReactNode;
 }
 
-interface MessageListContextValues {
+export interface MessageListContextValues {
   flatlistRef: any;
   isFound: boolean;
   flashListMounted: boolean;

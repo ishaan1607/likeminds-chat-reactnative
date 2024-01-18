@@ -8,19 +8,39 @@ import { PollConversationView } from "../Poll";
 import LinkPreview from "../LinkPreview";
 import { useLMChatStyles } from "../../lmChatProvider";
 import ReactionList from "../ReactionList";
-import { useMessageContext } from "../../context/MessageContext";
+import {
+  MessageContextProvider,
+  useMessageContext,
+} from "../../context/MessageContext";
 import { useChatroomContext } from "../../context/ChatroomContext";
 import DeletedMessage from "../DeletedMessage";
 import StateMessage from "../StateMessage";
 
 interface Messages {
   item: any;
+  index: number;
+  isStateIncluded: boolean;
   isIncluded: boolean;
 }
 
-const Messages = ({ item, isIncluded }: Messages) => {
+const Messages = ({ item, index, isStateIncluded, isIncluded }: Messages) => {
+  return (
+    <MessageContextProvider
+      index={index}
+      item={item}
+      isStateIncluded={isStateIncluded}
+      isIncluded={isIncluded}
+    >
+      <MessagesComponent />
+    </MessageContextProvider>
+  );
+};
+
+const MessagesComponent = () => {
   const LMChatContextStyles = useLMChatStyles();
   const {
+    item,
+    isIncluded,
     reactionArr,
     isTypeSent,
     userIdStringified,

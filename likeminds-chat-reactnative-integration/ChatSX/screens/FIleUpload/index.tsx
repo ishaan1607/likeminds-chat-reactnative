@@ -1,18 +1,15 @@
 import {
   View,
-  Text,
   TouchableOpacity,
   Image,
   ScrollView,
   Pressable,
-  TextInput,
   BackHandler,
   LogBox,
 } from "react-native";
 import { Image as CompressedImage } from "react-native-compressor";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import styles from "./styles";
-import Layout from "../../constants/Layout";
 import InputBox from "../../components/InputBox";
 import {
   CLEAR_FILE_UPLOADING_MESSAGES,
@@ -42,10 +39,6 @@ import { fetchResourceFromURI, generateGifName } from "../../commonFuctions";
 import { IMAGE_CROP_SCREEN } from "../../constants/Screens";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
-import { GiphyMediaView } from "@giphy/react-native-sdk";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { generateVoiceNoteName } from "../../audio";
-import { createThumbnail } from "react-native-create-thumbnail";
 import { Client } from "../../client";
 
 interface UploadResource {
@@ -374,7 +367,6 @@ const FileUpload = ({ navigation, route }: any) => {
             style={styles.mainImage}
           />
         ) : itemType === VIDEO_TEXT ? (
-          /* jshint ignore:start */
           <View style={styles.video}>
             <VideoPlayer
               source={{ uri: selectedFileToView?.uri }}
@@ -387,8 +379,7 @@ const FileUpload = ({ navigation, route }: any) => {
               showOnStart={true}
             />
           </View>
-        ) : /* jshint ignore:end */
-        docItemType === PDF_TEXT ? (
+        ) : docItemType === PDF_TEXT ? (
           <Image
             source={{ uri: selectedFileToView?.thumbnailUrl }}
             style={styles.mainImage}

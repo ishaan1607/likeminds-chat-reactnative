@@ -85,28 +85,7 @@ const ExploreFeedComponent = () => {
     <View style={styles.page}>
       <FlashList
         data={chats}
-        ListHeaderComponent={() => (
-          <ExploreFeedFilters
-            filterState={filterState}
-            setFilterState={(val) => {
-              setFilterState(val);
-            }}
-            setIsPinned={(val) => {
-              if (val) {
-                const pinnedChats = chats.filter((item: any) =>
-                  item?.isPinned ? item : null
-                );
-                setChats(pinnedChats);
-                setIsPinned(val);
-              } else {
-                setChats(exploreChatrooms);
-                setIsPinned(val);
-              }
-            }}
-            isPinned={isPinned}
-            pinnedChatroomsCount={pinnedChatroomsCount}
-          />
-        )}
+        ListHeaderComponent={() => <ExploreFeedFilters />}
         renderItem={({ item }: any) => {
           const exploreFeedProps = {
             header: item?.header,

@@ -1,4 +1,4 @@
 export interface ShareChatroomRequest {
-  chatroomId: number;
+  chatroomId: string;
   domain: string;
 }
