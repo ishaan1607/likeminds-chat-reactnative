@@ -3,14 +3,7 @@ import {
   StackActions,
   useIsFocused,
 } from "@react-navigation/native";
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useContext,
-  createContext,
-} from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   View,
   Text,

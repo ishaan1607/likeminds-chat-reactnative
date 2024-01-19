@@ -14,6 +14,19 @@ export const styles = StyleSheet.create({
     gap: Layout.normalize(20),
     marginTop: Platform.OS === "ios" ? Layout.normalize(-5) : 0,
   },
+  arrowButton: {
+    position: "absolute",
+    bottom: 20,
+    right: 20,
+    backgroundColor: "white",
+    padding: 10,
+    borderRadius: 60,
+    marginBottom: 60,
+  },
+  arrowButtonImage: {
+    height: 15,
+    width: 15,
+  },
   selectedHeadingContainer: {
     display: "flex",
     flexDirection: "row",

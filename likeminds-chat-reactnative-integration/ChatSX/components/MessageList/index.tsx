@@ -5,14 +5,9 @@ import {
   Image,
   ScrollViewProps,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
-import React, {
-  forwardRef,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import Swipeable from "../Swipeable";
 import Messages from "../Messages";
@@ -59,6 +54,8 @@ const MessageList = forwardRef(
     const [response, setResponse] = useState<any>([]);
     const [flashListMounted, setFlashListMounted] = useState(false);
     const [isFound, setIsFound] = useState(false);
+    const [isScrollingUp, setIsScrollingUp] = useState(false);
+    const [currentOffset, setCurrentOffset] = useState(0);
 
     const flatlistRef = useRef<any>(null);
     const dispatch = useAppDispatch();
@@ -362,6 +359,11 @@ const MessageList = forwardRef(
       const contentLength = event.nativeEvent.contentSize.height;
       const onStartReachedThreshold = 10;
       const onEndReachedThreshold = 10;
+
+      const isUp = offset > 0 && offset > currentOffset;
+
+      setIsScrollingUp(isUp);
+      setCurrentOffset(offset);
 
       // Check if scroll has reached start of list.
       const isScrollAtStart = offset < onStartReachedThreshold;
@@ -778,6 +780,26 @@ const MessageList = forwardRef(
         );
       }
     };
+
+    const scrollToTop = async () => {
+      const payload = GetConversationsRequestBuilder.builder()
+        .setChatroomId(chatroomID?.toString())
+        .setLimit(100)
+        .setType(GetConversationsType.ALL)
+        .build();
+
+      const conversationsFromRealm = await myClient?.getConversations(payload);
+
+      if (conversationsFromRealm[0]?.id !== conversations[0]?.id) {
+        dispatch({
+          type: GET_CONVERSATIONS_SUCCESS,
+          body: { conversations: conversationsFromRealm },
+        });
+      }
+
+      flatlistRef.current.scrollToIndex({ animated: true, index: 0 });
+    };
+
     return (
       <>
         <FlashList
@@ -933,6 +955,14 @@ const MessageList = forwardRef(
           keyboardShouldPersistTaps={"handled"}
           inverted
         />
+        {isScrollingUp && (
+          <TouchableOpacity style={styles.arrowButton} onPress={scrollToTop}>
+            <Image
+              source={require("../../assets/images/scrollDown.png")}
+              style={styles.arrowButtonImage}
+            />
+          </TouchableOpacity>
+        )}
         {!(Object.keys(currentChatroomTopic).length === 0) &&
         chatroomType !== ChatroomType.DMCHATROOM ? (
           <Pressable
