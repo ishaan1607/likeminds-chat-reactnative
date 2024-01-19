@@ -13,8 +13,4 @@ export interface LMOverlayProviderProps {
   userUniqueId: string;
   profileImageUrl: string;
   lmChatInterface: any;
-  reactionListStyles?: ReactionListStylesProps;
-  chatBubbleStyles?: ChatBubbleStylesProps;
-  inputBoxStyles?: InputBoxStyles;
-  themeStyles?: ThemeStyles;
 }

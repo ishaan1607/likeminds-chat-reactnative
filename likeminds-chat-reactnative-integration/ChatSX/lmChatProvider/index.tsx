@@ -6,7 +6,6 @@ import React, {
   useContext,
   useEffect,
 } from "react";
-import STYLES from "../constants/Styles";
 import { Platform, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppDispatch } from "../store";
@@ -38,11 +37,6 @@ import messaging from "@react-native-firebase/messaging";
 import { StackActions } from "@react-navigation/native";
 import { CallBack } from "../callBacks/callBackClass";
 
-// Create the theme context
-export const LMChatStylesContext = createContext<ThemeContextProps | undefined>(
-  undefined
-);
-
 // Create a context for LMChatProvider
 const LMChatContext = createContext<any | undefined>(undefined);
 
@@ -55,15 +49,6 @@ export const useLMChat = () => {
   return context;
 };
 
-//PropTypes for the LMChatProvider component
-export const useLMChatStyles = () => {
-  const context = useContext(LMChatStylesContext);
-  if (!context) {
-    throw new Error("useLMChatStyles must be used within an LMChatProvider");
-  }
-  return context;
-};
-
 export const LMChatProvider = ({
   myClient,
   children,
@@ -71,10 +56,6 @@ export const LMChatProvider = ({
   userUniqueId,
   profileImageUrl,
   lmChatInterface,
-  reactionListStyles,
-  chatBubbleStyles,
-  inputBoxStyles,
-  themeStyles,
 }: LMChatProviderProps): JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const [fcmToken, setFcmToken] = useState("");
@@ -202,12 +183,6 @@ export const LMChatProvider = ({
     callInitApi();
   }, []);
 
-  useMemo(() => {
-    if (themeStyles) {
-      STYLES.setTheme(themeStyles);
-    }
-  }, []);
-
   useEffect(() => {
     const unsubscribe = messaging().onMessage(async (remoteMessage) => {
       const val = await getNotification(remoteMessage);
@@ -260,13 +235,9 @@ export const LMChatProvider = ({
 
   return isInitiated && isRegisterdDevice ? (
     <LMChatContext.Provider value={lmChatInterface}>
-      <LMChatStylesContext.Provider
-        value={{ reactionListStyles, chatBubbleStyles, inputBoxStyles }}
-      >
-        <GestureHandlerRootView style={styles.flexStyling}>
-          <View style={styles.flexStyling}>{children}</View>
-        </GestureHandlerRootView>
-      </LMChatStylesContext.Provider>
+      <GestureHandlerRootView style={styles.flexStyling}>
+        <View style={styles.flexStyling}>{children}</View>
+      </GestureHandlerRootView>
     </LMChatContext.Provider>
   ) : (
     <></>

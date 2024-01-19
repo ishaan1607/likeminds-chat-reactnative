@@ -11,7 +11,6 @@ import STYLES from "../../constants/Styles";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../enums";
 import { styles } from "./styles";
-import { useLMChatStyles } from "../../lmChatProvider";
 import Layout from "../../constants/Layout";
 
 const ReactionList = ({
@@ -27,8 +26,7 @@ const ReactionList = ({
   const [selectedReaction, setSelectedReaction] = useState();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const LMChatContextStyles = useLMChatStyles();
-  const reactionListStyles = LMChatContextStyles?.reactionListStyles;
+  const reactionListStyles = STYLES.$REACTION_LIST_STYLE;
 
   //styling props
   const reactionSize = reactionListStyles?.reactionSize;

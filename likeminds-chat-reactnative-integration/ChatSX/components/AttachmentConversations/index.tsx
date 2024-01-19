@@ -47,7 +47,6 @@ import { Events, Keys } from "../../enums";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import { Base64 } from "../../awsExports";
 import { onSeekTo } from "../../audio/Controls";
-import { useLMChatStyles } from "../../lmChatProvider";
 import Layout from "../../constants/Layout";
 import { useLMChat } from "../../lmChatProvider";
 import { NavigateToProfileParams } from "../../callBacks/type";
@@ -95,8 +94,7 @@ const AttachmentConversations = ({
     (state) => state.chatroom
   );
 
-  const LMChatContext = useLMChatStyles();
-  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
   const borderRadius = chatBubbleStyles?.borderRadius;
@@ -1049,8 +1047,7 @@ export const ImageConversations = ({
     (state) => state.chatroom
   );
 
-  const LMChatContext = useLMChatStyles();
-  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
   const selectedMessageBackgroundColor =

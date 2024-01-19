@@ -22,6 +22,7 @@ import {
   LMChatroomCallbacks,
   LMChatCallbacks,
   NavigateToProfileParams,
+  STYLES,
 } from 'likeminds_chat_reactnative_integration';
 import {myClient} from '.';
 
@@ -35,7 +36,7 @@ function App(): React.JSX.Element {
 
   // themeStyling
   {
-    /* 
+    /*
   const themeStyles = {
     hue: 10,
     fontColor: 'black',
@@ -48,7 +49,7 @@ function App(): React.JSX.Element {
 
   // styling for reactionList
   {
-    /* 
+    /*
   const reactionListStyles = {
     reactionSize: 0,
     reactionLeftItemStroke: 'pink',
@@ -61,7 +62,7 @@ function App(): React.JSX.Element {
 
   // styling for chatBubble
   {
-    /* 
+    /*
   const chatBubbleStyles = {
     borderRadius: 5,
     sentMessageBackgroundColor: 'yellow',
@@ -87,7 +88,7 @@ function App(): React.JSX.Element {
 
   // styling for inputBox
   {
-    /* 
+    /*
   const inputBoxStyles = {
     placeholderTextColor: '#aaa',
     selectionColor: '#aaa',
@@ -134,6 +135,22 @@ function App(): React.JSX.Element {
   */
   }
 
+  // if (chatBubbleStyles) {
+  //   STYLES.setChatBubbleStyle(chatBubbleStyles);
+  // }
+
+  // if (themeStyles) {
+  //   STYLES.setTheme(themeStyles);
+  // }
+
+  // if (reactionListStyles) {
+  //   STYLES.setReactionListStyle(reactionListStyles);
+  // }
+
+  // if (inputBoxStyles) {
+  //   STYLES.setInputBoxStyle(inputBoxStyles);
+  // }
+
   // Override callBacks with custom logic
   class CustomCallbacks implements LMChatCallbacks, LMChatroomCallbacks {
     navigateToProfile(params: NavigateToProfileParams) {
@@ -157,12 +174,7 @@ function App(): React.JSX.Element {
       userName={userName}
       userUniqueId={userUniqueId}
       profileImageUrl={profileImageUrl}
-      lmChatInterface={lmChatInterface}
-      // chatBubbleStyles={chatBubbleStyles}
-      // reactionListStyles={reactionListStyles}
-      // inputBoxStyles={inputBoxStyles}
-      // themeStyles={themeStyles}
-    >
+      lmChatInterface={lmChatInterface}>
       <NavigationContainer ref={navigationRef} independent={true}>
         <Stack.Navigator>
           <Stack.Screen

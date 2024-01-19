@@ -12,10 +12,6 @@ export const LMOverlayProvider = ({
   userUniqueId,
   profileImageUrl,
   lmChatInterface,
-  reactionListStyles,
-  chatBubbleStyles,
-  inputBoxStyles,
-  themeStyles,
 }: LMOverlayProviderProps) => {
   return (
     <ReduxProvider store={store}>
@@ -29,10 +25,6 @@ export const LMOverlayProvider = ({
           userUniqueId={userUniqueId}
           profileImageUrl={profileImageUrl}
           lmChatInterface={lmChatInterface}
-          chatBubbleStyles={chatBubbleStyles}
-          reactionListStyles={reactionListStyles}
-          inputBoxStyles={inputBoxStyles}
-          themeStyles={themeStyles}
         >
           <View style={styles.flexStyling}>{children}</View>
         </LMChatProvider>
