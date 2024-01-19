@@ -7,6 +7,8 @@ import { decode } from "../../commonFuctions";
 import { LinkPreviewProps } from "./models";
 import LinkPreviewBox from "../linkPreviewBox";
 import { useLMChatStyles } from "../../lmChatProvider";
+import { useLMChat } from "../../lmChatProvider";
+import { NavigateToProfileParams } from "../../callBacks/type";
 
 const LinkPreview = ({
   description,
@@ -19,6 +21,7 @@ const LinkPreview = ({
   chatroomName,
 }: LinkPreviewProps) => {
   const { user } = useAppSelector((state) => state.homefeed);
+  const lmChatInterface = useLMChat();
 
   const LMChatContextStyles = useLMChatStyles();
   const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
@@ -75,7 +78,17 @@ const LinkPreview = ({
       >
         {/* Reply conversation message sender name */}
         {item?.member?.id == user?.id ? null : (
-          <Text style={styles.messageInfo} numberOfLines={1}>
+          <Text
+            style={styles.messageInfo}
+            numberOfLines={1}
+            onPress={() => {
+              const params: NavigateToProfileParams = {
+                taggedUserId: null,
+                member: item?.member,
+              };
+              lmChatInterface.navigateToProfile(params);
+            }}
+          >
             {item?.member?.name}
             {item?.member?.customTitle ? (
               <Text

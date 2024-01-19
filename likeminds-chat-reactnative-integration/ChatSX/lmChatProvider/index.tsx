@@ -24,7 +24,6 @@ import { getRoute } from "../notifications/routes";
 import * as RootNavigation from "../RootNavigation";
 import { navigationRef } from "../RootNavigation";
 import { setupPlayer } from "../audio";
-import { LMChatClient } from "@likeminds.community/chat-rn";
 import { GiphySDK } from "@giphy/react-native-sdk";
 import { GIPHY_SDK_API_KEY } from "../awsExports";
 import { Client } from "../client";
@@ -37,16 +36,15 @@ import getNotification, {
 } from "../notifications";
 import messaging from "@react-native-firebase/messaging";
 import { StackActions } from "@react-navigation/native";
+import { CallBack } from "../callBacks/callBackClass";
 
 // Create the theme context
 export const LMChatStylesContext = createContext<ThemeContextProps | undefined>(
   undefined
 );
 
-//PropTypes for the LMChatProvider component
-
 // Create a context for LMChatProvider
-const LMChatContext = createContext<LMChatClient | undefined>(undefined);
+const LMChatContext = createContext<any | undefined>(undefined);
 
 // Create a hook to use the LMChatContext
 export const useLMChat = () => {
@@ -57,6 +55,7 @@ export const useLMChat = () => {
   return context;
 };
 
+//PropTypes for the LMChatProvider component
 export const useLMChatStyles = () => {
   const context = useContext(LMChatStylesContext);
   if (!context) {
@@ -70,7 +69,8 @@ export const LMChatProvider = ({
   children,
   userName,
   userUniqueId,
-  cohortId,
+  profileImageUrl,
+  lmChatInterface,
   reactionListStyles,
   chatBubbleStyles,
   inputBoxStyles,
@@ -147,11 +147,6 @@ export const LMChatProvider = ({
         xPlatformCode: Platform.OS === "ios" ? "ios" : "an",
       };
       await myClient.registerDevice(payload);
-      const addMemberToCohortPayload = {
-        cohortId: parseInt(cohortId),
-        uuids: [userUniqueId],
-      };
-      await myClient?.addMemberToCohort(addMemberToCohortPayload);
       setIsRegisterdDevice(true);
     };
     if (fcmToken) {
@@ -163,12 +158,16 @@ export const LMChatProvider = ({
     //setting client in Client class
     Client.setMyClient(myClient);
 
+    // setting lmChatInterface in CallBack class
+    CallBack.setLMChatInterface(lmChatInterface);
+
     // storing myClient followed by community details
     const callInitApi = async () => {
       const payload = {
         uuid: userUniqueId, // uuid
         userName: userName, // user name
         isGuest: false,
+        imageUrl: profileImageUrl,
       };
 
       Credentials.setCredentials(userName, userUniqueId);
@@ -260,7 +259,7 @@ export const LMChatProvider = ({
   }, [isRegisterdDevice]);
 
   return isInitiated && isRegisterdDevice ? (
-    <LMChatContext.Provider value={myClient}>
+    <LMChatContext.Provider value={lmChatInterface}>
       <LMChatStylesContext.Provider
         value={{ reactionListStyles, chatBubbleStyles, inputBoxStyles }}
       >

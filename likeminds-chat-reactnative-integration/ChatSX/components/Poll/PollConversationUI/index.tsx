@@ -8,6 +8,8 @@ import {
 } from "../../../constants/Strings";
 import { PollConversationUIProps } from "../models";
 import Layout from "../../../constants/Layout";
+import { useLMChat } from "../../../lmChatProvider";
+import { NavigateToProfileParams } from "../../../callBacks/type";
 
 const PollConversationUI = ({
   text,
@@ -42,6 +44,7 @@ const PollConversationUI = ({
   resetShowResult,
   pollType,
 }: PollConversationUIProps) => {
+  const lmChatInterface = useLMChat();
   return (
     <View>
       {isIncluded ? (
@@ -56,7 +59,17 @@ const PollConversationUI = ({
         />
       ) : null}
       {member?.id == user?.id ? null : (
-        <Text style={styles.messageInfo} numberOfLines={1}>
+        <Text
+          style={styles.messageInfo}
+          numberOfLines={1}
+          onPress={() => {
+            const params: NavigateToProfileParams = {
+              taggedUserId: null,
+              member: member,
+            };
+            lmChatInterface.navigateToProfile(params);
+          }}
+        >
           {member?.name}
           {member?.customTitle ? (
             <Text

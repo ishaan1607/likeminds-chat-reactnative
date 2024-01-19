@@ -11,7 +11,8 @@ export interface LMOverlayProviderProps {
   children: React.ReactNode;
   userName: string;
   userUniqueId: string;
-  cohortId: string;
+  profileImageUrl: string;
+  lmChatInterface: any;
   reactionListStyles?: ReactionListStylesProps;
   chatBubbleStyles?: ChatBubbleStylesProps;
   inputBoxStyles?: InputBoxStyles;
