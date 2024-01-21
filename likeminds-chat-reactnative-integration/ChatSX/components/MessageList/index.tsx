@@ -6,6 +6,7 @@ import {
   ScrollViewProps,
   ActivityIndicator,
   TouchableOpacity,
+  Keyboard,
 } from "react-native";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
@@ -56,6 +57,7 @@ const MessageList = forwardRef(
     const [isFound, setIsFound] = useState(false);
     const [isScrollingUp, setIsScrollingUp] = useState(false);
     const [currentOffset, setCurrentOffset] = useState(0);
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
 
     const flatlistRef = useRef<any>(null);
     const dispatch = useAppDispatch();
@@ -86,6 +88,30 @@ const MessageList = forwardRef(
 
     const chatroomType = chatroomDBDetails?.type;
     const chatroomWithUser = chatroomDBDetails?.chatroomWithUser;
+
+    const _keyboardDidShow = () => {
+      setKeyboardVisible(true);
+    };
+
+    const _keyboardDidHide = () => {
+      setKeyboardVisible(false);
+    };
+
+    useEffect(() => {
+      const keyboardDidShowListener = Keyboard.addListener(
+        "keyboardDidShow",
+        _keyboardDidShow
+      );
+      const keyboardDidHideListener = Keyboard.addListener(
+        "keyboardDidHide",
+        _keyboardDidHide
+      );
+
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
+    }, []);
 
     // This useEffect is used to highlight the chatroom topic conversation for 1 sec on scrolling to it
     useEffect(() => {
@@ -956,7 +982,17 @@ const MessageList = forwardRef(
           inverted
         />
         {isScrollingUp && (
-          <TouchableOpacity style={styles.arrowButton} onPress={scrollToTop}>
+          <TouchableOpacity
+            style={[
+              styles.arrowButton,
+              {
+                bottom: keyboardVisible
+                  ? Layout.normalize(55)
+                  : Layout.normalize(20),
+              },
+            ]}
+            onPress={scrollToTop}
+          >
             <Image
               source={require("../../assets/images/scrollDown.png")}
               style={styles.arrowButtonImage}
