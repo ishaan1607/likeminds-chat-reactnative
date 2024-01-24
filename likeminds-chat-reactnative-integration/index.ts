@@ -13,6 +13,7 @@ import { LMChatroomCallbacks } from "./ChatSX/callBacks/chatroomCallback";
 import { LMChatCallbacks } from "./ChatSX/callBacks/lmChatCallback";
 import { NavigateToProfileParams } from "./ChatSX/callBacks/type";
 import { STYLES } from "./ChatSX/constants/Styles";
+import { RadialGradient } from "./ChatSX/radialGradient";
 
 export {
   ChatRoom,
@@ -30,4 +31,5 @@ export {
   LMChatCallbacks,
   NavigateToProfileParams,
   STYLES,
+  RadialGradient,
 };

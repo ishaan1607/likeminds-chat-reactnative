@@ -3,7 +3,6 @@ import React, {
   ReactNode,
   useMemo,
   useState,
-  useContext,
   useEffect,
 } from "react";
 import { Platform, StyleSheet, View } from "react-native";
@@ -36,18 +35,6 @@ import getNotification, {
 import messaging from "@react-native-firebase/messaging";
 import { StackActions } from "@react-navigation/native";
 import { CallBack } from "../callBacks/callBackClass";
-
-// Create a context for LMChatProvider
-const LMChatContext = createContext<any | undefined>(undefined);
-
-// Create a hook to use the LMChatContext
-export const useLMChat = () => {
-  const context = useContext(LMChatContext);
-  if (!context) {
-    throw new Error("useLMChat must be used within an LMChatProvider");
-  }
-  return context;
-};
 
 export const LMChatProvider = ({
   myClient,
@@ -234,11 +221,9 @@ export const LMChatProvider = ({
   }, [isRegisterdDevice]);
 
   return isInitiated && isRegisterdDevice ? (
-    <LMChatContext.Provider value={lmChatInterface}>
-      <GestureHandlerRootView style={styles.flexStyling}>
-        <View style={styles.flexStyling}>{children}</View>
-      </GestureHandlerRootView>
-    </LMChatContext.Provider>
+    <GestureHandlerRootView style={styles.flexStyling}>
+      <View style={styles.flexStyling}>{children}</View>
+    </GestureHandlerRootView>
   ) : (
     <></>
   );

@@ -6,7 +6,7 @@ import {
   Pressable,
   TextStyle,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import STYLES from "../../constants/Styles";
 import { styles } from "./styles";
 import { decode, generateGifString } from "../../commonFuctions";
@@ -195,6 +195,7 @@ const ReplyConversations = ({
   const textStyles = chatBubbleStyles?.textStyles;
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
@@ -299,7 +300,19 @@ const ReplyConversations = ({
       >
         {/* Reply conversation message sender name */}
         {item?.member?.id == user?.id ? null : (
-          <Text style={styles.messageInfo} numberOfLines={1}>
+          <Text
+            style={[
+              styles.messageInfo,
+              messageReceivedHeader
+                ? {
+                    color: messageReceivedHeader?.color,
+                    fontSize: messageReceivedHeader?.fontSize,
+                    fontFamily: messageReceivedHeader?.fontFamily,
+                  }
+                : null,
+            ]}
+            numberOfLines={1}
+          >
             {item?.member?.name}
             {item?.member?.customTitle ? (
               <Text

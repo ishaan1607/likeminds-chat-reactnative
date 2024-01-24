@@ -79,11 +79,14 @@ const MessageList = forwardRef(
     const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
     //styling props
-    const selectedBackgroundColor = chatBubbleStyles?.selectedBackgroundColor;
+    const selectedBackgroundColor =
+      chatBubbleStyles?.stateMessagesBackgroundColor;
+    const dateStateMessage = chatBubbleStyles?.dateStateMessage;
 
     const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor
       ? selectedBackgroundColor
       : STYLES.$COLORS.SELECTED_BLUE;
+
     // styling props ended
 
     const chatroomType = chatroomDBDetails?.type;
@@ -871,9 +874,15 @@ const MessageList = forwardRef(
                   <View style={[styles.statusMessage]}>
                     <Text
                       style={{
-                        color: STYLES.$COLORS.FONT_PRIMARY,
-                        fontSize: STYLES.$FONT_SIZES.SMALL,
-                        fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                        color: dateStateMessage?.color
+                          ? dateStateMessage?.color
+                          : STYLES.$COLORS.FONT_PRIMARY,
+                        fontSize: dateStateMessage?.fontSize
+                          ? dateStateMessage?.fontSize
+                          : STYLES.$FONT_SIZES.SMALL,
+                        fontFamily: dateStateMessage?.fontFamily
+                          ? dateStateMessage?.fontFamily
+                          : STYLES.$FONT_TYPES.LIGHT,
                       }}
                     >
                       {item?.date}

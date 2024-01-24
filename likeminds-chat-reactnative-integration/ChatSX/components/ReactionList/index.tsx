@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import ReactionGridModal from "../ReactionGridModal";
 import {
   LONG_PRESSED,

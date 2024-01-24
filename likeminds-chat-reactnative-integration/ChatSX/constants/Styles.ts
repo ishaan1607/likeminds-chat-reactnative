@@ -86,6 +86,7 @@ export class STYLES {
     primaryColor,
     secondaryColor,
     lightBackgroundColor,
+    fontTypes,
   }: StylesProps) {
     STYLES.$COLORS = {
       ...STYLES.$COLORS,
@@ -101,6 +102,16 @@ export class STYLES {
         : `hsl(${hue ? hue : 222}, 22%, 93%)`,
       SELECTED_BLUE: `hsl(${hue ? hue : 222}, 64%, 95%)`,
       SELECTED_CHAT_BUBBLE: `hsl(${hue ? hue : 222}, 67%, 91%)`,
+    };
+    STYLES.$FONT_TYPES = {
+      ...STYLES.$FONT_TYPES,
+      LIGHT: fontTypes?.LIGHT ? fontTypes?.LIGHT : "SofiaPro-Light",
+      MEDIUM: fontTypes?.MEDIUM ? fontTypes?.MEDIUM : "SofiaPro-Medium",
+      SEMI_BOLD: fontTypes?.SEMI_BOLD
+        ? fontTypes?.SEMI_BOLD
+        : "SofiaPro-SemiBold",
+      BOLD: fontTypes?.BOLD ? fontTypes?.BOLD : "SofiaPro-Bold",
+      BLACK: fontTypes?.BLACK ? fontTypes?.BLACK : "SofiaPro-Black",
     };
   }
   static setChatBubbleStyle(chatBubbleStyles: ChatBubbleStyles) {

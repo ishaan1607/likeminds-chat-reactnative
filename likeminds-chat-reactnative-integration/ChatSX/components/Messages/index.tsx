@@ -27,8 +27,8 @@ import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Credentials } from "../../credentials";
 import ReactionList from "../ReactionList";
 import Layout from "../../constants/Layout";
-import { useLMChat } from "../../lmChatProvider";
 import { NavigateToProfileParams } from "../../callBacks/type";
+import { CallBack } from "../../callBacks/callBackClass";
 
 interface Messages {
   item: any;
@@ -60,7 +60,7 @@ const Messages = ({
   chatroomName,
 }: Messages) => {
   const { user } = useAppSelector((state) => state.homefeed);
-  const lmChatInterface = useLMChat();
+  const lmChatInterface = CallBack.lmChatInterface;
 
   const { stateArr, conversations, chatroomDBDetails, selectedMessages }: any =
     useAppSelector((state) => state.chatroom);
@@ -81,6 +81,7 @@ const Messages = ({
   const stateMessagesBackgroundColor =
     chatBubbleStyles?.stateMessagesBackgroundColor;
   const stateMessagesTextStyles = chatBubbleStyles?.stateMessagesTextStyles;
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
@@ -459,7 +460,16 @@ const Messages = ({
                 >
                   {item?.member?.id == userIdStringified ? null : (
                     <Text
-                      style={styles.messageInfo}
+                      style={[
+                        styles.messageInfo,
+                        messageReceivedHeader
+                          ? {
+                              color: messageReceivedHeader?.color,
+                              fontSize: messageReceivedHeader?.fontSize,
+                              fontFamily: messageReceivedHeader?.fontFamily,
+                            }
+                          : null,
+                      ]}
                       numberOfLines={1}
                       onPress={() => {
                         const params: NavigateToProfileParams = {
@@ -555,7 +565,26 @@ const Messages = ({
                       }
                     : null,
                 ]}
-              />
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    const params: NavigateToProfileParams = {
+                      taggedUserId: null,
+                      member: item?.member,
+                    };
+                    lmChatInterface.navigateToProfile(params);
+                  }}
+                >
+                  <Image
+                    source={
+                      item?.member?.imageUrl
+                        ? { uri: item?.member?.imageUrl }
+                        : require("../../assets/images/default_pic.png")
+                    }
+                    style={styles.chatroomTopicAvatar}
+                  />
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         ) : null}

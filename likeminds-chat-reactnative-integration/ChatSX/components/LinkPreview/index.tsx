@@ -1,13 +1,13 @@
 import { View, Text, Image, Linking, Pressable } from "react-native";
-import React, { useContext } from "react";
+import React from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
 import { useAppSelector } from "../../store";
 import { decode } from "../../commonFuctions";
 import { LinkPreviewProps } from "./models";
 import LinkPreviewBox from "../linkPreviewBox";
-import { useLMChat } from "../../lmChatProvider";
 import { NavigateToProfileParams } from "../../callBacks/type";
+import { CallBack } from "../../callBacks/callBackClass";
 
 const LinkPreview = ({
   description,
@@ -20,7 +20,8 @@ const LinkPreview = ({
   chatroomName,
 }: LinkPreviewProps) => {
   const { user } = useAppSelector((state) => state.homefeed);
-  const lmChatInterface = useLMChat();
+
+  const lmChatInterface = CallBack.lmChatInterface;
 
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -35,6 +36,7 @@ const LinkPreview = ({
   const textStyles = chatBubbleStyles?.textStyles;
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
@@ -77,7 +79,16 @@ const LinkPreview = ({
         {/* Reply conversation message sender name */}
         {item?.member?.id == user?.id ? null : (
           <Text
-            style={styles.messageInfo}
+            style={[
+              styles.messageInfo,
+              messageReceivedHeader
+                ? {
+                    color: messageReceivedHeader?.color,
+                    fontSize: messageReceivedHeader?.fontSize,
+                    fontFamily: messageReceivedHeader?.fontFamily,
+                  }
+                : null,
+            ]}
             numberOfLines={1}
             onPress={() => {
               const params: NavigateToProfileParams = {

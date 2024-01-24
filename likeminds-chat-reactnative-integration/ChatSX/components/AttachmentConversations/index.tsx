@@ -48,8 +48,8 @@ import ReactNativeBlobUtil from "react-native-blob-util";
 import { Base64 } from "../../awsExports";
 import { onSeekTo } from "../../audio/Controls";
 import Layout from "../../constants/Layout";
-import { useLMChat } from "../../lmChatProvider";
 import { NavigateToProfileParams } from "../../callBacks/type";
+import { CallBack } from "../../callBacks/callBackClass";
 
 interface AttachmentConversations {
   item: any;
@@ -81,7 +81,7 @@ const AttachmentConversations = ({
   const progress = useProgress();
   const activeTrack = useActiveTrack();
 
-  const lmChatInterface = useLMChat();
+  const lmChatInterface = CallBack.lmChatInterface;
 
   let firstAttachment = item?.attachments[0];
   const isAudioActive =
@@ -107,6 +107,9 @@ const AttachmentConversations = ({
   const textStyles = chatBubbleStyles?.textStyles;
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
+  const playPauseBoxChatBubble = chatBubbleStyles?.playPauseBoxIcon;
+  const voiceNoteSlider = chatBubbleStyles?.voiceNoteSlider;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
@@ -261,7 +264,16 @@ const AttachmentConversations = ({
       >
         {!!(item?.member?.id == user?.id) || isReply ? null : (
           <Text
-            style={styles.messageInfo}
+            style={[
+              styles.messageInfo,
+              messageReceivedHeader
+                ? {
+                    color: messageReceivedHeader?.color,
+                    fontSize: messageReceivedHeader?.fontSize,
+                    fontFamily: messageReceivedHeader?.fontFamily,
+                  }
+                : null,
+            ]}
             numberOfLines={1}
             onPress={() => {
               const params: NavigateToProfileParams = {
@@ -319,7 +331,7 @@ const AttachmentConversations = ({
                   onPress={() => {
                     handleOnPausePlay();
                   }}
-                  style={styles.playPauseBox}
+                  style={[styles.playPauseBox, { ...playPauseBoxChatBubble }]}
                 >
                   <Image
                     source={require("../../assets/images/pause_icon3x.png")}
@@ -335,7 +347,7 @@ const AttachmentConversations = ({
                       handleStartPlay(firstAttachment?.url);
                     }
                   }}
-                  style={styles.playPauseBox}
+                  style={[styles.playPauseBox, { ...playPauseBoxChatBubble }]}
                 >
                   <Image
                     style={styles.playPauseImage}
@@ -361,11 +373,19 @@ const AttachmentConversations = ({
                         : 0
                       : 0
                   }
-                  minimumTrackTintColor="#ffad31"
+                  minimumTrackTintColor={
+                    voiceNoteSlider?.minimumTrackTintColor
+                      ? voiceNoteSlider.minimumTrackTintColor
+                      : "#ffad31"
+                  }
                   maximumTrackTintColor="grey"
                   tapToSeek={true}
                   onSlidingComplete={handleOnSeekTo}
-                  thumbTintColor="#ffad31"
+                  thumbTintColor={
+                    voiceNoteSlider?.thumbTintColor
+                      ? voiceNoteSlider.thumbTintColor
+                      : "#ffad31"
+                  }
                 />
                 <View
                   style={{

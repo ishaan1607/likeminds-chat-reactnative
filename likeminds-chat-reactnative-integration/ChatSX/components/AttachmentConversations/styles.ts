@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
     alignSelf: "flex-start",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     borderBottomLeftRadius: 0,
+    marginLeft: Layout.normalize(30),
   },
   alignRow: {
     display: "flex",

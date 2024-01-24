@@ -1,9 +1,18 @@
+interface FontTypes {
+  LIGHT?: string;
+  MEDIUM?: string;
+  SEMI_BOLD?: string;
+  BOLD?: string;
+  BLACK?: string;
+}
+
 export interface StylesProps {
   hue?: number;
   fontColor?: string;
   primaryColor?: string;
   secondaryColor?: string;
   lightBackgroundColor?: string;
+  fontTypes?: FontTypes;
 }
 
 export interface ChatBubbleStyles {
@@ -24,6 +33,28 @@ export interface ChatBubbleStyles {
     fontSize?: number;
     fontStyle?: string;
     fontFamily?: string;
+    color?: string;
+  };
+  messageReceivedHeader?: {
+    fontSize?: number;
+    fontFamily?: string;
+    color?: string;
+  };
+  dateStateMessage?: {
+    fontSize?: number;
+    fontFamily?: string;
+    color?: string;
+    backgroundColor?: string;
+  };
+  playPauseBoxIcon?: {
+    backgroundColor?: string;
+  };
+  voiceNoteSlider?: {
+    minimumTrackTintColor?: string;
+    thumbTintColor?: string;
+  };
+  pollVoteSliderColor?: {
+    backgroundColor?: string;
   };
 }
 
@@ -45,6 +76,7 @@ export interface InputBoxStyles {
   plainTextStyle?: {
     color?: string;
   };
+  placeholderText?: string;
   inputTextStyle?: {
     flexGrow?: number;
     fontSize?: string;
@@ -59,6 +91,7 @@ export interface InputBoxStyles {
     height?: number;
     resizeMode?: string;
     marginLeft?: number;
+    tintColor?: string;
   };
   attachmentIconStyles?: {
     width?: number;
@@ -69,6 +102,7 @@ export interface InputBoxStyles {
     width?: number;
     height?: number;
     resizeMode?: string;
+    tintColor?: string;
   };
   cameraIconStyles?: {
     width?: number;

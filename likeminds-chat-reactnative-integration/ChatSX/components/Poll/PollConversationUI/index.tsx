@@ -8,8 +8,9 @@ import {
 } from "../../../constants/Strings";
 import { PollConversationUIProps } from "../models";
 import Layout from "../../../constants/Layout";
-import { useLMChat } from "../../../lmChatProvider";
 import { NavigateToProfileParams } from "../../../callBacks/type";
+import STYLES from "../../../constants/Styles";
+import { CallBack } from "../../../callBacks/callBackClass";
 
 const PollConversationUI = ({
   text,
@@ -44,7 +45,12 @@ const PollConversationUI = ({
   resetShowResult,
   pollType,
 }: PollConversationUIProps) => {
-  const lmChatInterface = useLMChat();
+  const lmChatInterface = CallBack.lmChatInterface;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
+
+  //styling props
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
+  const pollVoteSliderColor = chatBubbleStyles?.pollVoteSliderColor;
   return (
     <View>
       {isIncluded ? (
@@ -60,7 +66,16 @@ const PollConversationUI = ({
       ) : null}
       {member?.id == user?.id ? null : (
         <Text
-          style={styles.messageInfo}
+          style={[
+            styles.messageInfo,
+            messageReceivedHeader
+              ? {
+                  color: messageReceivedHeader?.color,
+                  fontSize: messageReceivedHeader?.fontSize,
+                  fontFamily: messageReceivedHeader?.fontFamily,
+                }
+              : null,
+          ]}
           numberOfLines={1}
           onPress={() => {
             const params: NavigateToProfileParams = {
@@ -193,12 +208,13 @@ const PollConversationUI = ({
                             {
                               width: `${
                                 element?.percentage > 98
-                                  ? Layout.normalize(98)
+                                  ? 98
                                   : element?.percentage
                               }%`,
-                              backgroundColor: hue
-                                ? `hsl(${hue}, 60%, 85%)`
-                                : "hsl(222, 60%, 85%)",
+                              backgroundColor:
+                                pollVoteSliderColor?.backgroundColor
+                                  ? pollVoteSliderColor?.backgroundColor
+                                  : "hsl(222, 60%, 85%)",
                             },
                             styles.pollButtonBackground,
                             styles.pollButtonPadding,
