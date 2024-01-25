@@ -26,7 +26,7 @@ import { GiphySDK } from "@giphy/react-native-sdk";
 import { GIPHY_SDK_API_KEY } from "../awsExports";
 import { Client } from "../client";
 import { FAILED } from "../constants/Strings";
-import { LMChatProviderProps, ThemeContextProps } from "./type";
+import { LMChatProviderProps } from "./type";
 import { getUniqueId } from "react-native-device-info";
 import getNotification, {
   fetchFCMToken,

@@ -11,7 +11,10 @@ import VideoPlayer from "./ChatSX/screens/VideoPlayer";
 import store from "./ChatSX/store";
 import { LMChatroomCallbacks } from "./ChatSX/callBacks/chatroomCallback";
 import { LMChatCallbacks } from "./ChatSX/callBacks/lmChatCallback";
-import { NavigateToProfileParams } from "./ChatSX/callBacks/type";
+import {
+  NavigateToProfileParams,
+  NavigateToGroupDetailsParams,
+} from "./ChatSX/callBacks/type";
 import { STYLES } from "./ChatSX/constants/Styles";
 import { RadialGradient } from "./ChatSX/radialGradient";
 
@@ -30,6 +33,7 @@ export {
   LMChatroomCallbacks,
   LMChatCallbacks,
   NavigateToProfileParams,
+  NavigateToGroupDetailsParams,
   STYLES,
   RadialGradient,
 };

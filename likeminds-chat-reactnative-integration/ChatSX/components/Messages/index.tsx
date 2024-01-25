@@ -79,7 +79,7 @@ const Messages = ({
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
   const stateMessagesBackgroundColor =
-    chatBubbleStyles?.stateMessagesBackgroundColor;
+    chatBubbleStyles?.selectedMessagesBackgroundColor;
   const stateMessagesTextStyles = chatBubbleStyles?.stateMessagesTextStyles;
   const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
   const senderNameStyles = messageReceivedHeader?.senderNameStyles;

@@ -41,7 +41,7 @@ export interface ChatBubbleStyles {
   };
   linkTextColor?: string;
   taggingTextColor?: string;
-  stateMessagesBackgroundColor?: string;
+  selectedMessagesBackgroundColor?: string;
   stateMessagesTextStyles?: {
     fontSize?: number;
     fontStyle?: string;

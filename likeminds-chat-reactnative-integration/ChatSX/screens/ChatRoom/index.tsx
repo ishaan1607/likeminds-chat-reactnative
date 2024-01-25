@@ -128,6 +128,7 @@ import { Credentials } from "../../credentials";
 import MessageList from "../../components/MessageList";
 import { Client } from "../../client";
 import { CallBack } from "../../callBacks/callBackClass";
+import { NavigateToGroupDetailsParams } from "../../callBacks/type";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -162,9 +163,10 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     deepLinking,
     announcementRoomId,
     backIconPath,
+    gender,
   } = route.params;
 
-  const ChatroomTabNavigator = route.params.tabNavigator;
+  const ChatroomTabNavigator = route?.params?.tabNavigator;
 
   const chatroomHeaderStyles = STYLES.$CHATROOM_HEADER_STYLE;
   const chatroomNameHeaderStyle = chatroomHeaderStyles?.chatroomNameHeaderStyle;
@@ -360,36 +362,54 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
 
               <View style={styles.chatRoomInfo}>
                 <View>
-                  {ChatroomTabNavigator && (
+                  {ChatroomTabNavigator && gender == "male" ? (
                     <Image
                       source={
                         chatroomDBDetails?.chatroomImageUrl
                           ? { uri: chatroomDBDetails?.chatroomImageUrl }
-                          : require("../../assets/images/defaultGroupIcon.png")
+                          : require("../../assets/images/defaultGroupIconMale.png")
+                      }
+                      style={styles.avatar}
+                    />
+                  ) : (
+                    <Image
+                      source={
+                        chatroomDBDetails?.chatroomImageUrl
+                          ? { uri: chatroomDBDetails?.chatroomImageUrl }
+                          : require("../../assets/images/defaultGroupIconFemale.png")
                       }
                       style={styles.avatar}
                     />
                   )}
                 </View>
                 <View>
-                  <Text
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                    style={{
-                      color: chatroomNameHeaderStyle?.color
-                        ? chatroomNameHeaderStyle?.color
-                        : STYLES.$COLORS.FONT_PRIMARY,
-                      fontSize: chatroomNameHeaderStyle?.fontSize
-                        ? chatroomNameHeaderStyle?.fontSize
-                        : STYLES.$FONT_SIZES.LARGE,
-                      fontFamily: chatroomNameHeaderStyle?.fontFamily
-                        ? chatroomNameHeaderStyle?.fontFamily
-                        : STYLES.$FONT_TYPES.BOLD,
-                      maxWidth: Layout.normalize(250),
+                  <TouchableOpacity
+                    onPress={() => {
+                      const params: NavigateToGroupDetailsParams = {
+                        chatroom: chatroomDBDetails,
+                      };
+                      lmChatInterface.navigateToGroupDetails(params);
                     }}
                   >
-                    {chatroomName}
-                  </Text>
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={{
+                        color: chatroomNameHeaderStyle?.color
+                          ? chatroomNameHeaderStyle?.color
+                          : STYLES.$COLORS.FONT_PRIMARY,
+                        fontSize: chatroomNameHeaderStyle?.fontSize
+                          ? chatroomNameHeaderStyle?.fontSize
+                          : STYLES.$FONT_SIZES.LARGE,
+                        fontFamily: chatroomNameHeaderStyle?.fontFamily
+                          ? chatroomNameHeaderStyle?.fontFamily
+                          : STYLES.$FONT_TYPES.BOLD,
+                        maxWidth: Layout.normalize(250),
+                      }}
+                    >
+                      {chatroomName}
+                    </Text>
+                  </TouchableOpacity>
                   {chatroomType !== ChatroomType.DMCHATROOM ? (
                     <Text
                       style={{
@@ -2485,6 +2505,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               navigation={navigation}
               chatroomId={currentChatroomId}
               announcementRoomId={announcementRoomId}
+              gender={gender}
               lmChatInterface={lmChatInterface}
             />
           )}

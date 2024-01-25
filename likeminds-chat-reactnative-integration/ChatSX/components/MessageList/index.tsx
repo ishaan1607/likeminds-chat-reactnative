@@ -80,7 +80,7 @@ const MessageList = forwardRef(
 
     //styling props
     const selectedBackgroundColor =
-      chatBubbleStyles?.stateMessagesBackgroundColor;
+      chatBubbleStyles?.selectedMessagesBackgroundColor;
     const dateStateMessage = chatBubbleStyles?.dateStateMessage;
 
     const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor
