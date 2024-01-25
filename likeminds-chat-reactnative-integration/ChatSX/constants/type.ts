@@ -15,6 +15,19 @@ export interface StylesProps {
   fontTypes?: FontTypes;
 }
 
+export interface ChatroomHeaderStyles {
+  chatroomNameHeaderStyle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  chatroomSubHeaderStyle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+}
+
 export interface ChatBubbleStyles {
   borderRadius?: number;
   sentMessageBackgroundColor?: string;
@@ -36,9 +49,16 @@ export interface ChatBubbleStyles {
     color?: string;
   };
   messageReceivedHeader?: {
-    fontSize?: number;
-    fontFamily?: string;
-    color?: string;
+    senderNameStyles?: {
+      fontSize?: number;
+      fontFamily?: string;
+      color?: string;
+    };
+    senderDesignationStyles?: {
+      fontSize?: number;
+      fontFamily?: string;
+      color?: string;
+    };
   };
   dateStateMessage?: {
     fontSize?: number;

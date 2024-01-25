@@ -50,6 +50,9 @@ const PollConversationUI = ({
 
   //styling props
   const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
+  const senderNameStyles = messageReceivedHeader?.senderNameStyles;
+  const senderDesignationStyles =
+    messageReceivedHeader?.senderDesignationStyles;
   const pollVoteSliderColor = chatBubbleStyles?.pollVoteSliderColor;
   return (
     <View>
@@ -68,12 +71,12 @@ const PollConversationUI = ({
         <Text
           style={[
             styles.messageInfo,
-            messageReceivedHeader
-              ? {
-                  color: messageReceivedHeader?.color,
-                  fontSize: messageReceivedHeader?.fontSize,
-                  fontFamily: messageReceivedHeader?.fontFamily,
-                }
+            senderNameStyles?.color ? { color: senderNameStyles?.color } : null,
+            senderNameStyles?.fontSize
+              ? { fontSize: senderNameStyles?.fontSize }
+              : null,
+            senderNameStyles?.fontFamily
+              ? { color: senderNameStyles?.color }
               : null,
           ]}
           numberOfLines={1}
@@ -88,7 +91,18 @@ const PollConversationUI = ({
           {member?.name}
           {member?.customTitle ? (
             <Text
-              style={styles.messageCustomTitle}
+              style={[
+                styles.messageCustomTitle,
+                senderDesignationStyles?.color
+                  ? { color: senderDesignationStyles?.color }
+                  : null,
+                senderDesignationStyles?.fontSize
+                  ? { fontSize: senderDesignationStyles?.fontSize }
+                  : null,
+                senderDesignationStyles?.fontFamily
+                  ? { color: senderDesignationStyles?.color }
+                  : null,
+              ]}
             >{` • ${member?.customTitle}`}</Text>
           ) : null}
         </Text>

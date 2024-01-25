@@ -103,6 +103,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: Layout.normalize(5),
     gap: Layout.normalize(5),
+    marginLeft: Layout.normalize(30),
   },
   reactionSentParent: {
     display: "flex",

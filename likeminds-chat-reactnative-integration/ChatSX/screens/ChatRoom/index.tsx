@@ -161,9 +161,14 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     navigationFromNotification,
     deepLinking,
     announcementRoomId,
+    backIconPath,
   } = route.params;
 
   const ChatroomTabNavigator = route.params.tabNavigator;
+
+  const chatroomHeaderStyles = STYLES.$CHATROOM_HEADER_STYLE;
+  const chatroomNameHeaderStyle = chatroomHeaderStyles?.chatroomNameHeaderStyle;
+  const chatroomSubHeaderStyle = chatroomHeaderStyles?.chatroomSubHeaderStyle;
 
   useEffect(() => {
     ChatroomTabNavigator && setCurrentChatroomId(chatroomID);
@@ -329,11 +334,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               lmChatInterface.navigateToHomePage();
             }}
           >
-            {ChatroomTabNavigator ? (
-              <Image
-                source={require("../../../../../assets/images/backIcon.png")}
-                style={styles.backOptionalBtn}
-              />
+            {backIconPath ? (
+              <Image source={backIconPath} style={styles.backOptionalBtn} />
             ) : (
               <Image
                 source={require("../../assets/images/back_arrow3x.png")}
@@ -374,9 +376,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                     ellipsizeMode="tail"
                     numberOfLines={1}
                     style={{
-                      color: STYLES.$COLORS.FONT_PRIMARY,
-                      fontSize: STYLES.$FONT_SIZES.LARGE,
-                      fontFamily: STYLES.$FONT_TYPES.BOLD,
+                      color: chatroomNameHeaderStyle?.color
+                        ? chatroomNameHeaderStyle?.color
+                        : STYLES.$COLORS.FONT_PRIMARY,
+                      fontSize: chatroomNameHeaderStyle?.fontSize
+                        ? chatroomNameHeaderStyle?.fontSize
+                        : STYLES.$FONT_SIZES.LARGE,
+                      fontFamily: chatroomNameHeaderStyle?.fontFamily
+                        ? chatroomNameHeaderStyle?.fontFamily
+                        : STYLES.$FONT_TYPES.BOLD,
                       maxWidth: Layout.normalize(250),
                     }}
                   >
@@ -385,9 +393,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                   {chatroomType !== ChatroomType.DMCHATROOM ? (
                     <Text
                       style={{
-                        color: STYLES.$COLORS.MSG,
-                        fontSize: STYLES.$FONT_SIZES.SMALL,
-                        fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                        color: chatroomSubHeaderStyle?.color
+                          ? chatroomSubHeaderStyle?.color
+                          : STYLES.$COLORS.MSG,
+                        fontSize: chatroomSubHeaderStyle?.fontSize
+                          ? chatroomSubHeaderStyle?.fontSize
+                          : STYLES.$FONT_SIZES.SMALL,
+                        fontFamily: chatroomSubHeaderStyle?.fontFamily
+                          ? chatroomSubHeaderStyle?.fontFamily
+                          : STYLES.$FONT_TYPES.LIGHT,
                       }}
                     >
                       {chatroomDetails?.participantCount != undefined
