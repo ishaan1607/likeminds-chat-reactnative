@@ -193,6 +193,9 @@ const Messages = ({
                   isIncluded
                     ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                     : null,
+                  isTypeSent
+                    ? { backgroundColor: sentMessageBackgroundColor }
+                    : null,
                 ]}
               >
                 <Text style={[styles.deletedMsg] as TextStyle}>
