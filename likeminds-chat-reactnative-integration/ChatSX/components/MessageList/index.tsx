@@ -34,7 +34,6 @@ import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
 import { CAPITAL_GIF_TEXT, VOICE_NOTE_STRING } from "../../constants/Strings";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
-import { useLMChatStyles } from "../../lmChatProvider";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
 
@@ -78,8 +77,7 @@ const MessageList = forwardRef(
     const { user } = useAppSelector((state) => state.homefeed);
     const PAGE_SIZE = 200;
 
-    const LMChatContextStyles = useLMChatStyles();
-    const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
+    const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
     //styling props
     const selectedBackgroundColor = chatBubbleStyles?.selectedBackgroundColor;

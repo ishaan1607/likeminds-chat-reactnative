@@ -1,10 +1,9 @@
-interface StylesProps {
-  hue?: number;
-  fontColor?: string;
-  primaryColor?: string;
-  secondaryColor?: string;
-  lightBackgroundColor?: string;
-}
+import {
+  ChatBubbleStyles,
+  InputBoxStyles,
+  ReactionListStyles,
+  StylesProps,
+} from "./type";
 
 export class STYLES {
   static $COLORS = {
@@ -78,6 +77,9 @@ export class STYLES {
     "dark-content": "dark-content",
     "light-content": "light-content",
   };
+  static $CHAT_BUBBLE_STYLE: ChatBubbleStyles = {};
+  static $INPUT_BOX_STYLE: InputBoxStyles = {};
+  static $REACTION_LIST_STYLE: ReactionListStyles = {};
   static setTheme({
     hue,
     fontColor,
@@ -99,6 +101,21 @@ export class STYLES {
         : `hsl(${hue ? hue : 222}, 22%, 93%)`,
       SELECTED_BLUE: `hsl(${hue ? hue : 222}, 64%, 95%)`,
       SELECTED_CHAT_BUBBLE: `hsl(${hue ? hue : 222}, 67%, 91%)`,
+    };
+  }
+  static setChatBubbleStyle(chatBubbleStyles: ChatBubbleStyles) {
+    STYLES.$CHAT_BUBBLE_STYLE = {
+      ...chatBubbleStyles,
+    };
+  }
+  static setInputBoxStyle(inputBoxStyles: InputBoxStyles) {
+    STYLES.$INPUT_BOX_STYLE = {
+      ...inputBoxStyles,
+    };
+  }
+  static setReactionListStyle(reactionListStyles: ReactionListStyles) {
+    STYLES.$REACTION_LIST_STYLE = {
+      ...reactionListStyles,
     };
   }
 }

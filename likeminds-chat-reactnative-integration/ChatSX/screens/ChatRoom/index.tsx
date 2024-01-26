@@ -3,7 +3,14 @@ import {
   StackActions,
   useIsFocused,
 } from "@react-navigation/native";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  useContext,
+  createContext,
+} from "react";
 import {
   View,
   Text,
@@ -126,8 +133,9 @@ import { createTemporaryStateMessage } from "../../utils/chatroomUtils";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
 import MessageList from "../../components/MessageList";
-import { useLMChat } from "../../lmChatProvider";
 import { Client } from "../../client";
+import { CallBack } from "../../callBacks/callBackClass";
+import { useLMChat } from "../../lmChatProvider";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -159,6 +167,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     navigationFromNotification,
     deepLinking,
   } = route.params;
+
+  const lmChatInterface = useLMChat();
 
   const flatlistRef = useRef<any>(null);
   const refInput = useRef<any>();
@@ -313,7 +323,11 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              lmChatInterface.navigateToHomePage();
+            }}
+          >
             <Image
               source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
@@ -829,7 +843,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   //this function fetchChatroomDetails when we first move inside Chatroom
   async function fetchChatroomDetails() {
     const payload = { chatroomId: chatroomID };
-    const DB_DATA = await myClient?.getChatroom(chatroomID?.toString());
+    const chatroom = await myClient?.getChatroom(chatroomID?.toString());
+    const DB_DATA = chatroom?.data;
     if (DB_DATA?.isChatroomVisited) {
       setShimmerIsLoading(false);
     }

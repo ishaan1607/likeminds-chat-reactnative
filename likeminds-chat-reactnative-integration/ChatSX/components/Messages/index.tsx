@@ -25,9 +25,10 @@ import { ChatroomType } from "../../enums";
 import LinkPreview from "../LinkPreview";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Credentials } from "../../credentials";
-import { useLMChatStyles } from "../../lmChatProvider";
 import ReactionList from "../ReactionList";
 import Layout from "../../constants/Layout";
+import { useLMChat } from "../../lmChatProvider";
+import { NavigateToProfileParams } from "../../callBacks/type";
 
 interface Messages {
   item: any;
@@ -59,12 +60,12 @@ const Messages = ({
   chatroomName,
 }: Messages) => {
   const { user } = useAppSelector((state) => state.homefeed);
+  const lmChatInterface = useLMChat();
 
   const { stateArr, conversations, chatroomDBDetails, selectedMessages }: any =
     useAppSelector((state) => state.chatroom);
 
-  const LMChatContextStyles = useLMChatStyles();
-  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
   const borderRadius = chatBubbleStyles?.borderRadius;
@@ -80,7 +81,6 @@ const Messages = ({
   const stateMessagesBackgroundColor =
     chatBubbleStyles?.stateMessagesBackgroundColor;
   const stateMessagesTextStyles = chatBubbleStyles?.stateMessagesTextStyles;
-  const deletedMessagesTextStyles = chatBubbleStyles?.deletedMessagesTextStyles;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
@@ -191,16 +191,7 @@ const Messages = ({
                     : null,
                 ]}
               >
-                <Text
-                  style={
-                    [
-                      styles.deletedMsg,
-                      deletedMessagesTextStyles
-                        ? { ...deletedMessagesTextStyles }
-                        : null,
-                    ] as TextStyle
-                  }
-                >
+                <Text style={[styles.deletedMsg] as TextStyle}>
                   You deleted this message
                 </Text>
               </View>
@@ -214,16 +205,7 @@ const Messages = ({
                     : null,
                 ]}
               >
-                <Text
-                  style={
-                    [
-                      styles.deletedMsg,
-                      deletedMessagesTextStyles
-                        ? { ...deletedMessagesTextStyles }
-                        : null,
-                    ] as TextStyle
-                  }
-                >
+                <Text style={[styles.deletedMsg] as TextStyle}>
                   This message has been deleted by {conversationDeletorName}
                 </Text>
               </View>
@@ -237,16 +219,7 @@ const Messages = ({
                     : null,
                 ]}
               >
-                <Text
-                  style={
-                    [
-                      styles.deletedMsg,
-                      deletedMessagesTextStyles
-                        ? { ...deletedMessagesTextStyles }
-                        : null,
-                    ] as TextStyle
-                  }
-                >
+                <Text style={[styles.deletedMsg] as TextStyle}>
                   This message has been deleted by Community Manager
                 </Text>
               </View>
@@ -261,16 +234,7 @@ const Messages = ({
                   : null,
               ]}
             >
-              <Text
-                style={
-                  [
-                    styles.deletedMsg,
-                    deletedMessagesTextStyles
-                      ? { ...deletedMessagesTextStyles }
-                      : null,
-                  ] as TextStyle
-                }
-              >
+              <Text style={[styles.deletedMsg] as TextStyle}>
                 You deleted this message
               </Text>
             </View>
@@ -284,16 +248,7 @@ const Messages = ({
                   : null,
               ]}
             >
-              <Text
-                style={
-                  [
-                    styles.deletedMsg,
-                    deletedMessagesTextStyles
-                      ? { ...deletedMessagesTextStyles }
-                      : null,
-                  ] as TextStyle
-                }
-              >
+              <Text style={[styles.deletedMsg] as TextStyle}>
                 This message has been deleted by {conversationDeletorName}
               </Text>
             </View>
@@ -503,7 +458,17 @@ const Messages = ({
                   ]}
                 >
                   {item?.member?.id == userIdStringified ? null : (
-                    <Text style={styles.messageInfo} numberOfLines={1}>
+                    <Text
+                      style={styles.messageInfo}
+                      numberOfLines={1}
+                      onPress={() => {
+                        const params: NavigateToProfileParams = {
+                          taggedUserId: null,
+                          member: item?.member,
+                        };
+                        lmChatInterface.navigateToProfile(params);
+                      }}
+                    >
                       {item?.member?.name}
                       {item?.member?.customTitle ? (
                         <Text

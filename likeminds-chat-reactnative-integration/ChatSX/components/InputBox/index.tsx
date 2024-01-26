@@ -141,7 +141,6 @@ import {
   LMChatTextView,
 } from "../../uiComponents";
 import { Client } from "../../client";
-import { useLMChatStyles } from "../../lmChatProvider";
 import {
   convertToMentionValues,
   replaceMentionValues,
@@ -172,8 +171,7 @@ const InputBox = ({
   isGif,
 }: InputBoxProps) => {
   const myClient = Client.myClient;
-  const LMChatContext = useLMChatStyles();
-  const inputBoxStyles = LMChatContext?.inputBoxStyles;
+  const inputBoxStyles = STYLES.$INPUT_BOX_STYLE;
 
   const [isKeyBoardFocused, setIsKeyBoardFocused] = useState(false);
   const [message, setMessage] = useState(previousMessage);

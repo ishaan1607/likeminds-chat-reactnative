@@ -6,7 +6,6 @@ import React, {
   useContext,
   useEffect,
 } from "react";
-import STYLES from "../constants/Styles";
 import { Platform, StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppDispatch } from "../store";
@@ -24,7 +23,6 @@ import { getRoute } from "../notifications/routes";
 import * as RootNavigation from "../RootNavigation";
 import { navigationRef } from "../RootNavigation";
 import { setupPlayer } from "../audio";
-import { LMChatClient } from "@likeminds.community/chat-rn";
 import { GiphySDK } from "@giphy/react-native-sdk";
 import { GIPHY_SDK_API_KEY } from "../awsExports";
 import { Client } from "../client";
@@ -37,16 +35,10 @@ import getNotification, {
 } from "../notifications";
 import messaging from "@react-native-firebase/messaging";
 import { StackActions } from "@react-navigation/native";
-
-// Create the theme context
-export const LMChatStylesContext = createContext<ThemeContextProps | undefined>(
-  undefined
-);
-
-//PropTypes for the LMChatProvider component
+import { CallBack } from "../callBacks/callBackClass";
 
 // Create a context for LMChatProvider
-const LMChatContext = createContext<LMChatClient | undefined>(undefined);
+const LMChatContext = createContext<any | undefined>(undefined);
 
 // Create a hook to use the LMChatContext
 export const useLMChat = () => {
@@ -57,24 +49,13 @@ export const useLMChat = () => {
   return context;
 };
 
-export const useLMChatStyles = () => {
-  const context = useContext(LMChatStylesContext);
-  if (!context) {
-    throw new Error("useLMChatStyles must be used within an LMChatProvider");
-  }
-  return context;
-};
-
 export const LMChatProvider = ({
   myClient,
   children,
   userName,
   userUniqueId,
-  cohortId,
-  reactionListStyles,
-  chatBubbleStyles,
-  inputBoxStyles,
-  themeStyles,
+  profileImageUrl,
+  lmChatInterface,
 }: LMChatProviderProps): JSX.Element => {
   const [isInitiated, setIsInitiated] = useState(false);
   const [fcmToken, setFcmToken] = useState("");
@@ -147,11 +128,6 @@ export const LMChatProvider = ({
         xPlatformCode: Platform.OS === "ios" ? "ios" : "an",
       };
       await myClient.registerDevice(payload);
-      const addMemberToCohortPayload = {
-        cohortId: parseInt(cohortId),
-        uuids: [userUniqueId],
-      };
-      await myClient?.addMemberToCohort(addMemberToCohortPayload);
       setIsRegisterdDevice(true);
     };
     if (fcmToken) {
@@ -163,12 +139,16 @@ export const LMChatProvider = ({
     //setting client in Client class
     Client.setMyClient(myClient);
 
+    // setting lmChatInterface in CallBack class
+    CallBack.setLMChatInterface(lmChatInterface);
+
     // storing myClient followed by community details
     const callInitApi = async () => {
       const payload = {
         uuid: userUniqueId, // uuid
         userName: userName, // user name
         isGuest: false,
+        imageUrl: profileImageUrl,
       };
 
       Credentials.setCredentials(userName, userUniqueId);
@@ -201,12 +181,6 @@ export const LMChatProvider = ({
       setIsInitiated(true);
     };
     callInitApi();
-  }, []);
-
-  useMemo(() => {
-    if (themeStyles) {
-      STYLES.setTheme(themeStyles);
-    }
   }, []);
 
   useEffect(() => {
@@ -260,14 +234,10 @@ export const LMChatProvider = ({
   }, [isRegisterdDevice]);
 
   return isInitiated && isRegisterdDevice ? (
-    <LMChatContext.Provider value={myClient}>
-      <LMChatStylesContext.Provider
-        value={{ reactionListStyles, chatBubbleStyles, inputBoxStyles }}
-      >
-        <GestureHandlerRootView style={styles.flexStyling}>
-          <View style={styles.flexStyling}>{children}</View>
-        </GestureHandlerRootView>
-      </LMChatStylesContext.Provider>
+    <LMChatContext.Provider value={lmChatInterface}>
+      <GestureHandlerRootView style={styles.flexStyling}>
+        <View style={styles.flexStyling}>{children}</View>
+      </GestureHandlerRootView>
     </LMChatContext.Provider>
   ) : (
     <></>
