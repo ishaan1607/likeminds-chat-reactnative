@@ -22,6 +22,7 @@ import {
   LMChatCallbacks,
   LMChatroomCallbacks,
   NavigateToProfileParams,
+  NavigateToGroupDetailsParams,
   STYLES,
 } from 'likeminds_chat_reactnative_integration';
 import {myClient} from '.';
@@ -31,15 +32,19 @@ const Stack = createNativeStackNavigator();
 // Override callBacks with custom logic
 class CustomCallbacks implements LMChatCallbacks, LMChatroomCallbacks {
   navigateToProfile(params: NavigateToProfileParams) {
-      // Override navigateToProfile with custom logic
+    // Override navigateToProfile with custom logic
   }
-  
+
   navigateToHomePage() {
-      // Override navigateToHomePage with custom logic
+    // Override navigateToHomePage with custom logic
   }
 
   onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
-      // Override onEventTriggered with custom logic
+    // Override onEventTriggered with custom logic
+  }
+
+  navigateToGroupDetails(params: NavigateToGroupDetailsParams) {
+    // Override navigateToGroupDetails with custom logic
   }
 }
 
