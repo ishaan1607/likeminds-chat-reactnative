@@ -3,14 +3,7 @@ import {
   StackActions,
   useIsFocused,
 } from "@react-navigation/native";
-import React, {
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-  useContext,
-  createContext,
-} from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   View,
   Text,
@@ -135,7 +128,7 @@ import { Credentials } from "../../credentials";
 import MessageList from "../../components/MessageList";
 import { Client } from "../../client";
 import { CallBack } from "../../callBacks/callBackClass";
-import { useLMChat } from "../../lmChatProvider";
+import { NavigateToGroupDetailsParams } from "../../callBacks/type";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -161,14 +154,29 @@ interface UploadResource {
 const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const myClient = Client.myClient;
 
+  const [currentChatroomId, setCurrentChatroomId] = useState("");
+
   const {
     chatroomID,
     previousChatroomID,
     navigationFromNotification,
     deepLinking,
+    announcementRoomId,
+    backIconPath,
+    gender,
   } = route.params;
 
-  const lmChatInterface = useLMChat();
+  const ChatroomTabNavigator = route?.params?.tabNavigator;
+
+  const chatroomHeaderStyles = STYLES.$CHATROOM_HEADER_STYLE;
+  const chatroomNameHeaderStyle = chatroomHeaderStyles?.chatroomNameHeaderStyle;
+  const chatroomSubHeaderStyle = chatroomHeaderStyles?.chatroomSubHeaderStyle;
+
+  useEffect(() => {
+    ChatroomTabNavigator && setCurrentChatroomId(chatroomID);
+  }, []);
+
+  const lmChatInterface = CallBack.lmChatInterface;
 
   const flatlistRef = useRef<any>(null);
   const refInput = useRef<any>();
@@ -328,10 +336,14 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               lmChatInterface.navigateToHomePage();
             }}
           >
-            <Image
-              source={require("../../assets/images/back_arrow3x.png")}
-              style={styles.backBtn}
-            />
+            {backIconPath ? (
+              <Image source={backIconPath} style={styles.backOptionalBtn} />
+            ) : (
+              <Image
+                source={require("../../assets/images/back_arrow3x.png")}
+                style={styles.backBtn}
+              />
+            )}
           </TouchableOpacity>
           {!(Object.keys(chatroomDBDetails)?.length === 0) ? (
             <View style={styles.alignRow}>
@@ -349,52 +361,100 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               ) : null}
 
               <View style={styles.chatRoomInfo}>
-                <Text
-                  ellipsizeMode="tail"
-                  numberOfLines={1}
-                  style={{
-                    color: STYLES.$COLORS.FONT_PRIMARY,
-                    fontSize: STYLES.$FONT_SIZES.LARGE,
-                    fontFamily: STYLES.$FONT_TYPES.BOLD,
-                    maxWidth: Layout.normalize(150),
-                  }}
-                >
-                  {chatroomName}
-                </Text>
-                {chatroomType !== ChatroomType.DMCHATROOM ? (
-                  <Text
-                    style={{
-                      color: STYLES.$COLORS.MSG,
-                      fontSize: STYLES.$FONT_SIZES.SMALL,
-                      fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                <View>
+                  {ChatroomTabNavigator && gender == "male" ? (
+                    <Image
+                      source={
+                        chatroomDBDetails?.chatroomImageUrl
+                          ? { uri: chatroomDBDetails?.chatroomImageUrl }
+                          : require("../../assets/images/defaultGroupIconMale.png")
+                      }
+                      style={styles.avatar}
+                    />
+                  ) : (
+                    <Image
+                      source={
+                        chatroomDBDetails?.chatroomImageUrl
+                          ? { uri: chatroomDBDetails?.chatroomImageUrl }
+                          : require("../../assets/images/defaultGroupIconFemale.png")
+                      }
+                      style={styles.avatar}
+                    />
+                  )}
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      const params: NavigateToGroupDetailsParams = {
+                        chatroom: chatroomDBDetails,
+                      };
+                      lmChatInterface.navigateToGroupDetails(params);
                     }}
                   >
-                    {chatroomDetails?.participantCount != undefined
-                      ? `${chatroomDetails?.participantCount} participants`
-                      : ""}
-                  </Text>
-                ) : null}
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={{
+                        color: chatroomNameHeaderStyle?.color
+                          ? chatroomNameHeaderStyle?.color
+                          : STYLES.$COLORS.FONT_PRIMARY,
+                        fontSize: chatroomNameHeaderStyle?.fontSize
+                          ? chatroomNameHeaderStyle?.fontSize
+                          : STYLES.$FONT_SIZES.LARGE,
+                        fontFamily: chatroomNameHeaderStyle?.fontFamily
+                          ? chatroomNameHeaderStyle?.fontFamily
+                          : STYLES.$FONT_TYPES.BOLD,
+                        maxWidth: Layout.normalize(250),
+                      }}
+                    >
+                      {chatroomName}
+                    </Text>
+                  </TouchableOpacity>
+                  {chatroomType !== ChatroomType.DMCHATROOM ? (
+                    <Text
+                      style={{
+                        color: chatroomSubHeaderStyle?.color
+                          ? chatroomSubHeaderStyle?.color
+                          : STYLES.$COLORS.MSG,
+                        fontSize: chatroomSubHeaderStyle?.fontSize
+                          ? chatroomSubHeaderStyle?.fontSize
+                          : STYLES.$FONT_SIZES.SMALL,
+                        fontFamily: chatroomSubHeaderStyle?.fontFamily
+                          ? chatroomSubHeaderStyle?.fontFamily
+                          : STYLES.$FONT_TYPES.LIGHT,
+                      }}
+                    >
+                      {chatroomDetails?.participantCount != undefined
+                        ? `${chatroomDetails?.participantCount} participants`
+                        : ""}
+                    </Text>
+                  ) : null}
+                </View>
               </View>
             </View>
           ) : null}
         </View>
       ),
       headerRight: () =>
-        filteredChatroomActions?.length > 0 && (
-          <View style={styles.headerRight}>
-            {chatroomDetails ? (
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/three_dots3x.png")}
-                  style={styles.threeDots}
-                />
-              </TouchableOpacity>
-            ) : null}
-          </View>
+        ChatroomTabNavigator ? (
+          <></>
+        ) : (
+          filteredChatroomActions?.length > 0 && (
+            <View style={styles.headerRight}>
+              {chatroomDetails ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/three_dots3x.png")}
+                    style={styles.threeDots}
+                  />
+                </TouchableOpacity>
+              ) : null}
+            </View>
+          )
         ),
     });
   };
@@ -687,18 +747,20 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 />
               </TouchableOpacity>
             )}
-            {len === 1 && !isFirstMessageDeleted && (
-              <TouchableOpacity
-                onPress={() => {
-                  setReportModalVisible(true);
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/three_dots3x.png")}
-                  style={styles.threeDots}
-                />
-              </TouchableOpacity>
-            )}
+            {len === 1 &&
+              !isFirstMessageDeleted &&
+              !ChatroomTabNavigator(
+                <TouchableOpacity
+                  onPress={() => {
+                    setReportModalVisible(true);
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/three_dots3x.png")}
+                    style={styles.threeDots}
+                  />
+                </TouchableOpacity>
+              )}
           </View>
         );
       },
@@ -908,7 +970,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       type: SET_REPLY_MESSAGE,
       body: { replyMessage: "" },
     });
-  }, []);
+  }, [chatroomID]);
 
   // local handling for chatroom topic updation's state message
   useEffect(() => {
@@ -933,7 +995,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     if (selectedMessages.length !== 0 && isChatroomTopic) {
       addChatroomTopic();
     }
-  }, [currentChatroomTopic]);
+  }, [currentChatroomTopic, chatroomID]);
 
   // To trigger analytics for Message Selected
   useEffect(() => {
@@ -946,7 +1008,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         ])
       );
     }
-  }, [selectedMessages]);
+  }, [selectedMessages, chatroomID]);
 
   // To trigger analytics for Chatroom opened
   useEffect(() => {
@@ -971,7 +1033,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         [Keys.SOURCE, source],
       ])
     );
-  }, [chatroomType]);
+  }, [chatroomType, chatroomID]);
 
   //this useEffect fetch chatroom details only after initiate API got fetched if `navigation from Notification` else fetch chatroom details
   useEffect(() => {
@@ -989,7 +1051,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       }
     };
     invokeFunction();
-  }, [navigation, user]);
+  }, [navigation, user, chatroomID]);
 
   // this useEffect set unseenCount to zero when closing the chatroom
   useEffect(() => {
@@ -1005,21 +1067,21 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         closingChatroom();
       }
     };
-  }, [temporaryStateMessage]);
+  }, [temporaryStateMessage, chatroomID]);
 
   // this useEffect is to stop audio player when going out of chatroom, if any audio is running
   useEffect(() => {
     return () => {
       TrackPlayer.reset();
     };
-  }, []);
+  }, [chatroomID]);
 
   // this useEffect is to stop audio player when the app is in background
   useEffect(() => {
     if (!isFocused) {
       TrackPlayer.reset();
     }
-  }, [isFocused]);
+  }, [isFocused, chatroomID]);
 
   //Logic for navigation backAction
   function backAction() {
@@ -1075,12 +1137,12 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       backActionCall
     );
     return () => backHandlerAndroid.remove();
-  }, [chatroomType]);
+  }, [chatroomType, chatroomID]);
 
   // this useEffect update initial header when we get chatroomDetails.
   useEffect(() => {
     setInitialHeader();
-  }, [chatroomDBDetails, chatroomDetails]);
+  }, [chatroomDBDetails, chatroomDetails, chatroomID]);
 
   // this useEffect call API to show InputBox based on showDM key.
   useEffect(() => {
@@ -1110,7 +1172,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     if (chatroomDBDetails) {
       callApi();
     }
-  }, [chatroomDBDetails]);
+  }, [chatroomDBDetails, chatroomID]);
 
   // this useEffect update headers when we longPress or update selectedMessages array.
   useEffect(() => {
@@ -1119,7 +1181,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     } else if (isLongPress) {
       setSelectedHeader();
     }
-  }, [isLongPress, selectedMessages]);
+  }, [isLongPress, selectedMessages, chatroomID]);
 
   // sync conversation call with conversation_id from firebase listener
   const firebaseConversationSyncAPI = async (
@@ -1180,7 +1242,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         }
       }
     });
-  }, []);
+  }, [chatroomID]);
 
   // this useffect updates routes, previousRoute variables when we come to chatroom.
   useEffect(() => {
@@ -1188,7 +1250,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       routes = navigation.getState()?.routes;
       previousRoute = routes[routes?.length - 2];
     }
-  }, [isFocused]);
+  }, [isFocused, chatroomID]);
 
   //This useEffect has logic to or hide message privately when long press on a message
   useEffect(() => {
@@ -1210,7 +1272,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         setIsMessagePrivately(false);
       }
     }
-  }, [selectedMessages, showDM, showList]);
+  }, [selectedMessages, showDM, showList, chatroomID]);
 
   // This is to check eligibity of user that whether he/she can set chatroom topic or not
   useEffect(() => {
@@ -1225,7 +1287,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     ) {
       setIsChatroomTopic(true);
     }
-  }, [selectedMessages]);
+  }, [selectedMessages, chatroomID]);
 
   const handleModalClose = () => {
     setModalVisible(false);
@@ -2438,6 +2500,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         </View>
       ) : (
         <>
+          {ChatroomTabNavigator && (
+            <ChatroomTabNavigator
+              navigation={navigation}
+              chatroomId={currentChatroomId}
+              announcementRoomId={announcementRoomId}
+              gender={gender}
+              lmChatInterface={lmChatInterface}
+            />
+          )}
           <MessageList
             chatroomID={chatroomID}
             handleLongPress={handleLongPress}

@@ -29,6 +29,12 @@ const styles = StyleSheet.create({
   infoContainer: {
     flex: 1,
   },
+  backOptionalBtn: {
+    height: Layout.normalize(20),
+    width: Layout.normalize(24),
+    resizeMode: "contain",
+    tintColor: "black",
+  },
   messageCustomTitle: {
     color: STYLES.$COLORS.SECONDARY,
     fontSize: STYLES.$FONT_SIZES.MEDIUM,

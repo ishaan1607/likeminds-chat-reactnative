@@ -6,7 +6,7 @@ import {
   Pressable,
   TextStyle,
 } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import STYLES from "../../constants/Styles";
 import { styles } from "./styles";
 import { decode, generateGifString } from "../../commonFuctions";
@@ -195,6 +195,10 @@ const ReplyConversations = ({
   const textStyles = chatBubbleStyles?.textStyles;
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
+  const senderNameStyles = messageReceivedHeader?.senderNameStyles;
+  const senderDesignationStyles =
+    messageReceivedHeader?.senderDesignationStyles;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
@@ -299,11 +303,36 @@ const ReplyConversations = ({
       >
         {/* Reply conversation message sender name */}
         {item?.member?.id == user?.id ? null : (
-          <Text style={styles.messageInfo} numberOfLines={1}>
+          <Text
+            style={[
+              styles.messageInfo,
+              senderNameStyles?.color
+                ? { color: senderNameStyles?.color }
+                : null,
+              senderNameStyles?.fontSize
+                ? { fontSize: senderNameStyles?.fontSize }
+                : null,
+              senderNameStyles?.fontFamily
+                ? { color: senderNameStyles?.color }
+                : null,
+            ]}
+            numberOfLines={1}
+          >
             {item?.member?.name}
             {item?.member?.customTitle ? (
               <Text
-                style={styles.messageCustomTitle}
+                style={[
+                  styles.messageCustomTitle,
+                  senderDesignationStyles?.color
+                    ? { color: senderDesignationStyles?.color }
+                    : null,
+                  senderDesignationStyles?.fontSize
+                    ? { fontSize: senderDesignationStyles?.fontSize }
+                    : null,
+                  senderDesignationStyles?.fontFamily
+                    ? { color: senderDesignationStyles?.color }
+                    : null,
+                ]}
               >{` • ${item?.member?.customTitle}`}</Text>
             ) : null}
           </Text>

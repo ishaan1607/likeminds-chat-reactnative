@@ -27,8 +27,8 @@ import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Credentials } from "../../credentials";
 import ReactionList from "../ReactionList";
 import Layout from "../../constants/Layout";
-import { useLMChat } from "../../lmChatProvider";
 import { NavigateToProfileParams } from "../../callBacks/type";
+import { CallBack } from "../../callBacks/callBackClass";
 
 interface Messages {
   item: any;
@@ -60,7 +60,7 @@ const Messages = ({
   chatroomName,
 }: Messages) => {
   const { user } = useAppSelector((state) => state.homefeed);
-  const lmChatInterface = useLMChat();
+  const lmChatInterface = CallBack.lmChatInterface;
 
   const { stateArr, conversations, chatroomDBDetails, selectedMessages }: any =
     useAppSelector((state) => state.chatroom);
@@ -79,8 +79,12 @@ const Messages = ({
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
   const stateMessagesBackgroundColor =
-    chatBubbleStyles?.stateMessagesBackgroundColor;
+    chatBubbleStyles?.selectedMessagesBackgroundColor;
   const stateMessagesTextStyles = chatBubbleStyles?.stateMessagesTextStyles;
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
+  const senderNameStyles = messageReceivedHeader?.senderNameStyles;
+  const senderDesignationStyles =
+    messageReceivedHeader?.senderDesignationStyles;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
@@ -188,6 +192,9 @@ const Messages = ({
                   isTypeSent ? styles.sentMessage : styles.receivedMessage,
                   isIncluded
                     ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
+                    : null,
+                  isTypeSent
+                    ? { backgroundColor: sentMessageBackgroundColor }
                     : null,
                 ]}
               >
@@ -459,7 +466,18 @@ const Messages = ({
                 >
                   {item?.member?.id == userIdStringified ? null : (
                     <Text
-                      style={styles.messageInfo}
+                      style={[
+                        styles.messageInfo,
+                        senderNameStyles?.color
+                          ? { color: senderNameStyles?.color }
+                          : null,
+                        senderNameStyles?.fontSize
+                          ? { fontSize: senderNameStyles?.fontSize }
+                          : null,
+                        senderNameStyles?.fontFamily
+                          ? { color: senderNameStyles?.color }
+                          : null,
+                      ]}
                       numberOfLines={1}
                       onPress={() => {
                         const params: NavigateToProfileParams = {
@@ -472,7 +490,18 @@ const Messages = ({
                       {item?.member?.name}
                       {item?.member?.customTitle ? (
                         <Text
-                          style={styles.messageCustomTitle}
+                          style={[
+                            styles.messageCustomTitle,
+                            senderDesignationStyles?.color
+                              ? { color: senderDesignationStyles?.color }
+                              : null,
+                            senderDesignationStyles?.fontSize
+                              ? { fontSize: senderDesignationStyles?.fontSize }
+                              : null,
+                            senderDesignationStyles?.fontFamily
+                              ? { color: senderDesignationStyles?.color }
+                              : null,
+                          ]}
                         >{` • ${item?.member?.customTitle}`}</Text>
                       ) : null}
                     </Text>
@@ -555,7 +584,26 @@ const Messages = ({
                       }
                     : null,
                 ]}
-              />
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    const params: NavigateToProfileParams = {
+                      taggedUserId: null,
+                      member: item?.member,
+                    };
+                    lmChatInterface.navigateToProfile(params);
+                  }}
+                >
+                  <Image
+                    source={
+                      item?.member?.imageUrl
+                        ? { uri: item?.member?.imageUrl }
+                        : require("../../assets/images/default_pic.png")
+                    }
+                    style={styles.chatroomTopicAvatar}
+                  />
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         ) : null}

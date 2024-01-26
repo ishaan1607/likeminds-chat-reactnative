@@ -15,7 +15,15 @@ export const styles = StyleSheet.create({
     backgroundColor: "#fff",
     minWidth: Layout.normalize(100),
   },
-
+  chatroomTopicAvatar: {
+    width: Layout.normalize(40),
+    height: Layout.normalize(40),
+    borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
+    position: "absolute",
+    bottom: 0,
+    left: Layout.normalize(-45),
+    top: Layout.normalize(-30),
+  },
   pollMessage: {
     padding: Layout.normalize(10),
     width: "80%",
@@ -46,6 +54,7 @@ export const styles = StyleSheet.create({
     alignSelf: "flex-start",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     borderBottomLeftRadius: 0,
+    marginLeft: Layout.normalize(30),
   },
   messageText: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
@@ -85,6 +94,7 @@ export const styles = StyleSheet.create({
     borderWidth: Layout.normalize(10),
     borderBottomColor: STYLES.$COLORS.TERTIARY,
     borderRightColor: STYLES.$COLORS.TERTIARY,
+    marginLeft: Layout.normalize(30),
   },
   deletedMsg: {
     color: STYLES.$COLORS.MSG,

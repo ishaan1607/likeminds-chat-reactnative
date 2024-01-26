@@ -11,7 +11,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: Layout.normalize(20),
+    gap: Layout.normalize(15),
     marginTop: Platform.OS === "ios" ? Layout.normalize(-5) : 0,
   },
   selectedHeadingContainer: {
@@ -26,6 +26,11 @@ export const styles = StyleSheet.create({
     borderRadius: Layout.normalize(10),
     resizeMode: "contain",
     tintColor: STYLES.$COLORS.SECONDARY,
+  },
+  backOptionalBtn: {
+    height: Layout.normalize(20),
+    width: Layout.normalize(24),
+    resizeMode: "contain",
   },
   selectedBackBtn: {
     height: Layout.normalize(20),
@@ -46,7 +51,8 @@ export const styles = StyleSheet.create({
     tintColor: STYLES.$COLORS.SECONDARY,
   },
   chatRoomInfo: {
-    gap: Layout.normalize(5),
+    display: "flex",
+    flexDirection: "row",
   },
   chatRoomTopicInfo: {
     gap: Layout.normalize(5),

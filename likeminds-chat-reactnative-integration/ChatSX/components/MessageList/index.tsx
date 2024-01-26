@@ -5,14 +5,10 @@ import {
   Image,
   ScrollViewProps,
   ActivityIndicator,
+  TouchableOpacity,
+  Keyboard,
 } from "react-native";
-import React, {
-  forwardRef,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import Swipeable from "../Swipeable";
 import Messages from "../Messages";
@@ -59,6 +55,9 @@ const MessageList = forwardRef(
     const [response, setResponse] = useState<any>([]);
     const [flashListMounted, setFlashListMounted] = useState(false);
     const [isFound, setIsFound] = useState(false);
+    const [isScrollingUp, setIsScrollingUp] = useState(false);
+    const [currentOffset, setCurrentOffset] = useState(0);
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
 
     const flatlistRef = useRef<any>(null);
     const dispatch = useAppDispatch();
@@ -80,15 +79,42 @@ const MessageList = forwardRef(
     const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
     //styling props
-    const selectedBackgroundColor = chatBubbleStyles?.selectedBackgroundColor;
+    const selectedBackgroundColor =
+      chatBubbleStyles?.selectedMessagesBackgroundColor;
+    const dateStateMessage = chatBubbleStyles?.dateStateMessage;
 
     const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor
       ? selectedBackgroundColor
       : STYLES.$COLORS.SELECTED_BLUE;
+
     // styling props ended
 
     const chatroomType = chatroomDBDetails?.type;
     const chatroomWithUser = chatroomDBDetails?.chatroomWithUser;
+
+    const _keyboardDidShow = () => {
+      setKeyboardVisible(true);
+    };
+
+    const _keyboardDidHide = () => {
+      setKeyboardVisible(false);
+    };
+
+    useEffect(() => {
+      const keyboardDidShowListener = Keyboard.addListener(
+        "keyboardDidShow",
+        _keyboardDidShow
+      );
+      const keyboardDidHideListener = Keyboard.addListener(
+        "keyboardDidHide",
+        _keyboardDidHide
+      );
+
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
+    }, []);
 
     // This useEffect is used to highlight the chatroom topic conversation for 1 sec on scrolling to it
     useEffect(() => {
@@ -362,6 +388,11 @@ const MessageList = forwardRef(
       const contentLength = event.nativeEvent.contentSize.height;
       const onStartReachedThreshold = 10;
       const onEndReachedThreshold = 10;
+
+      const isUp = offset > 0 && offset > currentOffset;
+
+      setIsScrollingUp(isUp);
+      setCurrentOffset(offset);
 
       // Check if scroll has reached start of list.
       const isScrollAtStart = offset < onStartReachedThreshold;
@@ -778,6 +809,26 @@ const MessageList = forwardRef(
         );
       }
     };
+
+    const scrollToTop = async () => {
+      const payload = GetConversationsRequestBuilder.builder()
+        .setChatroomId(chatroomID?.toString())
+        .setLimit(100)
+        .setType(GetConversationsType.ALL)
+        .build();
+
+      const conversationsFromRealm = await myClient?.getConversations(payload);
+
+      if (conversationsFromRealm[0]?.id !== conversations[0]?.id) {
+        dispatch({
+          type: GET_CONVERSATIONS_SUCCESS,
+          body: { conversations: conversationsFromRealm },
+        });
+      }
+
+      flatlistRef.current.scrollToIndex({ animated: true, index: 0 });
+    };
+
     return (
       <>
         <FlashList
@@ -823,9 +874,15 @@ const MessageList = forwardRef(
                   <View style={[styles.statusMessage]}>
                     <Text
                       style={{
-                        color: STYLES.$COLORS.FONT_PRIMARY,
-                        fontSize: STYLES.$FONT_SIZES.SMALL,
-                        fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                        color: dateStateMessage?.color
+                          ? dateStateMessage?.color
+                          : STYLES.$COLORS.FONT_PRIMARY,
+                        fontSize: dateStateMessage?.fontSize
+                          ? dateStateMessage?.fontSize
+                          : STYLES.$FONT_SIZES.SMALL,
+                        fontFamily: dateStateMessage?.fontFamily
+                          ? dateStateMessage?.fontFamily
+                          : STYLES.$FONT_TYPES.LIGHT,
                       }}
                     >
                       {item?.date}
@@ -933,6 +990,24 @@ const MessageList = forwardRef(
           keyboardShouldPersistTaps={"handled"}
           inverted
         />
+        {isScrollingUp && (
+          <TouchableOpacity
+            style={[
+              styles.arrowButton,
+              {
+                bottom: keyboardVisible
+                  ? Layout.normalize(55)
+                  : Layout.normalize(20),
+              },
+            ]}
+            onPress={scrollToTop}
+          >
+            <Image
+              source={require("../../assets/images/scrollDown.png")}
+              style={styles.arrowButtonImage}
+            />
+          </TouchableOpacity>
+        )}
         {!(Object.keys(currentChatroomTopic).length === 0) &&
         chatroomType !== ChatroomType.DMCHATROOM ? (
           <Pressable

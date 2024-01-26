@@ -7,8 +7,8 @@ import moment from "moment";
 import { Events, Keys } from "../enums";
 import { LMChatAnalytics } from "../analytics/LMChatAnalytics";
 import { getConversationType } from "../utils/analyticsUtils";
-import { useLMChat } from "../lmChatProvider";
 import { NavigateToProfileParams } from "../callBacks/type";
+import { CallBack } from "../callBacks/callBackClass";
 
 const REGEX_USER_SPLITTING = /(<<.+?\|route:\/\/[^>]+>>)/gu;
 export const REGEX_USER_TAGGING =
@@ -158,7 +158,7 @@ export const decode = ({
   const arr: any[] = [];
   const parts = text?.split(REGEX_USER_SPLITTING);
 
-  const lmChatInterface = useLMChat();
+  const lmChatInterface = CallBack.lmChatInterface;
   let taggedUserId = "";
 
   if (parts) {
