@@ -19,12 +19,31 @@ import {
   PollResult,
   VideoPlayer,
   LMOverlayProvider,
+  LMChatCallbacks,
+  LMChatroomCallbacks,
+  NavigateToProfileParams,
   STYLES,
 } from 'likeminds_chat_reactnative_integration';
 import {myClient} from '.';
-import { CustomCallbacks } from './callBacks';
 
 const Stack = createNativeStackNavigator();
+
+// Override callBacks with custom logic
+class CustomCallbacks implements LMChatCallbacks, LMChatroomCallbacks {
+  navigateToProfile(params: NavigateToProfileParams) {
+      // Override navigateToProfile with custom logic
+  }
+  
+  navigateToHomePage() {
+      // Override navigateToHomePage with custom logic
+  }
+
+  onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
+      // Override onEventTriggered with custom logic
+  }
+}
+
+const lmChatInterface = new CustomCallbacks();
 
 function App(): React.JSX.Element {
   const userName = '';
@@ -148,8 +167,6 @@ function App(): React.JSX.Element {
   // if (inputBoxStyles) {
   //   STYLES.setInputBoxStyle(inputBoxStyles);
   // }
-
-  const lmChatInterface = new CustomCallbacks();
 
   return (
     <LMOverlayProvider
