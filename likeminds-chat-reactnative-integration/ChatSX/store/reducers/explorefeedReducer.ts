@@ -2,9 +2,14 @@ import {
   GET_EXPLORE_FEED_CHAT_SUCCESS,
   SET_EXPLORE_FEED_PAGE,
   UPDATE_EXPLORE_FEED_CHAT_SUCCESS,
-} from '../types/types';
+} from "../types/types";
+export interface ExploreFeedReducerState {
+  exploreChatrooms: any[];
+  page: number;
+  pinnedChatroomsCount: number;
+}
 
-const initialState = {
+export const initialState: ExploreFeedReducerState = {
   exploreChatrooms: [],
   page: 1,
   pinnedChatroomsCount: 0,
@@ -20,7 +25,7 @@ export function explorefeedReducer(state = initialState, action: any) {
       };
     }
     case GET_EXPLORE_FEED_CHAT_SUCCESS: {
-      const {chatrooms = [], pinnedChatroomsCount} = action.body;
+      const { chatrooms = [], pinnedChatroomsCount } = action.body;
       return {
         ...state,
         exploreChatrooms: chatrooms,
@@ -28,7 +33,7 @@ export function explorefeedReducer(state = initialState, action: any) {
       };
     }
     case UPDATE_EXPLORE_FEED_CHAT_SUCCESS: {
-      const {chatrooms = []} = action.body;
+      const { chatrooms = [] } = action.body;
       return {
         ...state,
         exploreChatrooms: [...state.exploreChatrooms, ...chatrooms],

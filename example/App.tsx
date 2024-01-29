@@ -12,6 +12,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationRef} from './RootNavigation';
 import {
   CarouselScreen,
+  ContextProvider,
   CreatePollScreen,
   FileUpload,
   ImageCropScreen,
@@ -19,9 +20,7 @@ import {
   PollResult,
   VideoPlayer,
 } from 'likeminds_chat_reactnative_integration';
-import {Provider as ReduxProvider} from 'react-redux';
 import {myClient} from '.';
-import {store} from 'likeminds_chat_reactnative_integration';
 import ChatroomScreen from './screens/Chatroom';
 
 const Stack = createNativeStackNavigator();
@@ -130,7 +129,7 @@ function App(): React.JSX.Element {
   }
 
   return (
-    <ReduxProvider store={store}>
+    <ContextProvider>
       <LMChatProvider
         myClient={myClient}
         userName={userName}
@@ -182,7 +181,7 @@ function App(): React.JSX.Element {
           </NavigationContainer>
         </KeyboardAvoidingView>
       </LMChatProvider>
-    </ReduxProvider>
+    </ContextProvider>
   );
 }
 

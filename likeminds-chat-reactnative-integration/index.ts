@@ -7,10 +7,10 @@ import PollResult from "./ChatSX/components/PollResult";
 import CreatePollScreen from "./ChatSX/components/Poll/CreatePollScreen";
 import ImageCropScreen from "./ChatSX/screens/ImageCrop";
 import VideoPlayer from "./ChatSX/screens/VideoPlayer";
-import store from "./ChatSX/store";
 import ChatroomHeader from "./ChatSX/components/ChatroomHeader";
 import MessageList from "./ChatSX/components/MessageList";
 import MessageInput from "./ChatSX/components/MessageInput";
+import { ContextProvider } from "./ChatSX/contextStore";
 
 export {
   ChatRoom,
@@ -18,7 +18,6 @@ export {
   MessageList,
   MessageInput,
   LMChatProvider,
-  store,
   FileUpload,
   CarouselScreen,
   PollResult,
@@ -26,4 +25,5 @@ export {
   ImageCropScreen,
   VideoPlayer,
   initMyClient,
+  ContextProvider,
 };
