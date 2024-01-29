@@ -213,7 +213,7 @@ const DMFeed = ({ navigation }: Props) => {
   const loadData = async (newPage: number) => {
     setIsLoading(true);
     setTimeout(async () => {
-      const res = await updateData(newPage);
+      const res: any = await updateData(newPage);
       if (res) {
         setIsLoading(false);
       }

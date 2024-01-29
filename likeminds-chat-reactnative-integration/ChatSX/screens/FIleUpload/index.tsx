@@ -191,7 +191,7 @@ const FileUpload = ({ navigation, route }: any) => {
       };
 
       try {
-        let getVideoThumbnailData = null;
+        let getVideoThumbnailData: any = null;
         if (
           thumbnailURL &&
           (attachmentType === VIDEO_TEXT || gifAttachmentType === GIF_TEXT)

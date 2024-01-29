@@ -139,7 +139,7 @@ const HomeFeed = ({ navigation }: Props) => {
       isGuest: false,
     };
 
-    const res = await dispatch(initAPI(payload) as any);
+    const res: any = await dispatch(initAPI(payload) as any);
 
     if (res) {
       setCommunityId(res?.community?.id);

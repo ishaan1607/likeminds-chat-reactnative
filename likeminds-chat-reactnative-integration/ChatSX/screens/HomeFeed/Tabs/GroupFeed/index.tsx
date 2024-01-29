@@ -157,7 +157,7 @@ const GroupFeed = ({ navigation }: Props) => {
   }, [user, isFocused]);
 
   async function fetchData() {
-    const invitesRes = await dispatch(
+    const invitesRes: any = await dispatch(
       getInvites({ channelType: 1, page: 1, pageSize: 10 }, false) as any
     );
 
@@ -205,7 +205,7 @@ const GroupFeed = ({ navigation }: Props) => {
   const loadData = async (newPage: number) => {
     setIsLoading(true);
     setTimeout(async () => {
-      const res = await updateData(newPage);
+      const res: any = await updateData(newPage);
       if (res) {
         setIsLoading(false);
       }

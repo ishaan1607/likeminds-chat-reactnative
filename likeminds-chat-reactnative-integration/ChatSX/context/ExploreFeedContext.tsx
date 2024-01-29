@@ -103,7 +103,7 @@ export const ExploreFeedContextProvider = ({
 
   const loadData = async (newPage: number) => {
     setIsLoading(true);
-    const res = await updateData(newPage);
+    const res: any = await updateData(newPage);
     if (res) {
       setIsLoading(false);
     }

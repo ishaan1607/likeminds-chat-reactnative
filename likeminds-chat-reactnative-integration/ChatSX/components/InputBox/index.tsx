@@ -1237,9 +1237,7 @@ const InputBox = ({
             payload.shareLink = url;
           }
 
-          const response = await dispatch(
-            onConversationsCreate(payload) as any
-          );
+          const response: any = await dispatch(onConversationsCreate(payload));
 
           if (response) {
             await myClient?.replaceSavedConversation(response?.conversation);
@@ -1337,9 +1335,7 @@ const InputBox = ({
             payload.shareLink = url;
           }
 
-          const response = await dispatch(
-            onConversationsCreate(payload) as any
-          );
+          const response: any = await dispatch(onConversationsCreate(payload));
 
           await myClient?.replaceSavedConversation(response?.conversation);
 
