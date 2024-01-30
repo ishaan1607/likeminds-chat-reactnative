@@ -25,7 +25,7 @@ import {
   fetchResourceFromURI,
   formatTime,
 } from "../../commonFuctions";
-import InputBox from "../../components/InputBox";
+import MessageInputBox from "../../components/InputBox";
 import ToastMessage from "../../components/ToastMessage";
 import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -2561,7 +2561,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               !(user.state !== 1 && chatroomDBDetails?.type === 7) &&
                 chatroomFollowStatus &&
                 memberRights[3]?.isSelected === true ? (
-                <InputBox
+                <MessageInputBox
                   chatroomName={chatroomName}
                   chatroomWithUser={chatroomWithUser}
                   replyChatID={replyChatID}
@@ -2708,7 +2708,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               </View>
             ) : (showDM === true && chatRequestState === 1) ||
               chatRequestState === null ? (
-              <InputBox
+              <MessageInputBox
                 replyChatID={replyChatID}
                 chatroomID={chatroomID}
                 chatRequestState={chatRequestState}

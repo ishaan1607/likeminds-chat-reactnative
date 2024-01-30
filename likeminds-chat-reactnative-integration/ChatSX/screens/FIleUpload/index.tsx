@@ -13,7 +13,7 @@ import { Image as CompressedImage } from "react-native-compressor";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import styles from "./styles";
 import Layout from "../../constants/Layout";
-import InputBox from "../../components/InputBox";
+import MessageInputBox from "../../components/InputBox";
 import {
   CLEAR_FILE_UPLOADING_MESSAGES,
   CLEAR_SELECTED_FILES_TO_UPLOAD,
@@ -405,7 +405,7 @@ const FileUpload = ({ navigation, route }: any) => {
 
       <View style={styles.bottomBar}>
         {len > 0 ? (
-          <InputBox
+          <MessageInputBox
             isUploadScreen={true}
             isDoc={docItemType === PDF_TEXT ? true : false}
             chatroomID={chatroomID}

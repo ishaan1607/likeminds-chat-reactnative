@@ -150,7 +150,7 @@ import Layout from "../../constants/Layout";
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
 
-const InputBox = ({
+const MessageInputBox = ({
   replyChatID,
   chatroomID,
   chatRequestState,
@@ -2663,4 +2663,4 @@ const InputBox = ({
   );
 };
 
-export default InputBox;
+export default MessageInputBox;
