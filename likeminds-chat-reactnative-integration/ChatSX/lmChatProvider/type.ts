@@ -6,5 +6,5 @@ export interface LMChatProviderProps {
   userName: string;
   userUniqueId: string;
   profileImageUrl: string;
-  lmChatInterface: any;
+  lmChatInterface?: any;
 }

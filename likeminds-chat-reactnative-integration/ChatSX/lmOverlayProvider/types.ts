@@ -12,5 +12,5 @@ export interface LMOverlayProviderProps {
   userName: string;
   userUniqueId: string;
   profileImageUrl: string;
-  lmChatInterface: any;
+  lmChatInterface?: any;
 }
