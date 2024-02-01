@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     color: STYLES.$COLORS.FONT_PRIMARY,
-    maxWidth: Layout.window.width - 150,
+    maxWidth: Layout.window.width - Layout.normalize(150),
   },
   messageDate: {
     fontSize: Layout.normalize(10),

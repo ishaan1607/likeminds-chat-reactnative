@@ -2367,7 +2367,7 @@ const MessageInputBox = ({
                   multilineField
                   inputRef={myRef}
                   onType={handleInputChange}
-                  autoFocus={true}
+                  autoFocus={false}
                   selectionColor={inputBoxStyles?.selectionColor}
                   partTypes={[
                     {
