@@ -225,6 +225,31 @@ const MessageInputBox = ({
   const [showLinkPreview, setShowLinkPreview] = useState(true);
   const [url, setUrl] = useState("");
   const [closedPreview, setClosedPreview] = useState(false);
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
+
+  const _keyboardDidShow = () => {
+    setKeyboardVisible(true);
+  };
+
+  const _keyboardDidHide = () => {
+    setKeyboardVisible(false);
+  };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      _keyboardDidShow
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      _keyboardDidHide
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
 
   const MAX_FILE_SIZE = 104857600; // 100MB in bytes
   const MAX_LENGTH = 300;
@@ -1898,7 +1923,12 @@ const MessageInputBox = ({
   }, [isVoiceNoteIconPress]);
 
   return (
-    <View>
+    <View
+      style={{
+        marginBottom:
+          keyboardVisible && !isUploadScreen ? Layout.normalize(-40) : 0,
+      }}
+    >
       {/* shows message how we record voice note */}
       {isVoiceNoteIconPress && (
         <View

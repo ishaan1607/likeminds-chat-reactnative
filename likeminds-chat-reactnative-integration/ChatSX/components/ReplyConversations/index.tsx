@@ -72,82 +72,84 @@ export const ReplyBox = ({ item, chatroomName }: ReplyBox) => {
   return (
     <View style={styles.replyBox}>
       <View>
-        <Text style={styles.replySender}>
+        <Text style={styles.replySender} numberOfLines={1}>
           {item?.member?.id == user?.id ? "You" : item?.member?.name}
         </Text>
       </View>
       <View style={styles.alignRow}>
-        {item?.hasFiles ? (
-          item?.attachments[0]?.type === IMAGE_TEXT ? (
-            <Image
-              source={require("../../assets/images/image_icon3x.png")}
-              style={styles.icon}
-            />
-          ) : item?.attachments[0]?.type === PDF_TEXT ? (
-            <Image
-              source={require("../../assets/images/document_icon3x.png")}
-              style={styles.icon}
-            />
-          ) : item?.attachments[0]?.type === VIDEO_TEXT ? (
-            <Image
-              source={require("../../assets/images/video_icon3x.png")}
-              style={styles.icon}
-            />
-          ) : item?.attachments[0]?.type === VOICE_NOTE_TEXT ? (
-            <Image
-              source={require("../../assets/images/mic_icon3x.png")}
-              style={[styles.icon, { tintColor: "grey" }]}
-            />
-          ) : item?.attachments[0]?.type === GIF_TEXT ? (
-            <View style={styles.gifView}>
-              <Text style={styles.gifText}>{CAPITAL_GIF_TEXT}</Text>
-            </View>
-          ) : Number(item?.state) === 10 ? (
-            <Image
-              source={require("../../assets/images/poll_icon3x.png")}
-              style={[styles.icon, { tintColor: "grey" }]}
-            />
-          ) : item?.ogTags?.url != null ? (
-            <Image
-              source={require("../../assets/images/link_icon.png")}
-              style={[styles.icon, { tintColor: "grey" }]}
-            />
-          ) : null
-        ) : null}
-        <Text
-          style={
-            [
-              styles.messageText,
-              textStyles ? { ...textStyles } : null,
-            ] as TextStyle
-          }
-        >
-          {decode({
-            text: !!answer
-              ? answer
-              : item?.attachments[0]?.type === PDF_TEXT
-              ? DOCUMENT_STRING
-              : item?.attachments[0]?.type === IMAGE_TEXT
-              ? PHOTO_STRING
-              : item?.attachments[0]?.type === VIDEO_TEXT
-              ? VIDEO_STRING
-              : item?.attachments[0]?.type === VOICE_NOTE_TEXT
-              ? VOICE_NOTE_STRING
-              : item?.attachments[0]?.type === GIF_TEXT
-              ? CAPITAL_GIF_TEXT
-              : item?.attachments[0]?.type === AUDIO_TEXT
-              ? NOT_SUPPORTED_TEXT
-              : null,
-            enableClick: false,
-            chatroomName: chatroomName,
-            communityId: user?.sdkClientInfo?.community,
-            textStyles: textStyles,
-            linkTextColor: linkTextColor,
-            taggingTextColor: taggingTextColor,
-          })}
-        </Text>
-        {!!item?.hasFiles && item?.attachments.length > 1 ? (
-          <View>
+        <Text numberOfLines={1} style={{ width: "100%" }}>
+          <Text>
+            {item?.hasFiles ? (
+              item?.attachments[0]?.type === IMAGE_TEXT ? (
+                <Image
+                  source={require("../../assets/images/image_icon3x.png")}
+                  style={styles.icon}
+                />
+              ) : item?.attachments[0]?.type === PDF_TEXT ? (
+                <Image
+                  source={require("../../assets/images/document_icon3x.png")}
+                  style={styles.icon}
+                />
+              ) : item?.attachments[0]?.type === VIDEO_TEXT ? (
+                <Image
+                  source={require("../../assets/images/video_icon3x.png")}
+                  style={styles.icon}
+                />
+              ) : item?.attachments[0]?.type === VOICE_NOTE_TEXT ? (
+                <Image
+                  source={require("../../assets/images/mic_icon3x.png")}
+                  style={[styles.icon, { tintColor: "grey" }]}
+                />
+              ) : item?.attachments[0]?.type === GIF_TEXT ? (
+                <View style={styles.gifView}>
+                  <Text style={styles.gifText}>{CAPITAL_GIF_TEXT}</Text>
+                </View>
+              ) : Number(item?.state) === 10 ? (
+                <Image
+                  source={require("../../assets/images/poll_icon3x.png")}
+                  style={[styles.icon, { tintColor: "grey" }]}
+                />
+              ) : item?.ogTags?.url != null ? (
+                <Image
+                  source={require("../../assets/images/link_icon.png")}
+                  style={[styles.icon, { tintColor: "grey" }]}
+                />
+              ) : null
+            ) : null}
+          </Text>{" "}
+          <Text
+            style={
+              [
+                styles.messageText,
+                textStyles ? { ...textStyles } : null,
+              ] as TextStyle
+            }
+          >
+            {decode({
+              text: !!answer
+                ? answer
+                : item?.attachments[0]?.type === PDF_TEXT
+                ? DOCUMENT_STRING
+                : item?.attachments[0]?.type === IMAGE_TEXT
+                ? PHOTO_STRING
+                : item?.attachments[0]?.type === VIDEO_TEXT
+                ? VIDEO_STRING
+                : item?.attachments[0]?.type === VOICE_NOTE_TEXT
+                ? VOICE_NOTE_STRING
+                : item?.attachments[0]?.type === GIF_TEXT
+                ? CAPITAL_GIF_TEXT
+                : item?.attachments[0]?.type === AUDIO_TEXT
+                ? NOT_SUPPORTED_TEXT
+                : null,
+              enableClick: false,
+              chatroomName: chatroomName,
+              communityId: user?.sdkClientInfo?.community,
+              textStyles: textStyles,
+              linkTextColor: linkTextColor,
+              taggingTextColor: taggingTextColor,
+            })}
+          </Text>
+          {!!item?.hasFiles && item?.attachments.length > 1 ? (
             <Text
               style={
                 [
@@ -156,8 +158,8 @@ export const ReplyBox = ({ item, chatroomName }: ReplyBox) => {
                 ] as TextStyle
               }
             >{` (+${item?.attachments.length - 1} more)`}</Text>
-          </View>
-        ) : null}
+          ) : null}
+        </Text>
       </View>
     </View>
   );

@@ -5,7 +5,7 @@ import React, {
   useState,
   useEffect,
 } from "react";
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View, KeyboardAvoidingView } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppDispatch } from "../store";
 import { Credentials } from "../credentials";
@@ -222,7 +222,12 @@ export const LMChatProvider = ({
 
   return isInitiated && isRegisterdDevice ? (
     <GestureHandlerRootView style={styles.flexStyling}>
-      <View style={styles.flexStyling}>{children}</View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.flexStyling}>{children}</View>
+      </KeyboardAvoidingView>
     </GestureHandlerRootView>
   ) : (
     <></>

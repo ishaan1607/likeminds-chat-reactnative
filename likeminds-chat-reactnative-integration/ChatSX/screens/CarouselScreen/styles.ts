@@ -21,6 +21,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flex: 1,
     paddingVertical: Layout.normalize(10),
+    marginTop: Layout.normalize(40),
   },
   image: {
     width: Layout.window.width,

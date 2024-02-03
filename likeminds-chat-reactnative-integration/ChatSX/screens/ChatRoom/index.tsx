@@ -362,7 +362,9 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
 
               <View style={styles.chatRoomInfo}>
                 <View>
-                  {ChatroomTabNavigator && gender == "male" ? (
+                  {ChatroomTabNavigator &&
+                  gender == "male" &&
+                  chatroomType !== ChatroomType.DMCHATROOM ? (
                     <Image
                       source={
                         chatroomDBDetails?.chatroomImageUrl
@@ -371,7 +373,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                       }
                       style={styles.avatar}
                     />
-                  ) : (
+                  ) : chatroomType !== ChatroomType.DMCHATROOM ? (
                     <Image
                       source={
                         chatroomDBDetails?.chatroomImageUrl
@@ -380,7 +382,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                       }
                       style={styles.avatar}
                     />
-                  )}
+                  ) : null}
                 </View>
                 <View>
                   <TouchableOpacity
@@ -427,6 +429,23 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                       {chatroomDetails?.participantCount != undefined
                         ? `${chatroomDetails?.participantCount} participants`
                         : ""}
+                    </Text>
+                  ) : chatroomType === ChatroomType.DMCHATROOM &&
+                    ChatroomTabNavigator ? (
+                    <Text
+                      style={{
+                        color: chatroomSubHeaderStyle?.color
+                          ? chatroomSubHeaderStyle?.color
+                          : STYLES.$COLORS.MSG,
+                        fontSize: chatroomSubHeaderStyle?.fontSize
+                          ? chatroomSubHeaderStyle?.fontSize
+                          : STYLES.$FONT_SIZES.SMALL,
+                        fontFamily: chatroomSubHeaderStyle?.fontFamily
+                          ? chatroomSubHeaderStyle?.fontFamily
+                          : STYLES.$FONT_TYPES.LIGHT,
+                      }}
+                    >
+                      Moderator
                     </Text>
                   ) : null}
                 </View>

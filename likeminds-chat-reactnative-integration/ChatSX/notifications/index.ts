@@ -141,7 +141,11 @@ export default async function getNotification(remoteMessage: any) {
           for (let i = 0; i < sortedUnreadConversation?.length; i++) {
             notifee.displayNotification({
               title: sortedUnreadConversation[i]?.chatroomName,
-              body: `<b>${sortedUnreadConversation[i]?.chatroomLastConversationUserName}</b>: ${sortedUnreadConversation[i]?.chatroomLastConversation}`,
+              body: `<b>${
+                sortedUnreadConversation[i]?.chatroomLastConversationUserName
+              }</b>: ${generateGifString(
+                sortedUnreadConversation[i]?.chatroomLastConversation
+              )}`,
               android: {
                 channelId,
                 groupId: navigationRoute?.toString(16),

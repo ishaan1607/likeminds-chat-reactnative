@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     left: Layout.normalize(10),
     width: "100%",
     right: Layout.normalize(10),
+    marginTop: Layout.normalize(10),
   },
   headingItems: {
     display: "flex",
