@@ -171,6 +171,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const chatroomHeaderStyles = STYLES.$CHATROOM_HEADER_STYLE;
   const chatroomNameHeaderStyle = chatroomHeaderStyles?.chatroomNameHeaderStyle;
   const chatroomSubHeaderStyle = chatroomHeaderStyles?.chatroomSubHeaderStyle;
+  const chatroomSelectedHeaderIcons =
+    chatroomHeaderStyles?.chatroomSelectedHeaderIcons;
 
   useEffect(() => {
     ChatroomTabNavigator && setCurrentChatroomId(chatroomID);
@@ -494,7 +496,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
           >
             <Image
               source={require("../../assets/images/blue_back_arrow3x.png")}
-              style={styles.selectedBackBtn}
+              style={[
+                styles.selectedBackBtn,
+                {
+                  tintColor:
+                    chatroomSelectedHeaderIcons?.tintColor !== undefined
+                      ? chatroomSelectedHeaderIcons?.tintColor
+                      : undefined,
+                },
+              ]}
             />
           </TouchableOpacity>
           <View style={styles.chatRoomInfo}>
@@ -626,7 +636,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 >
                   <Image
                     source={require("../../assets/images/reply_icon3x.png")}
-                    style={styles.threeDots}
+                    style={[
+                      styles.threeDots,
+                      {
+                        tintColor:
+                          chatroomSelectedHeaderIcons?.tintColor !== undefined
+                            ? chatroomSelectedHeaderIcons?.tintColor
+                            : undefined,
+                      },
+                    ]}
                   />
                 </TouchableOpacity>
               )}
@@ -646,7 +664,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   source={require("../../assets/images/copy_icon3x.png")}
-                  style={styles.threeDots}
+                  style={[
+                    styles.threeDots,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             ) : len > 1 && isCopy ? (
@@ -664,7 +690,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   source={require("../../assets/images/copy_icon3x.png")}
-                  style={styles.threeDots}
+                  style={[
+                    styles.threeDots,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             ) : null}
@@ -686,7 +720,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   source={require("../../assets/images/edit_icon3x.png")}
-                  style={styles.editIcon}
+                  style={[
+                    styles.editIcon,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             ) : null}
@@ -762,7 +804,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   source={require("../../assets/images/delete_icon3x.png")}
-                  style={styles.threeDots}
+                  style={[
+                    styles.threeDots,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             )}
@@ -776,7 +826,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 >
                   <Image
                     source={require("../../assets/images/three_dots3x.png")}
-                    style={styles.threeDots}
+                    style={[
+                      styles.threeDots,
+                      {
+                        tintColor:
+                          chatroomSelectedHeaderIcons?.tintColor !== undefined
+                            ? chatroomSelectedHeaderIcons?.tintColor
+                            : undefined,
+                      },
+                    ]}
                   />
                 </TouchableOpacity>
               )}

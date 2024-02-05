@@ -55,9 +55,11 @@ const MessageList = forwardRef(
     const [response, setResponse] = useState<any>([]);
     const [flashListMounted, setFlashListMounted] = useState(false);
     const [isFound, setIsFound] = useState(false);
+    const [isReplyFound, setIsReplyFound] = useState(false);
     const [isScrollingUp, setIsScrollingUp] = useState(false);
     const [currentOffset, setCurrentOffset] = useState(0);
     const [keyboardVisible, setKeyboardVisible] = useState(false);
+    const [replyConversationId, setReplyConversationId] = useState("");
 
     const flatlistRef = useRef<any>(null);
     const dispatch = useAppDispatch();
@@ -82,6 +84,8 @@ const MessageList = forwardRef(
     const selectedBackgroundColor =
       chatBubbleStyles?.selectedMessagesBackgroundColor;
     const dateStateMessage = chatBubbleStyles?.dateStateMessage;
+    const stateMessagesBackgroundColor =
+      chatBubbleStyles?.stateMessagesTextStyles?.backgroundColor;
 
     const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor
       ? selectedBackgroundColor
@@ -124,6 +128,15 @@ const MessageList = forwardRef(
         }, 1000);
       }
     }, [isFound]);
+
+    useEffect(() => {
+      if (isReplyFound) {
+        setTimeout(() => {
+          setIsReplyFound(false);
+          setReplyConversationId("");
+        }, 1000);
+      }
+    }, [isReplyFound]);
 
     {
       /* `{? = then}`, `{: = else}`  */
@@ -862,7 +875,11 @@ const MessageList = forwardRef(
               (val: any) => val?.id === item?.id && !isStateIncluded
             );
 
-            if (isFound && item?.id == currentChatroomTopic?.id) {
+            if (isFound && item?.id === currentChatroomTopic?.id) {
+              isIncluded = true;
+            }
+
+            if (isReplyFound && item?.id === replyConversationId) {
               isIncluded = true;
             }
 
@@ -871,7 +888,14 @@ const MessageList = forwardRef(
                 {index < conversations?.length &&
                 conversations[index]?.date !==
                   conversations[index + 1]?.date ? (
-                  <View style={[styles.statusMessage]}>
+                  <View
+                    style={[
+                      styles.statusMessage,
+                      stateMessagesBackgroundColor
+                        ? { backgroundColor: stateMessagesBackgroundColor }
+                        : null,
+                    ]}
+                  >
                     <Text
                       style={{
                         color: dateStateMessage?.color
@@ -947,6 +971,8 @@ const MessageList = forwardRef(
                           index,
                         });
                       }}
+                      setIsReplyFound={setIsReplyFound}
+                      setReplyConversationId={setReplyConversationId}
                       isIncluded={isIncluded}
                       item={item}
                       navigation={navigation}
