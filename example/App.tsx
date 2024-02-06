@@ -24,7 +24,7 @@ import {
   NavigateToProfileParams,
   NavigateToGroupDetailsParams,
   STYLES,
-} from 'likeminds_chat_reactnative_integration';
+} from '@likeminds.community/chat-rn-core';
 import {myClient} from '.';
 
 const Stack = createNativeStackNavigator();

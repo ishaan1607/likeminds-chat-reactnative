@@ -6,7 +6,7 @@ import {
   Pressable,
   TextStyle,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import STYLES from "../../constants/Styles";
 import { styles } from "./styles";
 import { decode, generateGifString } from "../../commonFuctions";
@@ -47,6 +47,8 @@ interface ReplyConversations {
   handleFileUpload: any;
   chatroomID: any;
   chatroomName: string;
+  setIsReplyFound: React.Dispatch<React.SetStateAction<boolean>>;
+  setReplyConversationId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface ReplyBox {
@@ -177,6 +179,8 @@ const ReplyConversations = ({
   handleFileUpload,
   chatroomID,
   chatroomName,
+  setIsReplyFound,
+  setReplyConversationId,
 }: ReplyConversations) => {
   const dispatch = useAppDispatch();
   const { conversations, selectedMessages, stateArr, isLongPress }: any =
@@ -216,7 +220,7 @@ const ReplyConversations = ({
     longPressOpenKeyboard();
   };
 
-  const handleOnPress = async () => {
+  const handleOnPress = async (event: any) => {
     const isStateIncluded = stateArr.includes(item?.state);
     if (isLongPress) {
       if (isIncluded) {
@@ -251,10 +255,14 @@ const ReplyConversations = ({
         if (!flashListMounted) {
           setTimeout(() => {
             onScrollToIndex(index);
+            setReplyConversationId(item?.replyConversationObject?.id);
+            setIsReplyFound(true);
             setFlashListMounted(true);
-          }, 1000);
+          }, 100);
         } else {
           onScrollToIndex(index);
+          setReplyConversationId(item?.replyConversationObject?.id);
+          setIsReplyFound(true);
         }
       } else {
         const newConversation = await getCurrentConversation(
@@ -270,6 +278,8 @@ const ReplyConversations = ({
         );
         if (index >= 0) {
           onScrollToIndex(index);
+          setReplyConversationId(item?.replyConversationObject?.id);
+          setIsReplyFound(true);
         }
       }
     }

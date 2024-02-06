@@ -225,31 +225,6 @@ const MessageInputBox = ({
   const [showLinkPreview, setShowLinkPreview] = useState(true);
   const [url, setUrl] = useState("");
   const [closedPreview, setClosedPreview] = useState(false);
-  const [keyboardVisible, setKeyboardVisible] = useState(false);
-
-  const _keyboardDidShow = () => {
-    setKeyboardVisible(true);
-  };
-
-  const _keyboardDidHide = () => {
-    setKeyboardVisible(false);
-  };
-
-  useEffect(() => {
-    const keyboardDidShowListener = Keyboard.addListener(
-      "keyboardDidShow",
-      _keyboardDidShow
-    );
-    const keyboardDidHideListener = Keyboard.addListener(
-      "keyboardDidHide",
-      _keyboardDidHide
-    );
-
-    return () => {
-      keyboardDidShowListener.remove();
-      keyboardDidHideListener.remove();
-    };
-  }, []);
 
   const MAX_FILE_SIZE = 104857600; // 100MB in bytes
   const MAX_LENGTH = 300;
@@ -1923,25 +1898,14 @@ const MessageInputBox = ({
   }, [isVoiceNoteIconPress]);
 
   return (
-    <View
-      style={{
-        marginBottom:
-          keyboardVisible && !isUploadScreen ? Layout.normalize(-40) : 0,
-      }}
-    >
+    <View>
       {/* shows message how we record voice note */}
       {isVoiceNoteIconPress && (
         <View
           style={[
             styles.tapAndHold,
             {
-              bottom: isKeyBoardFocused
-                ? isIOS
-                  ? Layout.normalize(65)
-                  : Layout.normalize(110)
-                : isIOS
-                ? Layout.normalize(80)
-                : Layout.normalize(70),
+              bottom: isKeyBoardFocused ? (isIOS ? 65 : 110) : isIOS ? 80 : 70,
             },
           ]}
         >
@@ -1958,11 +1922,11 @@ const MessageInputBox = ({
             ? {
                 marginBottom: isKeyBoardFocused
                   ? Platform.OS === "android"
-                    ? Layout.normalize(45)
-                    : Layout.normalize(5)
+                    ? 5
+                    : 5
                   : isIOS
-                  ? Layout.normalize(20)
-                  : Layout.normalize(5),
+                  ? 20
+                  : 5,
               }
             : null,
         ]}

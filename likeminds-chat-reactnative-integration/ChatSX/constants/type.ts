@@ -26,6 +26,9 @@ export interface ChatroomHeaderStyles {
     fontSize?: number;
     fontFamily?: string;
   };
+  chatroomSelectedHeaderIcons?: {
+    tintColor?: string;
+  };
 }
 
 export interface ChatBubbleStyles {
@@ -47,6 +50,7 @@ export interface ChatBubbleStyles {
     fontStyle?: string;
     fontFamily?: string;
     color?: string;
+    backgroundColor?: string;
   };
   messageReceivedHeader?: {
     senderNameStyles?: {
@@ -85,6 +89,7 @@ export interface ReactionListStyles {
   reactionItemBorderRadius?: number;
   gap?: number;
   selectedMessageBackgroundColor?: string;
+  tabOptionColor?: string;
 }
 
 export interface InputBoxStyles {

@@ -1,9 +1,8 @@
 {
-  "name": "likeminds_chat_reactnative_integration",
+  "name": "@likeminds.community/chat-rn-core",
   "version": "0.5.0",
   "versionCode": "1",
   "versionName": "0.5.0",
-  "private": true,
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -17,7 +16,7 @@
   },
   "dependencies": {
     "@giphy/react-native-sdk": "3.2.1",
-    "@likeminds.community/chat-rn": "1.4.0",
+    "@likeminds.community/chat-rn": "1.5.0",
     "@notifee/react-native": "7.6.1",
     "@react-native-async-storage/async-storage": "1.18.1",
     "@react-native-clipboard/clipboard": "1.11.2",

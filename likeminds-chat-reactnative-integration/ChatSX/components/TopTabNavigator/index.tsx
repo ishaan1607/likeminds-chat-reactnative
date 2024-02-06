@@ -1,5 +1,5 @@
 import { View, Image, Text, ScrollView, TouchableOpacity } from "react-native";
-import React, { useLayoutEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
@@ -39,7 +39,7 @@ export const PeopleWhoReactedDefault = ({
                 <View>
                   <Image
                     source={
-                      val?.member?.image_url
+                      val?.member?.imageUrl
                         ? { uri: val?.member?.image_url }
                         : require("../../assets/images/default_pic.png")
                     }
@@ -115,20 +115,6 @@ export const PeopleWhoReacted = ({
   );
 };
 
-const renderTabBar = (props: any) => (
-  <TabBar
-    {...props}
-    tabStyle={{ width: Layout.normalize(70), color: STYLES.$COLORS.SECONDARY }}
-    labelStyle={[
-      styles.textHeading,
-      { color: STYLES.$COLORS.LIGHT_BLUE, textTransform: "capitalize" },
-    ]}
-    indicatorStyle={{ backgroundColor: STYLES.$COLORS.SECONDARY }}
-    style={{ backgroundColor: "white" }}
-    scrollEnabled={true}
-  />
-);
-
 interface MyTabs {
   reactionArr: any;
   defaultReactionArr: any;
@@ -183,6 +169,30 @@ export default function MyTabs({
       setState(initialState as any);
     }
   }, [reactionArr]);
+
+  const reactionListStyle = STYLES.$REACTION_LIST_STYLE;
+
+  let tabOptionColor = reactionListStyle?.tabOptionColor;
+
+  const renderTabBar = (props: any) => (
+    <TabBar
+      {...props}
+      tabStyle={{
+        width: Layout.normalize(70),
+        color: STYLES.$COLORS.SECONDARY,
+      }}
+      labelStyle={[
+        styles.textHeading,
+        {
+          color: tabOptionColor ? tabOptionColor : STYLES.$COLORS.LIGHT_BLUE,
+          textTransform: "capitalize",
+        },
+      ]}
+      indicatorStyle={{ backgroundColor: STYLES.$COLORS.SECONDARY }}
+      style={{ backgroundColor: "white" }}
+      scrollEnabled={true}
+    />
+  );
 
   return (
     <TabView

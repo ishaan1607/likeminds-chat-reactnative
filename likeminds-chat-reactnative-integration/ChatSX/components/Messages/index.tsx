@@ -43,6 +43,8 @@ interface Messages {
   chatroomType: any;
   chatroomID: any;
   chatroomName: any;
+  setIsReplyFound: React.Dispatch<React.SetStateAction<boolean>>;
+  setReplyConversationId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Messages = ({
@@ -58,6 +60,8 @@ const Messages = ({
   chatroomType,
   chatroomID,
   chatroomName,
+  setIsReplyFound,
+  setReplyConversationId,
 }: Messages) => {
   const { user } = useAppSelector((state) => state.homefeed);
   const lmChatInterface = CallBack.lmChatInterface;
@@ -79,7 +83,7 @@ const Messages = ({
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
   const stateMessagesBackgroundColor =
-    chatBubbleStyles?.selectedMessagesBackgroundColor;
+    chatBubbleStyles?.stateMessagesTextStyles?.backgroundColor;
   const stateMessagesTextStyles = chatBubbleStyles?.stateMessagesTextStyles;
   const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
   const senderNameStyles = messageReceivedHeader?.senderNameStyles;
@@ -190,11 +194,11 @@ const Messages = ({
                 style={[
                   styles.message,
                   isTypeSent ? styles.sentMessage : styles.receivedMessage,
-                  isIncluded
-                    ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
-                    : null,
                   isTypeSent
                     ? { backgroundColor: sentMessageBackgroundColor }
+                    : null,
+                  isIncluded
+                    ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                     : null,
                 ]}
               >
@@ -236,11 +240,11 @@ const Messages = ({
               style={[
                 styles.message,
                 isTypeSent ? styles.sentMessage : styles.receivedMessage,
-                isIncluded
-                  ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
-                  : null,
                 isTypeSent
                   ? { backgroundColor: sentMessageBackgroundColor }
+                  : null,
+                isIncluded
+                  ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                   : null,
               ]}
             >
@@ -268,6 +272,8 @@ const Messages = ({
             isIncluded={isIncluded}
             item={item}
             isTypeSent={isTypeSent}
+            setIsReplyFound={setIsReplyFound}
+            setReplyConversationId={setReplyConversationId}
             onScrollToIndex={onScrollToIndex}
             openKeyboard={() => {
               openKeyboard();
@@ -395,7 +401,14 @@ const Messages = ({
                     </Text>
                   </Pressable>
                 ) : (
-                  <View style={[styles.statusMessage]}>
+                  <View
+                    style={[
+                      styles.statusMessage,
+                      stateMessagesBackgroundColor
+                        ? { backgroundColor: stateMessagesBackgroundColor }
+                        : null,
+                    ]}
+                  >
                     <Text style={styles.textCenterAlign}>
                       {
                         // State 1 refers to initial DM message, so in that case trimming the first user name
