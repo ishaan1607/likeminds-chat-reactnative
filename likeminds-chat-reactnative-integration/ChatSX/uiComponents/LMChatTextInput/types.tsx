@@ -8,7 +8,6 @@ import type {
   ViewStyle,
 } from "react-native";
 import React from "react";
-import { LMChatButtonProps } from "../LMChatButton/types";
 
 type Suggestion = {
   id: string;

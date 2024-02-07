@@ -5,14 +5,10 @@ import {
   Image,
   ScrollViewProps,
   ActivityIndicator,
+  TouchableOpacity,
+  Keyboard,
 } from "react-native";
-import React, {
-  forwardRef,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import Swipeable from "../Swipeable";
 import Messages from "../Messages";
@@ -34,8 +30,8 @@ import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
 import { CAPITAL_GIF_TEXT, VOICE_NOTE_STRING } from "../../constants/Strings";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
-import { useLMChatStyles } from "../../lmChatProvider";
 import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 const MessageList = forwardRef(
   (
@@ -59,6 +55,11 @@ const MessageList = forwardRef(
     const [response, setResponse] = useState<any>([]);
     const [flashListMounted, setFlashListMounted] = useState(false);
     const [isFound, setIsFound] = useState(false);
+    const [isReplyFound, setIsReplyFound] = useState(false);
+    const [isScrollingUp, setIsScrollingUp] = useState(false);
+    const [currentOffset, setCurrentOffset] = useState(0);
+    const [keyboardVisible, setKeyboardVisible] = useState(false);
+    const [replyConversationId, setReplyConversationId] = useState("");
 
     const flatlistRef = useRef<any>(null);
     const dispatch = useAppDispatch();
@@ -77,19 +78,65 @@ const MessageList = forwardRef(
     const { user } = useAppSelector((state) => state.homefeed);
     const PAGE_SIZE = 200;
 
-    const LMChatContextStyles = useLMChatStyles();
-    const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
+    const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
     //styling props
-    const selectedBackgroundColor = chatBubbleStyles?.selectedBackgroundColor;
+    const selectedBackgroundColor =
+      chatBubbleStyles?.selectedMessagesBackgroundColor;
+    const dateStateMessage = chatBubbleStyles?.dateStateMessage;
+    const stateMessagesBackgroundColor =
+      chatBubbleStyles?.stateMessagesTextStyles?.backgroundColor;
 
     const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor
       ? selectedBackgroundColor
       : STYLES.$COLORS.SELECTED_BLUE;
+
     // styling props ended
 
     const chatroomType = chatroomDBDetails?.type;
     const chatroomWithUser = chatroomDBDetails?.chatroomWithUser;
+
+    const _keyboardDidShow = () => {
+      setKeyboardVisible(true);
+    };
+
+    const _keyboardDidHide = () => {
+      setKeyboardVisible(false);
+    };
+
+    useEffect(() => {
+      const keyboardDidShowListener = Keyboard.addListener(
+        "keyboardDidShow",
+        _keyboardDidShow
+      );
+      const keyboardDidHideListener = Keyboard.addListener(
+        "keyboardDidHide",
+        _keyboardDidHide
+      );
+
+      return () => {
+        keyboardDidShowListener.remove();
+        keyboardDidHideListener.remove();
+      };
+    }, []);
+
+    // This useEffect is used to highlight the chatroom topic conversation for 1 sec on scrolling to it
+    useEffect(() => {
+      if (isFound) {
+        setTimeout(() => {
+          setIsFound(false);
+        }, 1000);
+      }
+    }, [isFound]);
+
+    useEffect(() => {
+      if (isReplyFound) {
+        setTimeout(() => {
+          setIsReplyFound(false);
+          setReplyConversationId("");
+        }, 1000);
+      }
+    }, [isReplyFound]);
 
     {
       /* `{? = then}`, `{: = else}`  */
@@ -232,7 +279,7 @@ const MessageList = forwardRef(
 
     const renderFooter = () => {
       return isLoading ? (
-        <View style={{ paddingVertical: 20 }}>
+        <View style={{ paddingVertical: Layout.normalize(20) }}>
           <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
         </View>
       ) : null;
@@ -354,6 +401,11 @@ const MessageList = forwardRef(
       const contentLength = event.nativeEvent.contentSize.height;
       const onStartReachedThreshold = 10;
       const onEndReachedThreshold = 10;
+
+      const isUp = offset > 0 && offset > currentOffset;
+
+      setIsScrollingUp(isUp);
+      setCurrentOffset(offset);
 
       // Check if scroll has reached start of list.
       const isScrollAtStart = offset < onStartReachedThreshold;
@@ -538,7 +590,7 @@ const MessageList = forwardRef(
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
           ]}
         >
@@ -692,7 +744,7 @@ const MessageList = forwardRef(
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
           ]}
         >
@@ -770,6 +822,26 @@ const MessageList = forwardRef(
         );
       }
     };
+
+    const scrollToTop = async () => {
+      const payload = GetConversationsRequestBuilder.builder()
+        .setChatroomId(chatroomID?.toString())
+        .setLimit(100)
+        .setType(GetConversationsType.ALL)
+        .build();
+
+      const conversationsFromRealm = await myClient?.getConversations(payload);
+
+      if (conversationsFromRealm[0]?.id !== conversations[0]?.id) {
+        dispatch({
+          type: GET_CONVERSATIONS_SUCCESS,
+          body: { conversations: conversationsFromRealm },
+        });
+      }
+
+      flatlistRef.current.scrollToIndex({ animated: true, index: 0 });
+    };
+
     return (
       <>
         <FlashList
@@ -803,7 +875,11 @@ const MessageList = forwardRef(
               (val: any) => val?.id === item?.id && !isStateIncluded
             );
 
-            if (isFound && item?.id == currentChatroomTopic?.id) {
+            if (isFound && item?.id === currentChatroomTopic?.id) {
+              isIncluded = true;
+            }
+
+            if (isReplyFound && item?.id === replyConversationId) {
               isIncluded = true;
             }
 
@@ -812,12 +888,25 @@ const MessageList = forwardRef(
                 {index < conversations?.length &&
                 conversations[index]?.date !==
                   conversations[index + 1]?.date ? (
-                  <View style={[styles.statusMessage]}>
+                  <View
+                    style={[
+                      styles.statusMessage,
+                      stateMessagesBackgroundColor
+                        ? { backgroundColor: stateMessagesBackgroundColor }
+                        : null,
+                    ]}
+                  >
                     <Text
                       style={{
-                        color: STYLES.$COLORS.FONT_PRIMARY,
-                        fontSize: STYLES.$FONT_SIZES.SMALL,
-                        fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                        color: dateStateMessage?.color
+                          ? dateStateMessage?.color
+                          : STYLES.$COLORS.FONT_PRIMARY,
+                        fontSize: dateStateMessage?.fontSize
+                          ? dateStateMessage?.fontSize
+                          : STYLES.$FONT_SIZES.SMALL,
+                        fontFamily: dateStateMessage?.fontFamily
+                          ? dateStateMessage?.fontFamily
+                          : STYLES.$FONT_TYPES.LIGHT,
                       }}
                     >
                       {item?.date}
@@ -882,6 +971,8 @@ const MessageList = forwardRef(
                           index,
                         });
                       }}
+                      setIsReplyFound={setIsReplyFound}
+                      setReplyConversationId={setReplyConversationId}
                       isIncluded={isIncluded}
                       item={item}
                       navigation={navigation}
@@ -925,6 +1016,24 @@ const MessageList = forwardRef(
           keyboardShouldPersistTaps={"handled"}
           inverted
         />
+        {isScrollingUp && (
+          <TouchableOpacity
+            style={[
+              styles.arrowButton,
+              {
+                bottom: keyboardVisible
+                  ? Layout.normalize(55)
+                  : Layout.normalize(20),
+              },
+            ]}
+            onPress={scrollToTop}
+          >
+            <Image
+              source={require("../../assets/images/scrollDown.png")}
+              style={styles.arrowButtonImage}
+            />
+          </TouchableOpacity>
+        )}
         {!(Object.keys(currentChatroomTopic).length === 0) &&
         chatroomType !== ChatroomType.DMCHATROOM ? (
           <Pressable
@@ -1011,7 +1120,7 @@ const MessageList = forwardRef(
                       color: STYLES.$COLORS.MSG,
                       fontSize: STYLES.$FONT_SIZES.MEDIUM,
                       fontFamily: STYLES.$FONT_TYPES.LIGHT,
-                      lineHeight: 18,
+                      lineHeight: Layout.normalize(18),
                     }}
                   >
                     {decode({

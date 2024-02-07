@@ -21,6 +21,7 @@ import { SET_EXPLORE_FEED_PAGE } from "../../store/types/types";
 import styles from "./styles";
 import { FlashList } from "@shopify/flash-list";
 import { LoaderComponent } from "../../components/LoaderComponent";
+import Layout from "../../constants/Layout";
 
 interface Props {
   navigation: any;
@@ -121,7 +122,7 @@ const ExploreFeed = ({ navigation }: Props) => {
 
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{ paddingVertical: 20 }}>
+      <View style={{ paddingVertical: Layout.normalize(20) }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;

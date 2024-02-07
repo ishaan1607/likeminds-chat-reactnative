@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image } from "react-native";
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import ReactionGridModal from "../ReactionGridModal";
 import {
   LONG_PRESSED,
@@ -11,7 +11,7 @@ import STYLES from "../../constants/Styles";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../enums";
 import { styles } from "./styles";
-import { useLMChatStyles } from "../../lmChatProvider";
+import Layout from "../../constants/Layout";
 
 const ReactionList = ({
   item,
@@ -26,8 +26,7 @@ const ReactionList = ({
   const [selectedReaction, setSelectedReaction] = useState();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const LMChatContextStyles = useLMChatStyles();
-  const reactionListStyles = LMChatContextStyles?.reactionListStyles;
+  const reactionListStyles = STYLES.$REACTION_LIST_STYLE;
 
   //styling props
   const reactionSize = reactionListStyles?.reactionSize;
@@ -216,8 +215,8 @@ const ReactionList = ({
               <View>
                 <Image
                   style={{
-                    height: 20,
-                    width: 20,
+                    height: Layout.normalize(20),
+                    width: Layout.normalize(20),
                     resizeMode: "contain",
                   }}
                   source={require("../../assets/images/more_dots3x.png")}

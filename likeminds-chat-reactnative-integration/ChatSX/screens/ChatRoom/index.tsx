@@ -17,6 +17,7 @@ import {
   Platform,
   LogBox,
   AppState,
+  ImageBackground,
 } from "react-native";
 import { Image as CompressedImage } from "react-native-compressor";
 import { SyncConversationRequest } from "@likeminds.community/chat-rn";
@@ -25,7 +26,7 @@ import {
   fetchResourceFromURI,
   formatTime,
 } from "../../commonFuctions";
-import InputBox from "../../components/InputBox";
+import MessageInputBox from "../../components/InputBox";
 import ToastMessage from "../../components/ToastMessage";
 import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -126,7 +127,9 @@ import { createTemporaryStateMessage } from "../../utils/chatroomUtils";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
 import { Credentials } from "../../credentials";
 import MessageList from "../../components/MessageList";
-import { useLMChat } from "../../lmChatProvider";
+import { Client } from "../../client";
+import { CallBack } from "../../callBacks/callBackClass";
+import { NavigateToGroupDetailsParams } from "../../callBacks/type";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -150,14 +153,34 @@ interface UploadResource {
 }
 
 const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
-  const myClient = useLMChat();
+  const myClient = Client.myClient;
+
+  const [currentChatroomId, setCurrentChatroomId] = useState("");
 
   const {
     chatroomID,
     previousChatroomID,
     navigationFromNotification,
     deepLinking,
+    announcementRoomId,
+    backIconPath,
+    gender,
+    backgroundImage,
   } = route.params;
+
+  const ChatroomTabNavigator = route?.params?.tabNavigator;
+
+  const chatroomHeaderStyles = STYLES.$CHATROOM_HEADER_STYLE;
+  const chatroomNameHeaderStyle = chatroomHeaderStyles?.chatroomNameHeaderStyle;
+  const chatroomSubHeaderStyle = chatroomHeaderStyles?.chatroomSubHeaderStyle;
+  const chatroomSelectedHeaderIcons =
+    chatroomHeaderStyles?.chatroomSelectedHeaderIcons;
+
+  useEffect(() => {
+    ChatroomTabNavigator && setCurrentChatroomId(chatroomID);
+  }, []);
+
+  const lmChatInterface = CallBack.lmChatInterface;
 
   const flatlistRef = useRef<any>(null);
   const refInput = useRef<any>();
@@ -223,7 +246,6 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   const chatRequestState = chatroomDBDetails?.chatRequestState;
   const chatroomDBDetailsLength = Object.keys(chatroomDBDetails)?.length;
   const [isChatroomTopic, setIsChatroomTopic] = useState(false);
-  const [isFound, setIsFound] = useState(false);
 
   AWS.config.update({
     region: REGION, // Replace with your AWS region, e.g., 'us-east-1'
@@ -313,11 +335,19 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
-          <TouchableOpacity onPress={() => {}}>
-            <Image
-              source={require("../../assets/images/back_arrow3x.png")}
-              style={styles.backBtn}
-            />
+          <TouchableOpacity
+            onPress={() => {
+              lmChatInterface.navigateToHomePage();
+            }}
+          >
+            {backIconPath ? (
+              <Image source={backIconPath} style={styles.backOptionalBtn} />
+            ) : (
+              <Image
+                source={require("../../assets/images/back_arrow3x.png")}
+                style={styles.backBtn}
+              />
+            )}
           </TouchableOpacity>
           {!(Object.keys(chatroomDBDetails)?.length === 0) ? (
             <View style={styles.alignRow}>
@@ -335,52 +365,119 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               ) : null}
 
               <View style={styles.chatRoomInfo}>
-                <Text
-                  ellipsizeMode="tail"
-                  numberOfLines={1}
-                  style={{
-                    color: STYLES.$COLORS.FONT_PRIMARY,
-                    fontSize: STYLES.$FONT_SIZES.LARGE,
-                    fontFamily: STYLES.$FONT_TYPES.BOLD,
-                    maxWidth: 150,
-                  }}
-                >
-                  {chatroomName}
-                </Text>
-                {chatroomType !== ChatroomType.DMCHATROOM ? (
-                  <Text
-                    style={{
-                      color: STYLES.$COLORS.MSG,
-                      fontSize: STYLES.$FONT_SIZES.SMALL,
-                      fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                <View>
+                  {ChatroomTabNavigator &&
+                  gender == "male" &&
+                  chatroomType !== ChatroomType.DMCHATROOM ? (
+                    <Image
+                      source={
+                        chatroomDBDetails?.chatroomImageUrl
+                          ? { uri: chatroomDBDetails?.chatroomImageUrl }
+                          : require("../../assets/images/defaultGroupIconMale.png")
+                      }
+                      style={styles.avatar}
+                    />
+                  ) : chatroomType !== ChatroomType.DMCHATROOM ? (
+                    <Image
+                      source={
+                        chatroomDBDetails?.chatroomImageUrl
+                          ? { uri: chatroomDBDetails?.chatroomImageUrl }
+                          : require("../../assets/images/defaultGroupIconFemale.png")
+                      }
+                      style={styles.avatar}
+                    />
+                  ) : null}
+                </View>
+                <View>
+                  <TouchableOpacity
+                    onPress={() => {
+                      const params: NavigateToGroupDetailsParams = {
+                        chatroom: chatroomDBDetails,
+                      };
+                      lmChatInterface.navigateToGroupDetails(params);
                     }}
                   >
-                    {chatroomDetails?.participantCount != undefined
-                      ? `${chatroomDetails?.participantCount} participants`
-                      : ""}
-                  </Text>
-                ) : null}
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={{
+                        color: chatroomNameHeaderStyle?.color
+                          ? chatroomNameHeaderStyle?.color
+                          : STYLES.$COLORS.FONT_PRIMARY,
+                        fontSize: chatroomNameHeaderStyle?.fontSize
+                          ? chatroomNameHeaderStyle?.fontSize
+                          : STYLES.$FONT_SIZES.LARGE,
+                        fontFamily: chatroomNameHeaderStyle?.fontFamily
+                          ? chatroomNameHeaderStyle?.fontFamily
+                          : STYLES.$FONT_TYPES.BOLD,
+                        maxWidth: Layout.normalize(250),
+                      }}
+                    >
+                      {chatroomName}
+                    </Text>
+                  </TouchableOpacity>
+                  {chatroomType !== ChatroomType.DMCHATROOM ? (
+                    <Text
+                      style={{
+                        color: chatroomSubHeaderStyle?.color
+                          ? chatroomSubHeaderStyle?.color
+                          : STYLES.$COLORS.MSG,
+                        fontSize: chatroomSubHeaderStyle?.fontSize
+                          ? chatroomSubHeaderStyle?.fontSize
+                          : STYLES.$FONT_SIZES.SMALL,
+                        fontFamily: chatroomSubHeaderStyle?.fontFamily
+                          ? chatroomSubHeaderStyle?.fontFamily
+                          : STYLES.$FONT_TYPES.LIGHT,
+                      }}
+                    >
+                      {chatroomDetails?.participantCount != undefined
+                        ? `${chatroomDetails?.participantCount} participants`
+                        : ""}
+                    </Text>
+                  ) : chatroomType === ChatroomType.DMCHATROOM &&
+                    ChatroomTabNavigator ? (
+                    <Text
+                      style={{
+                        color: chatroomSubHeaderStyle?.color
+                          ? chatroomSubHeaderStyle?.color
+                          : STYLES.$COLORS.MSG,
+                        fontSize: chatroomSubHeaderStyle?.fontSize
+                          ? chatroomSubHeaderStyle?.fontSize
+                          : STYLES.$FONT_SIZES.SMALL,
+                        fontFamily: chatroomSubHeaderStyle?.fontFamily
+                          ? chatroomSubHeaderStyle?.fontFamily
+                          : STYLES.$FONT_TYPES.LIGHT,
+                      }}
+                    >
+                      Moderator
+                    </Text>
+                  ) : null}
+                </View>
               </View>
             </View>
           ) : null}
         </View>
       ),
       headerRight: () =>
-        filteredChatroomActions?.length > 0 && (
-          <View style={styles.headerRight}>
-            {chatroomDetails ? (
-              <TouchableOpacity
-                onPress={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/three_dots3x.png")}
-                  style={styles.threeDots}
-                />
-              </TouchableOpacity>
-            ) : null}
-          </View>
+        ChatroomTabNavigator ? (
+          <></>
+        ) : (
+          filteredChatroomActions?.length > 0 && (
+            <View style={styles.headerRight}>
+              {chatroomDetails ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    setModalVisible(!modalVisible);
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/three_dots3x.png")}
+                    style={styles.threeDots}
+                  />
+                </TouchableOpacity>
+              ) : null}
+            </View>
+          )
         ),
     });
   };
@@ -401,7 +498,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
           >
             <Image
               source={require("../../assets/images/blue_back_arrow3x.png")}
-              style={styles.selectedBackBtn}
+              style={[
+                styles.selectedBackBtn,
+                {
+                  tintColor:
+                    chatroomSelectedHeaderIcons?.tintColor !== undefined
+                      ? chatroomSelectedHeaderIcons?.tintColor
+                      : undefined,
+                },
+              ]}
             />
           </TouchableOpacity>
           <View style={styles.chatRoomInfo}>
@@ -533,7 +638,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 >
                   <Image
                     source={require("../../assets/images/reply_icon3x.png")}
-                    style={styles.threeDots}
+                    style={[
+                      styles.threeDots,
+                      {
+                        tintColor:
+                          chatroomSelectedHeaderIcons?.tintColor !== undefined
+                            ? chatroomSelectedHeaderIcons?.tintColor
+                            : undefined,
+                      },
+                    ]}
                   />
                 </TouchableOpacity>
               )}
@@ -553,7 +666,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   source={require("../../assets/images/copy_icon3x.png")}
-                  style={styles.threeDots}
+                  style={[
+                    styles.threeDots,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             ) : len > 1 && isCopy ? (
@@ -571,7 +692,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   source={require("../../assets/images/copy_icon3x.png")}
-                  style={styles.threeDots}
+                  style={[
+                    styles.threeDots,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             ) : null}
@@ -593,7 +722,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   source={require("../../assets/images/edit_icon3x.png")}
-                  style={styles.editIcon}
+                  style={[
+                    styles.editIcon,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             ) : null}
@@ -669,22 +806,40 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   source={require("../../assets/images/delete_icon3x.png")}
-                  style={styles.threeDots}
+                  style={[
+                    styles.threeDots,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
                 />
               </TouchableOpacity>
             )}
-            {len === 1 && !isFirstMessageDeleted && (
-              <TouchableOpacity
-                onPress={() => {
-                  setReportModalVisible(true);
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/three_dots3x.png")}
-                  style={styles.threeDots}
-                />
-              </TouchableOpacity>
-            )}
+            {len === 1 &&
+              !isFirstMessageDeleted &&
+              !ChatroomTabNavigator(
+                <TouchableOpacity
+                  onPress={() => {
+                    setReportModalVisible(true);
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/three_dots3x.png")}
+                    style={[
+                      styles.threeDots,
+                      {
+                        tintColor:
+                          chatroomSelectedHeaderIcons?.tintColor !== undefined
+                            ? chatroomSelectedHeaderIcons?.tintColor
+                            : undefined,
+                      },
+                    ]}
+                  />
+                </TouchableOpacity>
+              )}
           </View>
         );
       },
@@ -829,7 +984,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   //this function fetchChatroomDetails when we first move inside Chatroom
   async function fetchChatroomDetails() {
     const payload = { chatroomId: chatroomID };
-    const DB_DATA = await myClient?.getChatroom(chatroomID?.toString());
+    const chatroom = await myClient?.getChatroom(chatroomID?.toString());
+    const DB_DATA = chatroom?.data;
     if (DB_DATA?.isChatroomVisited) {
       setShimmerIsLoading(false);
     }
@@ -893,16 +1049,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       type: SET_REPLY_MESSAGE,
       body: { replyMessage: "" },
     });
-  }, []);
-
-  // This useEffect is used to highlight the chatroom topic conversation for 1 sec on scrolling to it
-  useEffect(() => {
-    if (isFound) {
-      setTimeout(() => {
-        setIsFound(false);
-      }, 1000);
-    }
-  }, [isFound]);
+  }, [chatroomID]);
 
   // local handling for chatroom topic updation's state message
   useEffect(() => {
@@ -927,7 +1074,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     if (selectedMessages.length !== 0 && isChatroomTopic) {
       addChatroomTopic();
     }
-  }, [currentChatroomTopic]);
+  }, [currentChatroomTopic, chatroomID]);
 
   // To trigger analytics for Message Selected
   useEffect(() => {
@@ -940,7 +1087,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         ])
       );
     }
-  }, [selectedMessages]);
+  }, [selectedMessages, chatroomID]);
 
   // To trigger analytics for Chatroom opened
   useEffect(() => {
@@ -965,7 +1112,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         [Keys.SOURCE, source],
       ])
     );
-  }, [chatroomType]);
+  }, [chatroomType, chatroomID]);
 
   //this useEffect fetch chatroom details only after initiate API got fetched if `navigation from Notification` else fetch chatroom details
   useEffect(() => {
@@ -983,7 +1130,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       }
     };
     invokeFunction();
-  }, [navigation, user]);
+  }, [navigation, user, chatroomID]);
 
   // this useEffect set unseenCount to zero when closing the chatroom
   useEffect(() => {
@@ -999,21 +1146,21 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         closingChatroom();
       }
     };
-  }, [temporaryStateMessage]);
+  }, [temporaryStateMessage, chatroomID]);
 
   // this useEffect is to stop audio player when going out of chatroom, if any audio is running
   useEffect(() => {
     return () => {
       TrackPlayer.reset();
     };
-  }, []);
+  }, [chatroomID]);
 
   // this useEffect is to stop audio player when the app is in background
   useEffect(() => {
     if (!isFocused) {
       TrackPlayer.reset();
     }
-  }, [isFocused]);
+  }, [isFocused, chatroomID]);
 
   //Logic for navigation backAction
   function backAction() {
@@ -1069,12 +1216,12 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       backActionCall
     );
     return () => backHandlerAndroid.remove();
-  }, [chatroomType]);
+  }, [chatroomType, chatroomID]);
 
   // this useEffect update initial header when we get chatroomDetails.
   useEffect(() => {
     setInitialHeader();
-  }, [chatroomDBDetails, chatroomDetails]);
+  }, [chatroomDBDetails, chatroomDetails, chatroomID]);
 
   // this useEffect call API to show InputBox based on showDM key.
   useEffect(() => {
@@ -1104,7 +1251,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     if (chatroomDBDetails) {
       callApi();
     }
-  }, [chatroomDBDetails]);
+  }, [chatroomDBDetails, chatroomID]);
 
   // this useEffect update headers when we longPress or update selectedMessages array.
   useEffect(() => {
@@ -1113,7 +1260,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     } else if (isLongPress) {
       setSelectedHeader();
     }
-  }, [isLongPress, selectedMessages]);
+  }, [isLongPress, selectedMessages, chatroomID]);
 
   // sync conversation call with conversation_id from firebase listener
   const firebaseConversationSyncAPI = async (
@@ -1174,7 +1321,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         }
       }
     });
-  }, []);
+  }, [chatroomID]);
 
   // this useffect updates routes, previousRoute variables when we come to chatroom.
   useEffect(() => {
@@ -1182,7 +1329,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
       routes = navigation.getState()?.routes;
       previousRoute = routes[routes?.length - 2];
     }
-  }, [isFocused]);
+  }, [isFocused, chatroomID]);
 
   //This useEffect has logic to or hide message privately when long press on a message
   useEffect(() => {
@@ -1204,7 +1351,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         setIsMessagePrivately(false);
       }
     }
-  }, [selectedMessages, showDM, showList]);
+  }, [selectedMessages, showDM, showList, chatroomID]);
 
   // This is to check eligibity of user that whether he/she can set chatroom topic or not
   useEffect(() => {
@@ -1219,7 +1366,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     ) {
       setIsChatroomTopic(true);
     }
-  }, [selectedMessages]);
+  }, [selectedMessages, chatroomID]);
 
   const handleModalClose = () => {
     setModalVisible(false);
@@ -2313,23 +2460,32 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
   return (
     <View style={styles.container}>
       {shimmerIsLoading ? (
-        <View style={{ marginTop: 10 }}>
+        <View style={{ marginTop: Layout.normalize(10) }}>
           <View
             style={{
               backgroundColor: "#e8e8e877",
-              width: 200,
-              paddingLeft: 8,
-              paddingVertical: 15,
-              borderTopRightRadius: 12,
-              borderTopLeftRadius: 12,
-              borderBottomRightRadius: 12,
+              width: Layout.normalize(200),
+              paddingLeft: Layout.normalize(8),
+              paddingVertical: Layout.normalize(15),
+              borderTopRightRadius: Layout.normalize(12),
+              borderTopLeftRadius: Layout.normalize(12),
+              borderBottomRightRadius: Layout.normalize(12),
             }}
           >
             <ShimmerPlaceHolder
-              style={{ width: 150, height: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(150),
+                height: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
             <ShimmerPlaceHolder
-              style={{ width: 120, height: 10, marginTop: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(120),
+                height: Layout.normalize(10),
+                marginTop: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
           </View>
 
@@ -2337,39 +2493,57 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
             style={{
               backgroundColor: "#e8e8e877",
               alignSelf: "flex-end",
-              width: 200,
-              paddingLeft: 8,
-              paddingVertical: 15,
-              borderTopRightRadius: 12,
-              borderTopLeftRadius: 12,
-              borderBottomLeftRadius: 12,
-              marginTop: 10,
+              width: Layout.normalize(200),
+              paddingLeft: Layout.normalize(8),
+              paddingVertical: Layout.normalize(15),
+              borderTopRightRadius: Layout.normalize(12),
+              borderTopLeftRadius: Layout.normalize(12),
+              borderBottomLeftRadius: Layout.normalize(12),
+              marginTop: Layout.normalize(10),
             }}
           >
             <ShimmerPlaceHolder
-              style={{ width: 150, height: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(150),
+                height: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
             <ShimmerPlaceHolder
-              style={{ width: 120, height: 10, marginTop: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(120),
+                height: Layout.normalize(10),
+                marginTop: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
           </View>
           <View
             style={{
               backgroundColor: "#e8e8e877",
-              width: 200,
-              paddingLeft: 8,
-              paddingVertical: 15,
-              borderTopRightRadius: 12,
-              borderTopLeftRadius: 12,
-              borderBottomRightRadius: 12,
-              marginTop: 10,
+              width: Layout.normalize(200),
+              paddingLeft: Layout.normalize(8),
+              paddingVertical: Layout.normalize(15),
+              borderTopRightRadius: Layout.normalize(12),
+              borderTopLeftRadius: Layout.normalize(12),
+              borderBottomRightRadius: Layout.normalize(12),
+              marginTop: Layout.normalize(10),
             }}
           >
             <ShimmerPlaceHolder
-              style={{ width: 150, height: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(150),
+                height: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
             <ShimmerPlaceHolder
-              style={{ width: 120, height: 10, marginTop: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(120),
+                height: Layout.normalize(10),
+                marginTop: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
           </View>
 
@@ -2377,35 +2551,83 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
             style={{
               backgroundColor: "#e8e8e877",
               alignSelf: "flex-end",
-              width: 200,
-              paddingLeft: 8,
-              paddingVertical: 15,
-              borderTopRightRadius: 12,
-              borderTopLeftRadius: 12,
-              borderBottomLeftRadius: 12,
-              marginTop: 10,
+              width: Layout.normalize(200),
+              paddingLeft: Layout.normalize(8),
+              paddingVertical: Layout.normalize(15),
+              borderTopRightRadius: Layout.normalize(12),
+              borderTopLeftRadius: Layout.normalize(12),
+              borderBottomLeftRadius: Layout.normalize(12),
+              marginTop: Layout.normalize(10),
             }}
           >
             <ShimmerPlaceHolder
-              style={{ width: 150, height: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(150),
+                height: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
             <ShimmerPlaceHolder
-              style={{ width: 120, height: 10, marginTop: 10, borderRadius: 5 }}
+              style={{
+                width: Layout.normalize(120),
+                height: Layout.normalize(10),
+                marginTop: Layout.normalize(10),
+                borderRadius: Layout.normalize(5),
+              }}
             />
           </View>
         </View>
       ) : (
         <>
-          <MessageList
-            chatroomID={chatroomID}
-            handleLongPress={handleLongPress}
-            handleClick={handleClick}
-            removeReaction={removeReaction}
-            onTapToUndo={onTapToUndo}
-            handleFileUpload={handleFileUpload}
-            navigation={navigation}
-            ref={refInput}
-          />
+          {backgroundImage ? (
+            <ImageBackground
+              resizeMode="cover"
+              style={{ flex: 1, justifyContent: "center" }}
+              source={backgroundImage}
+            >
+              {ChatroomTabNavigator && (
+                <ChatroomTabNavigator
+                  navigation={navigation}
+                  chatroomId={currentChatroomId}
+                  announcementRoomId={announcementRoomId}
+                  gender={gender}
+                  lmChatInterface={lmChatInterface}
+                />
+              )}
+              <MessageList
+                chatroomID={chatroomID}
+                handleLongPress={handleLongPress}
+                handleClick={handleClick}
+                removeReaction={removeReaction}
+                onTapToUndo={onTapToUndo}
+                handleFileUpload={handleFileUpload}
+                navigation={navigation}
+                ref={refInput}
+              />
+            </ImageBackground>
+          ) : (
+            <>
+              {ChatroomTabNavigator && (
+                <ChatroomTabNavigator
+                  navigation={navigation}
+                  chatroomId={currentChatroomId}
+                  announcementRoomId={announcementRoomId}
+                  gender={gender}
+                  lmChatInterface={lmChatInterface}
+                />
+              )}
+              <MessageList
+                chatroomID={chatroomID}
+                handleLongPress={handleLongPress}
+                handleClick={handleClick}
+                removeReaction={removeReaction}
+                onTapToUndo={onTapToUndo}
+                handleFileUpload={handleFileUpload}
+                navigation={navigation}
+                ref={refInput}
+              />
+            </>
+          )}
         </>
       )}
 
@@ -2448,7 +2670,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               !(user.state !== 1 && chatroomDBDetails?.type === 7) &&
                 chatroomFollowStatus &&
                 memberRights[3]?.isSelected === true ? (
-                <InputBox
+                <MessageInputBox
                   chatroomName={chatroomName}
                   chatroomWithUser={chatroomWithUser}
                   replyChatID={replyChatID}
@@ -2484,14 +2706,14 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 isRealmDataPresent ? (
                 <View
                   style={{
-                    padding: 20,
+                    padding: Layout.normalize(20),
                     backgroundColor: STYLES.$COLORS.TERTIARY,
                   }}
                 >
                   <Text
                     style={styles.inviteText}
                   >{`${chatroomDBDetails?.header} invited you to join this secret group.`}</Text>
-                  <View style={{ marginTop: 10 }}>
+                  <View style={{ marginTop: Layout.normalize(10) }}>
                     <TouchableOpacity
                       onPress={() => {
                         showJoinAlert();
@@ -2500,9 +2722,9 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
-                        gap: 10,
+                        gap: Layout.normalize(10),
                         flexGrow: 1,
-                        paddingVertical: 10,
+                        paddingVertical: Layout.normalize(10),
                       }}
                     >
                       <Image
@@ -2519,9 +2741,9 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                         display: "flex",
                         flexDirection: "row",
                         alignItems: "center",
-                        gap: 10,
+                        gap: Layout.normalize(10),
                         flexGrow: 1,
-                        paddingVertical: 10,
+                        paddingVertical: Layout.normalize(10),
                       }}
                     >
                       <Image
@@ -2595,7 +2817,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               </View>
             ) : (showDM === true && chatRequestState === 1) ||
               chatRequestState === null ? (
-              <InputBox
+              <MessageInputBox
                 replyChatID={replyChatID}
                 chatroomID={chatroomID}
                 chatRequestState={chatRequestState}
@@ -2769,11 +2991,11 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 styles.reactionModalView,
                 {
                   top:
-                    position.y > Layout.window.height / 2
+                    position.y > Layout.window.height / Layout.normalize(2)
                       ? Platform.OS === "ios"
-                        ? position.y - 150
-                        : position.y - 100
-                      : position.y - 10,
+                        ? position.y - Layout.normalize(150)
+                        : position.y - Layout.normalize(100)
+                      : position.y - Layout.normalize(10),
                 },
               ]}
             >
@@ -2797,8 +3019,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                     flexDirection: "row",
                     justifyContent: "center",
                     alignItems: "center",
-                    paddingHorizontal: 10,
-                    marginTop: 8,
+                    paddingHorizontal: Layout.normalize(10),
+                    marginTop: Layout.normalize(8),
                   },
                 ]}
                 onPress={() => {
@@ -2808,8 +3030,8 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               >
                 <Image
                   style={{
-                    height: 25,
-                    width: 25,
+                    height: Layout.normalize(25),
+                    width: Layout.normalize(25),
                     resizeMode: "contain",
                   }}
                   source={require("../../assets/images/add_more_emojis3x.png")}
@@ -2837,7 +3059,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         >
           <View>
             <Pressable onPress={() => {}} style={[styles.emojiModalView]}>
-              <View style={{ height: 350 }}>
+              <View style={{ height: Layout.normalize(350) }}>
                 <EmojiKeyboard
                   categoryPosition="top"
                   onEmojiSelected={handlePick}

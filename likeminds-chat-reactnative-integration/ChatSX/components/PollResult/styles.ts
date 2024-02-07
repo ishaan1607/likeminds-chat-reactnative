@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 const styles = StyleSheet.create({
   page: {
@@ -7,8 +8,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatar: {
-    width: 50,
-    height: 50,
+    width: Layout.normalize(50),
+    height: Layout.normalize(50),
     borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
     marginRight: STYLES.$MARGINS.SMALL,
   },
@@ -21,12 +22,18 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 15,
-    paddingVertical: 10,
+    paddingHorizontal: Layout.normalize(15),
+    paddingVertical: Layout.normalize(10),
     flex: 1,
   },
   infoContainer: {
     flex: 1,
+  },
+  backOptionalBtn: {
+    height: Layout.normalize(20),
+    width: Layout.normalize(24),
+    resizeMode: "contain",
+    tintColor: "black",
   },
   messageCustomTitle: {
     color: STYLES.$COLORS.SECONDARY,
@@ -47,12 +54,24 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: 15,
+    gap: Layout.normalize(15),
   },
-  backBtn: { height: 40, width: 40, resizeMode: "contain" },
-  search: { height: 20, width: 20, resizeMode: "contain" },
-  chatRoomInfo: { gap: 5 },
-  nothingImg: { height: 100, width: 100, resizeMode: "contain" },
+  backBtn: {
+    height: Layout.normalize(40),
+    width: Layout.normalize(40),
+    resizeMode: "contain",
+  },
+  search: {
+    height: Layout.normalize(20),
+    width: Layout.normalize(20),
+    resizeMode: "contain",
+  },
+  chatRoomInfo: { gap: Layout.normalize(5) },
+  nothingImg: {
+    height: Layout.normalize(100),
+    width: Layout.normalize(100),
+    resizeMode: "contain",
+  },
   nothingDM: { display: "flex", flexGrow: 1 },
   justifyCenter: {
     padding: STYLES.$PADDINGS.MEDIUM,
@@ -60,7 +79,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     flex: 1,
-    gap: 10,
+    gap: Layout.normalize(10),
   },
   subTitle: {
     fontSize: STYLES.$FONT_SIZES.SMALL,
@@ -68,7 +87,7 @@ const styles = StyleSheet.create({
     color: STYLES.$COLORS.MSG,
     textAlign: "center",
   },
-  gap: { gap: 5 },
+  gap: { gap: Layout.normalize(5) },
 });
 
 export default styles;

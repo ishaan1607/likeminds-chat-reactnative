@@ -1,3 +1,5 @@
+import Layout from "../../constants/Layout";
+
 export default {
   $COLORS: {
     PRIMARY: "hsl(222, 53%, 15%)",
@@ -10,13 +12,13 @@ export default {
     RED: "red",
   },
   $FONT_SIZES: {
-    XS: 10,
-    SMALL: 12,
-    REGULAR: 13,
-    MEDIUM: 14,
-    LARGE: 16,
-    XL: 18,
-    XXL: 20,
+    XS: Layout.normalize(10),
+    SMALL: Layout.normalize(12),
+    REGULAR: Layout.normalize(13),
+    MEDIUM: Layout.normalize(14),
+    LARGE: Layout.normalize(16),
+    XL: Layout.normalize(18),
+    XXL: Layout.normalize(20),
   },
   $FONT_WEIGHTS: {
     LIGHT: "200" as "200",
@@ -40,20 +42,20 @@ export default {
     HEAVY: "0 30px 60px rgba(0, 0, 0, 0.6)",
   },
   $MARGINS: {
-    XS: 5,
-    SMALL: 10,
-    MEDIUM: 15,
-    LARGE: 20,
+    XS: Layout.normalize(5),
+    SMALL: Layout.normalize(10),
+    MEDIUM: Layout.normalize(15),
+    LARGE: Layout.normalize(20),
   },
   $PADDINGS: {
-    SMALL: 10,
-    MEDIUM: 15,
-    LARGE: 20,
+    SMALL: Layout.normalize(10),
+    MEDIUM: Layout.normalize(15),
+    LARGE: Layout.normalize(20),
   },
   $AVATAR: {
-    WIDTH: 50,
-    HEIGHT: 50,
-    BORDER_RADIUS: 25,
+    WIDTH: Layout.normalize(50),
+    HEIGHT: Layout.normalize(50),
+    BORDER_RADIUS: Layout.normalize(25),
   },
   $ALIGN_ROW: {
     display: "flex",
@@ -61,7 +63,7 @@ export default {
     alignItems: "center",
   },
   $TEXTVIEW_WIDTH: {
-    REGULAR: 240,
+    REGULAR: Layout.normalize(240),
   },
   $STATUS_BAR_STYLE: {
     default: "default",

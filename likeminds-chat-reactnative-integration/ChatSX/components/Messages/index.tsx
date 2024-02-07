@@ -25,8 +25,10 @@ import { ChatroomType } from "../../enums";
 import LinkPreview from "../LinkPreview";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Credentials } from "../../credentials";
-import { useLMChatStyles } from "../../lmChatProvider";
 import ReactionList from "../ReactionList";
+import Layout from "../../constants/Layout";
+import { NavigateToProfileParams } from "../../callBacks/type";
+import { CallBack } from "../../callBacks/callBackClass";
 
 interface Messages {
   item: any;
@@ -41,6 +43,8 @@ interface Messages {
   chatroomType: any;
   chatroomID: any;
   chatroomName: any;
+  setIsReplyFound: React.Dispatch<React.SetStateAction<boolean>>;
+  setReplyConversationId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const Messages = ({
@@ -56,14 +60,16 @@ const Messages = ({
   chatroomType,
   chatroomID,
   chatroomName,
+  setIsReplyFound,
+  setReplyConversationId,
 }: Messages) => {
   const { user } = useAppSelector((state) => state.homefeed);
+  const lmChatInterface = CallBack.lmChatInterface;
 
   const { stateArr, conversations, chatroomDBDetails, selectedMessages }: any =
     useAppSelector((state) => state.chatroom);
 
-  const LMChatContextStyles = useLMChatStyles();
-  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
   const borderRadius = chatBubbleStyles?.borderRadius;
@@ -77,9 +83,12 @@ const Messages = ({
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
   const stateMessagesBackgroundColor =
-    chatBubbleStyles?.stateMessagesBackgroundColor;
+    chatBubbleStyles?.stateMessagesTextStyles?.backgroundColor;
   const stateMessagesTextStyles = chatBubbleStyles?.stateMessagesTextStyles;
-  const deletedMessagesTextStyles = chatBubbleStyles?.deletedMessagesTextStyles;
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
+  const senderNameStyles = messageReceivedHeader?.senderNameStyles;
+  const senderDesignationStyles =
+    messageReceivedHeader?.senderDesignationStyles;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
@@ -185,21 +194,15 @@ const Messages = ({
                 style={[
                   styles.message,
                   isTypeSent ? styles.sentMessage : styles.receivedMessage,
+                  isTypeSent
+                    ? { backgroundColor: sentMessageBackgroundColor }
+                    : null,
                   isIncluded
                     ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                     : null,
                 ]}
               >
-                <Text
-                  style={
-                    [
-                      styles.deletedMsg,
-                      deletedMessagesTextStyles
-                        ? { ...deletedMessagesTextStyles }
-                        : null,
-                    ] as TextStyle
-                  }
-                >
+                <Text style={[styles.deletedMsg] as TextStyle}>
                   You deleted this message
                 </Text>
               </View>
@@ -213,16 +216,7 @@ const Messages = ({
                     : null,
                 ]}
               >
-                <Text
-                  style={
-                    [
-                      styles.deletedMsg,
-                      deletedMessagesTextStyles
-                        ? { ...deletedMessagesTextStyles }
-                        : null,
-                    ] as TextStyle
-                  }
-                >
+                <Text style={[styles.deletedMsg] as TextStyle}>
                   This message has been deleted by {conversationDeletorName}
                 </Text>
               </View>
@@ -236,16 +230,7 @@ const Messages = ({
                     : null,
                 ]}
               >
-                <Text
-                  style={
-                    [
-                      styles.deletedMsg,
-                      deletedMessagesTextStyles
-                        ? { ...deletedMessagesTextStyles }
-                        : null,
-                    ] as TextStyle
-                  }
-                >
+                <Text style={[styles.deletedMsg] as TextStyle}>
                   This message has been deleted by Community Manager
                 </Text>
               </View>
@@ -255,21 +240,15 @@ const Messages = ({
               style={[
                 styles.message,
                 isTypeSent ? styles.sentMessage : styles.receivedMessage,
+                isTypeSent
+                  ? { backgroundColor: sentMessageBackgroundColor }
+                  : null,
                 isIncluded
                   ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
                   : null,
               ]}
             >
-              <Text
-                style={
-                  [
-                    styles.deletedMsg,
-                    deletedMessagesTextStyles
-                      ? { ...deletedMessagesTextStyles }
-                      : null,
-                  ] as TextStyle
-                }
-              >
+              <Text style={[styles.deletedMsg] as TextStyle}>
                 You deleted this message
               </Text>
             </View>
@@ -283,16 +262,7 @@ const Messages = ({
                   : null,
               ]}
             >
-              <Text
-                style={
-                  [
-                    styles.deletedMsg,
-                    deletedMessagesTextStyles
-                      ? { ...deletedMessagesTextStyles }
-                      : null,
-                  ] as TextStyle
-                }
-              >
+              <Text style={[styles.deletedMsg] as TextStyle}>
                 This message has been deleted by {conversationDeletorName}
               </Text>
             </View>
@@ -302,6 +272,8 @@ const Messages = ({
             isIncluded={isIncluded}
             item={item}
             isTypeSent={isTypeSent}
+            setIsReplyFound={setIsReplyFound}
+            setReplyConversationId={setReplyConversationId}
             onScrollToIndex={onScrollToIndex}
             openKeyboard={() => {
               openKeyboard();
@@ -429,7 +401,14 @@ const Messages = ({
                     </Text>
                   </Pressable>
                 ) : (
-                  <View style={[styles.statusMessage]}>
+                  <View
+                    style={[
+                      styles.statusMessage,
+                      stateMessagesBackgroundColor
+                        ? { backgroundColor: stateMessagesBackgroundColor }
+                        : null,
+                    ]}
+                  >
                     <Text style={styles.textCenterAlign}>
                       {
                         // State 1 refers to initial DM message, so in that case trimming the first user name
@@ -502,11 +481,43 @@ const Messages = ({
                   ]}
                 >
                   {item?.member?.id == userIdStringified ? null : (
-                    <Text style={styles.messageInfo} numberOfLines={1}>
+                    <Text
+                      style={[
+                        styles.messageInfo,
+                        senderNameStyles?.color
+                          ? { color: senderNameStyles?.color }
+                          : null,
+                        senderNameStyles?.fontSize
+                          ? { fontSize: senderNameStyles?.fontSize }
+                          : null,
+                        senderNameStyles?.fontFamily
+                          ? { color: senderNameStyles?.color }
+                          : null,
+                      ]}
+                      numberOfLines={1}
+                      onPress={() => {
+                        const params: NavigateToProfileParams = {
+                          taggedUserId: null,
+                          member: item?.member,
+                        };
+                        lmChatInterface.navigateToProfile(params);
+                      }}
+                    >
                       {item?.member?.name}
                       {item?.member?.customTitle ? (
                         <Text
-                          style={styles.messageCustomTitle}
+                          style={[
+                            styles.messageCustomTitle,
+                            senderDesignationStyles?.color
+                              ? { color: senderDesignationStyles?.color }
+                              : null,
+                            senderDesignationStyles?.fontSize
+                              ? { fontSize: senderDesignationStyles?.fontSize }
+                              : null,
+                            senderDesignationStyles?.fontFamily
+                              ? { color: senderDesignationStyles?.color }
+                              : null,
+                          ]}
                         >{` • ${item?.member?.customTitle}`}</Text>
                       ) : null}
                     </Text>
@@ -539,8 +550,8 @@ const Messages = ({
                   >
                     <Image
                       style={{
-                        height: 25,
-                        width: 25,
+                        height: Layout.normalize(25),
+                        width: Layout.normalize(25),
                         resizeMode: "contain",
                       }}
                       source={require("../../assets/images/add_more_emojis3x.png")}
@@ -589,7 +600,26 @@ const Messages = ({
                       }
                     : null,
                 ]}
-              />
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    const params: NavigateToProfileParams = {
+                      taggedUserId: null,
+                      member: item?.member,
+                    };
+                    lmChatInterface.navigateToProfile(params);
+                  }}
+                >
+                  <Image
+                    source={
+                      item?.member?.imageUrl
+                        ? { uri: item?.member?.imageUrl }
+                        : require("../../assets/images/default_pic.png")
+                    }
+                    style={styles.chatroomTopicAvatar}
+                  />
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         ) : null}

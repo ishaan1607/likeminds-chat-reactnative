@@ -31,6 +31,7 @@ import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Events, Keys } from "../../enums";
 import { Credentials } from "../../credentials";
 import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 interface Props {
   navigation: any;
@@ -82,14 +83,15 @@ const HomeFeed = ({ navigation }: Props) => {
       headerRight: () => (
         <TouchableOpacity
           style={{
-            width: 35,
-            height: 35,
+            width: Layout.normalize(35),
+            height: Layout.normalize(35),
             borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
             backgroundColor: user?.imageUrl ? "white" : "purple",
             justifyContent: "center",
             alignItems: "center",
-            padding: 5,
-            paddingTop: Platform.OS === "ios" ? 5 : 3,
+            padding: Layout.normalize(5),
+            paddingTop:
+              Platform.OS === "ios" ? Layout.normalize(5) : Layout.normalize(3),
           }}
         >
           {user?.imageUrl ? (
@@ -101,7 +103,11 @@ const HomeFeed = ({ navigation }: Props) => {
                 fontSize: STYLES.$FONT_SIZES.LARGE,
                 fontFamily: STYLES.$FONT_TYPES.SEMI_BOLD,
                 paddingTop:
-                  Platform.OS === "ios" ? 3 : Platform.OS === "android" ? 0 : 0,
+                  Platform.OS === "ios"
+                    ? Layout.normalize(3)
+                    : Platform.OS === "android"
+                    ? 0
+                    : 0,
               }}
             >
               {user?.name ? getNameInitials(user?.name) : ""}
