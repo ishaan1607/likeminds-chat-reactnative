@@ -2607,13 +2607,15 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
             </ImageBackground>
           ) : (
             <>
-              <ChatroomTabNavigator
-                navigation={navigation}
-                chatroomId={currentChatroomId}
-                announcementRoomId={announcementRoomId}
-                gender={gender}
-                lmChatInterface={lmChatInterface}
-              />
+              {ChatroomTabNavigator && (
+                <ChatroomTabNavigator
+                  navigation={navigation}
+                  chatroomId={currentChatroomId}
+                  announcementRoomId={announcementRoomId}
+                  gender={gender}
+                  lmChatInterface={lmChatInterface}
+                />
+              )}
               <MessageList
                 chatroomID={chatroomID}
                 handleLongPress={handleLongPress}
