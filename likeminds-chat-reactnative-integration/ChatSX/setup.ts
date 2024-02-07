@@ -8,9 +8,12 @@ import { playbackService } from "./audio";
 import { ConversationState, LMChatClient } from "@likeminds.community/chat-rn";
 import { Client } from "./client";
 
-export const initMyClient = (apiKey: string) => {
+export const initMyClient = (
+  apiKey: string,
+  filterStateMessage: ConversationState[]
+) => {
   const myClient = LMChatClient.setApiKey(apiKey)
-    .setfilterStateConversation([ConversationState.MEMBER_LEFT_SECRET_CHATROOM])
+    .setfilterStateConversation(filterStateMessage)
     .build();
 
   Client.setMyClient(myClient);
