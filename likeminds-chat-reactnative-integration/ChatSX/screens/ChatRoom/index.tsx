@@ -17,6 +17,7 @@ import {
   Platform,
   LogBox,
   AppState,
+  ImageBackground,
 } from "react-native";
 import { Image as CompressedImage } from "react-native-compressor";
 import { SyncConversationRequest } from "@likeminds.community/chat-rn";
@@ -164,6 +165,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     announcementRoomId,
     backIconPath,
     gender,
+    backgroundImage,
   } = route.params;
 
   const ChatroomTabNavigator = route?.params?.tabNavigator;
@@ -2577,25 +2579,55 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         </View>
       ) : (
         <>
-          {ChatroomTabNavigator && (
-            <ChatroomTabNavigator
-              navigation={navigation}
-              chatroomId={currentChatroomId}
-              announcementRoomId={announcementRoomId}
-              gender={gender}
-              lmChatInterface={lmChatInterface}
-            />
+          {backgroundImage ? (
+            <ImageBackground
+              resizeMode="cover"
+              style={{ flex: 1, justifyContent: "center" }}
+              source={backgroundImage}
+            >
+              {ChatroomTabNavigator && (
+                <ChatroomTabNavigator
+                  navigation={navigation}
+                  chatroomId={currentChatroomId}
+                  announcementRoomId={announcementRoomId}
+                  gender={gender}
+                  lmChatInterface={lmChatInterface}
+                />
+              )}
+              <MessageList
+                chatroomID={chatroomID}
+                handleLongPress={handleLongPress}
+                handleClick={handleClick}
+                removeReaction={removeReaction}
+                onTapToUndo={onTapToUndo}
+                handleFileUpload={handleFileUpload}
+                navigation={navigation}
+                ref={refInput}
+              />
+            </ImageBackground>
+          ) : (
+            <>
+              {ChatroomTabNavigator && (
+                <ChatroomTabNavigator
+                  navigation={navigation}
+                  chatroomId={currentChatroomId}
+                  announcementRoomId={announcementRoomId}
+                  gender={gender}
+                  lmChatInterface={lmChatInterface}
+                />
+              )}
+              <MessageList
+                chatroomID={chatroomID}
+                handleLongPress={handleLongPress}
+                handleClick={handleClick}
+                removeReaction={removeReaction}
+                onTapToUndo={onTapToUndo}
+                handleFileUpload={handleFileUpload}
+                navigation={navigation}
+                ref={refInput}
+              />
+            </>
           )}
-          <MessageList
-            chatroomID={chatroomID}
-            handleLongPress={handleLongPress}
-            handleClick={handleClick}
-            removeReaction={removeReaction}
-            onTapToUndo={onTapToUndo}
-            handleFileUpload={handleFileUpload}
-            navigation={navigation}
-            ref={refInput}
-          />
         </>
       )}
 
