@@ -8,6 +8,7 @@ import {
 
 const ChatroomScreen = ({navigation, route}: any) => {
   return (
+    // TODO Make R is smallcase
     <ChatRoom navigation={navigation} route={route}>
       {/* ChatroomHeader */}
       <ChatroomHeader />

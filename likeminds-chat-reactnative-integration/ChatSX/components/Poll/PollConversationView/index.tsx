@@ -250,7 +250,9 @@ const PollConversationView = () => {
       chatroomId: item?.chatroomId,
       conversationId: item?.id,
     };
-    const res = await dispatch(firebaseConversation(payload, false) as any);
+    const res: any = await dispatch(
+      firebaseConversation(payload, false) as any
+    );
     await myClient?.updatePollVotes(
       res?.conversations,
       user?.sdkClientInfo?.community

@@ -226,7 +226,7 @@ export const MessageListContextProvider = ({
   // Function shows loader in between calling the API and getting the response
   const endLoadData = async () => {
     setIsLoading(true);
-    const res = await endOfPaginatedData();
+    const res: any = await endOfPaginatedData();
 
     // To check if its the end of list (top of list in our case)
     if (res?.conversations?.length == 0) {
@@ -288,7 +288,7 @@ export const MessageListContextProvider = ({
   // function shows loader in between calling the API and getting the response
   const startLoadData = async () => {
     setIsLoading(true);
-    const res = await startOfPaginatedData();
+    const res: any = await startOfPaginatedData();
 
     // To check if its the start of list (bottom of list in our case)
     if (res?.conversations?.length == 0) {
