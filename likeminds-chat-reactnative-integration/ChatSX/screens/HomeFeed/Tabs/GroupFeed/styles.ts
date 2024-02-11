@@ -1,5 +1,6 @@
-import {StyleSheet} from 'react-native';
-import STYLES from '../../../../constants/Styles';
+import { StyleSheet } from "react-native";
+import STYLES from "../../../../constants/Styles";
+import Layout from "../../../../constants/Layout";
 
 const styles = StyleSheet.create({
   page: {
@@ -7,8 +8,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatar: {
-    width: 36,
-    height: 36,
+    width: Layout.normalize(36),
+    height: Layout.normalize(36),
     borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
     marginRight: STYLES.$MARGINS.SMALL,
   },

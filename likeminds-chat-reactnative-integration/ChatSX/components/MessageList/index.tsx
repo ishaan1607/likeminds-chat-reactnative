@@ -1,5 +1,5 @@
-import { View, Text, Pressable } from "react-native";
-import React from "react";
+import { View, Text, Pressable, Keyboard } from "react-native";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import Swipeable from "../Swipeable";
 import Messages from "../Messages";
@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import STYLES from "../../constants/Styles";
 import { SET_POSITION } from "../../store/types/types";
 import { styles } from "./styles";
-import { useLMChatStyles } from "../../lmChatProvider";
 import {
   ChatroomContextValues,
   useChatroomContext,
@@ -38,7 +37,6 @@ const MessageListComponent = () => {
     currentChatroomTopic,
     shimmerIsLoading,
     refInput,
-
     handleLongPress,
     handleClick,
   }: ChatroomContextValues = useChatroomContext();
@@ -46,20 +44,84 @@ const MessageListComponent = () => {
   const {
     flatlistRef,
     isFound,
+    isReplyFound,
+    setIsFound,
+    replyConversationId,
     handleOnScroll,
     renderFooter,
+    setKeyboardVisible,
+    setIsReplyFound,
+    setReplyConversationId,
   }: MessageListContextValues = useMessageListContext();
-
-  const LMChatContextStyles = useLMChatStyles();
-  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
-  const selectedBackgroundColor = chatBubbleStyles?.selectedBackgroundColor;
+  const selectedBackgroundColor =
+    chatBubbleStyles?.selectedMessagesBackgroundColor;
+  const dateStateMessage = chatBubbleStyles?.dateStateMessage;
+  const stateMessagesBackgroundColor =
+    chatBubbleStyles?.stateMessagesTextStyles?.backgroundColor;
 
   const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor
     ? selectedBackgroundColor
     : STYLES.$COLORS.SELECTED_BLUE;
-  // styling props ended
+
+  //styling props ends here
+
+  const _keyboardDidShow = () => {
+    setKeyboardVisible(true);
+  };
+
+  const _keyboardDidHide = () => {
+    setKeyboardVisible(false);
+  };
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      _keyboardDidShow
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      _keyboardDidHide
+    );
+
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  // This useEffect is used to highlight the chatroom topic conversation for 1 sec on scrolling to it
+  useEffect(() => {
+    if (isFound) {
+      setTimeout(() => {
+        setIsFound(false);
+      }, 1000);
+    }
+  }, [isFound]);
+
+  useEffect(() => {
+    if (isReplyFound) {
+      setTimeout(() => {
+        setIsReplyFound(false);
+        setReplyConversationId("");
+      }, 1000);
+    }
+  }, [isReplyFound]);
+
+  {
+    /* `{? = then}`, `{: = else}`  */
+  }
+  {
+    /*
+        if DM ?
+          if userID !=== chatroomWithUserID ?
+            chatroomWithUserName
+          : memberName
+        : chatroomHeaderName
+    */
+  }
 
   const { stateArr }: any = useAppSelector((state) => state.chatroom);
   const { uploadingFilesMessages }: any = useAppSelector(
@@ -208,6 +270,10 @@ const MessageListComponent = () => {
               );
 
               if (isFound && item?.id == currentChatroomTopic?.id) {
+                isIncluded = true;
+              }
+
+              if (isReplyFound && item?.id === replyConversationId) {
                 isIncluded = true;
               }
 

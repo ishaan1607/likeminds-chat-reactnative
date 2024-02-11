@@ -2,15 +2,17 @@ import React, { ReactNode } from "react";
 import { View } from "react-native";
 import ToastMessage from "../../components/ToastMessage";
 import { styles } from "./styles";
-import MessageList from "../../components/MessageList";
 import {
   ChatroomContextProvider,
   ChatroomContextValues,
   useChatroomContext,
 } from "../../context/ChatroomContext";
-import MessageInput from "../../components/MessageInput";
 import ChatroomModals from "../../components/ChatroomModals";
-import ChatroomHeader from "../../components/ChatroomHeader";
+
+interface Data {
+  id: string;
+  title: string;
+}
 
 interface ChatRoomProps {
   navigation: any;

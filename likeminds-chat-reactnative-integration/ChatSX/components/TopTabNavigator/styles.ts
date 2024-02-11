@@ -1,5 +1,6 @@
 import { StatusBar, StyleSheet } from "react-native";
 import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 export const styles = StyleSheet.create({
   avatar: {
@@ -38,8 +39,8 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    paddingVertical: 2,
-    gap: 5,
+    paddingVertical: Layout.normalize(2),
+    gap: Layout.normalize(5),
     flexGrow: 1,
   },
   messageText: {

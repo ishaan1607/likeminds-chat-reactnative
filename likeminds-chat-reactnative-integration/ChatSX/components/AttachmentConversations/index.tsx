@@ -50,6 +50,9 @@ import { onSeekTo } from "../../audio/Controls";
 import { useLMChatStyles } from "../../lmChatProvider";
 import { useMessageContext } from "../../context/MessageContext";
 import { useChatroomContext } from "../../context/ChatroomContext";
+import Layout from "../../constants/Layout";
+import { NavigateToProfileParams } from "../../callBacks/type";
+import { CallBack } from "../../callBacks/callBackClass";
 
 interface AttachmentConversations {
   isReplyConversation?: any;
@@ -74,6 +77,7 @@ const AttachmentConversations = ({
   } = useMessageContext();
 
   const { navigation, handleFileUpload, chatroomName } = useChatroomContext();
+  const lmChatInterface = CallBack.lmChatInterface;
 
   let firstAttachment = item?.attachments[0];
   const isAudioActive =
@@ -86,8 +90,7 @@ const AttachmentConversations = ({
     (state) => state.chatroom
   );
 
-  const LMChatContext = useLMChatStyles();
-  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
   const borderRadius = chatBubbleStyles?.borderRadius;
@@ -100,6 +103,12 @@ const AttachmentConversations = ({
   const textStyles = chatBubbleStyles?.textStyles;
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
+  const senderNameStyles = messageReceivedHeader?.senderNameStyles;
+  const senderDesignationStyles =
+    messageReceivedHeader?.senderDesignationStyles;
+  const playPauseBoxChatBubble = chatBubbleStyles?.playPauseBoxIcon;
+  const voiceNoteSlider = chatBubbleStyles?.voiceNoteSlider;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
@@ -243,11 +252,43 @@ const AttachmentConversations = ({
         ]}
       >
         {!!(item?.member?.id == user?.id) || isReply ? null : (
-          <Text style={styles.messageInfo} numberOfLines={1}>
+          <Text
+            style={[
+              styles.messageInfo,
+              senderNameStyles?.color
+                ? { color: senderNameStyles?.color }
+                : null,
+              senderNameStyles?.fontSize
+                ? { fontSize: senderNameStyles?.fontSize }
+                : null,
+              senderNameStyles?.fontFamily
+                ? { color: senderNameStyles?.color }
+                : null,
+            ]}
+            numberOfLines={1}
+            onPress={() => {
+              const params: NavigateToProfileParams = {
+                taggedUserId: null,
+                member: item?.member,
+              };
+              lmChatInterface.navigateToProfile(params);
+            }}
+          >
             {item?.member?.name}
             {item?.member?.customTitle ? (
               <Text
-                style={styles.messageCustomTitle}
+                style={[
+                  styles.messageCustomTitle,
+                  senderDesignationStyles?.color
+                    ? { color: senderDesignationStyles?.color }
+                    : null,
+                  senderDesignationStyles?.fontSize
+                    ? { fontSize: senderDesignationStyles?.fontSize }
+                    : null,
+                  senderDesignationStyles?.fontFamily
+                    ? { color: senderDesignationStyles?.color }
+                    : null,
+                ]}
               >{` • ${item?.member?.customTitle}`}</Text>
             ) : null}
           </Text>
@@ -272,7 +313,7 @@ const AttachmentConversations = ({
                   onPress={() => {
                     handleOnPausePlay();
                   }}
-                  style={styles.playPauseBox}
+                  style={[styles.playPauseBox, { ...playPauseBoxChatBubble }]}
                 >
                   <Image
                     source={require("../../assets/images/pause_icon3x.png")}
@@ -288,7 +329,7 @@ const AttachmentConversations = ({
                       handleStartPlay(firstAttachment?.url);
                     }
                   }}
-                  style={styles.playPauseBox}
+                  style={[styles.playPauseBox, { ...playPauseBoxChatBubble }]}
                 >
                   <Image
                     style={styles.playPauseImage}
@@ -299,8 +340,8 @@ const AttachmentConversations = ({
               <View
                 style={{
                   flex: 1,
-                  marginTop: Platform.OS === "ios" ? 0 : 10,
-                  gap: 3,
+                  marginTop: Platform.OS === "ios" ? 0 : Layout.normalize(10),
+                  gap: Layout.normalize(3),
                 }}
               >
                 <Slider
@@ -314,17 +355,25 @@ const AttachmentConversations = ({
                         : 0
                       : 0
                   }
-                  minimumTrackTintColor="#ffad31"
+                  minimumTrackTintColor={
+                    voiceNoteSlider?.minimumTrackTintColor
+                      ? voiceNoteSlider.minimumTrackTintColor
+                      : "#ffad31"
+                  }
                   maximumTrackTintColor="grey"
                   tapToSeek={true}
                   onSlidingComplete={handleOnSeekTo}
-                  thumbTintColor="#ffad31"
+                  thumbTintColor={
+                    voiceNoteSlider?.thumbTintColor
+                      ? voiceNoteSlider.thumbTintColor
+                      : "#ffad31"
+                  }
                 />
                 <View
                   style={{
                     display: "flex",
                     flexDirection: "row",
-                    marginLeft: 10,
+                    marginLeft: Layout.normalize(10),
                     alignItems: "center",
                   }}
                 >
@@ -397,7 +446,7 @@ const AttachmentConversations = ({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    height: 150,
+                    height: Layout.normalize(150),
                     position: "absolute",
                     width: "100%",
                     zIndex: 1,
@@ -408,8 +457,8 @@ const AttachmentConversations = ({
                   style={{
                     backgroundColor: "black",
                     opacity: 0.9,
-                    padding: 10,
-                    borderRadius: 50,
+                    padding: Layout.normalize(10),
+                    borderRadius: Layout.normalize(50),
                   }}
                 >
                   <Text style={{ color: "white" }}>{CAPITAL_GIF_TEXT}</Text>
@@ -506,8 +555,8 @@ const AttachmentConversations = ({
         >
           <Image
             style={{
-              height: 25,
-              width: 25,
+              height: Layout.normalize(25),
+              width: Layout.normalize(25),
               resizeMode: "contain",
             }}
             source={require("../../assets/images/add_more_emojis3x.png")}
@@ -571,7 +620,7 @@ export const VideoConversations = () => {
   return (
     <View>
       {item?.attachmentCount > 1 ? (
-        <View style={{ gap: 2 }}>
+        <View style={{ gap: Layout.normalize(2) }}>
           {!isFullList ? (
             <View>
               <TouchableOpacity
@@ -773,7 +822,7 @@ export const PDFConversations = () => {
   return (
     <View>
       {item?.attachmentCount > 1 ? (
-        <View style={{ gap: 2 }}>
+        <View style={{ gap: Layout.normalize(2) }}>
           {!isFullList ? (
             <View>
               <TouchableOpacity
@@ -938,8 +987,7 @@ export const ImageConversations = () => {
     (state) => state.chatroom
   );
 
-  const LMChatContext = useLMChatStyles();
-  const chatBubbleStyles = LMChatContext?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
   const selectedMessageBackgroundColor =
@@ -1090,7 +1138,13 @@ export const ImageConversations = () => {
         >
           <Image style={styles.singleImg} source={firstImageSource} />
           {firstAttachment?.type === VIDEO_TEXT ? (
-            <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+            <View
+              style={{
+                position: "absolute",
+                bottom: 0,
+                left: Layout.normalize(5),
+              }}
+            >
               <Image
                 source={require("../../assets/images/video_icon3x.png")}
                 style={styles.videoIcon}
@@ -1110,7 +1164,13 @@ export const ImageConversations = () => {
           >
             <Image source={firstImageSource} style={styles.doubleImg} />
             {firstAttachment?.type === VIDEO_TEXT ? (
-              <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: Layout.normalize(5),
+                }}
+              >
                 <Image
                   source={require("../../assets/images/video_icon3x.png")}
                   style={styles.videoIcon}
@@ -1128,7 +1188,13 @@ export const ImageConversations = () => {
           >
             <Image source={secondImageSource} style={styles.doubleImg} />
             {secondAttachment?.type === VIDEO_TEXT ? (
-              <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: Layout.normalize(5),
+                }}
+              >
                 <Image
                   source={require("../../assets/images/video_icon3x.png")}
                   style={styles.videoIcon}
@@ -1190,7 +1256,13 @@ export const ImageConversations = () => {
           <View style={styles.imgParent}>
             <Image source={firstImageSource} style={styles.multipleImg} />
             {firstAttachment?.type === VIDEO_TEXT ? (
-              <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: Layout.normalize(5),
+                }}
+              >
                 <Image
                   source={require("../../assets/images/video_icon3x.png")}
                   style={styles.videoIcon}
@@ -1201,7 +1273,13 @@ export const ImageConversations = () => {
           <View style={styles.imgParent}>
             <Image style={styles.multipleImg} source={secondImageSource} />
             {firstAttachment?.type === VIDEO_TEXT ? (
-              <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+              <View
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: Layout.normalize(5),
+                }}
+              >
                 <Image
                   source={require("../../assets/images/video_icon3x.png")}
                   style={styles.videoIcon}
@@ -1214,7 +1292,7 @@ export const ImageConversations = () => {
           </View>
         </TouchableOpacity>
       ) : item?.attachmentCount === 4 ? (
-        <View style={{ gap: 5 }}>
+        <View style={{ gap: Layout.normalize(5) }}>
           <View style={styles.doubleImgParent}>
             <TouchableOpacity
               style={styles.touchableImg}
@@ -1226,7 +1304,13 @@ export const ImageConversations = () => {
             >
               <Image source={firstImageSource} style={styles.doubleImg} />
               {firstAttachment?.type === VIDEO_TEXT ? (
-                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: Layout.normalize(5),
+                  }}
+                >
                   <Image
                     source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
@@ -1244,7 +1328,13 @@ export const ImageConversations = () => {
             >
               <Image source={secondImageSource} style={styles.doubleImg} />
               {secondAttachment?.type === VIDEO_TEXT ? (
-                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: Layout.normalize(5),
+                  }}
+                >
                   <Image
                     source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
@@ -1264,7 +1354,13 @@ export const ImageConversations = () => {
             >
               <Image source={thirdImageSource} style={styles.doubleImg} />
               {thirdAttachment?.type === VIDEO_TEXT ? (
-                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: Layout.normalize(5),
+                  }}
+                >
                   <Image
                     source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
@@ -1282,7 +1378,13 @@ export const ImageConversations = () => {
             >
               <Image source={fourthImageSource} style={styles.doubleImg} />
               {fourthAttachment?.type === VIDEO_TEXT ? (
-                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: Layout.normalize(5),
+                  }}
+                >
                   <Image
                     source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
@@ -1294,7 +1396,7 @@ export const ImageConversations = () => {
         </View>
       ) : item?.attachmentCount > 4 ? (
         <TouchableOpacity
-          style={{ gap: 5 }}
+          style={{ gap: Layout.normalize(5) }}
           onLongPress={handleLongPress}
           delayLongPress={200}
           onPress={(event) => {
@@ -1346,7 +1448,13 @@ export const ImageConversations = () => {
             <View style={styles.imgParent}>
               <Image source={firstImageSource} style={styles.multipleImg} />
               {firstAttachment?.type === VIDEO_TEXT ? (
-                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: Layout.normalize(5),
+                  }}
+                >
                   <Image
                     source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
@@ -1357,7 +1465,13 @@ export const ImageConversations = () => {
             <View style={styles.imgParent}>
               <Image style={styles.multipleImg} source={secondImageSource} />
               {secondAttachment?.type === VIDEO_TEXT ? (
-                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: Layout.normalize(5),
+                  }}
+                >
                   <Image
                     source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
@@ -1370,7 +1484,13 @@ export const ImageConversations = () => {
             <View style={styles.imgParent}>
               <Image source={thirdImageSource} style={styles.multipleImg} />
               {thirdAttachment?.type === VIDEO_TEXT ? (
-                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: Layout.normalize(5),
+                  }}
+                >
                   <Image
                     source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
@@ -1381,7 +1501,13 @@ export const ImageConversations = () => {
             <View style={styles.imgParent}>
               <Image style={styles.multipleImg} source={fourthImageSource} />
               {fourthAttachment?.type === VIDEO_TEXT ? (
-                <View style={{ position: "absolute", bottom: 0, left: 5 }}>
+                <View
+                  style={{
+                    position: "absolute",
+                    bottom: 0,
+                    left: Layout.normalize(5),
+                  }}
+                >
                   <Image
                     source={require("../../assets/images/video_icon3x.png")}
                     style={styles.videoIcon}
@@ -1401,7 +1527,7 @@ export const ImageConversations = () => {
         <View
           style={{
             position: "absolute",
-            height: 150,
+            height: Layout.normalize(150),
             width: "100%",
             backgroundColor: SELECTED_BACKGROUND_COLOR,
             opacity: 0.5,
@@ -1411,7 +1537,7 @@ export const ImageConversations = () => {
         <View
           style={{
             position: "absolute",
-            height: 310,
+            height: Layout.normalize(310),
             width: "100%",
             backgroundColor: SELECTED_BACKGROUND_COLOR,
             opacity: 0.5,

@@ -81,7 +81,7 @@ const ViewParticipants = ({ navigation, route }: any) => {
           style={{
             justifyContent: "center",
             alignItems: "center",
-            padding: 5,
+            padding: Layout.normalize(5),
           }}
         >
           <Image
@@ -126,7 +126,7 @@ const ViewParticipants = ({ navigation, route }: any) => {
           style={{
             justifyContent: "center",
             alignItems: "center",
-            padding: 5,
+            padding: Layout.normalize(5),
           }}
         >
           <Image
@@ -252,7 +252,7 @@ const ViewParticipants = ({ navigation, route }: any) => {
 
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{ paddingVertical: 20 }}>
+      <View style={{ paddingVertical: Layout.normalize(20) }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;
@@ -280,15 +280,15 @@ const ViewParticipants = ({ navigation, route }: any) => {
             >
               <View
                 style={{
-                  height: 50,
-                  width: 50,
+                  height: Layout.normalize(50),
+                  width: Layout.normalize(50),
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "center",
                   alignItems: "center",
                   backgroundColor: STYLES.$COLORS.SECONDARY,
-                  borderRadius: 30,
-                  marginRight: 10,
+                  borderRadius: Layout.normalize(30),
+                  marginRight: Layout.normalize(10),
                 }}
               >
                 <Image

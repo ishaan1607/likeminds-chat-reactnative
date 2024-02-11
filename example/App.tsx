@@ -6,55 +6,85 @@
  */
 
 import React from 'react';
-import {KeyboardAvoidingView, Platform} from 'react-native';
+import {Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationRef} from './RootNavigation';
 import {
   CarouselScreen,
-  ContextProvider,
   CreatePollScreen,
   FileUpload,
   ImageCropScreen,
-  LMChatProvider,
   PollResult,
   VideoPlayer,
-} from 'likeminds_chat_reactnative_integration';
+  LMOverlayProvider,
+  LMChatCallbacks,
+  LMChatroomCallbacks,
+  NavigateToProfileParams,
+  NavigateToGroupDetailsParams,
+  STYLES,
+} from '@likeminds.community/chat-rn-core';
 import {myClient} from '.';
 import ChatroomScreen from './screens/Chatroom';
 
 const Stack = createNativeStackNavigator();
 
+// Override callBacks with custom logic
+class CustomCallbacks implements LMChatCallbacks, LMChatroomCallbacks {
+  navigateToProfile(params: NavigateToProfileParams) {
+    // Override navigateToProfile with custom logic
+  }
+
+  navigateToHomePage() {
+    // Override navigateToHomePage with custom logic
+  }
+
+  onEventTriggered(eventName: string, eventProperties?: Map<string, string>) {
+    // Override onEventTriggered with custom logic
+  }
+
+  navigateToGroupDetails(params: NavigateToGroupDetailsParams) {
+    // Override navigateToGroupDetails with custom logic
+  }
+}
+
+const lmChatInterface = new CustomCallbacks();
+
 function App(): React.JSX.Element {
-  const userName = 'Jai';
-  const userUniqueId = 'Jai';
-  const chatroomId = '4033778';
+  const userName = '';
+  const userUniqueId = '';
+  const chatroomId = '';
+  const profileImageUrl = '';
 
   // themeStyling
   {
-    /* const themeStyles = {
+    /*
+  const themeStyles = {
     hue: 10,
     fontColor: 'black',
     primaryColor: 'green',
     secondaryColor: 'green',
     lightBackgroundColor: '#d7f7ed',
-  }; */
+  };
+  */
   }
 
   // styling for reactionList
   {
-    /* const reactionListStyles = {
+    /*
+  const reactionListStyles = {
     reactionSize: 0,
     reactionLeftItemStroke: 'pink',
     reactionRightItemStroke: 'yellow',
     reactionItemBorderRadius: 5,
     gap: 5,
-  }; */
+  };
+  */
   }
 
   // styling for chatBubble
   {
-    /* 
+    /*
   const chatBubbleStyles = {
     borderRadius: 5,
     sentMessageBackgroundColor: 'yellow',
@@ -75,12 +105,12 @@ function App(): React.JSX.Element {
       fontFamily: 'SofiaPro-SemiBold',
     },
   };
-*/
+  */
   }
 
   // styling for inputBox
   {
-    /* 
+    /*
   const inputBoxStyles = {
     placeholderTextColor: '#aaa',
     selectionColor: '#aaa',
@@ -128,60 +158,67 @@ function App(): React.JSX.Element {
   */
   }
 
+  // if (chatBubbleStyles) {
+  //   STYLES.setChatBubbleStyle(chatBubbleStyles);
+  // }
+
+  // if (themeStyles) {
+  //   STYLES.setTheme(themeStyles);
+  // }
+
+  // if (reactionListStyles) {
+  //   STYLES.setReactionListStyle(reactionListStyles);
+  // }
+
+  // if (inputBoxStyles) {
+  //   STYLES.setInputBoxStyle(inputBoxStyles);
+  // }
+
   return (
-    <ContextProvider>
-      <LMChatProvider
-        myClient={myClient}
-        userName={userName}
-        userUniqueId={userUniqueId}
-        // chatBubbleStyles={chatBubbleStyles}
-        // reactionListStyles={reactionListStyles}
-        // inputBoxStyles={inputBoxStyles}
-        // themeStyles={themeStyles}
-      >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{flex: 1}}>
-          <NavigationContainer ref={navigationRef} independent={true}>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="ChatRoom"
-                component={ChatroomScreen}
-                initialParams={{
-                  chatroomID: chatroomId,
-                  isInvited: false,
-                }}
-              />
-              <Stack.Screen
-                options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
-                name={'FileUpload'}
-                component={FileUpload}
-              />
-              <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
-              <Stack.Screen
-                options={{gestureEnabled: false}}
-                name={'CarouselScreen'}
-                component={CarouselScreen}
-              />
-              <Stack.Screen
-                options={{gestureEnabled: false}}
-                name={'PollResult'}
-                component={PollResult}
-              />
-              <Stack.Screen
-                name={'CreatePollScreen'}
-                component={CreatePollScreen}
-              />
-              <Stack.Screen
-                options={{headerShown: false}}
-                name={'ImageCropScreen'}
-                component={ImageCropScreen}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </KeyboardAvoidingView>
-      </LMChatProvider>
-    </ContextProvider>
+    <LMOverlayProvider
+      myClient={myClient}
+      userName={userName}
+      userUniqueId={userUniqueId}
+      profileImageUrl={profileImageUrl}
+      lmChatInterface={lmChatInterface}>
+      <NavigationContainer ref={navigationRef} independent={true}>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="ChatRoom"
+            component={ChatroomScreen}
+            initialParams={{
+              chatroomID: chatroomId,
+              isInvited: false,
+            }}
+          />
+          <Stack.Screen
+            options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
+            name={'FileUpload'}
+            component={FileUpload}
+          />
+          <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
+          <Stack.Screen
+            options={{gestureEnabled: false}}
+            name={'CarouselScreen'}
+            component={CarouselScreen}
+          />
+          <Stack.Screen
+            options={{gestureEnabled: false}}
+            name={'PollResult'}
+            component={PollResult}
+          />
+          <Stack.Screen
+            name={'CreatePollScreen'}
+            component={CreatePollScreen}
+          />
+          <Stack.Screen
+            options={{headerShown: false}}
+            name={'ImageCropScreen'}
+            component={ImageCropScreen}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </LMOverlayProvider>
   );
 }
 

@@ -17,6 +17,7 @@ import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { getConversationType } from "../../utils/analyticsUtils";
 import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 interface Props {
   navigation: any;
@@ -112,7 +113,7 @@ const ReportScreen = ({ navigation, route }: Props) => {
   };
   return (
     <View style={styles.page}>
-      <View style={{ gap: 15 }}>
+      <View style={{ gap: Layout.normalize(15) }}>
         <Text style={styles.textHeading}>
           Please specify the problem to continue
         </Text>
@@ -125,7 +126,7 @@ const ReportScreen = ({ navigation, route }: Props) => {
           // flex: 1,
           flexDirection: "row",
           flexWrap: "wrap",
-          marginTop: 24,
+          marginTop: Layout.normalize(24),
         }}
       >
         {reasons.map((res: any, index: number) => {
@@ -167,8 +168,7 @@ const ReportScreen = ({ navigation, route }: Props) => {
       {selectedIndex == 5 ? (
         <View
           style={{
-            marginTop: 24,
-            // flex: 3,
+            marginTop: Layout.normalize(24),
           }}
         >
           <TextInput
@@ -176,10 +176,10 @@ const ReportScreen = ({ navigation, route }: Props) => {
               setOtherReason(e);
             }}
             style={{
-              margin: 12,
-              height: 40,
-              borderBottomWidth: 1,
-              padding: 10,
+              margin: Layout.normalize(12),
+              height: Layout.normalize(40),
+              borderBottomWidth: Layout.normalize(1),
+              padding: Layout.normalize(10),
               paddingLeft: 0,
               fontSize: STYLES.$FONT_SIZES.MEDIUM,
               fontFamily: STYLES.$FONT_TYPES.LIGHT,

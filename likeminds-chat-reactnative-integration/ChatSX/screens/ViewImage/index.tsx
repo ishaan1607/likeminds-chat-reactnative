@@ -1,8 +1,8 @@
-import {Image, PixelRatio, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import Layout from '../../constants/Layout';
+import { Image, PixelRatio, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import Layout from "../../constants/Layout";
 
-const ViewImage = ({val}: any) => {
+const ViewImage = ({ val }: any) => {
   const [dimensions, setDimensions] = useState({
     width: 0,
     height: 0,
@@ -18,7 +18,7 @@ const ViewImage = ({val}: any) => {
     });
   }, []);
 
-  const {height, width} = dimensions;
+  const { height, width } = dimensions;
   const aspectRatio = height / width;
 
   return (
@@ -26,11 +26,11 @@ const ViewImage = ({val}: any) => {
       {!!height || !!width ? (
         <Image
           style={{
-            width: '100%',
-            height: 250,
-            resizeMode: 'contain',
+            width: "100%",
+            height: Layout.normalize(250),
+            resizeMode: "contain",
           }}
-          source={{uri: val?.url}}
+          source={{ uri: val?.url }}
         />
       ) : null}
     </View>

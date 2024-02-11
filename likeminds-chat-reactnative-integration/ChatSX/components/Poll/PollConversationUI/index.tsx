@@ -7,6 +7,10 @@ import {
   SUBMIT_VOTE_TITLE,
 } from "../../../constants/Strings";
 import { PollConversationUIProps } from "../models";
+import Layout from "../../../constants/Layout";
+import { NavigateToProfileParams } from "../../../callBacks/type";
+import STYLES from "../../../constants/Styles";
+import { CallBack } from "../../../callBacks/callBackClass";
 
 const PollConversationUI = ({
   text,
@@ -41,6 +45,15 @@ const PollConversationUI = ({
   resetShowResult,
   pollType,
 }: PollConversationUIProps) => {
+  const lmChatInterface = CallBack.lmChatInterface;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
+
+  //styling props
+  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
+  const senderNameStyles = messageReceivedHeader?.senderNameStyles;
+  const senderDesignationStyles =
+    messageReceivedHeader?.senderDesignationStyles;
+  const pollVoteSliderColor = chatBubbleStyles?.pollVoteSliderColor;
   return (
     <View>
       {isIncluded ? (
@@ -51,11 +64,41 @@ const PollConversationUI = ({
         />
       ) : null}
       {member?.id == user?.id ? null : (
-        <Text style={styles.messageInfo} numberOfLines={1}>
+        <Text
+          style={[
+            styles.messageInfo,
+            senderNameStyles?.color ? { color: senderNameStyles?.color } : null,
+            senderNameStyles?.fontSize
+              ? { fontSize: senderNameStyles?.fontSize }
+              : null,
+            senderNameStyles?.fontFamily
+              ? { color: senderNameStyles?.color }
+              : null,
+          ]}
+          numberOfLines={1}
+          onPress={() => {
+            const params: NavigateToProfileParams = {
+              taggedUserId: null,
+              member: member,
+            };
+            lmChatInterface.navigateToProfile(params);
+          }}
+        >
           {member?.name}
           {member?.customTitle ? (
             <Text
-              style={styles.messageCustomTitle}
+              style={[
+                styles.messageCustomTitle,
+                senderDesignationStyles?.color
+                  ? { color: senderDesignationStyles?.color }
+                  : null,
+                senderDesignationStyles?.fontSize
+                  ? { fontSize: senderDesignationStyles?.fontSize }
+                  : null,
+                senderDesignationStyles?.fontFamily
+                  ? { color: senderDesignationStyles?.color }
+                  : null,
+              ]}
             >{` • ${member?.customTitle}`}</Text>
           ) : null}
         </Text>
@@ -100,7 +143,13 @@ const PollConversationUI = ({
         </Text>
 
         {multipleSelectNo > 1 ? (
-          <Text style={[styles.smallText, styles.greyColor, { marginTop: 5 }]}>
+          <Text
+            style={[
+              styles.smallText,
+              styles.greyColor,
+              { marginTop: Layout.normalize(5) },
+            ]}
+          >
             {stringManipulation()}
           </Text>
         ) : null}
@@ -137,7 +186,11 @@ const PollConversationUI = ({
                             width: "100%",
                             backgroundColor: "white",
                           },
-                          { padding: 0, margin: 0, borderRadius: 8 },
+                          {
+                            padding: 0,
+                            margin: 0,
+                            borderRadius: Layout.normalize(8),
+                          },
                         ]
                       : null,
                   ]}
@@ -166,9 +219,10 @@ const PollConversationUI = ({
                                   ? 98
                                   : element?.percentage
                               }%`,
-                              backgroundColor: hue
-                                ? `hsl(${hue}, 60%, 85%)`
-                                : "hsl(222, 60%, 85%)",
+                              backgroundColor:
+                                pollVoteSliderColor?.backgroundColor
+                                  ? pollVoteSliderColor?.backgroundColor
+                                  : "hsl(222, 60%, 85%)",
                             },
                             styles.pollButtonBackground,
                             styles.pollButtonPadding,
@@ -193,7 +247,7 @@ const PollConversationUI = ({
                   <Text
                     style={[
                       styles.smallText,
-                      { marginLeft: 5 },
+                      { marginLeft: Layout.normalize(5) },
                       voteCount < 1 ? styles.greyColor : null,
                     ]}
                   >{`${voteCount} ${voteCount > 1 ? "votes" : "vote"}`}</Text>
@@ -214,7 +268,10 @@ const PollConversationUI = ({
             }}
             style={({ pressed }) => [
               styles.pollButton,
-              { opacity: pressed ? 0.5 : 1, padding: 12 },
+              {
+                opacity: pressed ? Layout.normalize(0.5) : Layout.normalize(1),
+                padding: Layout.normalize(12),
+              },
               hue ? { borderColor: `hsl(${hue}, 47%, 31%)` } : null,
             ]}
           >
@@ -298,7 +355,10 @@ const PollConversationUI = ({
             styles.submitVoteButton,
             styles.alignRow,
             styles.justifyCenter,
-            { backgroundColor: styles.whiteColor.color, marginTop: 10 },
+            {
+              backgroundColor: styles.whiteColor.color,
+              marginTop: Layout.normalize(10),
+            },
             hue ? { backgroundColor: `hsl(${hue}, 47%, 31%)` } : null,
           ]}
         >

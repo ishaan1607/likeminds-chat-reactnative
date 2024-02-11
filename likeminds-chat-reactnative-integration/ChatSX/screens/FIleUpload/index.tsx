@@ -11,6 +11,7 @@ import { Image as CompressedImage } from "react-native-compressor";
 import React, { useEffect, useLayoutEffect, useRef } from "react";
 import styles from "./styles";
 import InputBox from "../../components/InputBox";
+import Layout from "../../constants/Layout";
 import {
   CLEAR_FILE_UPLOADING_MESSAGES,
   CLEAR_SELECTED_FILES_TO_UPLOAD,
@@ -455,7 +456,11 @@ const FileUpload = ({ navigation, route }: any) => {
                     />
                     {fileType === VIDEO_TEXT ? (
                       <View
-                        style={{ position: "absolute", bottom: 0, left: 5 }}
+                        style={{
+                          position: "absolute",
+                          bottom: 0,
+                          left: Layout.normalize(5),
+                        }}
                       >
                         <Image
                           source={require("../../assets/images/video_icon3x.png")}

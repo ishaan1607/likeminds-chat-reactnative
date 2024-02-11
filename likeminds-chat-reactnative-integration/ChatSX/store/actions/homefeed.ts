@@ -19,9 +19,6 @@ import {
   PROFILE_DATA,
   PROFILE_DATA_FAILED,
   PROFILE_DATA_SUCCESS,
-  REJECT_INVITE,
-  REJECT_INVITE_FAILED,
-  REJECT_INVITE_SUCCESS,
   UPDATE_DMFEED_CHAT,
   UPDATE_DMFEED_CHAT_FAILED,
   UPDATE_DMFEED_CHAT_SUCCESS,
@@ -34,14 +31,12 @@ import {
 } from "../types/types";
 import { Client } from "../../client";
 
-const myClient = Client.myClient;
-
 export const initAPI = (payload: any) => () => {
   try {
     const temp = {
       type: INIT_API_SUCCESS,
       [CALL_API]: {
-        func: myClient?.initiateUser(payload),
+        func: Client.myClient?.initiateUser(payload),
         body: payload,
         types: [INIT_API, INIT_API_SUCCESS, INIT_API_FAILED],
         showLoader: true,
@@ -58,7 +53,7 @@ export const getMemberState = (payload?: any) => () => {
     return {
       type: PROFILE_DATA_SUCCESS,
       [CALL_API]: {
-        func: myClient?.getMemberState(),
+        func: Client.myClient?.getMemberState(),
         body: payload,
         types: [PROFILE_DATA, PROFILE_DATA_SUCCESS, PROFILE_DATA_FAILED],
         showLoader: true,
@@ -74,7 +69,7 @@ export const getInvites = (payload: any, showLoader?: boolean) => () => {
     return {
       type: GET_INVITES_SUCCESS,
       [CALL_API]: {
-        func: myClient?.getInvites(payload),
+        func: Client.myClient?.getInvites(payload),
         body: payload,
         types: [GET_INVITES, GET_INVITES_SUCCESS, GET_INVITES_FAILED],
         showLoader: showLoader,
@@ -90,7 +85,7 @@ export const updateInvites = (payload: any, showLoader?: boolean) => () => {
     return {
       type: UPDATE_INVITES_SUCCESS,
       [CALL_API]: {
-        func: myClient?.getInvites(payload),
+        func: Client.myClient?.getInvites(payload),
         body: payload,
         types: [UPDATE_INVITES, UPDATE_INVITES_SUCCESS, UPDATE_INVITES_FAILED],
         showLoader: showLoader,
@@ -106,7 +101,7 @@ export const getHomeFeedData = (payload: any, showLoader?: boolean) => () => {
     return {
       type: GET_HOMEFEED_CHAT_SUCCESS,
       [CALL_API]: {
-        func: myClient?.getHomeFeed(payload),
+        func: Client.myClient?.getHomeFeed(payload),
         body: payload,
         types: [
           GET_HOMEFEED_CHAT,
@@ -127,7 +122,7 @@ export const updateHomeFeedData =
       return {
         type: UPDATE_HOMEFEED_CHAT_SUCCESS,
         [CALL_API]: {
-          func: myClient?.getHomeFeed(payload),
+          func: Client.myClient?.getHomeFeed(payload),
           body: payload,
           types: [
             UPDATE_HOMEFEED_CHAT,
@@ -147,7 +142,7 @@ export const getDMFeedData = (payload: any, showLoader?: boolean) => () => {
     return {
       type: GET_DMFEED_CHAT_SUCCESS,
       [CALL_API]: {
-        func: myClient?.fetchDMFeed(payload),
+        func: Client.myClient?.fetchDMFeed(payload),
         body: payload,
         types: [
           GET_DMFEED_CHAT,
@@ -167,7 +162,7 @@ export const updateDMFeedData = (payload: any, showLoader?: boolean) => () => {
     return {
       type: UPDATE_DMFEED_CHAT_SUCCESS,
       [CALL_API]: {
-        func: myClient?.fetchDMFeed(payload),
+        func: Client.myClient?.fetchDMFeed(payload),
         body: payload,
         types: [
           UPDATE_DMFEED_CHAT,

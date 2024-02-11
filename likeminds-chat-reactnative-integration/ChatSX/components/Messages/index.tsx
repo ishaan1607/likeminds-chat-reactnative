@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { Image, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
@@ -15,6 +15,8 @@ import {
 import { useChatroomContext } from "../../context/ChatroomContext";
 import DeletedMessage from "../DeletedMessage";
 import StateMessage from "../StateMessage";
+import { NavigateToProfileParams } from "../../callBacks/type";
+import { CallBack } from "../../callBacks/callBackClass";
 
 interface Messages {
   item: any;
@@ -37,7 +39,6 @@ const Messages = ({ item, index, isStateIncluded, isIncluded }: Messages) => {
 };
 
 const MessagesComponent = () => {
-  const LMChatContextStyles = useLMChatStyles();
   const {
     item,
     isIncluded,
@@ -51,7 +52,7 @@ const MessagesComponent = () => {
 
   const { removeReaction, chatroomID } = useChatroomContext();
 
-  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
   const sentMessageBackgroundColor =
@@ -65,6 +66,8 @@ const MessagesComponent = () => {
     ? selectedMessageBackgroundColor
     : STYLES.$COLORS.SELECTED_BLUE;
   // styling props ended
+
+  const lmChatInterface = CallBack.lmChatInterface;
 
   return (
     <View style={styles.messageParent}>
@@ -121,7 +124,26 @@ const MessagesComponent = () => {
                       }
                     : null,
                 ]}
-              />
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    const params: NavigateToProfileParams = {
+                      taggedUserId: null,
+                      member: item?.member,
+                    };
+                    lmChatInterface.navigateToProfile(params);
+                  }}
+                >
+                  <Image
+                    source={
+                      item?.member?.imageUrl
+                        ? { uri: item?.member?.imageUrl }
+                        : require("../../assets/images/default_pic.png")
+                    }
+                    style={styles.chatroomTopicAvatar}
+                  />
+                </TouchableOpacity>
+              </View>
             )}
           </View>
         ) : null}

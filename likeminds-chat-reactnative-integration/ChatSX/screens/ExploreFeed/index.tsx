@@ -1,23 +1,9 @@
-import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-  Alert,
-} from "react-native";
+import React, { useLayoutEffect } from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import ExploreFeedFilters from "../../components/ExploreFeedFilters";
 import ExploreFeedItem from "../../components/ExploreFeedItem";
-import ToastMessage from "../../components/ToastMessage";
 import STYLES from "../../constants/Styles";
-import { useAppDispatch, useAppSelector } from "../../store";
-import {
-  getExploreFeedData,
-  updateExploreFeedData,
-} from "../../store/actions/explorefeed";
-import { SET_EXPLORE_FEED_PAGE } from "../../store/types/types";
+import { useAppSelector } from "../../store";
 import styles from "./styles";
 import { FlashList } from "@shopify/flash-list";
 import { LoaderComponent } from "../../components/LoaderComponent";

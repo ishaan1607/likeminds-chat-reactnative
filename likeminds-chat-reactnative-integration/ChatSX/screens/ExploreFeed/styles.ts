@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 const styles = StyleSheet.create({
   page: {
@@ -10,12 +11,12 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: 15,
+    gap: Layout.normalize(15),
   },
   backBtn: {
-    height: 40,
-    width: 40,
-    borderRadius: 10,
+    height: Layout.normalize(40),
+    width: Layout.normalize(40),
+    borderRadius: Layout.normalize(10),
     resizeMode: "contain",
     tintColor: STYLES.$COLORS.SECONDARY,
   },

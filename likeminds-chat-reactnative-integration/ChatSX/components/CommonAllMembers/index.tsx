@@ -28,6 +28,7 @@ import { LoaderComponent } from "../LoaderComponent";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 const CommonAllMembers = ({
   navigation,
@@ -116,7 +117,7 @@ const CommonAllMembers = ({
           style={{
             justifyContent: "center",
             alignItems: "center",
-            padding: 5,
+            padding: Layout.normalize(5),
           }}
         >
           <Image
@@ -162,7 +163,7 @@ const CommonAllMembers = ({
           style={{
             justifyContent: "center",
             alignItems: "center",
-            padding: 5,
+            padding: Layout.normalize(5),
           }}
         >
           <Image
@@ -428,7 +429,7 @@ const CommonAllMembers = ({
   //pagination loader in the footer
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{ paddingVertical: 20 }}>
+      <View style={{ paddingVertical: Layout.normalize(20) }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;

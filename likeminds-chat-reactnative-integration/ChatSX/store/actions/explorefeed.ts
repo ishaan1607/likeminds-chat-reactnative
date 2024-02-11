@@ -10,15 +10,13 @@ import {
 } from "../types/types";
 import { Client } from "../../client";
 
-const myClient = Client.myClient;
-
 export const getExploreFeedData =
   (payload: any, showLoader?: boolean) => () => {
     try {
       return {
         type: GET_EXPLORE_FEED_CHAT_SUCCESS,
         [CALL_API]: {
-          func: myClient?.getExploreFeed(payload),
+          func: Client.myClient?.getExploreFeed(payload),
           body: payload,
           types: [
             GET_EXPLORE_FEED_CHAT,
@@ -38,7 +36,7 @@ export const updateExploreFeedData = (payload: any) => () => {
     return {
       type: UPDATE_EXPLORE_FEED_CHAT_SUCCESS,
       [CALL_API]: {
-        func: myClient?.getExploreFeed(payload),
+        func: Client.myClient?.getExploreFeed(payload),
         body: payload,
         types: [
           UPDATE_EXPLORE_FEED_CHAT,

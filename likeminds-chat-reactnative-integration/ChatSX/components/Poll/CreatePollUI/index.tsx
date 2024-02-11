@@ -25,7 +25,7 @@ import DateTimePicker from "@react-native-community/datetimepicker";
 import { CreatePollProps } from "../models";
 import STYLES from "../../../constants/Styles";
 import { useCreatePollContext } from "../../../context/CreatePollContext";
-import { useLMChatStyles } from "../../../lmChatProvider";
+import Layout from "../../../constants/Layout";
 
 const CreatePollUI = () => {
   const {
@@ -71,7 +71,7 @@ const CreatePollUI = () => {
     <View>
       <ScrollView
         keyboardShouldPersistTaps={"handled"}
-        contentContainerStyle={{ paddingBottom: 50 }}
+        contentContainerStyle={{ paddingBottom: Layout.normalize(10) }}
         bounces={false}
       >
         {/* Poll question */}
@@ -175,7 +175,7 @@ const CreatePollUI = () => {
                 style={[
                   styles.alignRow,
                   styles.justifySpace,
-                  { marginBottom: 10 },
+                  { marginBottom: Layout.normalize(10) },
                 ]}
               >
                 <Text
@@ -362,7 +362,7 @@ const CreatePollUI = () => {
                     { flexGrow: 1 },
                     styles.alignRow,
                     styles.justifySpace,
-                    { marginRight: 30 },
+                    { marginRight: Layout.normalize(30) },
                   ]}
                 >
                   <Text style={[styles.text, styles.blackColor]}>

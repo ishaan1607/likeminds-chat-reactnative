@@ -50,7 +50,7 @@ export const paginatedConversationsEnd =
       return {
         type: PAGINATED_CONVERSATIONS_END_SUCCESS,
         [CALL_API]: {
-          func: myClient?.getConversations(payload),
+          func: Client.myClient?.getConversations(payload),
           body: payload,
           types: [
             PAGINATED_CONVERSATIONS,
@@ -71,7 +71,7 @@ export const paginatedConversationsStart =
       return {
         type: PAGINATED_CONVERSATIONS_START_SUCCESS,
         [CALL_API]: {
-          func: myClient?.getConversations(payload),
+          func: Client.myClient?.getConversations(payload),
           body: payload,
           types: [
             PAGINATED_CONVERSATIONS,
@@ -92,7 +92,7 @@ export const paginatedConversations =
       return {
         type: PAGINATED_CONVERSATIONS_SUCCESS,
         [CALL_API]: {
-          func: myClient?.getConversations(payload),
+          func: Client.myClient?.getConversations(payload),
           body: payload,
           types: [
             PAGINATED_CONVERSATIONS,
@@ -113,7 +113,7 @@ export const firebaseConversation =
       return {
         type: FIREBASE_CONVERSATIONS_SUCCESS,
         [CALL_API]: {
-          func: myClient?.getConversationMeta(payload),
+          func: Client.myClient?.getConversationMeta(payload),
           body: payload,
           types: [
             FIREBASE_CONVERSATIONS,
@@ -134,7 +134,7 @@ export const onConversationsCreate =
       return {
         type: ON_CONVERSATIONS_CREATE_SUCCESS,
         [CALL_API]: {
-          func: myClient?.postConversation(payload),
+          func: Client.myClient?.postConversation(payload),
           body: payload,
           types: [
             ON_CONVERSATIONS_CREATE,
@@ -154,7 +154,7 @@ export const getChatroom = (payload: any) => () => {
     return {
       type: GET_CHATROOM_ACTIONS_SUCCESS,
       [CALL_API]: {
-        func: myClient?.getChatroomActions(payload),
+        func: Client.myClient?.getChatroomActions(payload),
         body: payload,
         types: [
           GET_CHATROOM,
