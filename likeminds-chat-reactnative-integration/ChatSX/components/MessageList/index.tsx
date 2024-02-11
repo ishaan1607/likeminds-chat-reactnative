@@ -1,4 +1,11 @@
-import { View, Text, Pressable, Keyboard } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Keyboard,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import React, { forwardRef, useEffect, useRef, useState } from "react";
 import { FlashList } from "@shopify/flash-list";
 import Swipeable from "../Swipeable";
@@ -19,6 +26,7 @@ import {
   useMessageListContext,
 } from "../../context/MessageListContext";
 import ChatroomTopic from "../ChatroomTopic";
+import Layout from "../../constants/Layout";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -52,6 +60,9 @@ const MessageListComponent = () => {
     setKeyboardVisible,
     setIsReplyFound,
     setReplyConversationId,
+    keyboardVisible,
+    isScrollingUp,
+    scrollToTop,
   }: MessageListContextValues = useMessageListContext();
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -359,6 +370,25 @@ const MessageListComponent = () => {
             keyboardShouldPersistTaps={"handled"}
             inverted
           />
+
+          {isScrollingUp && (
+            <TouchableOpacity
+              style={[
+                styles.arrowButton,
+                {
+                  bottom: keyboardVisible
+                    ? Layout.normalize(55)
+                    : Layout.normalize(20),
+                },
+              ]}
+              onPress={scrollToTop}
+            >
+              <Image
+                source={require("../../assets/images/scrollDown.png")}
+                style={styles.arrowButtonImage}
+              />
+            </TouchableOpacity>
+          )}
 
           {/* Chatroom Topic */}
           <ChatroomTopic />

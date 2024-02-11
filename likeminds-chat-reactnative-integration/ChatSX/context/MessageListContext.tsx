@@ -54,6 +54,9 @@ export interface MessageListContextValues {
   renderFooter: () => React.JSX.Element | null;
   getIconAttachment: (conversation: Conversation) => React.JSX.Element | null;
   scrollToIndex: (index: any) => any;
+  scrollToTop: any;
+  isScrollingUp: boolean;
+  keyboardVisible: boolean;
 }
 
 const MessageListContext = createContext<MessageListContextValues | undefined>(
@@ -90,6 +93,8 @@ export const MessageListContextProvider = ({
   const [isReplyFound, setIsReplyFound] = useState(false);
   const [replyConversationId, setReplyConversationId] = useState("");
   const [keyboardVisible, setKeyboardVisible] = useState(false);
+  const [isScrollingUp, setIsScrollingUp] = useState(false);
+  const [currentOffset, setCurrentOffset] = useState(0);
 
   const flatlistRef = useRef<any>(null);
   const dispatch = useAppDispatch();
@@ -97,6 +102,25 @@ export const MessageListContextProvider = ({
   const myClient = Client.myClient;
   // const { user } = useAppSelector((state) => state.homefeed);
   const PAGE_SIZE = 200;
+
+  const scrollToTop = async () => {
+    const payload = GetConversationsRequestBuilder.builder()
+      .setChatroomId(chatroomID?.toString())
+      .setLimit(100)
+      .setType(GetConversationsType.ALL)
+      .build();
+
+    const conversationsFromRealm = await myClient?.getConversations(payload);
+
+    if (conversationsFromRealm[0]?.id !== conversations[0]?.id) {
+      dispatch({
+        type: GET_CONVERSATIONS_SUCCESS,
+        body: { conversations: conversationsFromRealm },
+      });
+    }
+
+    flatlistRef.current.scrollToIndex({ animated: true, index: 0 });
+  };
 
   // this useEffect scroll to Index of latest message when we send the message.
   useEffect(() => {
@@ -330,6 +354,11 @@ export const MessageListContextProvider = ({
     const contentLength = event.nativeEvent.contentSize.height;
     const onStartReachedThreshold = 10;
     const onEndReachedThreshold = 10;
+
+    const isUp = offset > 0 && offset > currentOffset;
+
+    setIsScrollingUp(isUp);
+    setCurrentOffset(offset);
 
     // Check if scroll has reached start of list.
     const isScrollAtStart = offset < onStartReachedThreshold;
@@ -762,6 +791,9 @@ export const MessageListContextProvider = ({
     scrollToIndex,
     isReplyFound,
     replyConversationId,
+    keyboardVisible,
+    isScrollingUp,
+    scrollToTop,
   };
 
   return (
