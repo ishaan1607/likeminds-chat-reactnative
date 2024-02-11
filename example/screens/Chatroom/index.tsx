@@ -4,7 +4,7 @@ import {
   ChatroomHeader,
   MessageList,
   MessageInput,
-} from 'likeminds_chat_reactnative_integration';
+} from '@likeminds.community/chat-rn-core';
 
 const ChatroomScreen = ({navigation, route}: any) => {
   return (

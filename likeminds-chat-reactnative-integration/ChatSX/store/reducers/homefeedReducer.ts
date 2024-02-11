@@ -1,4 +1,3 @@
-import { current } from "@reduxjs/toolkit";
 import Styles from "../../constants/Styles";
 import {
   ACCEPT_INVITE_SUCCESS,

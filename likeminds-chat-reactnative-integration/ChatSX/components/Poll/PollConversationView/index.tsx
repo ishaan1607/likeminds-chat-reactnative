@@ -26,7 +26,6 @@ import { useMessageContext } from "../../../context/MessageContext";
 import { useChatroomContext } from "../../../context/ChatroomContext";
 import { styles } from "../../Messages/styles";
 import STYLES from "../../../constants/Styles";
-import { useLMChatStyles } from "../../../lmChatProvider";
 
 const PollConversationView = () => {
   const myClient = Client.myClient;
@@ -38,10 +37,9 @@ const PollConversationView = () => {
     handleOnPress: openKeyboard,
   } = useMessageContext();
   const { navigation } = useChatroomContext();
-  const LMChatContextStyles = useLMChatStyles();
   const { isTypeSent } = useMessageContext();
 
-  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
   const sentMessageBackgroundColor =

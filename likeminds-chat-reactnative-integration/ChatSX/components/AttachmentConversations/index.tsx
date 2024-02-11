@@ -47,7 +47,6 @@ import { Events, Keys } from "../../enums";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import { Base64 } from "../../awsExports";
 import { onSeekTo } from "../../audio/Controls";
-import { useLMChatStyles } from "../../lmChatProvider";
 import { useMessageContext } from "../../context/MessageContext";
 import { useChatroomContext } from "../../context/ChatroomContext";
 import Layout from "../../constants/Layout";

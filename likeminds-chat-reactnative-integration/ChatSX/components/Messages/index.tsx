@@ -6,7 +6,6 @@ import ReplyConversations from "../ReplyConversations";
 import AttachmentConversations from "../AttachmentConversations";
 import { PollConversationView } from "../Poll";
 import LinkPreview from "../LinkPreview";
-import { useLMChatStyles } from "../../lmChatProvider";
 import ReactionList from "../ReactionList";
 import {
   MessageContextProvider,

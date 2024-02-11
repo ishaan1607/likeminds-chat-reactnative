@@ -22,14 +22,12 @@ import {
 } from "../types/types";
 import { Client } from "../../client";
 
-const myClient = Client.myClient;
-
 export const getConversations = (payload: any, showLoader: boolean) => () => {
   try {
     return {
       type: GET_CONVERSATIONS_SUCCESS,
       [CALL_API]: {
-        func: myClient?.getConversations(payload),
+        func: Client.myClient?.getConversations(payload),
         body: payload,
         types: [
           GET_CONVERSATIONS,

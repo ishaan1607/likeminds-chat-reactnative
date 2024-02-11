@@ -49,7 +49,6 @@ import {
   View,
 } from "react-native";
 import STYLES from "../constants/Styles";
-import { useLMChat } from "../lmChatProvider";
 import {
   CommonActions,
   StackActions,
@@ -105,6 +104,7 @@ import { getChatroom } from "../store/actions/chatroom";
 import { fetchResourceFromURI, formatTime } from "../commonFuctions";
 import { Image as CompressedImage } from "react-native-compressor";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
+import { Client } from "../client";
 
 interface UploadResource {
   selectedImages: any;
@@ -243,7 +243,7 @@ export const ChatroomContextProvider = ({
   navigation,
   route,
 }: ChatroomContextProps) => {
-  const myClient = useLMChat();
+  const myClient = Client.myClient;
 
   const {
     chatroomID,

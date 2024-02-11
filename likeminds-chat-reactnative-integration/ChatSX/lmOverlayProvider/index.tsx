@@ -1,9 +1,8 @@
 import React from "react";
 import { LMOverlayProviderProps } from "./types";
-import { Provider as ReduxProvider } from "react-redux";
-import store from "../store";
 import { LMChatProvider } from "../lmChatProvider";
 import { StyleSheet, View } from "react-native";
+import { ContextProvider } from "../contextStore";
 
 export const LMOverlayProvider = ({
   myClient,
@@ -14,7 +13,7 @@ export const LMOverlayProvider = ({
   lmChatInterface,
 }: LMOverlayProviderProps) => {
   return (
-    <ReduxProvider store={store}>
+    <ContextProvider>
       <LMChatProvider
         myClient={myClient}
         userName={userName}
@@ -24,7 +23,7 @@ export const LMOverlayProvider = ({
       >
         <View style={styles.flexStyling}>{children}</View>
       </LMChatProvider>
-    </ReduxProvider>
+    </ContextProvider>
   );
 };
 

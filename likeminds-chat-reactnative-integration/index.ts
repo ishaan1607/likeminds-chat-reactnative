@@ -19,8 +19,10 @@ import {
 } from "./ChatSX/callBacks/type";
 import { STYLES } from "./ChatSX/constants/Styles";
 import { RadialGradient } from "./ChatSX/radialGradient";
+import { ChatRoom } from "./ChatSX/screens/ChatRoom";
 
 export {
+  ChatRoom,
   ChatroomHeader,
   MessageList,
   MessageInput,

@@ -1,6 +1,5 @@
 import { View, Text, Pressable, TextStyle, Image } from "react-native";
 import React from "react";
-import { useLMChatStyles } from "../../lmChatProvider";
 import { useMessageContext } from "../../context/MessageContext";
 import { useChatroomContext } from "../../context/ChatroomContext";
 import STYLES from "../../constants/Styles";
@@ -12,7 +11,6 @@ import { ChatroomType } from "../../enums";
 const StateMessage = () => {
   const { conversations }: any = useAppSelector((state) => state.chatroom);
   const { user } = useAppSelector((state) => state.homefeed);
-  const LMChatContextStyles = useLMChatStyles();
   const {
     item,
     isIncluded,
@@ -32,7 +30,7 @@ const StateMessage = () => {
 
   const { onTapToUndo, chatroomType, chatroomName } = useChatroomContext();
 
-  const chatBubbleStyles = LMChatContextStyles?.chatBubbleStyles;
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
   const borderRadius = chatBubbleStyles?.borderRadius;
@@ -46,7 +44,7 @@ const StateMessage = () => {
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
   const stateMessagesBackgroundColor =
-    chatBubbleStyles?.stateMessagesBackgroundColor;
+    chatBubbleStyles?.stateMessagesTextStyles?.backgroundColor;
   const stateMessagesTextStyles = chatBubbleStyles?.stateMessagesTextStyles;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor

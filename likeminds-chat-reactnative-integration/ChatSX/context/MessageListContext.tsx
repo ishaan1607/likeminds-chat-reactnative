@@ -21,7 +21,6 @@ import {
 import STYLES from "../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../store";
 import { Client } from "../client";
-import { useLMChatStyles } from "../lmChatProvider";
 import { ChatroomContextValues, useChatroomContext } from "./ChatroomContext";
 import {
   paginatedConversations,
@@ -44,7 +43,11 @@ export interface MessageListContextValues {
   flatlistRef: any;
   isFound: boolean;
   flashListMounted: boolean;
-
+  isReplyFound: boolean;
+  setIsReplyFound: Dispatch<SetStateAction<boolean>>;
+  replyConversationId: string;
+  setReplyConversationId: Dispatch<SetStateAction<string>>;
+  setKeyboardVisible: Dispatch<SetStateAction<boolean>>;
   setIsFound: Dispatch<SetStateAction<boolean>>;
   setFlashListMounted: Dispatch<SetStateAction<boolean>>;
   handleOnScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
@@ -84,6 +87,9 @@ export const MessageListContextProvider = ({
   const [response, setResponse] = useState<any>([]);
   const [flashListMounted, setFlashListMounted] = useState(false);
   const [isFound, setIsFound] = useState(false);
+  const [isReplyFound, setIsReplyFound] = useState(false);
+  const [replyConversationId, setReplyConversationId] = useState("");
+  const [keyboardVisible, setKeyboardVisible] = useState(false);
 
   const flatlistRef = useRef<any>(null);
   const dispatch = useAppDispatch();
@@ -745,13 +751,17 @@ export const MessageListContextProvider = ({
     flatlistRef,
     isFound,
     flashListMounted,
-
+    setIsReplyFound,
+    setReplyConversationId,
     setIsFound,
+    setKeyboardVisible,
     setFlashListMounted,
     handleOnScroll,
     renderFooter,
     getIconAttachment,
     scrollToIndex,
+    isReplyFound,
+    replyConversationId,
   };
 
   return (
