@@ -158,6 +158,21 @@ function App(): React.JSX.Element {
   */
   }
 
+  // styling for chatroom topic
+  {
+    /* 
+      const chatroomTopicStyles = {
+    topicHeader: {
+      color: 'blue',
+    },
+    topicDescription: {
+      color: 'yellow',
+    },
+    topicPlaceholder: 'Topic set by your CM',
+  };
+    */
+  }
+
   // if (chatBubbleStyles) {
   //   STYLES.setChatBubbleStyle(chatBubbleStyles);
   // }
@@ -172,6 +187,10 @@ function App(): React.JSX.Element {
 
   // if (inputBoxStyles) {
   //   STYLES.setInputBoxStyle(inputBoxStyles);
+  // }
+
+  // if (chatroomTopicStyles) {
+  //   STYLES.setChatroomTopicStyle(chatroomTopicStyles);
   // }
 
   return (

@@ -550,14 +550,15 @@ export const ChatroomContextProvider = ({
       });
       setIsRealmDataPresent(true);
       // This is to set chatroom topic if its already in API response
-      if (DB_DATA?.topic && DB_DATA?.topicId) {
+      if (DB_DATA?.topicId) {
+        const conversation = await myClient?.getConversation(DB_DATA?.topicId);
         dispatch({
           type: SET_CHATROOM_TOPIC,
           body: {
-            currentChatroomTopic: DB_DATA?.topic,
+            currentChatroomTopic: conversation[0],
           },
         });
-      } else if (!DB_DATA?.topic && !DB_DATA?.topicId) {
+      } else if (!DB_DATA?.topicId) {
         dispatch({
           type: CLEAR_CHATROOM_TOPIC,
         });

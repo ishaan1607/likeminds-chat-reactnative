@@ -248,6 +248,8 @@ const MessageListComponent = () => {
         </View>
       ) : (
         <>
+          {/* Chatroom Topic */}
+          <ChatroomTopic />
           {/* List of messages */}
           <FlashList
             ref={flatlistRef}
@@ -370,7 +372,6 @@ const MessageListComponent = () => {
             keyboardShouldPersistTaps={"handled"}
             inverted
           />
-
           {isScrollingUp && (
             <TouchableOpacity
               style={[
@@ -389,9 +390,6 @@ const MessageListComponent = () => {
               />
             </TouchableOpacity>
           )}
-
-          {/* Chatroom Topic */}
-          <ChatroomTopic />
         </>
       )}
     </>

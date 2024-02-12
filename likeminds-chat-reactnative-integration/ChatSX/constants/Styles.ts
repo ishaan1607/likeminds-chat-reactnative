@@ -1,6 +1,7 @@
 import {
   ChatBubbleStyles,
   ChatroomHeaderStyles,
+  ChatroomTopicStyles,
   InputBoxStyles,
   ReactionListStyles,
   StylesProps,
@@ -82,6 +83,7 @@ export class STYLES {
   static $INPUT_BOX_STYLE: InputBoxStyles = {};
   static $REACTION_LIST_STYLE: ReactionListStyles = {};
   static $CHATROOM_HEADER_STYLE: ChatroomHeaderStyles = {};
+  static $CHATROOM_TOPIC_STYLE: ChatroomTopicStyles = {};
   static setTheme({
     hue,
     fontColor,
@@ -134,6 +136,11 @@ export class STYLES {
   static setChatroomHeaderStyle(chatroomHeaderStyles: ChatroomHeaderStyles) {
     STYLES.$CHATROOM_HEADER_STYLE = {
       ...chatroomHeaderStyles,
+    };
+  }
+  static setChatroomTopicStyle(chatroomTopicStyles: ChatroomTopicStyles) {
+    STYLES.$CHATROOM_TOPIC_STYLE = {
+      ...chatroomTopicStyles,
     };
   }
 }

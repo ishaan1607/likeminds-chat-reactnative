@@ -31,6 +31,20 @@ export interface ChatroomHeaderStyles {
   };
 }
 
+export interface ChatroomTopicStyles {
+  topicHeader?: {
+    fontSize?: number;
+    fontFamily?: string;
+    color?: string;
+  };
+  topicDescription?: {
+    fontSize?: number;
+    fontFamily?: string;
+    color?: string;
+  };
+  topicPlaceholder?: string;
+}
+
 export interface ChatBubbleStyles {
   borderRadius?: number;
   sentMessageBackgroundColor?: string;
