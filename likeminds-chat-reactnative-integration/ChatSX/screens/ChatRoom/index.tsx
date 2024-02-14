@@ -32,7 +32,6 @@ import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getChatroom } from "../../store/actions/chatroom";
 import { styles } from "./styles";
-import Clipboard from "@react-native-clipboard/clipboard";
 import { DataSnapshot, onValue, ref } from "firebase/database";
 import { initAPI } from "../../store/actions/homefeed";
 import {
@@ -651,14 +650,14 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                 </TouchableOpacity>
               )}
 
-            {len === 1 && !isFirstMessageDeleted && isCopy ? (
+            {/* {len === 1 && !isFirstMessageDeleted && isCopy ? (
               <TouchableOpacity
                 onPress={() => {
                   const output = copySelectedMessages(
                     selectedMessages,
                     chatroomID
                   );
-                  Clipboard.setString(output);
+                  // Clipboard.setString(output);
                   dispatch({ type: SELECTED_MESSAGES, body: [] });
                   dispatch({ type: LONG_PRESSED, body: false });
                   setInitialHeader();
@@ -684,7 +683,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                     selectedMessages,
                     chatroomID
                   );
-                  Clipboard.setString(output);
+                  // Clipboard.setString(output);
                   dispatch({ type: SELECTED_MESSAGES, body: [] });
                   dispatch({ type: LONG_PRESSED, body: false });
                   setInitialHeader();
@@ -703,7 +702,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
                   ]}
                 />
               </TouchableOpacity>
-            ) : null}
+            ) : null} */}
 
             {isSelectedMessageEditable &&
             (chatroomType === ChatroomType.DMCHATROOM
