@@ -598,69 +598,62 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
           isDelete = true;
         }
         return (
-          !ChatroomTabNavigator && (
-            <View style={styles.selectedHeadingContainer}>
-              {len === 1 &&
-                !isFirstMessageDeleted &&
-                memberCanMessage &&
-                chatroomFollowStatus && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (len > 0) {
-                        setReplyChatID(selectedMessages[0]?.id);
-                        dispatch({
-                          type: SET_IS_REPLY,
-                          body: { isReply: true },
-                        });
-                        dispatch({
-                          type: SET_REPLY_MESSAGE,
-                          body: { replyMessage: selectedMessages[0] },
-                        });
-                        dispatch({ type: SELECTED_MESSAGES, body: [] });
-                        dispatch({ type: LONG_PRESSED, body: false });
-                        setInitialHeader();
-                        refInput.current.focus();
-                        LMChatAnalytics.track(
-                          Events.MESSAGE_REPLY,
-                          new Map<string, string>([
-                            [
-                              Keys.TYPE,
-                              getConversationType(selectedMessages[0]),
-                            ],
-                            [Keys.CHATROOM_ID, chatroomID?.toString()],
-                            [
-                              Keys.REPLIED_TO_MEMBER_ID,
-                              selectedMessages[0]?.member?.id,
-                            ],
-                            [
-                              Keys.REPLIED_TO_MEMBER_STATE,
-                              selectedMessages[0]?.member?.state,
-                            ],
-                            [
-                              Keys.REPLIED_TO_MESSAGE_ID,
-                              selectedMessages[0]?.id,
-                            ],
-                          ])
-                        );
-                      }
-                    }}
-                  >
-                    <Image
-                      source={require("../../assets/images/reply_icon3x.png")}
-                      style={[
-                        styles.threeDots,
-                        {
-                          tintColor:
-                            chatroomSelectedHeaderIcons?.tintColor !== undefined
-                              ? chatroomSelectedHeaderIcons?.tintColor
-                              : undefined,
-                        },
-                      ]}
-                    />
-                  </TouchableOpacity>
-                )}
+          <View style={styles.selectedHeadingContainer}>
+            {len === 1 &&
+              !isFirstMessageDeleted &&
+              memberCanMessage &&
+              chatroomFollowStatus && (
+                <TouchableOpacity
+                  onPress={() => {
+                    if (len > 0) {
+                      setReplyChatID(selectedMessages[0]?.id);
+                      dispatch({
+                        type: SET_IS_REPLY,
+                        body: { isReply: true },
+                      });
+                      dispatch({
+                        type: SET_REPLY_MESSAGE,
+                        body: { replyMessage: selectedMessages[0] },
+                      });
+                      dispatch({ type: SELECTED_MESSAGES, body: [] });
+                      dispatch({ type: LONG_PRESSED, body: false });
+                      setInitialHeader();
+                      refInput.current.focus();
+                      LMChatAnalytics.track(
+                        Events.MESSAGE_REPLY,
+                        new Map<string, string>([
+                          [Keys.TYPE, getConversationType(selectedMessages[0])],
+                          [Keys.CHATROOM_ID, chatroomID?.toString()],
+                          [
+                            Keys.REPLIED_TO_MEMBER_ID,
+                            selectedMessages[0]?.member?.id,
+                          ],
+                          [
+                            Keys.REPLIED_TO_MEMBER_STATE,
+                            selectedMessages[0]?.member?.state,
+                          ],
+                          [Keys.REPLIED_TO_MESSAGE_ID, selectedMessages[0]?.id],
+                        ])
+                      );
+                    }
+                  }}
+                >
+                  <Image
+                    source={require("../../assets/images/reply_icon3x.png")}
+                    style={[
+                      styles.threeDots,
+                      {
+                        tintColor:
+                          chatroomSelectedHeaderIcons?.tintColor !== undefined
+                            ? chatroomSelectedHeaderIcons?.tintColor
+                            : undefined,
+                      },
+                    ]}
+                  />
+                </TouchableOpacity>
+              )}
 
-              {/* {len === 1 && !isFirstMessageDeleted && isCopy ? (
+            {/* {len === 1 && !isFirstMessageDeleted && isCopy ? (
               <TouchableOpacity
                 onPress={() => {
                   const output = copySelectedMessages(
@@ -714,141 +707,140 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
               </TouchableOpacity>
             ) : null} */}
 
-              {isSelectedMessageEditable &&
-              (chatroomType === ChatroomType.DMCHATROOM
-                ? !!chatRequestState
-                : true) ? ( // this condition checks in case of DM, chatRequestState != 0 && chatRequestState != null then only show edit Icon
-                <TouchableOpacity
-                  onPress={() => {
-                    setIsEditable(true);
-                    dispatch({
-                      type: SET_EDIT_MESSAGE,
-                      body: { editConversation: { ...selectedMessages[0] } },
-                    });
-                    dispatch({ type: SELECTED_MESSAGES, body: [] });
-                    refInput.current.focus();
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/images/edit_icon3x.png")}
-                    style={[
-                      styles.editIcon,
-                      {
-                        tintColor:
-                          chatroomSelectedHeaderIcons?.tintColor !== undefined
-                            ? chatroomSelectedHeaderIcons?.tintColor
-                            : undefined,
-                      },
-                    ]}
-                  />
-                </TouchableOpacity>
-              ) : null}
-              {isDelete && (
-                <TouchableOpacity
-                  onPress={async () => {
-                    const res = await myClient
-                      .deleteConversations({
-                        conversationIds: selectedMessagesIDArr,
-                        reason: "none",
-                      })
-                      .then(async () => {
-                        dispatch({ type: SELECTED_MESSAGES, body: [] });
-                        dispatch({ type: LONG_PRESSED, body: false });
-                        let updatedConversations;
-                        for (let i = 0; i < selectedMessagesIDArr.length; i++) {
-                          LMChatAnalytics.track(
-                            Events.MESSAGE_DELETED,
-                            new Map<string, string>([
-                              [
-                                Keys.TYPE,
-                                getConversationType(selectedMessages[i]),
-                              ],
-                              [Keys.CHATROOM_ID, chatroomID?.toString()],
-                            ])
-                          );
-                          if (
-                            selectedMessagesIDArr[i] == currentChatroomTopic?.id
-                          ) {
-                            dispatch({
-                              type: CLEAR_CHATROOM_TOPIC,
-                            });
-                            updatedConversations =
-                              await myClient?.deleteConversation(
-                                selectedMessagesIDArr[i],
-                                user,
-                                conversations,
-                                true,
-                                chatroomID?.toString()
-                              );
-                          } else {
-                            updatedConversations =
-                              await myClient?.deleteConversation(
-                                selectedMessagesIDArr[i],
-                                user,
-                                conversations,
-                                false,
-                                chatroomID?.toString()
-                              );
-                          }
-                          // to stop audio player if we delete the message
-                          const conversation: any =
-                            await myClient.getConversation(
-                              selectedMessagesIDArr[i]
+            {isSelectedMessageEditable &&
+            (chatroomType === ChatroomType.DMCHATROOM
+              ? !!chatRequestState
+              : true) ? ( // this condition checks in case of DM, chatRequestState != 0 && chatRequestState != null then only show edit Icon
+              <TouchableOpacity
+                onPress={() => {
+                  setIsEditable(true);
+                  dispatch({
+                    type: SET_EDIT_MESSAGE,
+                    body: { editConversation: { ...selectedMessages[0] } },
+                  });
+                  dispatch({ type: SELECTED_MESSAGES, body: [] });
+                  refInput.current.focus();
+                }}
+              >
+                <Image
+                  source={require("../../assets/images/edit_icon3x.png")}
+                  style={[
+                    styles.editIcon,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
+                />
+              </TouchableOpacity>
+            ) : null}
+            {isDelete && (
+              <TouchableOpacity
+                onPress={async () => {
+                  const res = await myClient
+                    .deleteConversations({
+                      conversationIds: selectedMessagesIDArr,
+                      reason: "none",
+                    })
+                    .then(async () => {
+                      dispatch({ type: SELECTED_MESSAGES, body: [] });
+                      dispatch({ type: LONG_PRESSED, body: false });
+                      let updatedConversations;
+                      for (let i = 0; i < selectedMessagesIDArr.length; i++) {
+                        LMChatAnalytics.track(
+                          Events.MESSAGE_DELETED,
+                          new Map<string, string>([
+                            [
+                              Keys.TYPE,
+                              getConversationType(selectedMessages[i]),
+                            ],
+                            [Keys.CHATROOM_ID, chatroomID?.toString()],
+                          ])
+                        );
+                        if (
+                          selectedMessagesIDArr[i] == currentChatroomTopic?.id
+                        ) {
+                          dispatch({
+                            type: CLEAR_CHATROOM_TOPIC,
+                          });
+                          updatedConversations =
+                            await myClient?.deleteConversation(
+                              selectedMessagesIDArr[i],
+                              user,
+                              conversations,
+                              true,
+                              chatroomID?.toString()
                             );
-                          if (
-                            conversation[0]?.attachments[0]?.type ==
-                            VOICE_NOTE_TEXT
-                          ) {
-                            await TrackPlayer.reset();
-                          }
+                        } else {
+                          updatedConversations =
+                            await myClient?.deleteConversation(
+                              selectedMessagesIDArr[i],
+                              user,
+                              conversations,
+                              false,
+                              chatroomID?.toString()
+                            );
                         }
-                        dispatch({
-                          type: GET_CONVERSATIONS_SUCCESS,
-                          body: { conversations: updatedConversations },
-                        });
-                        setInitialHeader();
-                      })
-                      .catch(() => {
-                        Alert.alert("Delete message failed");
+                        // to stop audio player if we delete the message
+                        const conversation: any =
+                          await myClient.getConversation(
+                            selectedMessagesIDArr[i]
+                          );
+                        if (
+                          conversation[0]?.attachments[0]?.type ==
+                          VOICE_NOTE_TEXT
+                        ) {
+                          await TrackPlayer.reset();
+                        }
+                      }
+                      dispatch({
+                        type: GET_CONVERSATIONS_SUCCESS,
+                        body: { conversations: updatedConversations },
                       });
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/images/delete_icon3x.png")}
-                    style={[
-                      styles.threeDots,
-                      {
-                        tintColor:
-                          chatroomSelectedHeaderIcons?.tintColor !== undefined
-                            ? chatroomSelectedHeaderIcons?.tintColor
-                            : undefined,
-                      },
-                    ]}
-                  />
-                </TouchableOpacity>
-              )}
-              {!isFirstMessageDeleted && len === 1 ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    setReportModalVisible(true);
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/images/three_dots3x.png")}
-                    style={[
-                      styles.threeDots,
-                      {
-                        tintColor:
-                          chatroomSelectedHeaderIcons?.tintColor !== undefined
-                            ? chatroomSelectedHeaderIcons?.tintColor
-                            : undefined,
-                      },
-                    ]}
-                  />
-                </TouchableOpacity>
-              ) : null}
-            </View>
-          )
+                      setInitialHeader();
+                    })
+                    .catch(() => {
+                      Alert.alert("Delete message failed");
+                    });
+                }}
+              >
+                <Image
+                  source={require("../../assets/images/delete_icon3x.png")}
+                  style={[
+                    styles.threeDots,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
+                />
+              </TouchableOpacity>
+            )}
+            {!isFirstMessageDeleted && len === 1 && !ChatroomTabNavigator ? (
+              <TouchableOpacity
+                onPress={() => {
+                  setReportModalVisible(true);
+                }}
+              >
+                <Image
+                  source={require("../../assets/images/three_dots3x.png")}
+                  style={[
+                    styles.threeDots,
+                    {
+                      tintColor:
+                        chatroomSelectedHeaderIcons?.tintColor !== undefined
+                          ? chatroomSelectedHeaderIcons?.tintColor
+                          : undefined,
+                    },
+                  ]}
+                />
+              </TouchableOpacity>
+            ) : null}
+          </View>
         );
       },
     });
