@@ -1,8 +1,9 @@
 {
   "name": "@likeminds.community/chat-rn-core",
-  "version": "0.5.5",
-  "versionCode": "6",
-  "versionName": "0.5.5",
+  "version": "0.5.6",
+  "versionCode": "7",
+  "versionName": "0.5.6",
+  "description": "LikeMinds ReactNative Core SDK for chat",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -12,8 +13,12 @@
     "eslint:fix": "eslint --fix .",
     "prettier": "prettier --check .",
     "prettier:fix": "prettier --write .",
-    "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap"
+    "build": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap",
+    "npm-deploy": "rm -rf dist && microbundle --tsconfig tsconfig.json --no-sourcemap && npm publish --access public"
   },
+  "author": "LikeMinds",
+  "homepage": "https://likeminds.community/",
+  "license": "ISC",
   "dependencies": {
     "@giphy/react-native-sdk": "2.1.3",
     "@likeminds.community/chat-rn": "1.5.0",
@@ -30,21 +35,17 @@
     "@react-navigation/native-stack": "6.9.8",
     "@reduxjs/toolkit": "1.9.2",
     "@shopify/flash-list": "1.4.3",
-    "@types/react-native-video": "5.0.14",
     "aws-sdk": "2.1380.0",
     "buffer": "6.0.3",
     "diff": "5.1.0",
     "firebase": "9.17.1",
     "lottie-react-native": "6.4.0",
     "moment": "2.29.4",
-    "react": "18.2.0",
-    "react-native": "0.71.1",
     "react-native-audio-recorder-player": "3.6.4",
     "react-native-blob-util": "0.19.2",
     "react-native-compressor": "1.6.1",
     "react-native-create-thumbnail": "1.6.4",
     "react-native-device-info": "10.4.0",
-    "react-native-document-picker": "8.2.0",
     "react-native-gesture-handler": "2.14.0",
     "react-native-image-crop-tools": "1.6.4",
     "react-native-image-picker": "7.0.2",
@@ -57,21 +58,36 @@
     "react-native-safe-area-context": "4.5.0",
     "react-native-screens": "3.19.0",
     "react-native-shimmer-placeholder": "2.0.9",
-    "react-native-svg": "13.9.0",
     "react-native-swiper-flatlist": "3.2.2",
     "react-native-tab-view": "3.5.0",
     "react-native-track-player": "4.0.1",
     "react-native-uuid": "2.0.1",
-    "react-native-video": "5.2.1",
     "react-redux": "8.0.5",
     "realm": "11.10.2",
     "redux-thunk": "2.4.2",
     "rn-emoji-keyboard": "1.2.1"
   },
+  "peerDependencies": {
+    "@react-native-community/netinfo": ">=9.3.10",
+    "react": ">=18.2.0",
+    "react-native": ">=0.71.1",
+    "react-native-document-picker": ">=8.2.0",
+    "react-native-video": ">=5.2.1",
+    "@types/react-native-video": ">=5.0.14",
+    "react-native-svg": ">=13.9.0",
+    "react-native-gesture-handler": ">=2.9.0",
+    "react-native-reanimated": ">=3.4.2"
+  },
   "jest": {
     "preset": "react-native"
   },
   "devDependencies": {
-    "microbundle": "0.15.1"
+    "microbundle": ">=0.15.1",
+    "@react-native-community/netinfo": ">=9.3.10",
+    "react-native": ">=0.71.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LikeMindsCommunity/likeminds-chat-reactnative/tree/master/likeminds-chat-reactnative-integration"
   }
 }

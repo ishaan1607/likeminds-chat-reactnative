@@ -30,14 +30,6 @@ export const initMyClient = (
     }
   });
 
-  {
-    /* Uncomment the below code in case you dont have a setBackgroundMessageHandler  */
-  }
-  // messaging().setBackgroundMessageHandler(async (remoteMessage) => {
-  //   const val = await getNotification(remoteMessage);
-  //   return val;
-  // });
-
   TrackPlayer.registerPlaybackService(() => playbackService);
 
   return myClient;
