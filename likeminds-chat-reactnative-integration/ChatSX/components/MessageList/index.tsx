@@ -30,15 +30,15 @@ import Layout from "../../constants/Layout";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-const MessageList = () => {
+const MessageList = ({ ReactionList }: any) => {
   return (
     <MessageListContextProvider>
-      <MessageListComponent />
+      <MessageListComponent ReactionList={ReactionList} />
     </MessageListContextProvider>
   );
 };
 
-const MessageListComponent = () => {
+const MessageListComponent = ({ ReactionList }: any) => {
   const {
     conversations,
     selectedMessages,
@@ -360,6 +360,7 @@ const MessageListComponent = () => {
                         item={item}
                         isStateIncluded={isStateIncluded}
                         index={index}
+                        ReactionListProp={ReactionList}
                       />
                     </Pressable>
                   </Swipeable>

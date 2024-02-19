@@ -5,6 +5,7 @@ import {
   MessageList,
   MessageInput,
 } from '@likeminds.community/chat-rn-core';
+import {ReactionList} from '../../customisableComponents/ReactionList';
 
 const ChatroomScreen = ({navigation, route}: any) => {
   return (
@@ -14,7 +15,7 @@ const ChatroomScreen = ({navigation, route}: any) => {
       <ChatroomHeader />
 
       {/* Message List */}
-      <MessageList />
+      <MessageList ReactionList={<ReactionList />} />
 
       {/* Input Box Flow */}
       <MessageInput />

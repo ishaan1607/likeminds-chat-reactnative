@@ -20,6 +20,8 @@ import {
 import { STYLES } from "./ChatSX/constants/Styles";
 import { RadialGradient } from "./ChatSX/radialGradient";
 import { ChatRoom } from "./ChatSX/screens/ChatRoom";
+import { useChatroomContext } from "./ChatSX/context/ChatroomContext";
+import { useMessageContext } from "./ChatSX/context/MessageContext";
 
 export {
   ChatRoom,
@@ -42,4 +44,6 @@ export {
   NavigateToGroupDetailsParams,
   STYLES,
   RadialGradient,
+  useChatroomContext,
+  useMessageContext,
 };
