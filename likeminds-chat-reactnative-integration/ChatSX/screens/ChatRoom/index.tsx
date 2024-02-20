@@ -110,6 +110,7 @@ import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import {
   ChatroomChatRequestState,
   Keys,
+  MediaType,
   MemberState,
   Sources,
 } from "../../enums";
@@ -1078,15 +1079,19 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
 
   // To trigger analytics for Message Selected
   useEffect(() => {
+    let messageList: [[Keys, MediaType], [Keys, any]][] = [];
+
     for (let i = 0; i < selectedMessages.length; i++) {
-      LMChatAnalytics.track(
-        Events.MESSAGE_SELECTED,
-        new Map<string, string>([
-          [Keys.TYPE, getConversationType(selectedMessages[i])],
-          [Keys.CHATROOM_ID, chatroomID?.toString()],
-        ])
-      );
+      messageList.push([
+        [Keys.TYPE, getConversationType(selectedMessages[i])],
+        [Keys.CHATROOM_ID, chatroomID?.toString()],
+      ]);
     }
+
+    LMChatAnalytics.track(
+      Events.MESSAGE_SELECTED,
+      new Map<string, string>(messageList.flat())
+    );
   }, [selectedMessages, chatroomID]);
 
   // To trigger analytics for Chatroom opened
@@ -1112,7 +1117,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
         [Keys.SOURCE, source],
       ])
     );
-  }, [chatroomType, chatroomID]);
+  }, [chatroomType]);
 
   //this useEffect fetch chatroom details only after initiate API got fetched if `navigation from Notification` else fetch chatroom details
   useEffect(() => {

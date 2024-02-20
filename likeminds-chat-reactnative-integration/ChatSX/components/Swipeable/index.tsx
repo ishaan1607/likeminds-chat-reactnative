@@ -16,6 +16,9 @@ import { SET_IS_REPLY, SET_REPLY_MESSAGE } from "../../store/types/types";
 import { useAppDispatch } from "../../store";
 import STYLES from "../../constants/Styles";
 import { SwipeableParams } from "./model";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import { Events, Keys } from "../../enums";
+import { getConversationType } from "../../utils/analyticsUtils";
 
 const Swipeable = ({
   onFocusKeyboard,
@@ -41,6 +44,18 @@ const Swipeable = ({
       dispatch({ type: SET_IS_REPLY, body: { isReply: true } });
       onFocusKeyboard();
       x.value = withSpring(0);
+      const memberId = replyMessage?.member?.id?.toString();
+      const memberState = replyMessage?.member?.state?.toString();
+      LMChatAnalytics.track(
+        Events.MESSAGE_REPLY,
+        new Map<string | undefined, string | undefined>([
+          [Keys.TYPE, getConversationType(replyMessage)],
+          [Keys.CHATROOM_ID, replyMessage?.chatroomId?.toString()],
+          [Keys.REPLIED_TO_MEMBER_ID, memberId],
+          [Keys.REPLIED_TO_MEMBER_STATE, memberState],
+          [Keys.REPLIED_TO_MESSAGE_ID, replyMessage?.id],
+        ])
+      );
     }
   }, [isReplyBoxOpen]);
 
