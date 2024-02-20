@@ -1106,17 +1106,19 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     } else if (deepLinking) {
       source = "deep_link";
     }
-    LMChatAnalytics.track(
-      Events.CHAT_ROOM_OPENED,
-      new Map<string, string>([
-        [Keys.CHATROOM_ID, chatroomID?.toString()],
-        [
-          Keys.CHATROOM_TYPE,
-          getChatroomType(chatroomType, chatroomDBDetails?.isSecret),
-        ],
-        [Keys.SOURCE, source],
-      ])
-    );
+    if(chatroomType !== undefined){
+      LMChatAnalytics.track(
+        Events.CHAT_ROOM_OPENED,
+        new Map<string, string>([
+          [Keys.CHATROOM_ID, chatroomID?.toString()],
+          [
+            Keys.CHATROOM_TYPE,
+            getChatroomType(chatroomType, chatroomDBDetails?.isSecret),
+          ],
+          [Keys.SOURCE, source],
+        ])
+      );
+    }
   }, [chatroomType]);
 
   //this useEffect fetch chatroom details only after initiate API got fetched if `navigation from Notification` else fetch chatroom details
