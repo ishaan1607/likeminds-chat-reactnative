@@ -6,16 +6,10 @@ import {
   Linking,
   Pressable,
   ActivityIndicator,
-  Platform,
-  TouchableWithoutFeedback,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { styles } from "./styles";
-import {
-  convertSecondsToTime,
-  decode,
-  generateGifString,
-} from "../../commonFuctions";
+import { generateGifString } from "../../commonFuctions";
 import STYLES from "../../constants/Styles";
 import {
   LONG_PRESSED,
@@ -27,7 +21,6 @@ import { useAppDispatch, useAppSelector } from "../../store";
 import { CAROUSEL_SCREEN } from "../../constants/Screens";
 import {
   AUDIO_TEXT,
-  CAPITAL_GIF_TEXT,
   FAILED,
   GIF_TEXT,
   IMAGE_TEXT,
@@ -36,22 +29,15 @@ import {
   VIDEO_TEXT,
   VOICE_NOTE_TEXT,
 } from "../../constants/Strings";
-import Slider from "@react-native-community/slider";
-import TrackPlayer, {
-  useActiveTrack,
-  useProgress,
-} from "react-native-track-player";
-import { onPausePlay, onResumePlay, startPlay, stopPlay } from "../../audio";
-import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
-import { Events, Keys } from "../../enums";
-import ReactNativeBlobUtil from "react-native-blob-util";
-import { Base64 } from "../../awsExports";
-import { onSeekTo } from "../../audio/Controls";
 import { useMessageContext } from "../../context/MessageContext";
 import { useChatroomContext } from "../../context/ChatroomContext";
 import Layout from "../../constants/Layout";
-import { NavigateToProfileParams } from "../../callBacks/type";
-import { CallBack } from "../../callBacks/callBackClass";
+import MessageHeader from "../MessageHeader";
+import MessageNotSupported from "../MessageNotSupported";
+import VoiceNoteConversations from "../VoiceNoteConversations";
+import GIFConversations from "../GifConversations";
+import MessageText from "../MessageText";
+import MessageFooter from "../MessageFooter";
 
 interface AttachmentConversations {
   isReplyConversation?: any;
@@ -62,11 +48,6 @@ const AttachmentConversations = ({
   isReplyConversation,
   isReply,
 }: AttachmentConversations) => {
-  const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
-  const [isGifPlaying, setIsGifPlaying] = useState(false);
-  const progress = useProgress();
-  const activeTrack = useActiveTrack();
-
   const {
     isIncluded,
     item,
@@ -75,19 +56,11 @@ const AttachmentConversations = ({
     handleOnPress: openKeyboard,
   } = useMessageContext();
 
-  const { navigation, handleFileUpload, chatroomName } = useChatroomContext();
-  const lmChatInterface = CallBack.lmChatInterface;
-
   let firstAttachment = item?.attachments[0];
-  const isAudioActive =
-    activeTrack?.externalUrl === firstAttachment?.url ? true : false;
+
   const isGif = firstAttachment?.type === GIF_TEXT;
   const isAnswer = isGif ? !!generateGifString(item?.answer) : !!item?.answer;
-  const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.homefeed);
-  const { selectedMessages, stateArr, isLongPress }: any = useAppSelector(
-    (state) => state.chatroom
-  );
 
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -99,124 +72,12 @@ const AttachmentConversations = ({
     chatBubbleStyles?.receivedMessageBackgroundColor;
   const selectedMessageBackgroundColor =
     chatBubbleStyles?.selectedMessageBackgroundColor;
-  const textStyles = chatBubbleStyles?.textStyles;
-  const linkTextColor = chatBubbleStyles?.linkTextColor;
-  const taggingTextColor = chatBubbleStyles?.taggingTextColor;
-  const messageReceivedHeader = chatBubbleStyles?.messageReceivedHeader;
-  const senderNameStyles = messageReceivedHeader?.senderNameStyles;
-  const senderDesignationStyles =
-    messageReceivedHeader?.senderDesignationStyles;
-  const playPauseBoxChatBubble = chatBubbleStyles?.playPauseBoxIcon;
-  const voiceNoteSlider = chatBubbleStyles?.voiceNoteSlider;
 
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
     : STYLES.$COLORS.SELECTED_BLUE;
   // styling props ended
 
-  // to stop the audio if move out of the chatroom
-  useEffect(() => {
-    if (progress.duration <= progress.position) {
-      TrackPlayer.reset();
-      setIsVoiceNotePlaying(false);
-    }
-  }, [progress]);
-
-  // to handle start player
-  const handleStartPlay = async (path: string) => {
-    if (Platform.OS === "ios") {
-      const fileExtension = "m4a";
-
-      const dir = ReactNativeBlobUtil.fs.dirs.DocumentDir;
-      const localPath = `${dir}/${Base64.btoa(path)}.${fileExtension}`;
-      ReactNativeBlobUtil.config({
-        fileCache: true,
-        appendExt: fileExtension,
-        path: localPath,
-      })
-        .fetch("GET", path)
-        .then(async (res) => {
-          const internalUrl = `file://${res.path()}`;
-          await startPlay(internalUrl, path);
-          setIsVoiceNotePlaying(true);
-        });
-    } else {
-      await startPlay(path, path);
-      setIsVoiceNotePlaying(true);
-    }
-    LMChatAnalytics.track(
-      Events.VOICE_NOTE_PLAYED,
-      new Map<string, string>([
-        [Keys.CHATROOM_TYPE, item?.state?.toString()],
-        [Keys.CHATROOM_ID, item?.chatroomId?.toString()],
-        [Keys.MESSAGE_ID, item?.id?.toString()],
-      ])
-    );
-  };
-
-  // to pause playing audio recording
-  const handleOnPausePlay = async () => {
-    const value = await onPausePlay();
-    setIsVoiceNotePlaying(value);
-  };
-
-  // to resume playing audio recording
-  const handleOnResumePlay = async () => {
-    const value = await onResumePlay();
-    setIsVoiceNotePlaying(value);
-  };
-
-  // to seek player to the provided time
-  const handleOnSeekTo = async (value: number) => {
-    const secondsToSeek = value * (firstAttachment?.metaRO?.duration / 100);
-    await onSeekTo(secondsToSeek);
-  };
-
-  // to play and stop gif after 2s
-  const playGif = () => {
-    setIsGifPlaying(true);
-    setTimeout(() => {
-      setIsGifPlaying(false);
-    }, 2000);
-  };
-
-  // handle gif on press
-  const handleOnPress = (event: any, url?: string, index?: number) => {
-    const { pageX, pageY } = event.nativeEvent;
-    dispatch({
-      type: SET_POSITION,
-      body: { pageX: pageX, pageY: pageY },
-    });
-    let isStateIncluded = stateArr.includes(item?.state);
-    if (isLongPress) {
-      if (isIncluded) {
-        const filterdMessages = selectedMessages.filter(
-          (val: any) => val?.id !== item?.id && !stateArr.includes(val?.state)
-        );
-        if (filterdMessages.length > 0) {
-          dispatch({
-            type: SELECTED_MESSAGES,
-            body: [...filterdMessages],
-          });
-        } else {
-          dispatch({
-            type: SELECTED_MESSAGES,
-            body: [...filterdMessages],
-          });
-          dispatch({ type: LONG_PRESSED, body: false });
-        }
-      } else {
-        if (!isStateIncluded) {
-          dispatch({
-            type: SELECTED_MESSAGES,
-            body: [...selectedMessages, item],
-          });
-        }
-      }
-    } else {
-      playGif();
-    }
-  };
   return (
     <View
       style={[
@@ -250,48 +111,10 @@ const AttachmentConversations = ({
           isIncluded ? { backgroundColor: SELECTED_BACKGROUND_COLOR } : null,
         ]}
       >
-        {!!(item?.member?.id == user?.id) || isReply ? null : (
-          <Text
-            style={[
-              styles.messageInfo,
-              senderNameStyles?.color
-                ? { color: senderNameStyles?.color }
-                : null,
-              senderNameStyles?.fontSize
-                ? { fontSize: senderNameStyles?.fontSize }
-                : null,
-              senderNameStyles?.fontFamily
-                ? { color: senderNameStyles?.color }
-                : null,
-            ]}
-            numberOfLines={1}
-            onPress={() => {
-              const params: NavigateToProfileParams = {
-                taggedUserId: null,
-                member: item?.member,
-              };
-              lmChatInterface.navigateToProfile(params);
-            }}
-          >
-            {item?.member?.name}
-            {item?.member?.customTitle ? (
-              <Text
-                style={[
-                  styles.messageCustomTitle,
-                  senderDesignationStyles?.color
-                    ? { color: senderDesignationStyles?.color }
-                    : null,
-                  senderDesignationStyles?.fontSize
-                    ? { fontSize: senderDesignationStyles?.fontSize }
-                    : null,
-                  senderDesignationStyles?.fontFamily
-                    ? { color: senderDesignationStyles?.color }
-                    : null,
-                ]}
-              >{` • ${item?.member?.customTitle}`}</Text>
-            ) : null}
-          </Text>
-        )}
+        {/* Message Header */}
+        {!!(item?.member?.id == user?.id) || isReply ? null : <MessageHeader />}
+
+        {/* Message Type */}
         {firstAttachment?.type === IMAGE_TEXT ? (
           <ImageConversations />
         ) : firstAttachment?.type === PDF_TEXT ? (
@@ -299,253 +122,21 @@ const AttachmentConversations = ({
         ) : firstAttachment?.type === VIDEO_TEXT ? (
           <ImageConversations />
         ) : firstAttachment?.type === AUDIO_TEXT ? (
-          <View>
-            <Text style={styles.deletedMsg}>
-              This message is not supported in this app yet.
-            </Text>
-          </View>
+          <MessageNotSupported />
         ) : firstAttachment?.type === VOICE_NOTE_TEXT ? (
-          <View>
-            <View style={styles.voiceNotesParentBox}>
-              {isVoiceNotePlaying && isAudioActive ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    handleOnPausePlay();
-                  }}
-                  style={[styles.playPauseBox, { ...playPauseBoxChatBubble }]}
-                >
-                  <Image
-                    source={require("../../assets/images/pause_icon3x.png")}
-                    style={styles.playPauseImage}
-                  />
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (progress.position > 0 && isAudioActive) {
-                      handleOnResumePlay();
-                    } else {
-                      handleStartPlay(firstAttachment?.url);
-                    }
-                  }}
-                  style={[styles.playPauseBox, { ...playPauseBoxChatBubble }]}
-                >
-                  <Image
-                    style={styles.playPauseImage}
-                    source={require("../../assets/images/play_icon3x.png")}
-                  />
-                </TouchableOpacity>
-              )}
-              <View
-                style={{
-                  flex: 1,
-                  marginTop: Platform.OS === "ios" ? 0 : Layout.normalize(10),
-                  gap: Layout.normalize(3),
-                }}
-              >
-                <Slider
-                  minimumValue={0}
-                  maximumValue={100}
-                  step={0}
-                  value={
-                    isAudioActive
-                      ? progress.position / progress.duration
-                        ? (progress.position / progress.duration) * 100
-                        : 0
-                      : 0
-                  }
-                  minimumTrackTintColor={
-                    voiceNoteSlider?.minimumTrackTintColor
-                      ? voiceNoteSlider.minimumTrackTintColor
-                      : "#ffad31"
-                  }
-                  maximumTrackTintColor="grey"
-                  tapToSeek={true}
-                  onSlidingComplete={handleOnSeekTo}
-                  thumbTintColor={
-                    voiceNoteSlider?.thumbTintColor
-                      ? voiceNoteSlider.thumbTintColor
-                      : "#ffad31"
-                  }
-                />
-                <View
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    marginLeft: Layout.normalize(10),
-                    alignItems: "center",
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/images/mic_icon3x.png")}
-                    style={[styles.smallIcon, { tintColor: "grey" }]}
-                  />
-                  {isVoiceNotePlaying ? (
-                    <Text style={styles.recordTitle}>
-                      {!isAudioActive && !!progress.position
-                        ? convertSecondsToTime(0)
-                        : convertSecondsToTime(Math.floor(progress.position))}
-                    </Text>
-                  ) : (
-                    <Text style={styles.recordTitle}>
-                      {convertSecondsToTime(
-                        Math.floor(firstAttachment?.metaRO?.duration)
-                      )}
-                    </Text>
-                  )}
-                </View>
-              </View>
-            </View>
-            {item?.isInProgress === SUCCESS ? (
-              <View style={styles.uploadingIndicator}>
-                <ActivityIndicator
-                  size="large"
-                  color={STYLES.$COLORS.SECONDARY}
-                />
-              </View>
-            ) : item?.isInProgress === FAILED ? (
-              <View style={styles.uploadingIndicator}>
-                <Pressable
-                  onPress={() => {
-                    handleFileUpload(item?.id, true);
-                  }}
-                  style={({ pressed }) => [
-                    {
-                      opacity: pressed ? 0.5 : 1,
-                    },
-                    styles.retryButton,
-                  ]}
-                >
-                  <Image
-                    style={styles.retryIcon}
-                    source={require("../../assets/images/retry_file_upload3x.png")}
-                  />
-                  <Text style={styles.retryText}>RETRY</Text>
-                </Pressable>
-              </View>
-            ) : null}
-          </View>
+          <VoiceNoteConversations />
         ) : isGif ? (
-          <View
-            style={
-              isIncluded
-                ? {
-                    backgroundColor: SELECTED_BACKGROUND_COLOR,
-                    opacity: 0.7,
-                  }
-                : null
-            }
-          >
-            {!isGifPlaying && !item?.isInProgress ? (
-              <TouchableOpacity
-                onPress={handleOnPress}
-                onLongPress={handleLongPress}
-                style={[
-                  {
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: Layout.normalize(150),
-                    position: "absolute",
-                    width: "100%",
-                    zIndex: 1,
-                  },
-                ]}
-              >
-                <View
-                  style={{
-                    backgroundColor: "black",
-                    opacity: 0.9,
-                    padding: Layout.normalize(10),
-                    borderRadius: Layout.normalize(50),
-                  }}
-                >
-                  <Text style={{ color: "white" }}>{CAPITAL_GIF_TEXT}</Text>
-                </View>
-              </TouchableOpacity>
-            ) : null}
-
-            {isGifPlaying ? (
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  navigation.navigate(CAROUSEL_SCREEN, {
-                    dataObject: item,
-                    index: 0,
-                  });
-                  dispatch({
-                    type: STATUS_BAR_STYLE,
-                    body: { color: STYLES.$STATUS_BAR_STYLE["light-content"] },
-                  });
-                }}
-              >
-                <Image
-                  source={{
-                    uri: firstAttachment?.url,
-                  }}
-                  style={styles.singleImg}
-                />
-              </TouchableWithoutFeedback>
-            ) : (
-              <Image
-                source={{
-                  uri: firstAttachment?.thumbnailUrl,
-                }}
-                style={styles.singleImg}
-              />
-            )}
-
-            {item?.isInProgress === SUCCESS ? (
-              <View style={styles.uploadingIndicator}>
-                <ActivityIndicator
-                  size="large"
-                  color={STYLES.$COLORS.SECONDARY}
-                />
-              </View>
-            ) : item?.isInProgress === FAILED ? (
-              <View style={styles.uploadingIndicator}>
-                <Pressable
-                  onPress={() => {
-                    handleFileUpload(item?.id, true);
-                  }}
-                  style={({ pressed }) => [
-                    {
-                      opacity: pressed ? 0.5 : 1,
-                    },
-                    styles.retryButton,
-                  ]}
-                >
-                  <Image
-                    style={styles.retryIcon}
-                    source={require("../../assets/images/retry_file_upload3x.png")}
-                  />
-                  <Text style={styles.retryText}>RETRY</Text>
-                </Pressable>
-              </View>
-            ) : null}
-          </View>
+          <GIFConversations />
         ) : null}
 
-        {isAnswer ? (
-          <View style={styles.messageText as any}>
-            {decode({
-              text: isGif ? generateGifString(item?.answer) : item?.answer,
-              enableClick: true,
-              chatroomName: chatroomName,
-              communityId: user?.sdkClientInfo?.community,
-              textStyles: textStyles,
-              linkTextColor: linkTextColor,
-              taggingTextColor: taggingTextColor,
-            })}
-          </View>
-        ) : null}
-        <View style={styles.alignTime}>
-          {item?.isEdited ? (
-            <Text style={styles.messageDate}>{"Edited • "}</Text>
-          ) : null}
-          <Text style={styles.messageDate}>{item?.createdAt}</Text>
-        </View>
+        {/* Message text */}
+        {isAnswer ? <MessageText /> : null}
+
+        {/* Message Footer */}
+        <MessageFooter />
       </View>
 
+      {/* Add reaction emoji */}
       {!isTypeSent && !(firstAttachment?.type === AUDIO_TEXT) ? (
         <Pressable
           onLongPress={handleLongPress}

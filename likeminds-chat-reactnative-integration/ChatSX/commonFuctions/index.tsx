@@ -225,7 +225,6 @@ export const decode = ({
                       member: null,
                     };
                     lmChatInterface.navigateToProfile(params);
-                    Alert.alert(`navigate to the route ${val?.route}`);
                   }
                 }}
                 style={[
