@@ -23,6 +23,7 @@ import {
   NavigateToProfileParams,
   NavigateToGroupDetailsParams,
   STYLES,
+  ContextProvider,
 } from '@likeminds.community/chat-rn-core';
 import {myClient} from '.';
 import ChatroomScreen from './screens/Chatroom';
@@ -175,50 +176,52 @@ function App(): React.JSX.Element {
   // }
 
   return (
-    <LMOverlayProvider
-      myClient={myClient}
-      userName={userName}
-      userUniqueId={userUniqueId}
-      profileImageUrl={profileImageUrl}
-      lmChatInterface={lmChatInterface}>
-      <NavigationContainer ref={navigationRef} independent={true}>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="ChatRoom"
-            component={ChatroomScreen}
-            initialParams={{
-              chatroomID: chatroomId,
-              isInvited: false,
-            }}
-          />
-          <Stack.Screen
-            options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
-            name={'FileUpload'}
-            component={FileUpload}
-          />
-          <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
-          <Stack.Screen
-            options={{gestureEnabled: false}}
-            name={'CarouselScreen'}
-            component={CarouselScreen}
-          />
-          <Stack.Screen
-            options={{gestureEnabled: false}}
-            name={'PollResult'}
-            component={PollResult}
-          />
-          <Stack.Screen
-            name={'CreatePollScreen'}
-            component={CreatePollScreen}
-          />
-          <Stack.Screen
-            options={{headerShown: false}}
-            name={'ImageCropScreen'}
-            component={ImageCropScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </LMOverlayProvider>
+    <ContextProvider>
+      <LMOverlayProvider
+        myClient={myClient}
+        userName={userName}
+        userUniqueId={userUniqueId}
+        profileImageUrl={profileImageUrl}
+        lmChatInterface={lmChatInterface}>
+        <NavigationContainer ref={navigationRef} independent={true}>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="ChatRoom"
+              component={ChatroomScreen}
+              initialParams={{
+                chatroomID: chatroomId,
+                isInvited: false,
+              }}
+            />
+            <Stack.Screen
+              options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
+              name={'FileUpload'}
+              component={FileUpload}
+            />
+            <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
+            <Stack.Screen
+              options={{gestureEnabled: false}}
+              name={'CarouselScreen'}
+              component={CarouselScreen}
+            />
+            <Stack.Screen
+              options={{gestureEnabled: false}}
+              name={'PollResult'}
+              component={PollResult}
+            />
+            <Stack.Screen
+              name={'CreatePollScreen'}
+              component={CreatePollScreen}
+            />
+            <Stack.Screen
+              options={{headerShown: false}}
+              name={'ImageCropScreen'}
+              component={ImageCropScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </LMOverlayProvider>
+    </ContextProvider>
   );
 }
 
