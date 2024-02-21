@@ -173,6 +173,15 @@ function App(): React.JSX.Element {
     */
   }
 
+  // styling for file upload screen
+  {
+    /* 
+    const fileUploadStyles = {
+      selectedImageBorderColor: 'blue',
+    };
+    */
+  }
+
   // if (chatBubbleStyles) {
   //   STYLES.setChatBubbleStyle(chatBubbleStyles);
   // }
@@ -191,6 +200,10 @@ function App(): React.JSX.Element {
 
   // if (chatroomTopicStyles) {
   //   STYLES.setChatroomTopicStyle(chatroomTopicStyles);
+  // }
+
+  // if (fileUploadStyles) {
+  //   STYLES.setFileUploadStyle(fileUploadStyles);
   // }
 
   return (
@@ -214,6 +227,10 @@ function App(): React.JSX.Element {
             options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
             name={'FileUpload'}
             component={FileUpload}
+            initialParams={{
+              backIconPath: '', // add your back icon path here
+              imageCropIcon: '', // add your image crop icon path here
+            }}
           />
           <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
           <Stack.Screen

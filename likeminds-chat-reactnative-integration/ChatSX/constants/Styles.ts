@@ -2,6 +2,7 @@ import {
   ChatBubbleStyles,
   ChatroomHeaderStyles,
   ChatroomTopicStyles,
+  FileUploadStyles,
   InputBoxStyles,
   ReactionListStyles,
   StylesProps,
@@ -84,6 +85,7 @@ export class STYLES {
   static $REACTION_LIST_STYLE: ReactionListStyles = {};
   static $CHATROOM_HEADER_STYLE: ChatroomHeaderStyles = {};
   static $CHATROOM_TOPIC_STYLE: ChatroomTopicStyles = {};
+  static $FILE_UPLOAD_STYLE: FileUploadStyles = {};
   static setTheme({
     hue,
     fontColor,
@@ -141,6 +143,11 @@ export class STYLES {
   static setChatroomTopicStyle(chatroomTopicStyles: ChatroomTopicStyles) {
     STYLES.$CHATROOM_TOPIC_STYLE = {
       ...chatroomTopicStyles,
+    };
+  }
+  static setFileUploadStyle(fileUploadStyles: FileUploadStyles) {
+    STYLES.$FILE_UPLOAD_STYLE = {
+      ...fileUploadStyles,
     };
   }
 }
