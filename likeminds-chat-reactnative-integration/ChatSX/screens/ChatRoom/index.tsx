@@ -1079,19 +1079,22 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
 
   // To trigger analytics for Message Selected
   useEffect(() => {
-    let messageList: [[Keys, MediaType], [Keys, any]][] = [];
+    let selectedMessagesLength = selectedMessages?.length;
+    if (selectedMessagesLength) {
+      let messageList: [[Keys, MediaType], [Keys, any]][] = [];
 
-    for (let i = 0; i < selectedMessages.length; i++) {
-      messageList.push([
-        [Keys.TYPE, getConversationType(selectedMessages[i])],
-        [Keys.CHATROOM_ID, chatroomID?.toString()],
-      ]);
+      for (let i = 0; i < selectedMessagesLength; i++) {
+        messageList.push([
+          [Keys.TYPE, getConversationType(selectedMessages[i])],
+          [Keys.CHATROOM_ID, chatroomID?.toString()],
+        ]);
+      }
+
+      LMChatAnalytics.track(
+        Events.MESSAGE_SELECTED,
+        new Map<string, string>(messageList.flat())
+      );
     }
-
-    LMChatAnalytics.track(
-      Events.MESSAGE_SELECTED,
-      new Map<string, string>(messageList.flat())
-    );
   }, [selectedMessages, chatroomID]);
 
   // To trigger analytics for Chatroom opened
@@ -1106,7 +1109,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     } else if (deepLinking) {
       source = "deep_link";
     }
-    if(chatroomType !== undefined){
+    if (chatroomType !== undefined) {
       LMChatAnalytics.track(
         Events.CHAT_ROOM_OPENED,
         new Map<string, string>([
