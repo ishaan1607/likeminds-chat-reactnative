@@ -11,7 +11,7 @@ export const getConversationType = (conversation: Conversation) => {
       attachments && getMediaCount(MediaType.VIDEO, attachments);
     const pdfCount = attachments && getMediaCount(MediaType.PDF, attachments);
     const gifCount = attachments && getMediaCount(MediaType.GIF, attachments);
-    const voiveNoteCount =
+    const voiceNoteCount =
       attachments && getMediaCount(MediaType.VOICE_NOTE, attachments);
     if (imageCount && imageCount > 0 && videoCount && videoCount > 0) {
       return MediaType.IMAGE_VIDEO;
@@ -31,7 +31,7 @@ export const getConversationType = (conversation: Conversation) => {
     if (gifCount && gifCount > 0) {
       return MediaType.GIF;
     }
-    if (voiveNoteCount && voiveNoteCount > 0) {
+    if (voiceNoteCount && voiceNoteCount > 0) {
       return MediaType.VOICE_NOTE;
     }
     return MediaType.TEXT;
