@@ -17,6 +17,8 @@ import {
 } from "./ChatSX/callBacks/type";
 import { STYLES } from "./ChatSX/constants/Styles";
 import { RadialGradient } from "./ChatSX/radialGradient";
+import getNotification from "./ChatSX/notifications";
+import { getRoute } from "./ChatSX/notifications/routes";
 
 export {
   ChatRoom,
@@ -36,4 +38,6 @@ export {
   NavigateToGroupDetailsParams,
   STYLES,
   RadialGradient,
+  getNotification,
+  getRoute,
 };
