@@ -110,6 +110,7 @@ import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import {
   ChatroomChatRequestState,
   Keys,
+  MediaType,
   MemberState,
   Sources,
 } from "../../enums";
@@ -1078,13 +1079,20 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
 
   // To trigger analytics for Message Selected
   useEffect(() => {
-    for (let i = 0; i < selectedMessages.length; i++) {
-      LMChatAnalytics.track(
-        Events.MESSAGE_SELECTED,
-        new Map<string, string>([
+    let selectedMessagesLength = selectedMessages?.length;
+    if (selectedMessagesLength) {
+      let messageList: [[Keys, MediaType], [Keys, any]][] = [];
+
+      for (let i = 0; i < selectedMessagesLength; i++) {
+        messageList.push([
           [Keys.TYPE, getConversationType(selectedMessages[i])],
           [Keys.CHATROOM_ID, chatroomID?.toString()],
-        ])
+        ]);
+      }
+
+      LMChatAnalytics.track(
+        Events.MESSAGE_SELECTED,
+        new Map<string, string>(messageList.flat())
       );
     }
   }, [selectedMessages, chatroomID]);
@@ -1101,18 +1109,20 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
     } else if (deepLinking) {
       source = "deep_link";
     }
-    LMChatAnalytics.track(
-      Events.CHAT_ROOM_OPENED,
-      new Map<string, string>([
-        [Keys.CHATROOM_ID, chatroomID?.toString()],
-        [
-          Keys.CHATROOM_TYPE,
-          getChatroomType(chatroomType, chatroomDBDetails?.isSecret),
-        ],
-        [Keys.SOURCE, source],
-      ])
-    );
-  }, [chatroomType, chatroomID]);
+    if (chatroomType !== undefined) {
+      LMChatAnalytics.track(
+        Events.CHAT_ROOM_OPENED,
+        new Map<string, string>([
+          [Keys.CHATROOM_ID, chatroomID?.toString()],
+          [
+            Keys.CHATROOM_TYPE,
+            getChatroomType(chatroomType, chatroomDBDetails?.isSecret),
+          ],
+          [Keys.SOURCE, source],
+        ])
+      );
+    }
+  }, [chatroomType]);
 
   //this useEffect fetch chatroom details only after initiate API got fetched if `navigation from Notification` else fetch chatroom details
   useEffect(() => {

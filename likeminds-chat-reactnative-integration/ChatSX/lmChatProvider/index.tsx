@@ -170,56 +170,6 @@ export const LMChatProvider = ({
     callInitApi();
   }, []);
 
-  useEffect(() => {
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      const val = await getNotification(remoteMessage);
-      return val;
-    });
-
-    notifee.onForegroundEvent(async ({ type, detail }) => {
-      if (detail?.notification?.data?.route != undefined) {
-        const navigation = navigationRef?.current;
-        let currentRoute = navigation?.getCurrentRoute();
-        let routes = await getRoute(detail?.notification?.data?.route);
-
-        if (type === EventType.PRESS) {
-          if (!!navigation) {
-            if ((currentRoute?.name as any) === routes?.route) {
-              if (
-                JSON.stringify(routes?.params) !==
-                JSON.stringify(currentRoute?.params)
-              ) {
-                dispatch({
-                  type: CLEAR_CHATROOM_CONVERSATION,
-                  body: { conversations: [] },
-                });
-                dispatch({
-                  type: CLEAR_CHATROOM_DETAILS,
-                  body: { chatroomDetails: {} },
-                });
-                const popAction = StackActions.pop(1);
-                navigation.dispatch(popAction);
-                setTimeout(() => {
-                  navigation.navigate(
-                    routes?.route as never,
-                    routes?.params as never
-                  );
-                }, 1000);
-              }
-            } else {
-              navigation.navigate(
-                routes?.route as never,
-                routes?.params as never
-              ); //navigate(CHATROOM, {chatroomID: 69285});
-            }
-          }
-        }
-      }
-    });
-
-    return unsubscribe;
-  }, [isRegisterdDevice]);
-
   return isInitiated && isRegisterdDevice ? (
     <GestureHandlerRootView style={styles.flexStyling}>
       <KeyboardAvoidingView
