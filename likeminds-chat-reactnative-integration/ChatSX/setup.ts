@@ -18,18 +18,6 @@ export const initMyClient = (
 
   Client.setMyClient(myClient);
 
-  notifee.onBackgroundEvent(async ({ type, detail }) => {
-    const routes = getRoute(detail?.notification?.data?.route);
-
-    if (type === EventType.PRESS) {
-      if (RootNavigation) {
-        setTimeout(() => {
-          RootNavigation.navigate(routes.route, routes.params); // e.g. navigate(CHATROOM, {chatroomID: 69285});
-        }, 1000);
-      }
-    }
-  });
-
   TrackPlayer.registerPlaybackService(() => playbackService);
 
   return myClient;
