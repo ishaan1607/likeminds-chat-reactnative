@@ -182,6 +182,21 @@ function App(): React.JSX.Element {
     */
   }
 
+  // styling for file upload screen
+  const memberDirectoryStyles = {
+    userName: {
+      color: 'red',
+    },
+    userTitle: {
+      color: 'blue',
+    },
+    searchPlaceholder: 'Khojo',
+  };
+
+  if (memberDirectoryStyles) {
+    STYLES.setMemberDirectoryStyle(memberDirectoryStyles);
+  }
+
   // if (chatBubbleStyles) {
   //   STYLES.setChatBubbleStyle(chatBubbleStyles);
   // }

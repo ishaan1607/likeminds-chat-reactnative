@@ -35,6 +35,20 @@ export interface FileUploadStyles {
   selectedImageBorderColor?: string;
 }
 
+export interface MemberDirectoryStyles {
+  userNameStyles?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  userTitleStyles?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  searchPlaceholderText?: string;
+}
+
 export interface ChatroomTopicStyles {
   topicHeader?: {
     fontSize?: number;
