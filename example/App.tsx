@@ -183,19 +183,23 @@ function App(): React.JSX.Element {
   }
 
   // styling for file upload screen
-  const memberDirectoryStyles = {
-    userName: {
+  {
+    /*
+   const memberDirectoryStyles = {
+    userNameStyles: {
       color: 'red',
     },
-    userTitle: {
+    userTitleStyles: {
       color: 'blue',
     },
-    searchPlaceholder: 'Khojo',
+    searchPlaceholderText: 'Khojo',
   };
-
-  if (memberDirectoryStyles) {
-    STYLES.setMemberDirectoryStyle(memberDirectoryStyles);
+  */
   }
+
+  // if (memberDirectoryStyles) {
+  //   STYLES.setMemberDirectoryStyle(memberDirectoryStyles);
+  // }
 
   // if (chatBubbleStyles) {
   //   STYLES.setChatBubbleStyle(chatBubbleStyles);
