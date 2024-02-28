@@ -197,6 +197,24 @@ function App(): React.JSX.Element {
   */
   }
 
+  // styling for carousel screen
+  {
+    /*
+  const carouselScreenStyles = {
+    headerTitle: {
+      color: 'red',
+    },
+    headerSubtitle: {
+      color: 'blue',
+    },
+  };
+  */
+  }
+
+  // if (carouselScreenStyles) {
+  //   STYLES.setCarouselScreenStyle(carouselScreenStyles);
+  // }
+
   // if (memberDirectoryStyles) {
   //   STYLES.setMemberDirectoryStyle(memberDirectoryStyles);
   // }
@@ -256,6 +274,9 @@ function App(): React.JSX.Element {
             options={{gestureEnabled: false}}
             name={'CarouselScreen'}
             component={CarouselScreen}
+            initialParams={{
+              backIconPath: '', // add your back icon path here
+            }}
           />
           <Stack.Screen
             options={{gestureEnabled: false}}
