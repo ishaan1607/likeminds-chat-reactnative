@@ -149,5 +149,5 @@ export interface InputBoxStyles {
     height?: number;
     resizeMode?: string;
   };
-  messageInputMarginBotton?: number;
+  messageInputMarginBottom?: number;
 }

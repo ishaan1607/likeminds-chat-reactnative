@@ -1928,8 +1928,8 @@ const MessageInputBox = ({
           styles.inputContainer,
           !isUploadScreen
             ? {
-                marginBottom: inputBoxStyles?.messageInputMarginBotton
-                  ? inputBoxStyles?.messageInputMarginBotton
+                marginBottom: inputBoxStyles?.messageInputMarginBottom
+                  ? inputBoxStyles?.messageInputMarginBottom
                   : marginValue,
               }
             : null,
