@@ -1223,7 +1223,7 @@ const ChatRoom = ({ navigation, route }: ChatRoomProps) => {
 
     const backHandlerAndroid = BackHandler.addEventListener(
       "hardwareBackPress",
-      backActionCall
+      lmChatInterface.navigateToPreviousScreen
     );
     return () => backHandlerAndroid.remove();
   }, [chatroomType, chatroomID]);

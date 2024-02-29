@@ -1897,6 +1897,14 @@ const MessageInputBox = ({
     }
   }, [isVoiceNoteIconPress]);
 
+  const marginValue = isKeyBoardFocused
+    ? Platform.OS === "android"
+      ? 5
+      : 5
+    : isIOS
+    ? 20
+    : 5;
+
   return (
     <View>
       {/* shows message how we record voice note */}
@@ -1920,13 +1928,9 @@ const MessageInputBox = ({
           styles.inputContainer,
           !isUploadScreen
             ? {
-                marginBottom: isKeyBoardFocused
-                  ? Platform.OS === "android"
-                    ? 5
-                    : 5
-                  : isIOS
-                  ? 20
-                  : 5,
+                marginBottom: inputBoxStyles?.messageInputMarginBottom
+                  ? inputBoxStyles?.messageInputMarginBottom
+                  : marginValue,
               }
             : null,
         ]}
