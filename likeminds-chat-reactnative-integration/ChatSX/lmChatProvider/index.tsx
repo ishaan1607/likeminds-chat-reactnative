@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Platform, StyleSheet, View, KeyboardAvoidingView } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppDispatch } from "../store";
 import { Credentials } from "../credentials";
@@ -111,12 +111,7 @@ export const LMChatProvider = ({
 
   return isInitiated ? (
     <GestureHandlerRootView style={styles.flexStyling}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        <View style={styles.flexStyling}>{children}</View>
-      </KeyboardAvoidingView>
+      <View style={styles.flexStyling}>{children}</View>
     </GestureHandlerRootView>
   ) : (
     <></>
