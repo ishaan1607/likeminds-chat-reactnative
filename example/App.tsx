@@ -17,6 +17,7 @@ import {
   ImageCropScreen,
   PollResult,
   VideoPlayer,
+  ExploreFeed,
   LMOverlayProvider,
   LMChatCallbacks,
   LMChatroomCallbacks,
@@ -211,6 +212,22 @@ function App(): React.JSX.Element {
   */
   }
 
+  // styling for explore chatroom screen
+  {
+    /* 
+      const exploreChatroomStyles = {
+    header: {
+      color: 'green',
+      placeHolderText: 'Look for new chatrooms',
+    },
+  };
+    */
+  }
+
+  // if (exploreChatroomStyles) {
+  //   STYLES.setExploreChatroomStyle(exploreChatroomStyles);
+  // }
+
   // if (carouselScreenStyles) {
   //   STYLES.setCarouselScreenStyle(carouselScreenStyles);
   // }
@@ -252,6 +269,18 @@ function App(): React.JSX.Element {
       lmChatInterface={lmChatInterface}>
       <NavigationContainer ref={navigationRef} independent={true}>
         <Stack.Navigator>
+          <Stack.Screen
+            name={'ExploreFeed'}
+            component={ExploreFeed}
+            initialParams={{
+              backIconPath: '',
+              filterIconPath: '',
+              participantsIconPath: '',
+              totalMessagesIconPath: '',
+              joinButtonPath: '',
+              joinedButtonPath: '',
+            }}
+          />
           <Stack.Screen
             name="ChatRoom"
             component={ChatroomScreen}

@@ -3,6 +3,7 @@ import {
   ChatBubbleStyles,
   ChatroomHeaderStyles,
   ChatroomTopicStyles,
+  ExploreChatroomStyles,
   FileUploadStyles,
   InputBoxStyles,
   MemberDirectoryStyles,
@@ -90,6 +91,7 @@ export class STYLES {
   static $FILE_UPLOAD_STYLE: FileUploadStyles = {};
   static $MEMBER_DIRECTORY_STYLE: MemberDirectoryStyles = {};
   static $CAROUSEL_SCREEN_STYLE: CarouselScreenStyles = {};
+  static $EXPLORE_CHATROOM_STYLE: ExploreChatroomStyles = {};
   static setTheme({
     hue,
     fontColor,
@@ -162,6 +164,11 @@ export class STYLES {
   static setCarouselScreenStyle(carouselScreenStyles: CarouselScreenStyles) {
     STYLES.$CAROUSEL_SCREEN_STYLE = {
       ...carouselScreenStyles,
+    };
+  }
+  static setExploreChatroomStyle(exploreChatroomStyles: ExploreChatroomStyles) {
+    STYLES.$EXPLORE_CHATROOM_STYLE = {
+      ...exploreChatroomStyles,
     };
   }
 }

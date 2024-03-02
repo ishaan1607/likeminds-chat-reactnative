@@ -6,13 +6,15 @@ import {
   TouchableOpacity,
   Modal,
   Pressable,
+  TextStyle,
 } from "react-native";
 import { styles } from "./styles";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { useExploreFeedContext } from "../../context/ExploreFeedContext";
+import STYLES from "../../constants/Styles";
 
-const ExploreFeedFilters = () => {
+const ExploreFeedFilters = ({ filterIconPath }: any) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   const {
@@ -26,6 +28,8 @@ const ExploreFeedFilters = () => {
     setFilterState,
     setChats,
   } = useExploreFeedContext();
+
+  const filterHeader = STYLES.$EXPLORE_CHATROOM_STYLE?.filterHeader;
 
   const handleModalClose = () => {
     setModalVisible(false);
@@ -59,9 +63,30 @@ const ExploreFeedFilters = () => {
           }}
           style={styles.itemContainer}
         >
-          <Text style={styles.titleText}>{arr[filterState]}</Text>
+          <Text
+            style={
+              [
+                styles.titleText,
+                filterHeader?.color && {
+                  color: filterHeader?.color,
+                },
+                filterHeader?.fontSize && {
+                  fontSize: filterHeader?.fontSize,
+                },
+                filterHeader?.fontFamily && {
+                  fontFamily: filterHeader?.fontFamily,
+                },
+              ] as TextStyle
+            }
+          >
+            {arr[filterState]}
+          </Text>
           <Image
-            source={require("../../assets/images/down_arrow3x.png")}
+            source={
+              filterIconPath
+                ? filterIconPath
+                : require("../../assets/images/down_arrow3x.png")
+            }
             style={styles.icon}
           />
         </TouchableOpacity>
