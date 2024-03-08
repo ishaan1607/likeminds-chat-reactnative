@@ -15,20 +15,24 @@ interface Data {
 }
 
 interface ChatRoomProps {
-  navigation: any;
-  route: any;
+  // navigation: any;
+  // route: any;
   children: ReactNode;
+  setChatroomTopic: any;
 }
 
-const ChatRoom = ({ navigation, route, children }: ChatRoomProps) => {
+const ChatRoom = ({ children, setChatroomTopic }: ChatRoomProps) => {
   return (
-    <ChatroomContextProvider navigation={navigation} route={route}>
-      <ChatroomComponent children={children} />
+    <ChatroomContextProvider>
+      <ChatroomComponent
+        children={children}
+        setChatroomTopic={setChatroomTopic}
+      />
     </ChatroomContextProvider>
   );
 };
 
-const ChatroomComponent = ({ children }) => {
+const ChatroomComponent = ({ children, setChatroomTopic }: any) => {
   const { isToast, msg, setIsToast }: ChatroomContextValues =
     useChatroomContext();
 
@@ -38,7 +42,7 @@ const ChatroomComponent = ({ children }) => {
       {children}
 
       {/* Chatroom Modals */}
-      <ChatroomModals />
+      <ChatroomModals setChatroomTopicProp={setChatroomTopic} />
 
       {/* Toast Message Flow inside Chatroom */}
       <ToastMessage

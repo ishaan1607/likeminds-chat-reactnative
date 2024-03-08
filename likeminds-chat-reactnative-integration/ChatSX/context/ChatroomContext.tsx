@@ -54,7 +54,9 @@ import {
   StackActions,
   useIsFocused,
   useNavigation,
+  useRoute,
 } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { BUCKET, POOL_ID, REGION } from "../awsExports";
 import { CognitoIdentityCredentials, S3 } from "aws-sdk";
 import AWS from "aws-sdk";
@@ -117,8 +119,8 @@ interface UploadResource {
 
 interface ChatroomContextProps {
   children: ReactNode;
-  navigation: any;
-  route: any;
+  // navigation: any;
+  // route: any;
 }
 
 export interface ChatroomContextValues {
@@ -240,17 +242,27 @@ export const useChatroomContext = () => {
 
 export const ChatroomContextProvider = ({
   children,
-  navigation,
-  route,
-}: ChatroomContextProps) => {
+}: // navigation,
+// route,
+ChatroomContextProps) => {
   const myClient = Client.myClient;
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  const route = useRoute();
 
   const {
     chatroomID,
     previousChatroomID,
     navigationFromNotification,
     deepLinking,
-  } = route.params;
+  } = route.params as {
+    chatroomID: any; // Adjust the type accordingly
+    previousChatroomID: any; // Adjust the type accordingly
+    navigationFromNotification: any; // Adjust the type accordingly
+    deepLinking: any; // Adjust the type accordingly
+  };
+
+  // console.log("chatroomID",chatroomID);
 
   const refInput = useRef<any>();
 
@@ -396,6 +408,9 @@ export const ChatroomContextProvider = ({
       dispatch({
         type: CLEAR_SELECTED_MESSAGES,
       });
+      console.log("success", response);
+
+      return currentSelectedMessage;
     }
   };
 
@@ -622,6 +637,8 @@ export const ChatroomContextProvider = ({
         currentChatroomTopic,
         user
       );
+      console.log("tempStateMessage", tempStateMessage);
+
       dispatch({
         type: ADD_STATE_MESSAGE,
         body: { conversation: tempStateMessage },
@@ -636,6 +653,8 @@ export const ChatroomContextProvider = ({
       );
     };
     if (selectedMessages.length !== 0 && isChatroomTopic) {
+      console.log("aayaAndar", currentChatroomTopic);
+
       addChatroomTopic();
     }
   }, [currentChatroomTopic]);
@@ -727,28 +746,28 @@ export const ChatroomContextProvider = ({
   }, [isFocused]);
 
   //Logic for navigation backAction
-  function backAction() {
-    dispatch({ type: SELECTED_MESSAGES, body: [] });
-    dispatch({ type: LONG_PRESSED, body: false });
-    if (chatroomType === ChatroomType.DMCHATROOM) {
-      if (previousRoute?.name === DM_ALL_MEMBERS) {
-        const popAction = StackActions.pop(2);
-        navigation.dispatch(popAction);
-      } else {
-        if (previousChatroomID) {
-          const popAction = StackActions.pop(1);
-          navigation.dispatch(popAction);
-          navigation?.push(CHATROOM, {
-            chatroomID: previousChatroomID,
-          });
-        } else {
-          navigation.goBack();
-        }
-      }
-    } else {
-      navigation.goBack();
-    }
-  }
+  // function backAction() {
+  //   dispatch({ type: SELECTED_MESSAGES, body: [] });
+  //   dispatch({ type: LONG_PRESSED, body: false });
+  //   if (chatroomType === ChatroomType.DMCHATROOM) {
+  //     if (previousRoute?.name === DM_ALL_MEMBERS) {
+  //       const popAction = StackActions.pop(2);
+  //       navigation.dispatch(popAction);
+  //     } else {
+  //       if (previousChatroomID) {
+  //         const popAction = StackActions.pop(1);
+  //         navigation.dispatch(popAction);
+  //         navigation?.push(CHATROOM, {
+  //           chatroomID: previousChatroomID,
+  //         });
+  //       } else {
+  //         navigation.goBack();
+  //       }
+  //     }
+  //   } else {
+  //     navigation.goBack();
+  //   }
+  // }
 
   //Navigation gesture back handler for android
   useEffect(() => {

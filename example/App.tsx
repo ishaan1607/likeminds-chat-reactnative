@@ -24,9 +24,11 @@ import {
   NavigateToProfileParams,
   NavigateToGroupDetailsParams,
   STYLES,
+  Chat,
 } from '@likeminds.community/chat-rn-core';
 import {myClient} from '.';
-import ChatroomScreen from './screens/Chatroom';
+import {ChatroomScreen} from './screens/Chatroom';
+import NewChat from './screens/Chatroom/NewChat';
 
 const Stack = createNativeStackNavigator();
 
@@ -268,22 +270,11 @@ function App(): React.JSX.Element {
       profileImageUrl={profileImageUrl}
       lmChatInterface={lmChatInterface}>
       <NavigationContainer ref={navigationRef} independent={true}>
+        {/* <Chat> */}
         <Stack.Navigator>
           <Stack.Screen
-            name={'ExploreFeed'}
-            component={ExploreFeed}
-            initialParams={{
-              backIconPath: '',
-              filterIconPath: '',
-              participantsIconPath: '',
-              totalMessagesIconPath: '',
-              joinButtonPath: '',
-              joinedButtonPath: '',
-            }}
-          />
-          <Stack.Screen
             name="ChatRoom"
-            component={ChatroomScreen}
+            component={NewChat}
             initialParams={{
               chatroomID: chatroomId,
               isInvited: false,
@@ -322,6 +313,7 @@ function App(): React.JSX.Element {
             component={ImageCropScreen}
           />
         </Stack.Navigator>
+        {/* </Chat> */}
       </NavigationContainer>
     </LMOverlayProvider>
   );

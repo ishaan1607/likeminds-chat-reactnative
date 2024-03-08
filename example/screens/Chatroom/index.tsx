@@ -4,23 +4,34 @@ import {
   ChatroomHeader,
   MessageList,
   MessageInput,
+  useChatroomContext,
 } from '@likeminds.community/chat-rn-core';
-import {ReactionList} from '../../customisableComponents/ReactionList';
+import {
+  ReactionList,
+  // setChatroomTopicOverwrite,
+} from '../../customisableComponents/ReactionList';
+// import {setChatroomTopicOverwrite} from '../../callbacks';
 
-const ChatroomScreen = ({navigation, route}: any) => {
+export function ChatroomScreen() {
+  const {setChatroomTopic} = useChatroomContext();
+  const setChatroomTopicOverwrite = async () => {
+    console.log('before chatroom topic');
+    const response = await setChatroomTopic();
+    console.log('after chatroom topic', response);
+  };
+  // console.log('setChatroomTopicOverwrite', setChatroomTopicOverwrite());
+
   return (
     // TODO Make R is smallcase
-    <ChatRoom navigation={navigation} route={route}>
+    <ChatRoom setChatroomTopic={setChatroomTopicOverwrite}>
       {/* ChatroomHeader */}
       <ChatroomHeader />
 
       {/* Message List */}
-      <MessageList ReactionList={<ReactionList />} />
+      <MessageList />
 
       {/* Input Box Flow */}
       <MessageInput />
     </ChatRoom>
   );
-};
-
-export default ChatroomScreen;
+}
