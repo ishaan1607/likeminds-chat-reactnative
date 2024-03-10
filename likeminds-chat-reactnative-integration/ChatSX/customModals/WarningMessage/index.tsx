@@ -12,7 +12,15 @@ import {
   useChatroomContext,
 } from "../../context/ChatroomContext";
 
-const WarningMessageModal = () => {
+interface WarningMessageModal {
+  leaveChatroomProp: () => void;
+  leaveSecretChatroomProp: () => void;
+}
+
+const WarningMessageModal = ({
+  leaveChatroomProp,
+  leaveSecretChatroomProp,
+}: WarningMessageModal) => {
   const {
     isWarningMessageModalState,
     isSecret,
@@ -50,9 +58,11 @@ const WarningMessageModal = () => {
               onPress={() => {
                 () => {
                   if (isSecret) {
-                    leaveSecretChatroom();
+                    leaveSecretChatroomProp
+                      ? leaveSecretChatroomProp()
+                      : leaveSecretChatroom();
                   } else {
-                    leaveChatroom();
+                    leaveChatroomProp ? leaveChatroomProp() : leaveChatroom();
                   }
                 };
                 hideWarningModal();

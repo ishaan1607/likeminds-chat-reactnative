@@ -8,7 +8,17 @@ import {
 } from "../../context/ChatroomContext";
 import { onShare } from "../../shareUtils";
 
-const ChatroomActionModal = () => {
+interface ChatroomActionModal {
+  joinChatroomProp: () => void;
+  muteNotificationsProp: () => void;
+  unmuteNotificationsProp: () => void;
+}
+
+const ChatroomActionModal = ({
+  joinChatroomProp,
+  muteNotificationsProp,
+  unmuteNotificationsProp,
+}: ChatroomActionModal) => {
   const {
     chatroomID,
     chatroomType,
@@ -56,16 +66,22 @@ const ChatroomActionModal = () => {
                       setModalVisible(false);
                     } else if (val?.id === ChatroomActions.JOIN_CHATROOM) {
                       if (!isSecret) {
-                        // joinChatroom();
+                        joinChatroomProp
+                          ? await joinChatroomProp()
+                          : await joinChatroom();
                       }
                       setModalVisible(false);
                     } else if (val?.id === ChatroomActions.MUTE_NOTIFICATIONS) {
-                      // await muteNotifications();
+                      muteNotificationsProp
+                        ? await muteNotificationsProp()
+                        : await muteNotifications();
                       setModalVisible(false);
                     } else if (
                       val?.id === ChatroomActions.UNMUTE_NOTIFICATIONS
                     ) {
-                      // await unmuteNotifications();
+                      unmuteNotificationsProp
+                        ? await unmuteNotificationsProp()
+                        : await unmuteNotifications();
                       setModalVisible(false);
                     } else if (val?.id === ChatroomActions.VIEW_PROFILE) {
                       //View Profile code

@@ -10,7 +10,11 @@ import { REPORT } from "../../constants/Screens";
 import { SELECTED_MESSAGES } from "../../store/types/types";
 import { useAppDispatch } from "../../store";
 
-const ReportActionModal = ({ setChatroomTopicProp }: any) => {
+interface ReportActionModal {
+  setChatroomTopicProp: () => void;
+}
+
+const ReportActionModal = ({ setChatroomTopicProp }: ReportActionModal) => {
   const dispatch = useAppDispatch();
 
   const {
@@ -59,7 +63,6 @@ const ReportActionModal = ({ setChatroomTopicProp }: any) => {
             {isChatroomTopic && chatroomType !== ChatroomType.DMCHATROOM ? (
               <TouchableOpacity
                 onPress={async () => {
-                  console.log("setChatroomTopicProp", setChatroomTopicProp);
                   setChatroomTopicProp
                     ? setChatroomTopicProp()
                     : setChatroomTopic();

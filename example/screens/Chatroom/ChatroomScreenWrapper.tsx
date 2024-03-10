@@ -1,8 +1,8 @@
 import {Chat} from '@likeminds.community/chat-rn-core';
 import React from 'react';
-import {ChatroomScreen} from '.';
+import {ChatroomScreen} from './ChatroomScreen';
 
-function NewChat() {
+function ChatroomScreenWrapper() {
   return (
     <Chat>
       <ChatroomScreen />
@@ -10,4 +10,4 @@ function NewChat() {
   );
 }
 
-export default NewChat;
+export default ChatroomScreenWrapper;

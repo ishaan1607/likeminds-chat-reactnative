@@ -9,14 +9,34 @@ import ApproveDMRequestModal from "../../customModals/ApproveDMRequest";
 import RejectDMRequestModal from "../../customModals/RejectDMRequest";
 import BlockDMRequestModal from "../../customModals/BlockDMRequest";
 
-const ChatroomModals = () => {
+interface ChatroomModals {
+  setChatroomTopicProp: () => void;
+  leaveChatroomProp: () => void;
+  leaveSecretChatroomProp: () => void;
+  joinChatroomProp: () => void;
+  muteNotificationsProp: () => void;
+  unmuteNotificationsProp: () => void;
+}
+
+const ChatroomModals = ({
+  setChatroomTopicProp,
+  leaveChatroomProp,
+  leaveSecretChatroomProp,
+  joinChatroomProp,
+  muteNotificationsProp,
+  unmuteNotificationsProp,
+}: ChatroomModals) => {
   return (
     <View>
       {/* Chatroom Action Modal */}
-      <ChatroomActionModal />
+      <ChatroomActionModal
+        joinChatroomProp={joinChatroomProp}
+        muteNotificationsProp={muteNotificationsProp}
+        unmuteNotificationsProp={unmuteNotificationsProp}
+      />
 
       {/* Report Action Modal */}
-      <ReportActionModal />
+      <ReportActionModal setChatroomTopicProp={setChatroomTopicProp} />
 
       {/* Message Reaction Modal */}
       <MessageReactionModal />
@@ -25,7 +45,10 @@ const ChatroomModals = () => {
       <EmojiKeyboardModal />
 
       {/* CHATROOM LEAVING WARNING message modal */}
-      <WarningMessageModal />
+      <WarningMessageModal
+        leaveChatroomProp={leaveChatroomProp}
+        leaveSecretChatroomProp={leaveSecretChatroomProp}
+      />
 
       {/* APPROVE DM request Modal */}
       <ApproveDMRequestModal />

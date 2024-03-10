@@ -15,24 +15,58 @@ interface Data {
 }
 
 interface ChatRoomProps {
-  // navigation: any;
-  // route: any;
   children: ReactNode;
-  setChatroomTopic: any;
+  setChatroomTopic: () => void;
+  leaveChatroom: () => void;
+  leaveSecretChatroom: () => void;
+  joinChatroom: () => void;
+  muteNotifications: () => void;
+  unmuteNotifications: () => void;
 }
 
-const ChatRoom = ({ children, setChatroomTopic }: ChatRoomProps) => {
+const ChatRoom = ({
+  children,
+  setChatroomTopic,
+  leaveChatroom,
+  leaveSecretChatroom,
+  joinChatroom,
+  muteNotifications,
+  unmuteNotifications,
+}: ChatRoomProps) => {
   return (
     <ChatroomContextProvider>
       <ChatroomComponent
         children={children}
         setChatroomTopic={setChatroomTopic}
+        leaveChatroom={leaveChatroom}
+        leaveSecretChatroom={leaveSecretChatroom}
+        joinChatroom={joinChatroom}
+        muteNotifications={muteNotifications}
+        unmuteNotifications={unmuteNotifications}
       />
     </ChatroomContextProvider>
   );
 };
 
-const ChatroomComponent = ({ children, setChatroomTopic }: any) => {
+interface ChatroomComponent {
+  children: ReactNode;
+  setChatroomTopic: () => void;
+  leaveChatroom: () => void;
+  leaveSecretChatroom: () => void;
+  joinChatroom: () => void;
+  muteNotifications: () => void;
+  unmuteNotifications: () => void;
+}
+
+const ChatroomComponent = ({
+  children,
+  setChatroomTopic,
+  leaveChatroom,
+  leaveSecretChatroom,
+  joinChatroom,
+  muteNotifications,
+  unmuteNotifications,
+}: ChatroomComponent) => {
   const { isToast, msg, setIsToast }: ChatroomContextValues =
     useChatroomContext();
 
@@ -42,7 +76,14 @@ const ChatroomComponent = ({ children, setChatroomTopic }: any) => {
       {children}
 
       {/* Chatroom Modals */}
-      <ChatroomModals setChatroomTopicProp={setChatroomTopic} />
+      <ChatroomModals
+        setChatroomTopicProp={setChatroomTopic}
+        leaveChatroomProp={leaveChatroom}
+        leaveSecretChatroomProp={leaveSecretChatroom}
+        joinChatroomProp={joinChatroom}
+        muteNotificationsProp={muteNotifications}
+        unmuteNotificationsProp={unmuteNotifications}
+      />
 
       {/* Toast Message Flow inside Chatroom */}
       <ToastMessage
