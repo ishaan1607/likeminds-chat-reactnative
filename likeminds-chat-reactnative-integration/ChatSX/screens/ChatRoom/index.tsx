@@ -22,6 +22,10 @@ interface ChatRoomProps {
   joinChatroom: () => void;
   muteNotifications: () => void;
   unmuteNotifications: () => void;
+  onApprove: () => void;
+  onReject: () => void;
+  blockMember: () => void;
+  unblockMember: () => void;
 }
 
 const ChatRoom = ({
@@ -32,6 +36,10 @@ const ChatRoom = ({
   joinChatroom,
   muteNotifications,
   unmuteNotifications,
+  onApprove,
+  onReject,
+  blockMember,
+  unblockMember,
 }: ChatRoomProps) => {
   return (
     <ChatroomContextProvider>
@@ -43,6 +51,10 @@ const ChatRoom = ({
         joinChatroom={joinChatroom}
         muteNotifications={muteNotifications}
         unmuteNotifications={unmuteNotifications}
+        onApprove={onApprove}
+        onReject={onReject}
+        blockMember={blockMember}
+        unblockMember={unblockMember}
       />
     </ChatroomContextProvider>
   );
@@ -56,6 +68,10 @@ interface ChatroomComponent {
   joinChatroom: () => void;
   muteNotifications: () => void;
   unmuteNotifications: () => void;
+  onApprove: () => void;
+  onReject: () => void;
+  blockMember: () => void;
+  unblockMember: () => void;
 }
 
 const ChatroomComponent = ({
@@ -66,6 +82,10 @@ const ChatroomComponent = ({
   joinChatroom,
   muteNotifications,
   unmuteNotifications,
+  onApprove,
+  onReject,
+  blockMember,
+  unblockMember,
 }: ChatroomComponent) => {
   const { isToast, msg, setIsToast }: ChatroomContextValues =
     useChatroomContext();
@@ -83,6 +103,10 @@ const ChatroomComponent = ({
         joinChatroomProp={joinChatroom}
         muteNotificationsProp={muteNotifications}
         unmuteNotificationsProp={unmuteNotifications}
+        onApproveProp={onApprove}
+        onRejectProp={onReject}
+        blockMemberProp={blockMember}
+        unblockMemberProp={unblockMember}
       />
 
       {/* Toast Message Flow inside Chatroom */}

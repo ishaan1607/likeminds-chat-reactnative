@@ -16,6 +16,10 @@ interface ChatroomModals {
   joinChatroomProp: () => void;
   muteNotificationsProp: () => void;
   unmuteNotificationsProp: () => void;
+  onApproveProp: () => void;
+  onRejectProp: () => void;
+  blockMemberProp: () => void;
+  unblockMemberProp: () => void;
 }
 
 const ChatroomModals = ({
@@ -25,6 +29,10 @@ const ChatroomModals = ({
   joinChatroomProp,
   muteNotificationsProp,
   unmuteNotificationsProp,
+  onApproveProp,
+  onRejectProp,
+  blockMemberProp,
+  unblockMemberProp,
 }: ChatroomModals) => {
   return (
     <View>
@@ -33,6 +41,7 @@ const ChatroomModals = ({
         joinChatroomProp={joinChatroomProp}
         muteNotificationsProp={muteNotificationsProp}
         unmuteNotificationsProp={unmuteNotificationsProp}
+        unblockMemberProp={unblockMemberProp}
       />
 
       {/* Report Action Modal */}
@@ -51,13 +60,13 @@ const ChatroomModals = ({
       />
 
       {/* APPROVE DM request Modal */}
-      <ApproveDMRequestModal />
+      <ApproveDMRequestModal onApproveProp={onApproveProp} />
 
       {/* REJECT DM request Modal */}
-      <RejectDMRequestModal />
+      <RejectDMRequestModal onRejectProp={onRejectProp} />
 
       {/* BLOCK DM request Modal */}
-      <BlockDMRequestModal />
+      <BlockDMRequestModal blockMemberProp={blockMemberProp} />
     </View>
   );
 };

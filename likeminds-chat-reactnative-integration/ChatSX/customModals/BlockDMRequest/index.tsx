@@ -11,7 +11,11 @@ import {
   useChatroomContext,
 } from "../../context/ChatroomContext";
 
-const BlockDMRequestModal = () => {
+interface BlockDMRequestModal {
+  blockMemberProp: () => void;
+}
+
+const BlockDMRequestModal = ({ blockMemberProp }: BlockDMRequestModal) => {
   const {
     DMBlockAlertModalVisible,
     chatroomName,
@@ -44,7 +48,7 @@ const BlockDMRequestModal = () => {
             <TouchableOpacity
               style={[styles.button, styles.okButton]}
               onPress={() => {
-                blockMember();
+                blockMemberProp ? blockMemberProp() : blockMember();
                 hideDMBlockAlert();
               }}
             >

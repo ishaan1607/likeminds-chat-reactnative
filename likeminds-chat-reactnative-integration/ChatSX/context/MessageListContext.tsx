@@ -54,7 +54,7 @@ export interface MessageListContextValues {
   renderFooter: () => React.JSX.Element | null;
   getIconAttachment: (conversation: Conversation) => React.JSX.Element | null;
   scrollToIndex: (index: any) => any;
-  scrollToTop: any;
+  scrollToBottom: any;
   isScrollingUp: boolean;
   keyboardVisible: boolean;
 }
@@ -103,7 +103,7 @@ export const MessageListContextProvider = ({
   // const { user } = useAppSelector((state) => state.homefeed);
   const PAGE_SIZE = 200;
 
-  const scrollToTop = async () => {
+  const scrollToBottom = async () => {
     const payload = GetConversationsRequestBuilder.builder()
       .setChatroomId(chatroomID?.toString())
       .setLimit(100)
@@ -793,7 +793,7 @@ export const MessageListContextProvider = ({
     replyConversationId,
     keyboardVisible,
     isScrollingUp,
-    scrollToTop,
+    scrollToBottom,
   };
 
   return (

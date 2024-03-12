@@ -12,12 +12,14 @@ interface ChatroomActionModal {
   joinChatroomProp: () => void;
   muteNotificationsProp: () => void;
   unmuteNotificationsProp: () => void;
+  unblockMemberProp: () => void;
 }
 
 const ChatroomActionModal = ({
   joinChatroomProp,
   muteNotificationsProp,
   unmuteNotificationsProp,
+  unblockMemberProp,
 }: ChatroomActionModal) => {
   const {
     chatroomID,
@@ -89,7 +91,9 @@ const ChatroomActionModal = ({
                       // await handleBlockMember();
                       setModalVisible(false);
                     } else if (val?.id === ChatroomActions.UNBLOCK_MEMBER) {
-                      // await unblockMember();
+                      unblockMemberProp
+                        ? await unblockMemberProp()
+                        : await unblockMember();
                       setModalVisible(false);
                     } else if (val?.id === ChatroomActions.SHARE) {
                       //   Share flow

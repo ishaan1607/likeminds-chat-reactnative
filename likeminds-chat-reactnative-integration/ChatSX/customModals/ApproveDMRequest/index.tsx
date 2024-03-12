@@ -12,10 +12,14 @@ import {
   useChatroomContext,
 } from "../../context/ChatroomContext";
 
-const ApproveDMRequestModal = () => {
+interface ApproveDMRequestModal {
+  onApproveProp: () => void;
+}
+
+const ApproveDMRequestModal = ({ onApproveProp }: ApproveDMRequestModal) => {
   const {
     DMApproveAlertModalVisible,
-    
+
     onApprove,
     hideDMApproveAlert,
   }: ChatroomContextValues = useChatroomContext();
@@ -42,7 +46,7 @@ const ApproveDMRequestModal = () => {
             <TouchableOpacity
               style={[styles.button, styles.okButton]}
               onPress={() => {
-                onApprove();
+                onApproveProp ? onApproveProp() : onApprove();
                 hideDMApproveAlert();
               }}
             >

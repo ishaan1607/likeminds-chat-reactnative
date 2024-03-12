@@ -30,15 +30,33 @@ import Layout from "../../constants/Layout";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-const MessageList = ({ ReactionList }: any) => {
+interface MessageList {
+  onTapToUndo?: () => void;
+  ReactionList?: any;
+  scrollToBottom?: () => void;
+}
+
+const MessageList = ({
+  onTapToUndo,
+  ReactionList,
+  scrollToBottom,
+}: MessageList) => {
   return (
     <MessageListContextProvider>
-      <MessageListComponent ReactionList={ReactionList} />
+      <MessageListComponent
+        ReactionList={ReactionList}
+        onTapToUndo={onTapToUndo}
+        scrollToBottomProp={scrollToBottom}
+      />
     </MessageListContextProvider>
   );
 };
 
-const MessageListComponent = ({ ReactionList }: any) => {
+const MessageListComponent = ({
+  ReactionList,
+  onTapToUndo,
+  scrollToBottomProp,
+}: any) => {
   const {
     conversations,
     selectedMessages,
@@ -62,7 +80,7 @@ const MessageListComponent = ({ ReactionList }: any) => {
     setReplyConversationId,
     keyboardVisible,
     isScrollingUp,
-    scrollToTop,
+    scrollToBottom,
   }: MessageListContextValues = useMessageListContext();
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -361,6 +379,7 @@ const MessageListComponent = ({ ReactionList }: any) => {
                         isStateIncluded={isStateIncluded}
                         index={index}
                         ReactionListProp={ReactionList}
+                        onTapToUndoProp={onTapToUndo}
                       />
                     </Pressable>
                   </Swipeable>
@@ -383,7 +402,7 @@ const MessageListComponent = ({ ReactionList }: any) => {
                     : Layout.normalize(20),
                 },
               ]}
-              onPress={scrollToTop}
+              onPress={scrollToBottomProp ? scrollToBottomProp : scrollToBottom}
             >
               <Image
                 source={require("../../assets/images/scrollDown.png")}

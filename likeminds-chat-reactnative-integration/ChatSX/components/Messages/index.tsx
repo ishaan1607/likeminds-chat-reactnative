@@ -23,6 +23,7 @@ interface Messages {
   isStateIncluded: boolean;
   isIncluded: boolean;
   ReactionListProp: any;
+  onTapToUndoProp: () => void;
 }
 
 const Messages = ({
@@ -31,6 +32,7 @@ const Messages = ({
   isStateIncluded,
   isIncluded,
   ReactionListProp,
+  onTapToUndoProp,
 }: Messages) => {
   return (
     <MessageContextProvider
@@ -39,12 +41,15 @@ const Messages = ({
       isStateIncluded={isStateIncluded}
       isIncluded={isIncluded}
     >
-      <MessagesComponent ReactionListProp={ReactionListProp} />
+      <MessagesComponent
+        ReactionListProp={ReactionListProp}
+        onTapToUndoProp={onTapToUndoProp}
+      />
     </MessageContextProvider>
   );
 };
 
-const MessagesComponent = ({ ReactionListProp }: any) => {
+const MessagesComponent = ({ ReactionListProp, onTapToUndoProp }: any) => {
   const {
     item,
     isIncluded,
@@ -88,7 +93,7 @@ const MessagesComponent = ({ ReactionListProp }: any) => {
         ) : item?.ogTags?.url != null && item?.ogTags != undefined ? (
           <LinkPreview />
         ) : (
-          <StateMessage />
+          <StateMessage onTapToUndoProp={onTapToUndoProp} />
         )}
 
         {/* Sharp corner styles of a chat bubble */}

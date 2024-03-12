@@ -1580,6 +1580,8 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
       chatroomID?.toString(),
       response?.data?.conversation
     );
+
+    return response;
   };
 
   // this function calls API to reject DM request
@@ -1604,6 +1606,8 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
       ChatroomChatRequestState.REJECTED
     );
     fetchChatroomDetails();
+
+    return response;
   };
 
   // this function calls API to approve DM request on click TapToUndo
@@ -1627,6 +1631,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
       ChatroomChatRequestState.ACCEPTED
     );
     fetchChatroomDetails();
+    return response;
   };
 
   // this function calls API to block a member
@@ -1649,6 +1654,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
       ChatroomChatRequestState.REJECTED
     );
     fetchChatroomDetails();
+    return response;
   };
 
   // this function calls API to unblock a member
@@ -1671,6 +1677,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
       ChatroomChatRequestState.ACCEPTED
     );
     fetchChatroomDetails();
+    return response;
   };
 
   // this function shows confirm alert popup to approve DM request

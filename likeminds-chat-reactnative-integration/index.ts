@@ -23,6 +23,7 @@ import { ChatRoom } from "./ChatSX/screens/ChatRoom";
 import ExploreFeed from "./ChatSX/screens/ExploreFeed";
 import { useChatroomContext } from "./ChatSX/context/ChatroomContext";
 import { useMessageContext } from "./ChatSX/context/MessageContext";
+import { useMessageListContext } from "./ChatSX/context/MessageListContext";
 import Chat from "./ChatSX/context/Chat";
 
 export {
@@ -50,4 +51,5 @@ export {
   useMessageContext,
   ExploreFeed,
   Chat,
+  useMessageListContext,
 };
