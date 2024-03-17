@@ -34,12 +34,14 @@ interface MessageList {
   onTapToUndo?: () => void;
   ReactionList?: any;
   scrollToBottom?: () => void;
+  renderFooter?: () => void;
 }
 
 const MessageList = ({
   onTapToUndo,
   ReactionList,
   scrollToBottom,
+  renderFooter,
 }: MessageList) => {
   return (
     <MessageListContextProvider>
@@ -47,6 +49,7 @@ const MessageList = ({
         ReactionList={ReactionList}
         onTapToUndo={onTapToUndo}
         scrollToBottomProp={scrollToBottom}
+        renderFooterProp={renderFooter}
       />
     </MessageListContextProvider>
   );
@@ -56,6 +59,7 @@ const MessageListComponent = ({
   ReactionList,
   onTapToUndo,
   scrollToBottomProp,
+  renderFooterProp,
 }: any) => {
   const {
     conversations,
@@ -387,8 +391,12 @@ const MessageListComponent = ({
               );
             }}
             onScroll={handleOnScroll}
-            ListHeaderComponent={renderFooter}
-            ListFooterComponent={renderFooter}
+            ListHeaderComponent={
+              renderFooterProp ? renderFooterProp : renderFooter
+            }
+            ListFooterComponent={
+              renderFooterProp ? renderFooterProp : renderFooter
+            }
             keyboardShouldPersistTaps={"handled"}
             inverted
           />
