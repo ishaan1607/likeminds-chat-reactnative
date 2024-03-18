@@ -9,12 +9,14 @@ import {
 import { REPORT } from "../../constants/Screens";
 import { SELECTED_MESSAGES } from "../../store/types/types";
 import { useAppDispatch } from "../../store";
+import {
+  CustomisableMethodsContextProps,
+  useCustomisableMethodsContext,
+} from "../../context/CustomisableMethodsContext";
 
-interface ReportActionModal {
-  setChatroomTopicProp: () => void;
-}
-
-const ReportActionModal = ({ setChatroomTopicProp }: ReportActionModal) => {
+const ReportActionModal = () => {
+  const { setChatroomTopicProp }: CustomisableMethodsContextProps =
+    useCustomisableMethodsContext();
   const dispatch = useAppDispatch();
 
   const {

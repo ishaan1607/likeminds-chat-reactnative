@@ -13,12 +13,14 @@ import {
   ChatroomContextValues,
   useChatroomContext,
 } from "../../context/ChatroomContext";
+import {
+  CustomisableMethodsContextProps,
+  useCustomisableMethodsContext,
+} from "../../context/CustomisableMethodsContext";
 
-interface RejectDMRequestModal {
-  onRejectProp: () => void;
-}
-
-const RejectDMRequestModal = ({ onRejectProp }: RejectDMRequestModal) => {
+const RejectDMRequestModal = () => {
+  const { onRejectProp }: CustomisableMethodsContextProps =
+    useCustomisableMethodsContext();
   const {
     navigation,
     chatroomID,

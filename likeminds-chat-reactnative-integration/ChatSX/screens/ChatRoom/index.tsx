@@ -8,6 +8,7 @@ import {
   useChatroomContext,
 } from "../../context/ChatroomContext";
 import ChatroomModals from "../../components/ChatroomModals";
+import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
 
 interface Data {
   id: string;
@@ -43,60 +44,7 @@ const ChatRoom = ({
 }: ChatRoomProps) => {
   return (
     <ChatroomContextProvider>
-      <ChatroomComponent
-        children={children}
-        setChatroomTopic={setChatroomTopic}
-        leaveChatroom={leaveChatroom}
-        leaveSecretChatroom={leaveSecretChatroom}
-        joinChatroom={joinChatroom}
-        muteNotifications={muteNotifications}
-        unmuteNotifications={unmuteNotifications}
-        onApprove={onApprove}
-        onReject={onReject}
-        blockMember={blockMember}
-        unblockMember={unblockMember}
-      />
-    </ChatroomContextProvider>
-  );
-};
-
-interface ChatroomComponent {
-  children: ReactNode;
-  setChatroomTopic: () => void;
-  leaveChatroom: () => void;
-  leaveSecretChatroom: () => void;
-  joinChatroom: () => void;
-  muteNotifications: () => void;
-  unmuteNotifications: () => void;
-  onApprove: () => void;
-  onReject: () => void;
-  blockMember: () => void;
-  unblockMember: () => void;
-}
-
-const ChatroomComponent = ({
-  children,
-  setChatroomTopic,
-  leaveChatroom,
-  leaveSecretChatroom,
-  joinChatroom,
-  muteNotifications,
-  unmuteNotifications,
-  onApprove,
-  onReject,
-  blockMember,
-  unblockMember,
-}: ChatroomComponent) => {
-  const { isToast, msg, setIsToast }: ChatroomContextValues =
-    useChatroomContext();
-
-  return (
-    <View style={styles.container}>
-      {/* Children components */}
-      {children}
-
-      {/* Chatroom Modals */}
-      <ChatroomModals
+      <CustomisableMethodsContextProvider
         setChatroomTopicProp={setChatroomTopic}
         leaveChatroomProp={leaveChatroom}
         leaveSecretChatroomProp={leaveSecretChatroom}
@@ -107,7 +55,28 @@ const ChatroomComponent = ({
         onRejectProp={onReject}
         blockMemberProp={blockMember}
         unblockMemberProp={unblockMember}
-      />
+      >
+        <ChatroomComponent children={children} />
+      </CustomisableMethodsContextProvider>
+    </ChatroomContextProvider>
+  );
+};
+
+interface ChatroomComponent {
+  children: ReactNode;
+}
+
+const ChatroomComponent = ({ children }: ChatroomComponent) => {
+  const { isToast, msg, setIsToast }: ChatroomContextValues =
+    useChatroomContext();
+
+  return (
+    <View style={styles.container}>
+      {/* Children components */}
+      {children}
+
+      {/* Chatroom Modals */}
+      <ChatroomModals />
 
       {/* Toast Message Flow inside Chatroom */}
       <ToastMessage

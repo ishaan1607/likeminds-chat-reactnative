@@ -24,6 +24,8 @@ import ExploreFeed from "./ChatSX/screens/ExploreFeed";
 import { useChatroomContext } from "./ChatSX/context/ChatroomContext";
 import { useMessageContext } from "./ChatSX/context/MessageContext";
 import { useMessageListContext } from "./ChatSX/context/MessageListContext";
+import { useExploreFeedContext } from "./ChatSX/context/ExploreFeedContext";
+import { useCreatePollContext } from "./ChatSX/context/CreatePollContext";
 import Chat from "./ChatSX/context/Chat";
 
 export {
@@ -52,4 +54,6 @@ export {
   ExploreFeed,
   Chat,
   useMessageListContext,
+  useExploreFeedContext,
+  useCreatePollContext,
 };

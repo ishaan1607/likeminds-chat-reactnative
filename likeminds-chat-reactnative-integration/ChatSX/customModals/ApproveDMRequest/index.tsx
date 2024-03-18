@@ -11,12 +11,14 @@ import {
   ChatroomContextValues,
   useChatroomContext,
 } from "../../context/ChatroomContext";
+import {
+  CustomisableMethodsContextProps,
+  useCustomisableMethodsContext,
+} from "../../context/CustomisableMethodsContext";
 
-interface ApproveDMRequestModal {
-  onApproveProp: () => void;
-}
-
-const ApproveDMRequestModal = ({ onApproveProp }: ApproveDMRequestModal) => {
+const ApproveDMRequestModal = () => {
+  const { onApproveProp }: CustomisableMethodsContextProps =
+    useCustomisableMethodsContext();
   const {
     DMApproveAlertModalVisible,
 

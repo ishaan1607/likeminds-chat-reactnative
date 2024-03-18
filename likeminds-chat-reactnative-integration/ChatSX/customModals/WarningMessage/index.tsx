@@ -11,16 +11,16 @@ import {
   ChatroomContextValues,
   useChatroomContext,
 } from "../../context/ChatroomContext";
+import {
+  CustomisableMethodsContextProps,
+  useCustomisableMethodsContext,
+} from "../../context/CustomisableMethodsContext";
 
-interface WarningMessageModal {
-  leaveChatroomProp: () => void;
-  leaveSecretChatroomProp: () => void;
-}
-
-const WarningMessageModal = ({
-  leaveChatroomProp,
-  leaveSecretChatroomProp,
-}: WarningMessageModal) => {
+const WarningMessageModal = () => {
+  const {
+    leaveChatroomProp,
+    leaveSecretChatroomProp,
+  }: CustomisableMethodsContextProps = useCustomisableMethodsContext();
   const {
     isWarningMessageModalState,
     isSecret,

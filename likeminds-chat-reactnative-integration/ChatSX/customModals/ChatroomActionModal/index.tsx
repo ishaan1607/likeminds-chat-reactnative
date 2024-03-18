@@ -7,20 +7,18 @@ import {
   useChatroomContext,
 } from "../../context/ChatroomContext";
 import { onShare } from "../../shareUtils";
+import {
+  CustomisableMethodsContextProps,
+  useCustomisableMethodsContext,
+} from "../../context/CustomisableMethodsContext";
 
-interface ChatroomActionModal {
-  joinChatroomProp: () => void;
-  muteNotificationsProp: () => void;
-  unmuteNotificationsProp: () => void;
-  unblockMemberProp: () => void;
-}
-
-const ChatroomActionModal = ({
-  joinChatroomProp,
-  muteNotificationsProp,
-  unmuteNotificationsProp,
-  unblockMemberProp,
-}: ChatroomActionModal) => {
+const ChatroomActionModal = () => {
+  const {
+    joinChatroomProp,
+    muteNotificationsProp,
+    unmuteNotificationsProp,
+    unblockMemberProp,
+  }: CustomisableMethodsContextProps = useCustomisableMethodsContext();
   const {
     chatroomID,
     chatroomType,

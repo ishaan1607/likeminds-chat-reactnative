@@ -9,43 +9,14 @@ import ApproveDMRequestModal from "../../customModals/ApproveDMRequest";
 import RejectDMRequestModal from "../../customModals/RejectDMRequest";
 import BlockDMRequestModal from "../../customModals/BlockDMRequest";
 
-interface ChatroomModals {
-  setChatroomTopicProp: () => void;
-  leaveChatroomProp: () => void;
-  leaveSecretChatroomProp: () => void;
-  joinChatroomProp: () => void;
-  muteNotificationsProp: () => void;
-  unmuteNotificationsProp: () => void;
-  onApproveProp: () => void;
-  onRejectProp: () => void;
-  blockMemberProp: () => void;
-  unblockMemberProp: () => void;
-}
-
-const ChatroomModals = ({
-  setChatroomTopicProp,
-  leaveChatroomProp,
-  leaveSecretChatroomProp,
-  joinChatroomProp,
-  muteNotificationsProp,
-  unmuteNotificationsProp,
-  onApproveProp,
-  onRejectProp,
-  blockMemberProp,
-  unblockMemberProp,
-}: ChatroomModals) => {
+const ChatroomModals = () => {
   return (
     <View>
       {/* Chatroom Action Modal */}
-      <ChatroomActionModal
-        joinChatroomProp={joinChatroomProp}
-        muteNotificationsProp={muteNotificationsProp}
-        unmuteNotificationsProp={unmuteNotificationsProp}
-        unblockMemberProp={unblockMemberProp}
-      />
+      <ChatroomActionModal />
 
       {/* Report Action Modal */}
-      <ReportActionModal setChatroomTopicProp={setChatroomTopicProp} />
+      <ReportActionModal />
 
       {/* Message Reaction Modal */}
       <MessageReactionModal />
@@ -54,19 +25,16 @@ const ChatroomModals = ({
       <EmojiKeyboardModal />
 
       {/* CHATROOM LEAVING WARNING message modal */}
-      <WarningMessageModal
-        leaveChatroomProp={leaveChatroomProp}
-        leaveSecretChatroomProp={leaveSecretChatroomProp}
-      />
+      <WarningMessageModal />
 
       {/* APPROVE DM request Modal */}
-      <ApproveDMRequestModal onApproveProp={onApproveProp} />
+      <ApproveDMRequestModal />
 
       {/* REJECT DM request Modal */}
-      <RejectDMRequestModal onRejectProp={onRejectProp} />
+      <RejectDMRequestModal />
 
       {/* BLOCK DM request Modal */}
-      <BlockDMRequestModal blockMemberProp={blockMemberProp} />
+      <BlockDMRequestModal />
     </View>
   );
 };

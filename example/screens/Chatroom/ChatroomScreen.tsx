@@ -6,6 +6,7 @@ import {
   MessageInput,
   useChatroomContext,
   useMessageListContext,
+  useExploreFeedContext,
 } from '@likeminds.community/chat-rn-core';
 
 export function ChatroomScreen() {
@@ -26,6 +27,7 @@ export function ChatroomScreen() {
     unblockMember,
   } = useChatroomContext();
   const {scrollToBottom, renderFooter} = useMessageListContext();
+  const {renderFooterExploreFeed, handleLoadMore} = useExploreFeedContext();
   const customSetChatroomTopic = async () => {
     console.log('before custom chatroom topic');
     const response = await setChatroomTopic();
@@ -105,6 +107,16 @@ export function ChatroomScreen() {
     console.log('before custom render footer');
     await renderFooter();
     console.log('after custom render footer');
+  };
+  const customExploreFeedRenderFooter = async () => {
+    console.log('before custom render footer');
+    await renderFooterExploreFeed();
+    console.log('after custom render footer');
+  };
+  const customHandleLoadMore = async () => {
+    console.log('before handle load more');
+    await handleLoadMore();
+    console.log('after handle load more');
   };
 
   return (

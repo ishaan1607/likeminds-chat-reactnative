@@ -10,12 +10,14 @@ import {
   ChatroomContextValues,
   useChatroomContext,
 } from "../../context/ChatroomContext";
+import {
+  CustomisableMethodsContextProps,
+  useCustomisableMethodsContext,
+} from "../../context/CustomisableMethodsContext";
 
-interface BlockDMRequestModal {
-  blockMemberProp: () => void;
-}
-
-const BlockDMRequestModal = ({ blockMemberProp }: BlockDMRequestModal) => {
+const BlockDMRequestModal = () => {
+  const { blockMemberProp }: CustomisableMethodsContextProps =
+    useCustomisableMethodsContext();
   const {
     DMBlockAlertModalVisible,
     chatroomName,

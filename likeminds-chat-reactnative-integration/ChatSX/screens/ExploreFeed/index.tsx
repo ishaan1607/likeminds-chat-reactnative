@@ -46,7 +46,7 @@ const ExploreFeedComponent = ({ route }: any) => {
     setFilterState,
     setChats,
     handleLoadMore,
-    renderFooter,
+    renderFooterExploreFeed,
   } = useExploreFeedContext();
   const { count } = useAppSelector((state) => state.loader);
 
@@ -131,7 +131,7 @@ const ExploreFeedComponent = ({ route }: any) => {
         estimatedItemSize={15}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
-        ListFooterComponent={renderFooter}
+        ListFooterComponent={renderFooterExploreFeed}
         keyExtractor={(item: any) => (item?.id ? item?.id?.toString() : null)}
       />
       {count > 0 && <LoaderComponent />}
