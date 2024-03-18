@@ -1,41 +1,8 @@
-import React, { useState, useLayoutEffect, useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Platform,
-  Alert,
-  ActivityIndicator,
-  Image,
-  Pressable,
-} from "react-native";
-import { SHOW_LIST_REGEX, getNameInitials } from "../../../../commonFuctions";
-import HomeFeedExplore from "../../../../components/HomeFeedExplore";
+import React from "react";
+import { View, Text, Image, Pressable } from "react-native";
 import HomeFeedItem from "../../../../components/HomeFeedItem";
-import STYLES from "../../../../constants/Styles";
-import { onValue, ref } from "@firebase/database";
-import { useAppDispatch, useAppSelector } from "../../../../store";
-import {
-  getInvites,
-  initAPI,
-  updateDMFeedData,
-  updateHomeFeedData,
-  updateInvites,
-} from "../../../../store/actions/homefeed";
+import { useAppSelector } from "../../../../store";
 import styles from "./styles";
-import {
-  SET_DM_PAGE,
-  SET_INITIAL_DMFEED_CHATROOM,
-  INSERT_DMFEED_CHATROOM,
-  UPDATE_DMFEED_CHATROOM,
-  DELETE_DMFEED_CHATROOM,
-} from "../../../../store/types/types";
-import { getUniqueId } from "react-native-device-info";
-import {
-  fetchFCMToken,
-  requestUserPermission,
-} from "../../../../notifications";
 import { DM_ALL_MEMBERS } from "../../../../constants/Screens";
 import {
   DM_INFO,
@@ -44,15 +11,10 @@ import {
   NO_DM_TEXT,
 } from "../../../../constants/Strings";
 import { FlashList } from "@shopify/flash-list";
-import { useIsFocused } from "@react-navigation/native";
-import Realm from "realm";
-import { paginatedSyncAPI } from "../../../../utils/syncChatroomApi";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
-import { Events, Keys, Sources } from "../../../../enums";
-import { LMChatAnalytics } from "../../../../analytics/LMChatAnalytics";
-import { Client } from "../../../../client";
 import Layout from "../../../../constants/Layout";
+import { useHomeFeedContext } from "../../../../context/HomeFeedContext";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -61,189 +23,15 @@ interface Props {
 }
 
 const DMFeed = ({ navigation }: Props) => {
-  const myClient = Client.myClient;
-  const [isLoading, setIsLoading] = useState(false);
-  const [shimmerIsLoading, setShimmerIsLoading] = useState(true);
-  const [showDM, setShowDM] = useState(false);
-  const [showList, setShowList] = useState<any>(null);
-  const [FCMToken, setFCMToken] = useState("");
-  const dispatch = useAppDispatch();
-  const isFocused = useIsFocused();
-
   const {
-    myDMChatrooms,
-    unseenCount,
-    totalCount,
-    dmPage,
-    invitedChatrooms,
     dmFeedChatrooms,
-  } = useAppSelector((state) => state.homefeed);
-  const { user, community } = useAppSelector((state) => state.homefeed);
-
-  const db = myClient?.firebaseInstance();
-  const chatrooms = [...myDMChatrooms];
-  const INITIAL_SYNC_PAGE = 1;
-  let startTime = 0;
-  let endTime = 0;
-
-  async function fetchData() {
-    if (community?.id) {
-      const payload = {
-        page: 1,
-      };
-      const apiRes = await myClient?.checkDMStatus({
-        requestFrom: "dm_feed_v2",
-      });
-      const response = apiRes?.data;
-      if (response) {
-        const routeURL = response?.cta;
-        const hasShowList = SHOW_LIST_REGEX.test(routeURL);
-        if (hasShowList) {
-          const showListValue = routeURL.match(SHOW_LIST_REGEX)[1];
-          setShowList(showListValue);
-        }
-        setShowDM(response?.showDm);
-      }
-    }
-  }
-
-  useEffect(() => {
-    if (isFocused) {
-      LMChatAnalytics.track(
-        Events.DM_FEED_OPENED,
-        new Map<string, string>([[Keys.SOURCE, Sources.HOME_FEED]])
-      );
-    }
-  }, [isFocused]);
-
-  useLayoutEffect(() => {
-    fetchData();
-  }, [navigation, community]);
-
-  useEffect(() => {
-    const token = async () => {
-      const isPermissionEnabled = await requestUserPermission();
-      if (isPermissionEnabled) {
-        const fcmToken = await fetchFCMToken();
-        if (fcmToken) {
-          setFCMToken(fcmToken);
-        }
-      }
-    };
-    token();
-  }, []);
-
-  // Fetching already existing chatrooms from Realm
-  const getChatroomFromLocalDB = async () => {
-    const existingChatrooms: any = await myClient?.getFilteredChatrooms(true);
-    if (!!existingChatrooms && existingChatrooms.length !== 0) {
-      setShimmerIsLoading(false);
-      dispatch({
-        type: SET_INITIAL_DMFEED_CHATROOM,
-        body: { dmFeedChatrooms: existingChatrooms },
-      });
-    }
-  };
-
-  const getAppConfig = async () => {
-    const appConfig = await myClient?.getAppConfig();
-    if (appConfig?.isDmFeedChatroomsSynced === undefined) {
-      startTime = Date.now() / 1000;
-      setTimeout(() => {
-        myClient?.initiateAppConfig();
-        myClient?.setAppConfig(true);
-      }, 200);
-    } else {
-      setShimmerIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    const query = ref(db, `/community/${community?.id}`);
-    return onValue(query, (snapshot) => {
-      if (snapshot.exists()) {
-        if (!user?.sdkClientInfo?.community) {
-          return;
-        }
-        if (isFocused) {
-          paginatedSyncAPI(INITIAL_SYNC_PAGE, user, true);
-          setShimmerIsLoading(false);
-          setTimeout(() => {
-            getChatroomFromLocalDB();
-          }, 500);
-        }
-      }
-    });
-  }, [user, isFocused]);
-
-  useEffect(() => {
-    const initiate = async () => {
-      await getAppConfig();
-      if (!user?.sdkClientInfo?.community) {
-        return;
-      }
-      await paginatedSyncAPI(INITIAL_SYNC_PAGE, user, true);
-      if (shimmerIsLoading == true && isFocused) {
-        endTime = Date.now() / 1000;
-        LMChatAnalytics.track(
-          Events.SYNC_COMPLETE,
-          new Map<string, string>([
-            [Keys.SYNC_COMPLETE, true?.toString()],
-            [Keys.TIME_TAKEN, (endTime - startTime)?.toString()],
-          ])
-        );
-      }
-      setShimmerIsLoading(false);
-      setTimeout(() => {
-        getChatroomFromLocalDB();
-      }, 500);
-    };
-    initiate();
-  }, [user, isFocused, shimmerIsLoading, startTime]);
-
-  //function calls updateDMFeedData action to update myDMChatrooms array with the new data.
-  async function updateData(newPage: number) {
-    const payload = {
-      page: newPage,
-    };
-    const response = await dispatch(updateDMFeedData(payload, false) as any);
-    return response;
-  }
-
-  // function shows loader in between calling the API and getting the response
-  const loadData = async (newPage: number) => {
-    setIsLoading(true);
-    setTimeout(async () => {
-      const res: any = await updateData(newPage);
-      if (res) {
-        setIsLoading(false);
-      }
-    }, 1500);
-  };
-
-  //function checks the pagination logic, if it verifies the condition then call loadData
-  const handleLoadMore = async () => {
-    if (!isLoading) {
-      if (
-        myDMChatrooms?.length > 0 &&
-        myDMChatrooms?.length % 10 === 0 &&
-        myDMChatrooms?.length === 10 * dmPage
-      ) {
-        const newPage = dmPage + 1;
-        dispatch({ type: SET_DM_PAGE, body: newPage });
-        loadData(newPage);
-      }
-    }
-  };
-
-  const renderFooter = () => {
-    return isLoading ? (
-      <View style={{ paddingVertical: Layout.normalize(20) }}>
-        <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
-      </View>
-    ) : null;
-  };
-
+    shimmerIsLoadingDM,
+    showDM,
+    showList,
+    renderFooterDM,
+    handleLoadMoreDM,
+  } = useHomeFeedContext();
+  const user = useAppSelector((state) => state.homefeed.user);
   return (
     <View style={styles.page}>
       {dmFeedChatrooms?.length === 0 ? (
@@ -285,7 +73,7 @@ const DMFeed = ({ navigation }: Props) => {
             {DM_INFO}
           </Text>
         </View>
-      ) : shimmerIsLoading ? (
+      ) : shimmerIsLoadingDM ? (
         <>
           <View
             style={{
@@ -425,7 +213,8 @@ const DMFeed = ({ navigation }: Props) => {
             };
             return <HomeFeedItem {...homeFeedProps} navigation={navigation} />;
           }}
-          ListFooterComponent={renderFooter}
+          onLoad={handleLoadMoreDM}
+          ListFooterComponent={renderFooterDM}
           keyExtractor={(item: any) => item?.id?.toString()}
         />
       )}
