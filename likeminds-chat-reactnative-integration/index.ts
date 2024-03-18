@@ -20,6 +20,8 @@ import {
 import { STYLES } from "./ChatSX/constants/Styles";
 import { RadialGradient } from "./ChatSX/radialGradient";
 import { ChatRoom } from "./ChatSX/screens/ChatRoom";
+import getNotification from "./ChatSX/notifications";
+import { getRoute } from "./ChatSX/notifications/routes";
 
 export {
   ChatRoom,
@@ -42,4 +44,6 @@ export {
   NavigateToGroupDetailsParams,
   STYLES,
   RadialGradient,
+  getNotification,
+  getRoute,
 };
