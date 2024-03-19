@@ -18,6 +18,7 @@ import {
   PollResult,
   VideoPlayer,
   ExploreFeed,
+  HomeFeed,
   LMOverlayProvider,
   LMChatCallbacks,
   LMChatroomCallbacks,
@@ -224,6 +225,21 @@ function App(): React.JSX.Element {
     */
   }
 
+  // styling for home feed screen
+  {
+    /* 
+  const homeFeedStyles = {
+    unreadCount: {
+      color: 'blue',
+    },
+  };
+  */
+  }
+
+  // if (homeFeedStyles) {
+  //   STYLES.setHomeFeedStyle(homeFeedStyles);
+  // }
+
   // if (exploreChatroomStyles) {
   //   STYLES.setExploreChatroomStyle(exploreChatroomStyles);
   // }
@@ -268,7 +284,8 @@ function App(): React.JSX.Element {
       profileImageUrl={profileImageUrl}
       lmChatInterface={lmChatInterface}>
       <NavigationContainer ref={navigationRef} independent={true}>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName={'Homefeed'}>
+          <Stack.Screen name={'Homefeed'} component={HomeFeed} />
           <Stack.Screen
             name="ChatRoom"
             component={ChatroomScreenWrapper}

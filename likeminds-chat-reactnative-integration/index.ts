@@ -13,6 +13,7 @@ import MessageInput from "./ChatSX/components/MessageInput";
 import { ContextProvider } from "./ChatSX/contextStore";
 import { LMChatroomCallbacks } from "./ChatSX/callBacks/chatroomCallback";
 import { LMChatCallbacks } from "./ChatSX/callBacks/lmChatCallback";
+import HomeFeed from "./ChatSX/screens/HomeFeed";
 import {
   NavigateToProfileParams,
   NavigateToGroupDetailsParams,
@@ -48,6 +49,7 @@ export {
   NavigateToProfileParams,
   NavigateToGroupDetailsParams,
   STYLES,
+  HomeFeed,
   RadialGradient,
   useChatroomContext,
   useMessageContext,
