@@ -27,6 +27,7 @@ import { useMessageContext } from "./ChatSX/context/MessageContext";
 import { useMessageListContext } from "./ChatSX/context/MessageListContext";
 import { useExploreFeedContext } from "./ChatSX/context/ExploreFeedContext";
 import { useCreatePollContext } from "./ChatSX/context/CreatePollContext";
+import { useInputBoxContext } from "./ChatSX/context/InputBoxContext";
 import Chat from "./ChatSX/context/Chat";
 
 export {
@@ -58,4 +59,5 @@ export {
   useMessageListContext,
   useExploreFeedContext,
   useCreatePollContext,
+  useInputBoxContext,
 };

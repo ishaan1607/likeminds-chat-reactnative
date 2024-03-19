@@ -7,6 +7,7 @@ import {
   useChatroomContext,
   useMessageListContext,
   useExploreFeedContext,
+  useInputBoxContext,
 } from '@likeminds.community/chat-rn-core';
 
 export function ChatroomScreen() {
@@ -28,6 +29,27 @@ export function ChatroomScreen() {
   } = useChatroomContext();
   const {scrollToBottom, renderFooter} = useMessageListContext();
   const {renderFooterExploreFeed, handleLoadMore} = useExploreFeedContext();
+  const {handleGallery, handleDoc, handleCamera, onEdit} = useInputBoxContext();
+  const customHandleGallery = async () => {
+    console.log('before custom handle gallery');
+    await handleGallery();
+    console.log('after custom handle gallery');
+  };
+  const customHandleCamera = async () => {
+    console.log('before custom handle camera');
+    await handleCamera();
+    console.log('after custom handle camera');
+  };
+  const customHandleDoc = async () => {
+    console.log('before custom handle doc');
+    await handleDoc();
+    console.log('after custom handle doc');
+  };
+  const customOnEdit = async () => {
+    console.log('before custom on edit');
+    await onEdit();
+    console.log('after custom on edit');
+  };
   const customSetChatroomTopic = async () => {
     console.log('before custom chatroom topic');
     const response = await setChatroomTopic();
@@ -146,6 +168,10 @@ export function ChatroomScreen() {
         joinSecretChatroomProp={customJoinSecretChatroom}
         showJoinAlertProp={customShowJoinAlert}
         showRejectAlertProp={customShowRejectAlert}
+        handleGallery={customHandleGallery}
+        handleCamera={customHandleCamera}
+        handleDoc={customHandleDoc}
+        onEdit={customOnEdit}
       />
     </ChatRoom>
   );
