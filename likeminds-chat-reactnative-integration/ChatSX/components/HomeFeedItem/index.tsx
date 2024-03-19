@@ -9,6 +9,7 @@ import {
   Pressable,
   Platform,
   TextStyle,
+  ImageStyle,
 } from "react-native";
 import { decode } from "../../commonFuctions";
 import { useAppDispatch, useAppSelector } from "../../store";
@@ -82,6 +83,7 @@ const HomeFeedItem: React.FC<Props> = ({
   const lastConversationTime = homeFeedStyles.lastConversationTime;
   const titleStyle = homeFeedStyles.title;
   const lastConversationStyle = homeFeedStyles.lastConversation;
+  const avatarStyles = homeFeedStyles.avatar;
 
   const showJoinAlert = () =>
     Alert.alert(
@@ -411,13 +413,27 @@ const HomeFeedItem: React.FC<Props> = ({
               ? { uri: avatar }
               : require("../../assets/images/default_pic.png")
           }
-          style={styles.avatar}
+          style={
+            [
+              styles.avatar,
+              avatarStyles?.borderRadius && {
+                borderRadius: avatarStyles?.borderRadius,
+              },
+            ] as ImageStyle
+          }
         />
         {chatroomType === ChatroomType.DMCHATROOM ? (
           <View style={styles.dmAvatarBubble}>
             <Image
               source={require("../../assets/images/dm_message_bubble3x.png")}
-              style={styles.dmAvatarBubbleImg}
+              style={
+                [
+                  styles.dmAvatarBubbleImg,
+                  avatarStyles?.borderRadius && {
+                    borderRadius: avatarStyles?.borderRadius,
+                  },
+                ] as ImageStyle
+              }
             />
           </View>
         ) : null}
