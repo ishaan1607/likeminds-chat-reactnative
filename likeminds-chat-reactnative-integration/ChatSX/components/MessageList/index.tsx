@@ -6,7 +6,13 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FlashList } from "@shopify/flash-list";
 import Swipeable from "../Swipeable";
 import Messages from "../Messages";
@@ -30,15 +36,29 @@ import Layout from "../../constants/Layout";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-const MessageList = () => {
+interface MessageListProps {
+  CustomMessageHeader?: ReactNode;
+  CustomMessageFooter?: ReactNode;
+}
+
+const MessageList = ({
+  CustomMessageHeader,
+  CustomMessageFooter,
+}: MessageListProps) => {
   return (
     <MessageListContextProvider>
-      <MessageListComponent />
+      <MessageListComponent
+        CustomMessageHeader={CustomMessageHeader}
+        CustomMessageFooter={CustomMessageFooter}
+      />
     </MessageListContextProvider>
   );
 };
 
-const MessageListComponent = () => {
+const MessageListComponent = ({
+  CustomMessageHeader,
+  CustomMessageFooter,
+}: MessageListProps) => {
   const {
     conversations,
     selectedMessages,
@@ -358,6 +378,8 @@ const MessageListComponent = () => {
                         item={item}
                         isStateIncluded={isStateIncluded}
                         index={index}
+                        CustomMessageHeader={CustomMessageHeader}
+                        CustomMessageFooter={CustomMessageFooter}
                       />
                     </Pressable>
                   </Swipeable>

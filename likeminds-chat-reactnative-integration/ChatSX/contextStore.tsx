@@ -41,7 +41,7 @@ interface AppContextProps {
 const Context = createContext<AppContextProps | undefined>(undefined);
 
 // Create a provider to use in the component tree
-export const ContextProvider = ({ children }) => {
+export const ContextProvider = ({ children }: any) => {
   const initialState: ContextState = {
     homefeed: HomefeedInitialState,
     chatroom: ChatroomInitialState,
@@ -50,7 +50,10 @@ export const ContextProvider = ({ children }) => {
     upload: UploadInitialInitialState,
   };
 
-  const [state, dispatch] = useReducerWithMiddleware(rootReducer as any, initialState);
+  const [state, dispatch] = useReducerWithMiddleware(
+    rootReducer as any,
+    initialState
+  );
 
   return (
     <Context.Provider value={{ state, dispatch }}>{children}</Context.Provider>

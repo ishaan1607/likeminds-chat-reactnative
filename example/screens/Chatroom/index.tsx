@@ -4,21 +4,24 @@ import {
   ChatroomHeader,
   MessageList,
   MessageInput,
+  Chat,
 } from '@likeminds.community/chat-rn-core';
 
 const ChatroomScreen = ({navigation, route}: any) => {
   return (
     // TODO Make R is smallcase
-    <ChatRoom navigation={navigation} route={route}>
-      {/* ChatroomHeader */}
-      <ChatroomHeader />
+    <Chat>
+      <ChatRoom >
+        {/* ChatroomHeader */}
+        <ChatroomHeader />
 
-      {/* Message List */}
-      <MessageList />
+        {/* Message List */}
+        <MessageList />
 
-      {/* Input Box Flow */}
-      <MessageInput />
-    </ChatRoom>
+        {/* Input Box Flow */}
+        <MessageInput />
+      </ChatRoom>
+    </Chat>
   );
 };
 

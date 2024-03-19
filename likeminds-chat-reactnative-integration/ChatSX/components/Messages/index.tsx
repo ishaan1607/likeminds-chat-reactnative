@@ -1,5 +1,5 @@
 import { Image, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { ReactNode } from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
 import ReplyConversations from "../ReplyConversations";
@@ -22,15 +22,26 @@ interface Messages {
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
+  CustomMessageHeader?: ReactNode;
+  CustomMessageFooter?: ReactNode;
 }
 
-const Messages = ({ item, index, isStateIncluded, isIncluded }: Messages) => {
+const Messages = ({
+  item,
+  index,
+  isStateIncluded,
+  isIncluded,
+  CustomMessageHeader,
+  CustomMessageFooter,
+}: Messages) => {
   return (
     <MessageContextProvider
       index={index}
       item={item}
       isStateIncluded={isStateIncluded}
       isIncluded={isIncluded}
+      CustomMessageHeader={CustomMessageHeader}
+      CustomMessageFooter={CustomMessageFooter}
     >
       <MessagesComponent />
     </MessageContextProvider>

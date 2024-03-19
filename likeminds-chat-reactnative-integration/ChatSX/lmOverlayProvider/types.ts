@@ -1,4 +1,5 @@
 import { LMChatClient } from "@likeminds.community/chat-rn";
+import React from "react";
 
 export interface LMOverlayProviderProps {
   myClient: LMChatClient;

@@ -15,14 +15,12 @@ interface Data {
 }
 
 interface ChatRoomProps {
-  navigation: any;
-  route: any;
   children: ReactNode;
 }
 
-const ChatRoom = ({ navigation, route, children }: ChatRoomProps) => {
+const ChatRoom = ({ children }: ChatRoomProps) => {
   return (
-    <ChatroomContextProvider navigation={navigation} route={route}>
+    <ChatroomContextProvider>
       <ChatroomComponent children={children} />
     </ChatroomContextProvider>
   );

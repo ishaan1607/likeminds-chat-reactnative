@@ -38,6 +38,7 @@ import VoiceNoteConversations from "../VoiceNoteConversations";
 import GIFConversations from "../GifConversations";
 import MessageText from "../MessageText";
 import MessageFooter from "../MessageFooter";
+import { useMessageListContext } from "../../context/MessageListContext";
 
 interface AttachmentConversations {
   isReplyConversation?: any;
@@ -52,6 +53,8 @@ const AttachmentConversations = ({
     isIncluded,
     item,
     isTypeSent,
+    CustomMessageHeader,
+    CustomMessageFooter,
     handleLongPress,
     handleOnPress: openKeyboard,
   } = useMessageContext();
@@ -77,6 +80,8 @@ const AttachmentConversations = ({
     ? selectedMessageBackgroundColor
     : STYLES.$COLORS.SELECTED_BLUE;
   // styling props ended
+
+  const delayLongPress = 200;
 
   return (
     <View
@@ -112,7 +117,12 @@ const AttachmentConversations = ({
         ]}
       >
         {/* Message Header */}
-        {!!(item?.member?.id == user?.id) || isReply ? null : <MessageHeader />}
+        {!!(item?.member?.id == user?.id) ||
+        isReply ? null : CustomMessageHeader ? (
+          CustomMessageHeader
+        ) : (
+          <MessageHeader />
+        )}
 
         {/* Message Type */}
         {firstAttachment?.type === IMAGE_TEXT ? (
@@ -133,14 +143,14 @@ const AttachmentConversations = ({
         {isAnswer ? <MessageText /> : null}
 
         {/* Message Footer */}
-        <MessageFooter />
+        {CustomMessageFooter ? CustomMessageFooter : <MessageFooter />}
       </View>
 
       {/* Add reaction emoji */}
       {!isTypeSent && !(firstAttachment?.type === AUDIO_TEXT) ? (
         <Pressable
           onLongPress={handleLongPress}
-          delayLongPress={200}
+          delayLongPress={delayLongPress}
           onPress={openKeyboard}
         >
           <Image
@@ -170,6 +180,7 @@ export const VideoConversations = () => {
     (state) => state.chatroom
   );
   const [isFullList, setIsFullList] = useState(false);
+  const delayLongPress = 200;
 
   const handleOnPress = (event: any, url: string) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -215,7 +226,7 @@ export const VideoConversations = () => {
             <View>
               <TouchableOpacity
                 onLongPress={handleLongPress}
-                delayLongPress={200}
+                delayLongPress={delayLongPress}
                 onPress={(event) => {
                   handleOnPress(event, firstAttachment?.url);
                 }}
@@ -231,7 +242,7 @@ export const VideoConversations = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onLongPress={handleLongPress}
-                delayLongPress={200}
+                delayLongPress={delayLongPress}
                 onPress={(event) => {
                   handleOnPress(event, secondAttachment?.url);
                 }}
@@ -250,7 +261,7 @@ export const VideoConversations = () => {
             item?.attachments.map((val: any, index: number) => (
               <TouchableOpacity
                 onLongPress={handleLongPress}
-                delayLongPress={200}
+                delayLongPress={delayLongPress}
                 onPress={(event) => {
                   handleOnPress(event, val?.url);
                 }}
@@ -271,7 +282,7 @@ export const VideoConversations = () => {
       ) : (
         <TouchableOpacity
           onLongPress={handleLongPress}
-          delayLongPress={200}
+          delayLongPress={delayLongPress}
           onPress={(event) => {
             handleOnPress(event, firstAttachment?.url);
           }}
@@ -289,7 +300,7 @@ export const VideoConversations = () => {
       {item.attachmentCount > 2 && !isFullList && (
         <TouchableOpacity
           onLongPress={handleLongPress}
-          delayLongPress={200}
+          delayLongPress={delayLongPress}
           onPress={(event) => {
             const { pageX, pageY } = event.nativeEvent;
             dispatch({
@@ -372,6 +383,7 @@ export const PDFConversations = () => {
     (state) => state.chatroom
   );
   const [isFullList, setIsFullList] = useState(false);
+  const delayLongPress = 200;
 
   const handleOnPress = (event: any, url: string) => {
     const { pageX, pageY } = event.nativeEvent;
@@ -417,7 +429,7 @@ export const PDFConversations = () => {
             <View>
               <TouchableOpacity
                 onLongPress={handleLongPress}
-                delayLongPress={200}
+                delayLongPress={delayLongPress}
                 onPress={(event) => {
                   handleOnPress(event, firstAttachment?.url);
                 }}
@@ -433,7 +445,7 @@ export const PDFConversations = () => {
               </TouchableOpacity>
               <TouchableOpacity
                 onLongPress={handleLongPress}
-                delayLongPress={200}
+                delayLongPress={delayLongPress}
                 onPress={(event) => {
                   handleOnPress(event, secondAttachment?.url);
                 }}
@@ -452,7 +464,7 @@ export const PDFConversations = () => {
             item?.attachments.map((val: any, index: number) => (
               <TouchableOpacity
                 onLongPress={handleLongPress}
-                delayLongPress={200}
+                delayLongPress={delayLongPress}
                 onPress={(event) => {
                   handleOnPress(event, val?.url);
                 }}
@@ -473,7 +485,7 @@ export const PDFConversations = () => {
       ) : (
         <TouchableOpacity
           onLongPress={handleLongPress}
-          delayLongPress={200}
+          delayLongPress={delayLongPress}
           onPress={(event) => {
             handleOnPress(event, firstAttachment?.url);
           }}
@@ -491,7 +503,7 @@ export const PDFConversations = () => {
       {item.attachmentCount > 2 && !isFullList && (
         <TouchableOpacity
           onLongPress={handleLongPress}
-          delayLongPress={200}
+          delayLongPress={delayLongPress}
           onPress={(event) => {
             const { pageX, pageY } = event.nativeEvent;
             dispatch({
@@ -568,6 +580,10 @@ export const ImageConversations = () => {
   const { isIncluded, item, handleLongPress } = useMessageContext();
   const { navigation, handleFileUpload } = useChatroomContext();
 
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
+  const imageVideoBorderRadius =
+    chatBubbleStyles?.imageVideoAttachmentsBorderRadius;
+
   const firstAttachment = item?.attachments[0];
   const secondAttachment = item?.attachments[1];
   const thirdAttachment = item?.attachments[2];
@@ -577,8 +593,6 @@ export const ImageConversations = () => {
     (state) => state.chatroom
   );
 
-  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
-
   //styling props
   const selectedMessageBackgroundColor =
     chatBubbleStyles?.selectedMessageBackgroundColor;
@@ -586,6 +600,8 @@ export const ImageConversations = () => {
   const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
     ? selectedMessageBackgroundColor
     : STYLES.$COLORS.SELECTED_BLUE;
+
+  const delayLongPress = 200;
 
   // handle on press on attachment
   const handleOnPress = (event: any, url: string, index: number) => {
@@ -721,12 +737,20 @@ export const ImageConversations = () => {
       {item?.attachmentCount === 1 ? (
         <TouchableOpacity
           onLongPress={handleLongPress}
-          delayLongPress={200}
+          delayLongPress={delayLongPress}
           onPress={(event) => {
             handleOnPress(event, firstAttachment?.url, 0);
           }}
         >
-          <Image style={styles.singleImg} source={firstImageSource} />
+          <Image
+            style={[
+              styles.singleImg,
+              imageVideoBorderRadius
+                ? { borderRadius: imageVideoBorderRadius }
+                : null,
+            ]}
+            source={firstImageSource}
+          />
           {firstAttachment?.type === VIDEO_TEXT ? (
             <View
               style={{
@@ -747,12 +771,20 @@ export const ImageConversations = () => {
           <TouchableOpacity
             style={styles.touchableImg}
             onLongPress={handleLongPress}
-            delayLongPress={200}
+            delayLongPress={delayLongPress}
             onPress={(event) => {
               handleOnPress(event, firstAttachment?.url, 0);
             }}
           >
-            <Image source={firstImageSource} style={styles.doubleImg} />
+            <Image
+              source={firstImageSource}
+              style={[
+                styles.doubleImg,
+                imageVideoBorderRadius
+                  ? { borderRadius: imageVideoBorderRadius }
+                  : null,
+              ]}
+            />
             {firstAttachment?.type === VIDEO_TEXT ? (
               <View
                 style={{
@@ -771,12 +803,20 @@ export const ImageConversations = () => {
           <TouchableOpacity
             style={styles.touchableImg}
             onLongPress={handleLongPress}
-            delayLongPress={200}
+            delayLongPress={delayLongPress}
             onPress={(event) => {
               handleOnPress(event, secondAttachment?.url, 1);
             }}
           >
-            <Image source={secondImageSource} style={styles.doubleImg} />
+            <Image
+              source={secondImageSource}
+              style={[
+                styles.doubleImg,
+                imageVideoBorderRadius
+                  ? { borderRadius: imageVideoBorderRadius }
+                  : null,
+              ]}
+            />
             {secondAttachment?.type === VIDEO_TEXT ? (
               <View
                 style={{
@@ -796,7 +836,7 @@ export const ImageConversations = () => {
       ) : item?.attachmentCount === 3 ? (
         <TouchableOpacity
           onLongPress={handleLongPress}
-          delayLongPress={200}
+          delayLongPress={delayLongPress}
           onPress={(event) => {
             const { pageX, pageY } = event.nativeEvent;
             dispatch({
@@ -843,7 +883,14 @@ export const ImageConversations = () => {
           }}
           style={styles.doubleImgParent}
         >
-          <View style={styles.imgParent}>
+          <View
+            style={[
+              styles.imgParent,
+              imageVideoBorderRadius
+                ? { borderRadius: imageVideoBorderRadius }
+                : null,
+            ]}
+          >
             <Image source={firstImageSource} style={styles.multipleImg} />
             {firstAttachment?.type === VIDEO_TEXT ? (
               <View
@@ -860,7 +907,14 @@ export const ImageConversations = () => {
               </View>
             ) : null}
           </View>
-          <View style={styles.imgParent}>
+          <View
+            style={[
+              styles.imgParent,
+              imageVideoBorderRadius
+                ? { borderRadius: imageVideoBorderRadius }
+                : null,
+            ]}
+          >
             <Image style={styles.multipleImg} source={secondImageSource} />
             {firstAttachment?.type === VIDEO_TEXT ? (
               <View
@@ -877,7 +931,14 @@ export const ImageConversations = () => {
               </View>
             ) : null}
           </View>
-          <View style={styles.tripleImgOverlay}>
+          <View
+            style={[
+              styles.tripleImgOverlay,
+              imageVideoBorderRadius
+                ? { borderRadius: imageVideoBorderRadius }
+                : null,
+            ]}
+          >
             <Text style={styles.tripleImgText}>+2</Text>
           </View>
         </TouchableOpacity>
@@ -887,12 +948,20 @@ export const ImageConversations = () => {
             <TouchableOpacity
               style={styles.touchableImg}
               onLongPress={handleLongPress}
-              delayLongPress={200}
+              delayLongPress={delayLongPress}
               onPress={(event) => {
                 handleOnPress(event, firstAttachment?.url, 0);
               }}
             >
-              <Image source={firstImageSource} style={styles.doubleImg} />
+              <Image
+                source={firstImageSource}
+                style={[
+                  styles.doubleImg,
+                  imageVideoBorderRadius
+                    ? { borderRadius: imageVideoBorderRadius }
+                    : null,
+                ]}
+              />
               {firstAttachment?.type === VIDEO_TEXT ? (
                 <View
                   style={{
@@ -911,12 +980,20 @@ export const ImageConversations = () => {
             <TouchableOpacity
               style={styles.touchableImg}
               onLongPress={handleLongPress}
-              delayLongPress={200}
+              delayLongPress={delayLongPress}
               onPress={(event) => {
                 handleOnPress(event, secondAttachment?.url, 1);
               }}
             >
-              <Image source={secondImageSource} style={styles.doubleImg} />
+              <Image
+                source={secondImageSource}
+                style={[
+                  styles.doubleImg,
+                  imageVideoBorderRadius
+                    ? { borderRadius: imageVideoBorderRadius }
+                    : null,
+                ]}
+              />
               {secondAttachment?.type === VIDEO_TEXT ? (
                 <View
                   style={{
@@ -937,12 +1014,20 @@ export const ImageConversations = () => {
             <TouchableOpacity
               style={styles.touchableImg}
               onLongPress={handleLongPress}
-              delayLongPress={200}
+              delayLongPress={delayLongPress}
               onPress={(event) => {
                 handleOnPress(event, thirdAttachment?.url, 2);
               }}
             >
-              <Image source={thirdImageSource} style={styles.doubleImg} />
+              <Image
+                source={thirdImageSource}
+                style={[
+                  styles.doubleImg,
+                  imageVideoBorderRadius
+                    ? { borderRadius: imageVideoBorderRadius }
+                    : null,
+                ]}
+              />
               {thirdAttachment?.type === VIDEO_TEXT ? (
                 <View
                   style={{
@@ -961,12 +1046,20 @@ export const ImageConversations = () => {
             <TouchableOpacity
               style={styles.touchableImg}
               onLongPress={handleLongPress}
-              delayLongPress={200}
+              delayLongPress={delayLongPress}
               onPress={(event) => {
                 handleOnPress(event, fourthAttachment?.url, 3);
               }}
             >
-              <Image source={fourthImageSource} style={styles.doubleImg} />
+              <Image
+                source={fourthImageSource}
+                style={[
+                  styles.doubleImg,
+                  imageVideoBorderRadius
+                    ? { borderRadius: imageVideoBorderRadius }
+                    : null,
+                ]}
+              />
               {fourthAttachment?.type === VIDEO_TEXT ? (
                 <View
                   style={{
@@ -988,7 +1081,7 @@ export const ImageConversations = () => {
         <TouchableOpacity
           style={{ gap: Layout.normalize(5) }}
           onLongPress={handleLongPress}
-          delayLongPress={200}
+          delayLongPress={delayLongPress}
           onPress={(event) => {
             const { pageX, pageY } = event.nativeEvent;
             dispatch({
@@ -1035,7 +1128,14 @@ export const ImageConversations = () => {
           }}
         >
           <View style={styles.doubleImgParent}>
-            <View style={styles.imgParent}>
+            <View
+              style={[
+                styles.imgParent,
+                imageVideoBorderRadius
+                  ? { borderRadius: imageVideoBorderRadius }
+                  : null,
+              ]}
+            >
               <Image source={firstImageSource} style={styles.multipleImg} />
               {firstAttachment?.type === VIDEO_TEXT ? (
                 <View
@@ -1052,7 +1152,14 @@ export const ImageConversations = () => {
                 </View>
               ) : null}
             </View>
-            <View style={styles.imgParent}>
+            <View
+              style={[
+                styles.imgParent,
+                imageVideoBorderRadius
+                  ? { borderRadius: imageVideoBorderRadius }
+                  : null,
+              ]}
+            >
               <Image style={styles.multipleImg} source={secondImageSource} />
               {secondAttachment?.type === VIDEO_TEXT ? (
                 <View
@@ -1071,7 +1178,14 @@ export const ImageConversations = () => {
             </View>
           </View>
           <View style={styles.doubleImgParent}>
-            <View style={styles.imgParent}>
+            <View
+              style={[
+                styles.imgParent,
+                imageVideoBorderRadius
+                  ? { borderRadius: imageVideoBorderRadius }
+                  : null,
+              ]}
+            >
               <Image source={thirdImageSource} style={styles.multipleImg} />
               {thirdAttachment?.type === VIDEO_TEXT ? (
                 <View
@@ -1088,7 +1202,14 @@ export const ImageConversations = () => {
                 </View>
               ) : null}
             </View>
-            <View style={styles.imgParent}>
+            <View
+              style={[
+                styles.imgParent,
+                imageVideoBorderRadius
+                  ? { borderRadius: imageVideoBorderRadius }
+                  : null,
+              ]}
+            >
               <Image style={styles.multipleImg} source={fourthImageSource} />
               {fourthAttachment?.type === VIDEO_TEXT ? (
                 <View
@@ -1105,7 +1226,14 @@ export const ImageConversations = () => {
                 </View>
               ) : null}
             </View>
-            <View style={styles.tripleImgOverlay}>
+            <View
+              style={[
+                styles.tripleImgOverlay,
+                imageVideoBorderRadius
+                  ? { borderRadius: imageVideoBorderRadius }
+                  : null,
+              ]}
+            >
               <Text style={styles.tripleImgText}>{`+${
                 item?.attachmentCount - 3
               }`}</Text>

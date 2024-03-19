@@ -54,7 +54,9 @@ import {
   StackActions,
   useIsFocused,
   useNavigation,
+  useRoute,
 } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 import { BUCKET, POOL_ID, REGION } from "../awsExports";
 import { CognitoIdentityCredentials, S3 } from "aws-sdk";
 import AWS from "aws-sdk";
@@ -117,8 +119,6 @@ interface UploadResource {
 
 interface ChatroomContextProps {
   children: ReactNode;
-  navigation: any;
-  route: any;
 }
 
 export interface ChatroomContextValues {
@@ -238,19 +238,23 @@ export const useChatroomContext = () => {
   return context;
 };
 
-export const ChatroomContextProvider = ({
-  children,
-  navigation,
-  route,
-}: ChatroomContextProps) => {
+export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
   const myClient = Client.myClient;
+
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  const route = useRoute();
 
   const {
     chatroomID,
     previousChatroomID,
     navigationFromNotification,
     deepLinking,
-  } = route.params;
+  } = route.params as {
+    chatroomID: any; // Adjust the type accordingly
+    previousChatroomID: any; // Adjust the type accordingly
+    navigationFromNotification: any; // Adjust the type accordingly
+    deepLinking: any; // Adjust the type accordingly
+  };
 
   const refInput = useRef<any>();
 
@@ -396,6 +400,7 @@ export const ChatroomContextProvider = ({
       dispatch({
         type: CLEAR_SELECTED_MESSAGES,
       });
+      return currentSelectedMessage;
     }
   };
 
@@ -550,14 +555,15 @@ export const ChatroomContextProvider = ({
       });
       setIsRealmDataPresent(true);
       // This is to set chatroom topic if its already in API response
-      if (DB_DATA?.topic && DB_DATA?.topicId) {
+      if (DB_DATA?.topicId) {
+        const conversation = await myClient?.getConversation(DB_DATA?.topicId);
         dispatch({
           type: SET_CHATROOM_TOPIC,
           body: {
-            currentChatroomTopic: DB_DATA?.topic,
+            currentChatroomTopic: conversation[0],
           },
         });
-      } else if (!DB_DATA?.topic && !DB_DATA?.topicId) {
+      } else if (!DB_DATA?.topicId) {
         dispatch({
           type: CLEAR_CHATROOM_TOPIC,
         });
@@ -1574,6 +1580,8 @@ export const ChatroomContextProvider = ({
       chatroomID?.toString(),
       response?.data?.conversation
     );
+
+    return response;
   };
 
   // this function calls API to reject DM request
@@ -1598,6 +1606,8 @@ export const ChatroomContextProvider = ({
       ChatroomChatRequestState.REJECTED
     );
     fetchChatroomDetails();
+
+    return response;
   };
 
   // this function calls API to approve DM request on click TapToUndo
@@ -1621,6 +1631,7 @@ export const ChatroomContextProvider = ({
       ChatroomChatRequestState.ACCEPTED
     );
     fetchChatroomDetails();
+    return response;
   };
 
   // this function calls API to block a member
@@ -1643,6 +1654,7 @@ export const ChatroomContextProvider = ({
       ChatroomChatRequestState.REJECTED
     );
     fetchChatroomDetails();
+    return response;
   };
 
   // this function calls API to unblock a member
@@ -1665,6 +1677,7 @@ export const ChatroomContextProvider = ({
       ChatroomChatRequestState.ACCEPTED
     );
     fetchChatroomDetails();
+    return response;
   };
 
   // this function shows confirm alert popup to approve DM request

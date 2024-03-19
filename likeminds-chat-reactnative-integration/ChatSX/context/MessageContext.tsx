@@ -22,6 +22,8 @@ interface MessageContextProps {
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
+  CustomMessageHeader?: ReactNode;
+  CustomMessageFooter?: ReactNode;
 }
 
 export interface MessageContextValues {
@@ -41,6 +43,8 @@ export interface MessageContextValues {
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
+  CustomMessageHeader?: ReactNode;
+  CustomMessageFooter?: ReactNode;
 
   handleLongPress: (event: GestureResponderEvent) => void;
   handleOnPress: (event: GestureResponderEvent) => void;
@@ -67,6 +71,8 @@ export const MessageContextProvider = ({
   index,
   isStateIncluded,
   isIncluded,
+  CustomMessageHeader,
+  CustomMessageFooter,
 }: MessageContextProps) => {
   const { user } = useAppSelector((state) => state.homefeed);
 
@@ -186,6 +192,8 @@ export const MessageContextProvider = ({
     index,
     isStateIncluded,
     isIncluded,
+    CustomMessageHeader,
+    CustomMessageFooter,
 
     handleLongPress,
     handleOnPress,
