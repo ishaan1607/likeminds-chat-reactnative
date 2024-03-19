@@ -17,6 +17,15 @@ interface Data {
 
 interface ChatRoomProps {
   children: ReactNode;
+  showViewParticipants: boolean;
+  showShareChatroom: boolean;
+  showMuteNotifications?: boolean;
+  showLeaveChatroom?: boolean;
+  showJoinChatroom?: boolean;
+  showUnmuteNotifications?: boolean;
+  showBlockMember?: boolean;
+  showUnBlockMember?: boolean;
+  showViewProfile?: boolean;
   setChatroomTopic: () => void;
   leaveChatroom: () => void;
   leaveSecretChatroom: () => void;
@@ -31,6 +40,15 @@ interface ChatRoomProps {
 
 const ChatRoom = ({
   children,
+  showViewParticipants,
+  showShareChatroom,
+  showMuteNotifications,
+  showLeaveChatroom,
+  showJoinChatroom,
+  showUnmuteNotifications,
+  showBlockMember,
+  showUnBlockMember,
+  showViewProfile,
   setChatroomTopic,
   leaveChatroom,
   leaveSecretChatroom,
@@ -55,6 +73,15 @@ const ChatRoom = ({
         onRejectProp={onReject}
         blockMemberProp={blockMember}
         unblockMemberProp={unblockMember}
+        showViewParticipants={showViewParticipants}
+        showShareChatroom={showShareChatroom}
+        showMuteNotifications={showMuteNotifications}
+        showLeaveChatroom={showLeaveChatroom}
+        showJoinChatroom={showJoinChatroom}
+        showUnmuteNotifications={showUnmuteNotifications}
+        showBlockMember={showBlockMember}
+        showUnBlockMember={showUnBlockMember}
+        showViewProfile={showViewProfile}
       >
         <ChatroomComponent children={children} />
       </CustomisableMethodsContextProvider>

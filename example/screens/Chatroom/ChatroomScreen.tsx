@@ -10,6 +10,15 @@ import {
 } from '@likeminds.community/chat-rn-core';
 
 export function ChatroomScreen() {
+  const showViewParticipants = true;
+  const showShareChatroom = true;
+  const showMuteNotifications = true;
+  const showLeaveChatroom = true;
+  const showJoinChatroom = true;
+  const showUnmuteNotifications = true;
+  const showBlockMember = true;
+  const showUnBlockMember = true;
+  const showViewProfile = true;
   const {
     setChatroomTopic,
     leaveChatroom,
@@ -116,6 +125,15 @@ export function ChatroomScreen() {
 
   return (
     <ChatRoom
+      showViewParticipants={showViewParticipants}
+      showShareChatroom={showShareChatroom}
+      showMuteNotifications={showMuteNotifications}
+      showLeaveChatroom={showLeaveChatroom}
+      showJoinChatroom={showJoinChatroom}
+      showUnmuteNotifications={showUnmuteNotifications}
+      showBlockMember={showBlockMember}
+      showUnBlockMember={showUnBlockMember}
+      showViewProfile={showViewProfile}
       setChatroomTopic={customSetChatroomTopic}
       leaveChatroom={customLeaveChatroom}
       leaveSecretChatroom={customLeaveSecretChatroom}

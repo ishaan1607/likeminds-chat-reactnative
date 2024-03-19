@@ -18,6 +18,15 @@ const ChatroomActionModal = () => {
     muteNotificationsProp,
     unmuteNotificationsProp,
     unblockMemberProp,
+    showViewParticipants,
+    showShareChatroom,
+    showMuteNotifications,
+    showJoinChatroom,
+    showLeaveChatroom,
+    showUnmuteNotifications,
+    showBlockMember,
+    showUnBlockMember,
+    showViewProfile,
   }: CustomisableMethodsContextProps = useCustomisableMethodsContext();
   const {
     chatroomID,
@@ -36,6 +45,50 @@ const ChatroomActionModal = () => {
     handleBlockMember,
     unblockMember,
   }: ChatroomContextValues = useChatroomContext();
+  const updatedFilteredChatroomActions = filteredChatroomActions.filter(
+    (item) => {
+      if (
+        item.id === ChatroomActions.VIEW_PARTICIPANTS &&
+        showViewParticipants
+      ) {
+        return true;
+      }
+      if (
+        (item.id === ChatroomActions.LEAVE_CHATROOM && showLeaveChatroom) ||
+        (item.id === ChatroomActions.LEAVE_SECRET_CHATROOM && showLeaveChatroom)
+      ) {
+        return true;
+      }
+      if (item.id === ChatroomActions.SHARE && showShareChatroom) {
+        return true;
+      }
+      if (
+        item.id === ChatroomActions.MUTE_NOTIFICATIONS &&
+        showMuteNotifications
+      ) {
+        return true;
+      }
+      if (
+        item.id === ChatroomActions.UNMUTE_NOTIFICATIONS &&
+        showUnmuteNotifications
+      ) {
+        return true;
+      }
+      if (item.id === ChatroomActions.JOIN_CHATROOM && showJoinChatroom) {
+        return true;
+      }
+      if (item.id === ChatroomActions.VIEW_PROFILE && showViewProfile) {
+        return true;
+      }
+      if (item.id === ChatroomActions.BLOCK_MEMBER && showBlockMember) {
+        return true;
+      }
+      if (item.id === ChatroomActions.UNBLOCK_MEMBER && showUnBlockMember) {
+        return true;
+      }
+      return false;
+    }
+  );
   return (
     <Modal
       transparent={true}
