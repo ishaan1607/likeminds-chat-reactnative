@@ -32,34 +32,30 @@ const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 interface MessageList {
   onTapToUndo?: () => void;
-  ReactionList?: any;
   scrollToBottom?: () => void;
-  renderFooter?: () => void;
+  ReactionList?: any;
 }
 
 const MessageList = ({
   onTapToUndo,
-  ReactionList,
   scrollToBottom,
-  renderFooter,
+  ReactionList,
 }: MessageList) => {
   return (
     <MessageListContextProvider>
       <MessageListComponent
-        ReactionList={ReactionList}
         onTapToUndo={onTapToUndo}
         scrollToBottomProp={scrollToBottom}
-        renderFooterProp={renderFooter}
+        ReactionList={ReactionList}
       />
     </MessageListContextProvider>
   );
 };
 
 const MessageListComponent = ({
-  ReactionList,
   onTapToUndo,
   scrollToBottomProp,
-  renderFooterProp,
+  ReactionList,
 }: any) => {
   const {
     conversations,
@@ -391,12 +387,8 @@ const MessageListComponent = ({
               );
             }}
             onScroll={handleOnScroll}
-            ListHeaderComponent={
-              renderFooterProp ? renderFooterProp : renderFooter
-            }
-            ListFooterComponent={
-              renderFooterProp ? renderFooterProp : renderFooter
-            }
+            ListHeaderComponent={renderFooter}
+            ListFooterComponent={renderFooter}
             keyboardShouldPersistTaps={"handled"}
             inverted
           />

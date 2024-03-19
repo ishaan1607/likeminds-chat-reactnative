@@ -26,7 +26,7 @@ export function ChatroomScreen() {
     blockMember,
     unblockMember,
   } = useChatroomContext();
-  const {scrollToBottom, renderFooter} = useMessageListContext();
+  const {scrollToBottom} = useMessageListContext();
   const {renderFooterExploreFeed, handleLoadMore} = useExploreFeedContext();
   const customSetChatroomTopic = async () => {
     console.log('before custom chatroom topic');
@@ -103,11 +103,6 @@ export function ChatroomScreen() {
     await scrollToBottom();
     console.log('after custom scroll to bottom');
   };
-  const customRenderFooter = async () => {
-    console.log('before custom render footer');
-    await renderFooter();
-    console.log('after custom render footer');
-  };
   const customExploreFeedRenderFooter = async () => {
     console.log('before custom render footer');
     await renderFooterExploreFeed();
@@ -138,7 +133,6 @@ export function ChatroomScreen() {
       <MessageList
         onTapToUndo={customOnTapToUndo}
         scrollToBottom={customScrollToBottom}
-        renderFooter={customRenderFooter}
       />
 
       {/* Input Box Flow */}
