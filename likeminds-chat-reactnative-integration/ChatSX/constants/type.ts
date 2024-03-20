@@ -31,6 +31,10 @@ export interface ChatroomHeaderStyles {
   };
 }
 
+export interface FileUploadStyles {
+  selectedImageBorderColor?: string;
+}
+
 export interface ChatroomTopicStyles {
   topicHeader?: {
     fontSize?: number;

@@ -81,6 +81,10 @@ function App(): React.JSX.Element {
             options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
             name={'FileUpload'}
             component={FileUpload}
+            initialParams={{
+              backIconPath: '', // add your back icon path here
+              imageCropIcon: '', // add your image crop icon path here
+            }}
           />
           <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
           <Stack.Screen
