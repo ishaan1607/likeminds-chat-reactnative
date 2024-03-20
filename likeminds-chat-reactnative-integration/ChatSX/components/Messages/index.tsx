@@ -22,7 +22,7 @@ interface Messages {
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
-  ReactionListProp: any;
+  ReactionListProp: React.FC<{ ReactionListProp: React.ReactNode }>;
 }
 
 const Messages = ({
@@ -44,7 +44,7 @@ const Messages = ({
   );
 };
 
-const MessagesComponent = ({ ReactionListProp }: any) => {
+const MessagesComponent = ({ ReactionListProp }) => {
   const {
     item,
     isIncluded,
