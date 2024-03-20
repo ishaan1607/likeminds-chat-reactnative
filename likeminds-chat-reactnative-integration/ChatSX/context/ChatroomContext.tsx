@@ -223,7 +223,7 @@ export interface ChatroomContextValues {
     voiceNotesToUpload?: any
   ) => void;
   onReplyPrivatelyClick: (uuid: string, conversationID: number) => void;
-  ReactionListProp: any;
+  ReactionListProp: React.ReactNode;
 }
 
 const ChatroomContext = createContext<ChatroomContextValues | undefined>(

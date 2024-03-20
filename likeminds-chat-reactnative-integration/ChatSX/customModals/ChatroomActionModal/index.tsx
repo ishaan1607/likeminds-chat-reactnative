@@ -11,6 +11,7 @@ import {
   CustomisableMethodsContextProps,
   useCustomisableMethodsContext,
 } from "../../context/CustomisableMethodsContext";
+import { VIEW_PARTICIPANTS } from "../../constants/Screens";
 
 const ChatroomActionModal = () => {
   const {
@@ -45,6 +46,7 @@ const ChatroomActionModal = () => {
     unmuteNotifications,
     handleBlockMember,
     unblockMember,
+    chatroomName,
   }: ChatroomContextValues = useChatroomContext();
   const updatedFilteredChatroomActions = filteredChatroomActions?.map(
     (item) => {
@@ -112,16 +114,16 @@ const ChatroomActionModal = () => {
                     onPress={async () => {
                       if (val?.id === ChatroomActions.VIEW_PARTICIPANTS) {
                         setModalVisible(false);
-                        // navigation.navigate(VIEW_PARTICIPANTS, {
-                        //   chatroomID: chatroomID,
-                        //   isSecret: isSecret,
-                        //   chatroomName: chatroomName,
-                        // });
+                        navigation.navigate(VIEW_PARTICIPANTS, {
+                          chatroomID: chatroomID,
+                          isSecret: isSecret,
+                          chatroomName: chatroomName,
+                        });
                       } else if (
                         val?.id === ChatroomActions.LEAVE_CHATROOM ||
                         val?.id === ChatroomActions.LEAVE_SECRET_CHATROOM
                       ) {
-                        // showWarningModal();
+                        showWarningModal();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.JOIN_CHATROOM) {
                         if (!isSecret) {
@@ -147,7 +149,7 @@ const ChatroomActionModal = () => {
                       } else if (val?.id === ChatroomActions.VIEW_PROFILE) {
                         //View Profile code
                       } else if (val?.id === ChatroomActions.BLOCK_MEMBER) {
-                        // await handleBlockMember();
+                        await handleBlockMember();
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.UNBLOCK_MEMBER) {
                         unblockMemberProp
@@ -156,11 +158,11 @@ const ChatroomActionModal = () => {
                         setModalVisible(false);
                       } else if (val?.id === ChatroomActions.SHARE) {
                         //   Share flow
-                        //   onShare(
-                        //     chatroomID,
-                        //     chatroomType,
-                        //     chatroomDBDetails?.isSecret
-                        //   );
+                        onShare(
+                          chatroomID,
+                          chatroomType,
+                          chatroomDBDetails?.isSecret
+                        );
                       }
                     }}
                     key={val?.id}

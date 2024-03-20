@@ -3,7 +3,11 @@ import { ChatroomContextProvider } from "./ChatroomContext";
 import { MessageListContextProvider } from "./MessageListContext";
 import { ExploreFeedContextProvider } from "./ExploreFeedContext";
 
-function Chat({ children }: any) {
+interface ChatProps {
+  children: React.ReactNode;
+}
+
+function Chat({ children }: ChatProps) {
   return (
     <ChatroomContextProvider>
       <MessageListContextProvider>
