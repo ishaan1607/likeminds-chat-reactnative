@@ -6,7 +6,13 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import React, {
+  ReactNode,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { FlashList } from "@shopify/flash-list";
 import Swipeable from "../Swipeable";
 import Messages from "../Messages";

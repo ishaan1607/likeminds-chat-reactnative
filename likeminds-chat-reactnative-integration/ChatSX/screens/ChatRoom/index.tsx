@@ -3,12 +3,12 @@ import { View } from "react-native";
 import ToastMessage from "../../components/ToastMessage";
 import { styles } from "./styles";
 import {
-  ChatroomContextProvider,
   ChatroomContextValues,
   useChatroomContext,
 } from "../../context/ChatroomContext";
 import ChatroomModals from "../../components/ChatroomModals";
 import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
+import { CustomComponentContextProvider } from "../../context/CustomComponentContextProvider";
 
 interface Data {
   id: string;
@@ -17,7 +17,20 @@ interface Data {
 
 interface ChatRoomProps {
   children: ReactNode;
-  ReactionList?: React.ReactNode;
+  customReplyBox?: (item: any, chatroomName: string) => JSX.Element;
+  customMessageHeader?: ReactNode;
+  customMessageFooter?: ReactNode;
+  customVideoImageAttachmentConversation?: ReactNode;
+  customPdfAttachmentConversation?: ReactNode;
+  customVoiceNoteAttachmentConversation?: ReactNode;
+  customGifAttachmentConversation?: ReactNode;
+  customMessageNotSupportedConversation?: ReactNode;
+  customDeletedMessage?: ReactNode;
+  customReplyConversations?: ReactNode;
+  customPollConversationView?: ReactNode;
+  customLinkPreview?: ReactNode;
+  customStateMessage?: ReactNode;
+  customReactionList?: React.ReactNode;
   showViewParticipants?: boolean;
   showShareChatroom?: boolean;
   showMuteNotifications?: boolean;
@@ -40,9 +53,26 @@ interface ChatRoomProps {
   unblockMember?: () => void;
 }
 
+interface ChatRoomComponentProps {
+  children: ReactNode;
+}
+
 const ChatRoom = ({
   children,
-  ReactionList,
+  customReplyBox,
+  customMessageHeader,
+  customMessageFooter,
+  customVideoImageAttachmentConversation,
+  customPdfAttachmentConversation,
+  customVoiceNoteAttachmentConversation,
+  customGifAttachmentConversation,
+  customMessageNotSupportedConversation,
+  customDeletedMessage,
+  customReplyConversations,
+  customPollConversationView,
+  customLinkPreview,
+  customStateMessage,
+  customReactionList,
   showViewParticipants,
   showShareChatroom,
   showMuteNotifications,
@@ -65,7 +95,28 @@ const ChatRoom = ({
   unblockMember,
 }: ChatRoomProps) => {
   return (
-    <ChatroomContextProvider ReactionListProp={ReactionList}>
+    <CustomComponentContextProvider
+      customReplyBox={customReplyBox}
+      customMessageHeader={customMessageHeader}
+      customMessageFooter={customMessageFooter}
+      customVideoImageAttachmentConversation={
+        customVideoImageAttachmentConversation
+      }
+      customPdfAttachmentConversation={customPdfAttachmentConversation}
+      customVoiceNoteAttachmentConversation={
+        customVoiceNoteAttachmentConversation
+      }
+      customGifAttachmentConversation={customGifAttachmentConversation}
+      customMessageNotSupportedConversation={
+        customMessageNotSupportedConversation
+      }
+      customDeletedMessage={customDeletedMessage}
+      customReplyConversations={customReplyConversations}
+      customPollConversationView={customPollConversationView}
+      customLinkPreview={customLinkPreview}
+      customStateMessage={customStateMessage}
+      customReactionList={customReactionList}
+    >
       <CustomisableMethodsContextProvider
         setChatroomTopicProp={setChatroomTopic}
         leaveChatroomProp={leaveChatroom}
@@ -90,15 +141,11 @@ const ChatRoom = ({
       >
         <ChatroomComponent children={children} />
       </CustomisableMethodsContextProvider>
-    </ChatroomContextProvider>
+    </CustomComponentContextProvider>
   );
 };
 
-interface ChatroomComponent {
-  children: ReactNode;
-}
-
-const ChatroomComponent = ({ children }: ChatroomComponent) => {
+const ChatroomComponent = ({ children }: ChatRoomComponentProps) => {
   const { isToast, msg, setIsToast }: ChatroomContextValues =
     useChatroomContext();
 

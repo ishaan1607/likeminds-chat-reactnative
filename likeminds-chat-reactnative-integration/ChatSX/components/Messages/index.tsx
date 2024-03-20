@@ -1,5 +1,5 @@
 import { Image, TouchableOpacity, View } from "react-native";
-import React from "react";
+import React, { ReactNode } from "react";
 import { styles } from "./styles";
 import STYLES from "../../constants/Styles";
 import ReplyConversations from "../ReplyConversations";
@@ -13,9 +13,10 @@ import {
 } from "../../context/MessageContext";
 import { useChatroomContext } from "../../context/ChatroomContext";
 import DeletedMessage from "../DeletedMessage";
-import StateMessage from "../StateMessage";
+import SimpleMessage from "../SimpleMessage";
 import { NavigateToProfileParams } from "../../callBacks/type";
 import { CallBack } from "../../callBacks/callBackClass";
+import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 
 interface Messages {
   item: any;
@@ -45,11 +46,14 @@ const Messages = ({
 };
 
 interface MessagesComponentProps {
-  ReactionListProp: React.FC<React.ReactNode>;
-  onTapToUndoProp: () => void;
+  onTapToUndoProp?: () => void;
 }
 
-const MessagesComponent = ({ onTapToUndoProp }: any) => {
+interface CustomReactionList {
+  customReactionList?: ReactNode;
+}
+
+const MessagesComponent = ({ onTapToUndoProp }: MessagesComponentProps) => {
   const {
     item,
     isIncluded,
@@ -59,9 +63,17 @@ const MessagesComponent = ({ onTapToUndoProp }: any) => {
     isItemIncludedInStateArr,
     handleLongPress,
   } = useMessageContext();
-  const { ReactionListProp } = useChatroomContext();
+  const { customReactionList }: CustomReactionList =
+    useCustomComponentsContext();
 
   const { removeReaction, chatroomID } = useChatroomContext();
+
+  const {
+    customDeletedMessage,
+    customReplyConversations,
+    customPollConversationView,
+    customLinkPreview,
+  } = useCustomComponentsContext();
 
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -84,17 +96,33 @@ const MessagesComponent = ({ onTapToUndoProp }: any) => {
     <View style={styles.messageParent}>
       <View>
         {item?.deletedBy ? (
-          <DeletedMessage />
+          customDeletedMessage ? (
+            customDeletedMessage
+          ) : (
+            <DeletedMessage />
+          )
         ) : item?.replyConversationObject ? (
-          <ReplyConversations />
+          customReplyConversations ? (
+            customReplyConversations
+          ) : (
+            <ReplyConversations />
+          )
         ) : !item?.replyConversationObject && item?.attachmentCount > 0 ? (
           <AttachmentConversations />
         ) : item?.state === 10 ? (
-          <PollConversationView />
+          customPollConversationView ? (
+            customPollConversationView
+          ) : (
+            <PollConversationView />
+          )
         ) : item?.ogTags?.url != null && item?.ogTags != undefined ? (
-          <LinkPreview />
+          customLinkPreview ? (
+            customLinkPreview
+          ) : (
+            <LinkPreview />
+          )
         ) : (
-          <StateMessage onTapToUndoProp={onTapToUndoProp} />
+          <SimpleMessage onTapToUndoProp={onTapToUndoProp} />
         )}
 
         {/* Sharp corner styles of a chat bubble */}
@@ -160,8 +188,8 @@ const MessagesComponent = ({ onTapToUndoProp }: any) => {
         ) : null}
 
         {/* Reaction List */}
-        {ReactionListProp ? (
-          ReactionListProp
+        {customReactionList ? (
+          customReactionList
         ) : (
           <ReactionList
             item={item}

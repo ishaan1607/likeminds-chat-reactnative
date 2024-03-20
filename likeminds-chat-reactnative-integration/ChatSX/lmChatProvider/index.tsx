@@ -1,5 +1,5 @@
-import { StyleSheet, View } from "react-native";
 import React, { useState, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useAppDispatch } from "../store";
 import { Credentials } from "../credentials";
@@ -23,7 +23,7 @@ export const LMChatProvider = ({
   userUniqueId,
   profileImageUrl,
   lmChatInterface,
-}: LMChatProviderProps): JSX.Element => {
+}: LMChatProviderProps) => {
   const [isInitiated, setIsInitiated] = useState(false);
 
   // to initialise track player

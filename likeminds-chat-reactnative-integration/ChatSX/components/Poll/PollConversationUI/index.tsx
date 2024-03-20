@@ -11,6 +11,10 @@ import Layout from "../../../constants/Layout";
 import { NavigateToProfileParams } from "../../../callBacks/type";
 import STYLES from "../../../constants/Styles";
 import { CallBack } from "../../../callBacks/callBackClass";
+import MessageHeader from "../../MessageHeader";
+import MessageFooter from "../../MessageFooter";
+import { useChatroomContext } from "../../../context/ChatroomContext";
+import { useCustomComponentsContext } from "../../../context/CustomComponentContextProvider";
 
 const PollConversationUI = ({
   text,
@@ -54,6 +58,9 @@ const PollConversationUI = ({
   const senderDesignationStyles =
     messageReceivedHeader?.senderDesignationStyles;
   const pollVoteSliderColor = chatBubbleStyles?.pollVoteSliderColor;
+
+  const { customMessageHeader, customMessageFooter } =
+    useCustomComponentsContext();
   return (
     <View>
       {isIncluded ? (
@@ -63,45 +70,10 @@ const PollConversationUI = ({
           style={styles.selectedItem}
         />
       ) : null}
-      {member?.id == user?.id ? null : (
-        <Text
-          style={[
-            styles.messageInfo,
-            senderNameStyles?.color ? { color: senderNameStyles?.color } : null,
-            senderNameStyles?.fontSize
-              ? { fontSize: senderNameStyles?.fontSize }
-              : null,
-            senderNameStyles?.fontFamily
-              ? { color: senderNameStyles?.color }
-              : null,
-          ]}
-          numberOfLines={1}
-          onPress={() => {
-            const params: NavigateToProfileParams = {
-              taggedUserId: null,
-              member: member,
-            };
-            lmChatInterface.navigateToProfile(params);
-          }}
-        >
-          {member?.name}
-          {member?.customTitle ? (
-            <Text
-              style={[
-                styles.messageCustomTitle,
-                senderDesignationStyles?.color
-                  ? { color: senderDesignationStyles?.color }
-                  : null,
-                senderDesignationStyles?.fontSize
-                  ? { fontSize: senderDesignationStyles?.fontSize }
-                  : null,
-                senderDesignationStyles?.fontFamily
-                  ? { color: senderDesignationStyles?.color }
-                  : null,
-              ]}
-            >{` • ${member?.customTitle}`}</Text>
-          ) : null}
-        </Text>
+      {member?.id == user?.id ? null : customMessageHeader ? (
+        customMessageHeader
+      ) : (
+        <MessageHeader />
       )}
 
       {/* Poll heading */}
@@ -373,12 +345,7 @@ const PollConversationUI = ({
       ) : null}
 
       {/* Poll timestamp and show edited text if edited */}
-      <View style={styles.alignTime}>
-        {isEdited ? (
-          <Text style={styles.messageDate}>{"Edited • "}</Text>
-        ) : null}
-        <Text style={styles.messageDate}>{createdAt}</Text>
-      </View>
+      {customMessageFooter ? customMessageFooter : <MessageFooter />}
     </View>
   );
 };

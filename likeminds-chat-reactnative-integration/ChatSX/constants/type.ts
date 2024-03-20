@@ -198,6 +198,7 @@ export interface ChatBubbleStyles {
   pollVoteSliderColor?: {
     backgroundColor?: string;
   };
+  imageVideoAttachmentsBorderRadius?: number;
 }
 
 export interface ReactionListStyles {

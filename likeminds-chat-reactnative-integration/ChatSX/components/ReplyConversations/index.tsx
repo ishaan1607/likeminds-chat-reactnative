@@ -37,6 +37,9 @@ import { useMessageContext } from "../../context/MessageContext";
 import { useChatroomContext } from "../../context/ChatroomContext";
 import { useMessageListContext } from "../../context/MessageListContext";
 import Layout from "../../constants/Layout";
+import MessageHeader from "../MessageHeader";
+import MessageFooter from "../MessageFooter";
+import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 
 interface ReplyConversations {
   item: any;
@@ -174,6 +177,7 @@ const ReplyConversations = () => {
   const dispatch = useAppDispatch();
   const { conversations, selectedMessages, stateArr, isLongPress }: any =
     useAppSelector((state) => state.chatroom);
+  const { customReplyBox } = useCustomComponentsContext();
   const { user } = useAppSelector((state) => state.homefeed);
   const [flashListMounted, setFlashListMounted] = useState(false);
 
@@ -210,6 +214,9 @@ const ReplyConversations = () => {
   } = useMessageContext();
 
   const { chatroomID, chatroomName } = useChatroomContext();
+
+  const { customMessageHeader, customMessageFooter } =
+    useCustomComponentsContext();
 
   const { scrollToIndex, setReplyConversationId, setIsReplyFound } =
     useMessageListContext();
@@ -308,51 +315,25 @@ const ReplyConversations = () => {
         ]}
       >
         {/* Reply conversation message sender name */}
-        {item?.member?.id == user?.id ? null : (
-          <Text
-            style={[
-              styles.messageInfo,
-              senderNameStyles?.color
-                ? { color: senderNameStyles?.color }
-                : null,
-              senderNameStyles?.fontSize
-                ? { fontSize: senderNameStyles?.fontSize }
-                : null,
-              senderNameStyles?.fontFamily
-                ? { color: senderNameStyles?.color }
-                : null,
-            ]}
-            numberOfLines={1}
-          >
-            {item?.member?.name}
-            {item?.member?.customTitle ? (
-              <Text
-                style={[
-                  styles.messageCustomTitle,
-                  senderDesignationStyles?.color
-                    ? { color: senderDesignationStyles?.color }
-                    : null,
-                  senderDesignationStyles?.fontSize
-                    ? { fontSize: senderDesignationStyles?.fontSize }
-                    : null,
-                  senderDesignationStyles?.fontFamily
-                    ? { color: senderDesignationStyles?.color }
-                    : null,
-                ]}
-              >{` • ${item?.member?.customTitle}`}</Text>
-            ) : null}
-          </Text>
+        {item?.member?.id == user?.id ? null : customMessageHeader ? (
+          customMessageHeader
+        ) : (
+          <MessageHeader />
         )}
         <TouchableOpacity
           onLongPress={handleLongPress}
           delayLongPress={200}
           onPress={handleOnPress}
         >
-          <ReplyBox
-            isIncluded={isIncluded}
-            item={item?.replyConversationObject}
-            chatroomName={chatroomName}
-          />
+          {customReplyBox ? (
+            customReplyBox(item?.replyConversationObject, chatroomName)
+          ) : (
+            <ReplyBox
+              isIncluded={isIncluded}
+              item={item?.replyConversationObject}
+              chatroomName={chatroomName}
+            />
+          )}
         </TouchableOpacity>
         {item?.attachmentCount > 0 ? (
           <AttachmentConversations isReplyConversation={true} isReply={true} />
@@ -376,12 +357,7 @@ const ReplyConversations = () => {
                 taggingTextColor: taggingTextColor,
               })}
             </View>
-            <View style={styles.alignTime}>
-              {item?.isEdited ? (
-                <Text style={styles.messageDate}>{"Edited • "}</Text>
-              ) : null}
-              <Text style={styles.messageDate}>{item?.createdAt}</Text>
-            </View>
+            {customMessageFooter ? customMessageFooter : <MessageFooter />}
           </View>
         )}
       </View>

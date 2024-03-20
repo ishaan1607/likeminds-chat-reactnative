@@ -3,14 +3,17 @@ import { ChatroomContextProvider } from "./ChatroomContext";
 import { MessageListContextProvider } from "./MessageListContext";
 import { ExploreFeedContextProvider } from "./ExploreFeedContext";
 import { InputBoxContextProvider } from "./InputBoxContext";
+interface ChatProps {
+  children: React.ReactNode;
+}
 
-function Chat({ children }: any) {
+function Chat({ children }: ChatProps) {
   return (
     <ChatroomContextProvider>
       <MessageListContextProvider>
-        <InputBoxContextProvider>
-          <ExploreFeedContextProvider>{children}</ExploreFeedContextProvider>
-        </InputBoxContextProvider>
+        <ExploreFeedContextProvider>
+          <InputBoxContextProvider>{children}</InputBoxContextProvider>
+        </ExploreFeedContextProvider>
       </MessageListContextProvider>
     </ChatroomContextProvider>
   );
