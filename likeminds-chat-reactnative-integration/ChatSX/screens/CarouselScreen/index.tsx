@@ -20,7 +20,7 @@ import { useAppDispatch } from "../../store";
 const CarouselScreen = ({ navigation, route }: any) => {
   const video = useRef<any>(null);
   const dispatch = useAppDispatch();
-  const { index, dataObject } = route.params;
+  const { index, dataObject, backIconPath } = route.params;
   const data = dataObject?.attachments;
   let imageCount = 0;
   let videoCount = 0;
@@ -40,6 +40,10 @@ const CarouselScreen = ({ navigation, route }: any) => {
   const userName = dataObject?.member?.name;
   const date = dataObject?.date;
   const time = dataObject?.createdAt;
+
+  const carouselScreenStyles = STYLES.$CAROUSEL_SCREEN_STYLE;
+  const headerTitle = carouselScreenStyles?.headerTitle;
+  const headerSubtitle = carouselScreenStyles?.headerSubtitle;
 
   let countText = "";
 
@@ -98,26 +102,42 @@ const CarouselScreen = ({ navigation, route }: any) => {
                 });
               }}
             >
-              <Image
-                source={require("../../assets/images/blue_back_arrow3x.png")}
-                style={styles.backBtn}
-              />
+              {backIconPath ? (
+                <Image source={backIconPath} style={styles.backBtn} />
+              ) : (
+                <Image
+                  source={require("../../assets/images/blue_back_arrow3x.png")}
+                  style={styles.backBtn}
+                />
+              )}
             </TouchableOpacity>
             <View style={styles.chatRoomInfo}>
               <Text
                 style={{
-                  color: STYLES.$COLORS.TERTIARY,
-                  fontSize: STYLES.$FONT_SIZES.LARGE,
-                  fontFamily: STYLES.$FONT_TYPES.BOLD,
+                  color: headerTitle?.color
+                    ? headerTitle?.color
+                    : STYLES.$COLORS.TERTIARY,
+                  fontSize: headerTitle?.fontSize
+                    ? headerTitle?.fontSize
+                    : STYLES.$FONT_SIZES.LARGE,
+                  fontFamily: headerTitle?.fontFamily
+                    ? headerTitle?.fontFamily
+                    : STYLES.$FONT_TYPES.BOLD,
                 }}
               >
                 {userName}
               </Text>
               <Text
                 style={{
-                  color: STYLES.$COLORS.TERTIARY,
-                  fontSize: STYLES.$FONT_SIZES.SMALL,
-                  fontFamily: STYLES.$FONT_TYPES.MEDIUM,
+                  color: headerSubtitle?.color
+                    ? headerSubtitle?.color
+                    : STYLES.$COLORS.TERTIARY,
+                  fontSize: headerSubtitle?.fontSize
+                    ? headerSubtitle?.fontSize
+                    : STYLES.$FONT_SIZES.SMALL,
+                  fontFamily: headerSubtitle?.fontFamily
+                    ? headerSubtitle?.fontFamily
+                    : STYLES.$FONT_TYPES.MEDIUM,
                 }}
               >
                 {`${countText ? `${countText} • ` : ""}${date}, ${time}`}

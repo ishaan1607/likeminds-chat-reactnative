@@ -91,6 +91,9 @@ function App(): React.JSX.Element {
             options={{gestureEnabled: false}}
             name={'CarouselScreen'}
             component={CarouselScreen}
+            initialParams={{
+              backIconPath: '', // add your back icon path here
+            }}
           />
           <Stack.Screen
             options={{gestureEnabled: false}}

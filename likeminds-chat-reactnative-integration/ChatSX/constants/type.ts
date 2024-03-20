@@ -35,6 +35,19 @@ export interface FileUploadStyles {
   selectedImageBorderColor?: string;
 }
 
+export interface CarouselScreenStyles {
+  headerTitle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  headerSubtitle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+}
+
 export interface MemberDirectoryStyles {
   userNameStyles?: {
     color?: string;

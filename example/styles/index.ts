@@ -127,7 +127,7 @@ export const setStyles = () => {
     */
   }
 
-    // styling for member directory screen
+  // styling for member directory screen
     {
       /*
      const memberDirectoryStyles = {
@@ -141,6 +141,20 @@ export const setStyles = () => {
     };
     */
     }
+
+  // styling for carousel screen
+  {
+    /*
+  const carouselScreenStyles = {
+    headerTitle: {
+      color: 'red',
+    },
+    headerSubtitle: {
+      color: 'blue',
+    },
+  };
+  */
+  }
 
   // if (chatBubbleStyles) {
   //   STYLES.setChatBubbleStyle(chatBubbleStyles);
@@ -168,5 +182,9 @@ export const setStyles = () => {
 
   // if (memberDirectoryStyles) {
   //   STYLES.setMemberDirectoryStyle(memberDirectoryStyles);
+  // }
+
+  // if (carouselScreenStyles) {
+  //   STYLES.setCarouselScreenStyle(carouselScreenStyles);
   // }
 };

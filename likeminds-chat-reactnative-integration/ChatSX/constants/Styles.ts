@@ -1,4 +1,5 @@
 import {
+  CarouselScreenStyles,
   ChatBubbleStyles,
   ChatroomHeaderStyles,
   ChatroomTopicStyles,
@@ -88,6 +89,7 @@ export class STYLES {
   static $CHATROOM_TOPIC_STYLE: ChatroomTopicStyles = {};
   static $FILE_UPLOAD_STYLE: FileUploadStyles = {};
   static $MEMBER_DIRECTORY_STYLE: MemberDirectoryStyles = {};
+  static $CAROUSEL_SCREEN_STYLE: CarouselScreenStyles = {};
   static setTheme({
     hue,
     fontColor,
@@ -155,6 +157,11 @@ export class STYLES {
   static setMemberDirectoryStyle(memberDirectoryStyles: MemberDirectoryStyles) {
     STYLES.$MEMBER_DIRECTORY_STYLE = {
       ...memberDirectoryStyles,
+    };
+  }
+  static setCarouselScreenStyle(carouselScreenStyles: CarouselScreenStyles) {
+    STYLES.$CAROUSEL_SCREEN_STYLE = {
+      ...carouselScreenStyles,
     };
   }
 }
