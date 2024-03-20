@@ -83,7 +83,7 @@ const Swipeable = ({
   // draggable message pan gesture on x-axis
   const panGesture = Gesture.Pan()
     .runOnJS(true)
-    .enabled(!isStateIncluded)
+    .enabled(!isStateIncluded && item?.deletedBy == null)
     .activeOffsetX([-10, 10])
     .onStart((event) => {
       const deltaX = event.translationX;

@@ -58,6 +58,9 @@ export const VIDEO_STRING = "Video";
 export const DOCUMENT_STRING = "Document";
 export const VOICE_NOTE_STRING = "Voice Note";
 
+export const DELETED_MESSAGE = "This message has been deleted";
+export const MESSAGE_NOT_SUPPORTED = "This message is not supported yet";
+
 export const SUCCESS = "SUCCESS";
 export const FAILED = "FAILED";
 export const CHARACTER_LIMIT_MESSAGE = "Your message exceeds character limit";

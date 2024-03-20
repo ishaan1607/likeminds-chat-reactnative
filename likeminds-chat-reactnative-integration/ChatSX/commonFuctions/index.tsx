@@ -1,4 +1,4 @@
-import React, { Alert, Linking, Platform, Text } from "react-native";
+import React, { Alert, Linking, Platform, Text, TextStyle } from "react-native";
 import STYLES from "../constants/Styles";
 import { PDF_TEXT, VIDEO_TEXT } from "../constants/Strings";
 import { createThumbnail } from "react-native-create-thumbnail";
@@ -7,6 +7,8 @@ import moment from "moment";
 import { Events, Keys } from "../enums";
 import { LMChatAnalytics } from "../analytics/LMChatAnalytics";
 import { getConversationType } from "../utils/analyticsUtils";
+import { NavigateToProfileParams } from "../callBacks/type";
+import { CallBack } from "../callBacks/callBackClass";
 
 const REGEX_USER_SPLITTING = /(<<.+?\|route:\/\/[^>]+>>)/gu;
 export const REGEX_USER_TAGGING =
@@ -156,6 +158,9 @@ export const decode = ({
   const arr: any[] = [];
   const parts = text?.split(REGEX_USER_SPLITTING);
 
+  const lmChatInterface = CallBack.lmChatInterface;
+  let taggedUserId = "";
+
   if (parts) {
     for (const matchResult of parts) {
       if (matchResult.match(REGEX_USER_TAGGING)) {
@@ -165,7 +170,7 @@ export const decode = ({
           let { route } = match?.groups!;
 
           const startingIndex = route.indexOf("/");
-          const taggedUserId = route.substring(startingIndex + 1);
+          taggedUserId = route.substring(startingIndex + 1);
 
           LMChatAnalytics.track(
             Events.USER_TAGS_SOMEONE,
@@ -196,6 +201,9 @@ export const decode = ({
       }
     }
 
+    const chatroomTopicStyles = STYLES.$CHATROOM_TOPIC_STYLE;
+    const topicDescription = chatroomTopicStyles?.topicDescription;
+
     return enableClick ? (
       <Text>
         {arr.map((val, index) => (
@@ -215,6 +223,11 @@ export const decode = ({
               <Text
                 onPress={() => {
                   if (!isLongPress) {
+                    const params: NavigateToProfileParams = {
+                      taggedUserId: taggedUserId,
+                      member: null,
+                    };
+                    lmChatInterface.navigateToProfile(params);
                     Alert.alert(`navigate to the route ${val?.route}`);
                   }
                 }}
@@ -240,10 +253,25 @@ export const decode = ({
       <Text>
         {arr.map((val, index) => (
           <Text
-            style={{
-              color: STYLES.$COLORS.FONT_PRIMARY,
-              fontFamily: STYLES.$FONT_TYPES.LIGHT,
-            }}
+            style={
+              [
+                {
+                  color: topicDescription?.color
+                    ? topicDescription?.color
+                    : STYLES.$COLORS.FONT_PRIMARY,
+                },
+                {
+                  fontFamily: topicDescription?.fontFamily
+                    ? topicDescription?.fontFamily
+                    : STYLES.$FONT_TYPES.LIGHT,
+                },
+                {
+                  fontSize: topicDescription?.fontSize
+                    ? topicDescription?.fontSize
+                    : null,
+                },
+              ] as TextStyle
+            }
             key={val.key + index}
           >
             {val.route ? (
@@ -499,7 +527,7 @@ export const getPdfThumbnail = async (selectedFile: any) => {
 //this function detect "@" mentions/tags while typing.
 export function detectMentions(input: string) {
   const mentionRegex = /(?:^|\s)@(\w+)/g;
-  const matches = [];
+  const matches: string[] = [];
   let match;
 
   while ((match = mentionRegex.exec(input)) !== null) {

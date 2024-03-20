@@ -1,5 +1,6 @@
 import { Platform, StyleSheet } from "react-native";
 import STYLES from "../../../../constants/Styles";
+import Layout from "../../../../constants/Layout";
 
 const styles = StyleSheet.create({
   page: {
@@ -7,8 +8,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   avatar: {
-    width: 36,
-    height: 36,
+    width: Layout.normalize(36),
+    height: Layout.normalize(36),
     borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
     marginRight: STYLES.$MARGINS.SMALL,
   },
@@ -19,12 +20,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    gap: 10,
-    borderRadius: 50,
-    bottom: Platform.OS == "ios" ? 30 : 20,
-    right: 20,
+    paddingVertical: Layout.normalize(15),
+    paddingHorizontal: Layout.normalize(20),
+    gap: Layout.normalize(10),
+    borderRadius: Layout.normalize(50),
+    bottom: Platform.OS == "ios" ? Layout.normalize(30) : Layout.normalize(20),
+    right: Layout.normalize(20),
   },
   nothingFab: {
     backgroundColor: STYLES.$COLORS.SECONDARY,
@@ -32,13 +33,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    gap: 10,
-    borderRadius: 50,
+    paddingVertical: Layout.normalize(15),
+    paddingHorizontal: Layout.normalize(20),
+    gap: Layout.normalize(10),
+    borderRadius: Layout.normalize(50),
   },
-  fabImg: { height: 20, width: 20, resizeMode: "contain" },
-  nothingImg: { height: 100, width: 100, resizeMode: "contain" },
+  fabImg: {
+    height: Layout.normalize(20),
+    width: Layout.normalize(20),
+    resizeMode: "contain",
+  },
+  nothingImg: {
+    height: Layout.normalize(100),
+    width: Layout.normalize(100),
+    resizeMode: "contain",
+  },
   nothingDM: { display: "flex", flexGrow: 1 },
   text: {
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
@@ -51,7 +60,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     flex: 1,
-    gap: 10,
+    gap: Layout.normalize(10),
   },
   title: {
     fontSize: STYLES.$FONT_SIZES.LARGE,

@@ -64,7 +64,7 @@ const ImageScreen = ({ navigation, route }: ImageScreen) => {
         return (
           <TouchableOpacity
             style={{
-              marginTop: 20,
+              marginTop: Layout.normalize(20),
             }}
             onPress={() => {
               navigation.navigate(CAROUSEL_SCREEN, {
@@ -98,7 +98,7 @@ const ImageScreen = ({ navigation, route }: ImageScreen) => {
                 >
                   <Image
                     style={{
-                      height: 250,
+                      height: Layout.normalize(250),
                       width: "100%",
                       resizeMode: "contain",
                     }}
@@ -106,7 +106,11 @@ const ImageScreen = ({ navigation, route }: ImageScreen) => {
                   />
                   {val?.type === VIDEO_TEXT ? (
                     <View
-                      style={{ position: "absolute", bottom: 20, left: 20 }}
+                      style={{
+                        position: "absolute",
+                        bottom: Layout.normalize(20),
+                        left: Layout.normalize(20),
+                      }}
                     >
                       <Image
                         source={require("../../assets/images/video_icon3x.png")}

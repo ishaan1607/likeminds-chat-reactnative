@@ -1,4 +1,3 @@
-import { current } from "@reduxjs/toolkit";
 import Styles from "../../constants/Styles";
 import {
   ACCEPT_INVITE_SUCCESS,
@@ -32,7 +31,25 @@ import { removeDuplicateObjects } from "../../utils/homeFeedUtils";
 import { ChatroomChatRequestState } from "../../enums";
 import { ChatroomType } from "../../enums";
 
-const initialState = {
+export interface HomeFeedReducerState {
+  myChatrooms: any[];
+  myDMChatrooms: any[];
+  invitedChatrooms: any[];
+  user: any;
+  memberRights: any[];
+  community: any;
+  unseenCount: number | null;
+  totalCount: number | null;
+  page: number;
+  dmPage: number;
+  isToast: boolean;
+  toastMessage: string;
+  statusBarStyle: string;
+  groupFeedChatrooms: any[];
+  dmFeedChatrooms: any[];
+}
+
+export const initialState: HomeFeedReducerState = {
   myChatrooms: [] as any,
   myDMChatrooms: [] as any,
   invitedChatrooms: [] as any,
@@ -181,7 +198,7 @@ export function homefeedReducer(state = initialState, action: any) {
     }
     case GET_INVITES_SUCCESS: {
       const { userInvites = [] } = action.body;
-      const updatedUserInvites = [];
+      const updatedUserInvites: any = [];
       for (let i = 0; i < userInvites.length; i++) {
         const newObject = {
           ...userInvites[i],

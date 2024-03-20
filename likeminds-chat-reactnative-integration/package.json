@@ -1,9 +1,8 @@
 {
-  "name": "likeminds_chat_reactnative_integration",
-  "version": "0.5.0",
-  "versionCode": "1",
-  "versionName": "0.5.0",
-  "private": true,
+  "name": "@likeminds.community/chat-rn-core",
+  "version": "0.5.4",
+  "versionCode": "5",
+  "versionName": "0.5.4",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -17,7 +16,7 @@
   },
   "dependencies": {
     "@giphy/react-native-sdk": "3.2.1",
-    "@likeminds.community/chat-rn": "^1.4.0",
+    "@likeminds.community/chat-rn": "1.5.0",
     "@notifee/react-native": "7.6.1",
     "@react-native-async-storage/async-storage": "1.18.1",
     "@react-native-clipboard/clipboard": "1.11.2",
@@ -26,18 +25,16 @@
     "@react-native-community/slider": "4.4.3",
     "@react-native-firebase/app": "18.1.0",
     "@react-native-firebase/messaging": "18.1.0",
-    "@react-native/babel-preset": "^0.74.0",
+    "@react-native/babel-preset": "0.74.0",
     "@react-navigation/material-top-tabs": "6.6.2",
     "@react-navigation/native": "6.1.2",
     "@react-navigation/native-stack": "6.9.8",
-    "@reduxjs/toolkit": "1.9.2",
     "@shopify/flash-list": "1.4.3",
-    "@types/react-native-video": "^5.0.14",
+    "@types/react-native-video": "5.0.14",
     "aws-sdk": "2.1380.0",
     "buffer": "6.0.3",
     "diff": "5.1.0",
     "firebase": "9.17.1",
-    "likeminds_chat_reactnative_ui": "file:../likeminds-chat-reactnative-ui/likeminds_chat_reactnative_ui-0.5.0.tgz",
     "lottie-react-native": "6.4.0",
     "moment": "2.29.4",
     "react": "18.2.0",
@@ -66,15 +63,13 @@
     "react-native-track-player": "4.0.1",
     "react-native-uuid": "2.0.1",
     "react-native-video": "5.2.1",
-    "react-redux": "8.0.5",
     "realm": "11.10.2",
-    "redux-thunk": "2.4.2",
     "rn-emoji-keyboard": "1.2.1"
   },
   "jest": {
     "preset": "react-native"
   },
   "devDependencies": {
-    "microbundle": "^0.15.1"
+    "microbundle": "0.15.1"
   }
 }

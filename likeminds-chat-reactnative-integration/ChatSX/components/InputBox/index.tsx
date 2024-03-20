@@ -139,18 +139,18 @@ import {
   LMChatLoader,
   LMChatTextInput,
   LMChatTextView,
-} from "likeminds_chat_reactnative_ui";
+} from "../../uiComponents";
+import { Client } from "../../client";
 import {
   convertToMentionValues,
   replaceMentionValues,
-} from "likeminds_chat_reactnative_ui/components/LMChatTextInput/utils";
-import { Client } from "../../client";
-import { useLMChatStyles } from "../../lmChatProvider";
+} from "../../uiComponents/LMChatTextInput/utils";
+import Layout from "../../constants/Layout";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
 
-const InputBox = ({
+const MessageInputBox = ({
   replyChatID,
   chatroomID,
   chatRequestState,
@@ -171,8 +171,7 @@ const InputBox = ({
   isGif,
 }: InputBoxProps) => {
   const myClient = Client.myClient;
-  const LMChatContext = useLMChatStyles();
-  const inputBoxStyles = LMChatContext?.inputBoxStyles;
+  const inputBoxStyles = STYLES.$INPUT_BOX_STYLE;
 
   const [isKeyBoardFocused, setIsKeyBoardFocused] = useState(false);
   const [message, setMessage] = useState(previousMessage);
@@ -1237,9 +1236,7 @@ const InputBox = ({
             payload.shareLink = url;
           }
 
-          const response = await dispatch(
-            onConversationsCreate(payload) as any
-          );
+          const response: any = await dispatch(onConversationsCreate(payload));
 
           if (response) {
             await myClient?.replaceSavedConversation(response?.conversation);
@@ -1337,9 +1334,7 @@ const InputBox = ({
             payload.shareLink = url;
           }
 
-          const response = await dispatch(
-            onConversationsCreate(payload) as any
-          );
+          const response: any = await dispatch(onConversationsCreate(payload));
 
           await myClient?.replaceSavedConversation(response?.conversation);
 
@@ -1484,7 +1479,7 @@ const InputBox = ({
   //pagination loader in the footer
   const renderFooter = () => {
     return isLoading ? (
-      <View style={{ paddingVertical: 20 }}>
+      <View style={{ paddingVertical: Layout.normalize(20) }}>
         <LMChatLoader color={STYLES.$COLORS.SECONDARY} />
       </View>
     ) : null;
@@ -1923,7 +1918,7 @@ const InputBox = ({
             ? {
                 marginBottom: isKeyBoardFocused
                   ? Platform.OS === "android"
-                    ? 45
+                    ? 5
                     : 5
                   : isIOS
                   ? 20
@@ -2001,8 +1996,8 @@ const InputBox = ({
                         style={[
                           styles.infoContainer,
                           {
-                            borderBottomWidth: 0.2,
-                            gap: isIOS ? 5 : 0,
+                            borderBottomWidth: Layout.normalize(0.2),
+                            gap: isIOS ? Layout.normalize(5) : 0,
                           },
                         ]}
                       >
@@ -2147,7 +2142,7 @@ const InputBox = ({
               (isReply && !isUploadScreen) || isEditable || isUserTagging
                 ? {
                     borderWidth: 0,
-                    margin: isIOS ? 0 : 2,
+                    margin: isIOS ? 0 : Layout.normalize(2),
                   }
                 : null,
             ]}
@@ -2188,7 +2183,7 @@ const InputBox = ({
                   {
                     paddingVertical: 0,
                     marginVertical: 0,
-                    marginHorizontal: 10,
+                    marginHorizontal: Layout.normalize(10),
                   },
                 ]}
               >
@@ -2307,9 +2302,9 @@ const InputBox = ({
                   styles.inputParent,
                   isUploadScreen
                     ? {
-                        marginHorizontal: 5,
+                        marginHorizontal: Layout.normalize(5),
                       }
-                    : { marginHorizontal: 15 },
+                    : { marginHorizontal: Layout.normalize(15) },
                 ]}
               >
                 {!isUploadScreen &&
@@ -2330,19 +2325,24 @@ const InputBox = ({
                   </TouchableOpacity>
                 ) : null}
                 <LMChatTextInput
-                  placeholderText="Type here..."
+                  placeholderText={
+                    inputBoxStyles?.placeholderText
+                      ? inputBoxStyles?.placeholderText
+                      : "Type a message"
+                  }
                   placeholderTextColor={inputBoxStyles?.placeholderTextColor}
                   plainTextStyle={[
                     inputBoxStyles?.plainTextStyle,
                     {
-                      color: !isUploadScreen
+                      color: isUploadScreen
                         ? STYLES.$BACKGROUND_COLORS.LIGHT
                         : STYLES.$BACKGROUND_COLORS.DARK,
                     },
                   ]}
                   style={
                     [
-                      inputBoxStyles?.inputTextStyle || styles.input,
+                      styles.input,
+                      inputBoxStyles?.inputTextStyle,
                       {
                         height: Math.max(25, inputHeight),
                         color: isUploadScreen
@@ -2381,7 +2381,10 @@ const InputBox = ({
             !voiceNotes?.recordTime &&
             !isDeleteAnimation ? (
               <TouchableOpacity
-                style={[styles.emojiButton, { marginLeft: 15 }]}
+                style={[
+                  styles.emojiButton,
+                  { marginLeft: Layout.normalize(15) },
+                ]}
                 onPress={() => {
                   Keyboard.dismiss();
                   setModalVisible(true);
@@ -2390,9 +2393,10 @@ const InputBox = ({
                 <LMChatIcon
                   assetPath={require("../../assets/images/open_files3x.png")}
                   iconStyle={
-                    inputBoxStyles?.attachmentIconStyles
-                      ? (inputBoxStyles.attachmentIconStyles as ImageStyle)
-                      : styles.emoji
+                    [
+                      styles.emoji,
+                      inputBoxStyles?.attachmentIconStyles,
+                    ] as ImageStyle
                   }
                 />
               </TouchableOpacity>
@@ -2451,9 +2455,7 @@ const InputBox = ({
             <LMChatIcon
               assetPath={require("../../assets/images/send_button3x.png")}
               iconStyle={
-                inputBoxStyles?.sendIconStyles
-                  ? (inputBoxStyles.sendIconStyles as ImageStyle)
-                  : styles.send
+                [styles.send, inputBoxStyles?.sendIconStyles] as ImageStyle
               }
             />
           </TouchableOpacity>
@@ -2492,9 +2494,10 @@ const InputBox = ({
                       <LMChatIcon
                         assetPath={require("../../assets/images/mic_icon3x.png")}
                         iconStyle={
-                          inputBoxStyles?.micIconStyles
-                            ? (inputBoxStyles.micIconStyles as ImageStyle)
-                            : styles.mic
+                          [
+                            styles.mic,
+                            inputBoxStyles?.micIconStyles,
+                          ] as ImageStyle
                         }
                       />
                     </Pressable>
@@ -2510,7 +2513,9 @@ const InputBox = ({
                 >
                   <LMChatIcon
                     assetPath={require("../../assets/images/mic_icon3x.png")}
-                    iconStyle={styles.mic}
+                    iconStyle={
+                      [styles.mic, inputBoxStyles?.micIconStyles] as ImageStyle
+                    }
                   />
                 </Pressable>
               </Animated.View>
@@ -2545,9 +2550,10 @@ const InputBox = ({
                     <LMChatIcon
                       assetPath={require("../../assets/images/camera_icon3x.png")}
                       iconStyle={
-                        inputBoxStyles?.cameraIconStyles
-                          ? (inputBoxStyles.cameraIconStyles as ImageStyle)
-                          : styles.emoji
+                        [
+                          styles.emoji,
+                          inputBoxStyles?.cameraIconStyles,
+                        ] as ImageStyle
                       }
                     />
                   </TouchableOpacity>
@@ -2568,9 +2574,10 @@ const InputBox = ({
                     <LMChatIcon
                       assetPath={require("../../assets/images/select_image_icon3x.png")}
                       iconStyle={
-                        inputBoxStyles?.galleryIconStyles
-                          ? (inputBoxStyles.galleryIconStyles as ImageStyle)
-                          : styles.emoji
+                        [
+                          styles.emoji,
+                          inputBoxStyles?.galleryIconStyles,
+                        ] as ImageStyle
                       }
                     />
                   </TouchableOpacity>
@@ -2591,9 +2598,10 @@ const InputBox = ({
                     <LMChatIcon
                       assetPath={require("../../assets/images/select_doc_icon3x.png")}
                       iconStyle={
-                        inputBoxStyles?.documentIconStyles
-                          ? (inputBoxStyles.documentIconStyles as ImageStyle)
-                          : styles.emoji
+                        [
+                          styles.emoji,
+                          inputBoxStyles?.documentIconStyles,
+                        ] as ImageStyle
                       }
                     />
                   </TouchableOpacity>
@@ -2616,9 +2624,10 @@ const InputBox = ({
                       <LMChatIcon
                         assetPath={require("../../assets/images/poll_icon3x.png")}
                         iconStyle={
-                          inputBoxStyles?.pollIconStyles
-                            ? (inputBoxStyles.pollIconStyles as ImageStyle)
-                            : styles.emoji
+                          [
+                            styles.emoji,
+                            inputBoxStyles?.pollIconStyles,
+                          ] as ImageStyle
                         }
                       />
                     </TouchableOpacity>
@@ -2644,4 +2653,4 @@ const InputBox = ({
   );
 };
 
-export default InputBox;
+export default MessageInputBox;

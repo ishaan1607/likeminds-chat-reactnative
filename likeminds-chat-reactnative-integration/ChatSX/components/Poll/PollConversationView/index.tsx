@@ -22,15 +22,38 @@ import {
   PollConversationViewState,
 } from "../models";
 import { Client } from "../../../client";
+import { useMessageContext } from "../../../context/MessageContext";
+import { useChatroomContext } from "../../../context/ChatroomContext";
+import { styles } from "../../Messages/styles";
+import STYLES from "../../../constants/Styles";
 
-const PollConversationView = ({
-  navigation,
-  item,
-  isIncluded,
-  openKeyboard,
-  longPressOpenKeyboard,
-}: PollConversationViewProps) => {
+const PollConversationView = () => {
   const myClient = Client.myClient;
+
+  const {
+    isIncluded,
+    item,
+    handleLongPress: longPressOpenKeyboard,
+    handleOnPress: openKeyboard,
+  } = useMessageContext();
+  const { navigation } = useChatroomContext();
+  const { isTypeSent } = useMessageContext();
+
+  const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
+
+  //styling props
+  const sentMessageBackgroundColor =
+    chatBubbleStyles?.sentMessageBackgroundColor;
+  const receivedMessageBackgroundColor =
+    chatBubbleStyles?.receivedMessageBackgroundColor;
+  const selectedMessageBackgroundColor =
+    chatBubbleStyles?.selectedMessageBackgroundColor;
+
+  const SELECTED_BACKGROUND_COLOR = selectedMessageBackgroundColor
+    ? selectedMessageBackgroundColor
+    : STYLES.$COLORS.SELECTED_BLUE;
+  // styling props ended
+
   const [selectedPolls, setSelectedPolls] = useState<any>([]);
   const [showSelected, setShowSelected] = useState(false);
   const [shouldShowSubmitPollButton, setShouldShowSubmitPollButton] =
@@ -225,7 +248,9 @@ const PollConversationView = ({
       chatroomId: item?.chatroomId,
       conversationId: item?.id,
     };
-    const res = await dispatch(firebaseConversation(payload, false) as any);
+    const res: any = await dispatch(
+      firebaseConversation(payload, false) as any
+    );
     await myClient?.updatePollVotes(
       res?.conversations,
       user?.sdkClientInfo?.community
@@ -428,34 +453,54 @@ const PollConversationView = ({
   };
 
   return (
-    <View>
-      <PollConversationUI
-        onNavigate={onNavigate}
-        setSelectedPollOptions={setSelectedPollOptions}
-        addPollOption={addPollOption}
-        submitPoll={submitPoll}
-        setShowSelected={setShowSelected}
-        setIsAddPollOptionModalVisible={setIsAddPollOptionModalVisible}
-        setAddOptionInputField={setAddOptionInputField}
-        openKeyboard={openKeyboard}
-        longPressOpenKeyboard={longPressOpenKeyboard}
-        stringManipulation={stringManipulation}
-        resetShowResult={resetShowResult}
-        {...props}
-      />
-      <AddOptionsModal
-        isAddPollOptionModalVisible={isAddPollOptionModalVisible}
-        setIsAddPollOptionModalVisible={setIsAddPollOptionModalVisible}
-        addOptionInputField={addOptionInputField}
-        setAddOptionInputField={setAddOptionInputField}
-        handelAddOptionSubmit={addPollOption}
-      />
-      <AnonymousPollModal
-        isAnonymousPollModalVisible={isAnonymousPollModalVisible}
-        hideAnonymousPollModal={hideAnonymousPollModal}
-        title={ANONYMOUS_POLL_TITLE}
-        subTitle={ANONYMOUS_POLL_SUB_TITLE}
-      />
+    <View
+      style={[
+        styles.pollMessage,
+        isTypeSent
+          ? [
+              styles.sentMessage,
+              sentMessageBackgroundColor
+                ? { backgroundColor: sentMessageBackgroundColor }
+                : null,
+            ]
+          : [
+              styles.receivedMessage,
+              receivedMessageBackgroundColor
+                ? { backgroundColor: receivedMessageBackgroundColor }
+                : null,
+            ],
+        isIncluded ? { backgroundColor: SELECTED_BACKGROUND_COLOR } : null,
+      ]}
+    >
+      <View>
+        <PollConversationUI
+          onNavigate={onNavigate}
+          setSelectedPollOptions={setSelectedPollOptions}
+          addPollOption={addPollOption}
+          submitPoll={submitPoll}
+          setShowSelected={setShowSelected}
+          setIsAddPollOptionModalVisible={setIsAddPollOptionModalVisible}
+          setAddOptionInputField={setAddOptionInputField}
+          openKeyboard={openKeyboard}
+          longPressOpenKeyboard={longPressOpenKeyboard}
+          stringManipulation={stringManipulation}
+          resetShowResult={resetShowResult}
+          {...props}
+        />
+        <AddOptionsModal
+          isAddPollOptionModalVisible={isAddPollOptionModalVisible}
+          setIsAddPollOptionModalVisible={setIsAddPollOptionModalVisible}
+          addOptionInputField={addOptionInputField}
+          setAddOptionInputField={setAddOptionInputField}
+          handelAddOptionSubmit={addPollOption}
+        />
+        <AnonymousPollModal
+          isAnonymousPollModalVisible={isAnonymousPollModalVisible}
+          hideAnonymousPollModal={hideAnonymousPollModal}
+          title={ANONYMOUS_POLL_TITLE}
+          subTitle={ANONYMOUS_POLL_SUB_TITLE}
+        />
+      </View>
     </View>
   );
 };

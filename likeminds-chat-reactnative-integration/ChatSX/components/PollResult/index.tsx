@@ -6,11 +6,12 @@ import STYLES from "../../constants/Styles";
 import { FlashList } from "@shopify/flash-list";
 import { NO_RESPONSES, POLL_RESULT_TEXT } from "../../constants/Strings";
 import { Client } from "../../client";
+import Layout from "../../constants/Layout";
 
 const PollStack = createMaterialTopTabNavigator();
 
 const PollResult = ({ navigation, route }: any) => {
-  const { tabsValueArr = [], conversationID } = route.params;
+  const { tabsValueArr = [], conversationID, backIconPath } = route.params;
 
   const setInitialHeader = () => {
     navigation.setOptions({
@@ -23,10 +24,14 @@ const PollResult = ({ navigation, route }: any) => {
               navigation.goBack();
             }}
           >
-            <Image
-              source={require("../../assets/images/back_arrow3x.png")}
-              style={styles.backBtn}
-            />
+            {backIconPath ? (
+              <Image source={backIconPath} style={styles.backOptionalBtn} />
+            ) : (
+              <Image
+                source={require("../../assets/images/back_arrow3x.png")}
+                style={styles.backBtn}
+              />
+            )}
           </TouchableOpacity>
           <View style={styles.chatRoomInfo}>
             <Text
@@ -94,7 +99,7 @@ const PollResult = ({ navigation, route }: any) => {
                         styles.font,
                         {
                           color: STYLES.$COLORS.MSG,
-                          marginTop: 5,
+                          marginTop: Layout.normalize(5),
                         },
                       ]}
                     >

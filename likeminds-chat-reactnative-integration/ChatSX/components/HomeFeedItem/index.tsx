@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -8,33 +8,35 @@ import {
   Alert,
   Pressable,
   Platform,
-} from 'react-native';
-import {myClient} from '../../..';
-import {decode, getFullDate} from '../../commonFuctions';
-import {useAppDispatch, useAppSelector} from '../../store';
+} from "react-native";
+import { decode } from "../../commonFuctions";
+import { useAppDispatch, useAppSelector } from "../../store";
 import {
   ACCEPT_INVITE,
   ACCEPT_INVITE_SUCCESS,
   REJECT_INVITE_SUCCESS,
   SET_PAGE,
   SHOW_TOAST,
-} from '../../store/types/types';
-import {styles} from './styles';
-import STYLES from '../../constants/Styles';
-import {CHATROOM} from '../../constants/Screens';
+} from "../../store/types/types";
+import { styles } from "./styles";
+import STYLES from "../../constants/Styles";
+import { CHATROOM } from "../../constants/Screens";
 import {
   CANCEL_BUTTON,
   CAPITAL_GIF_TEXT,
   CONFIRM_BUTTON,
+  DELETED_MESSAGE,
   IMAGE_TEXT,
+  MESSAGE_NOT_SUPPORTED,
   PDF_TEXT,
   VIDEO_TEXT,
-} from '../../constants/Strings';
-import Layout from '../../constants/Layout';
-import {paginatedSyncAPI} from '../../utils/syncChatroomApi';
-import {ChatroomChatRequestState} from '../../enums';
-import {ChatroomType} from '../../enums';
-import {DocumentType} from '../../enums';
+} from "../../constants/Strings";
+import Layout from "../../constants/Layout";
+import { paginatedSyncAPI } from "../../utils/syncChatroomApi";
+import { ChatroomChatRequestState } from "../../enums";
+import { ChatroomType } from "../../enums";
+import { DocumentType } from "../../enums";
+import { Client } from "../../client";
 
 interface Props {
   avatar: string;
@@ -72,16 +74,17 @@ const HomeFeedItem: React.FC<Props> = ({
   muteStatus,
 }) => {
   const dispatch = useAppDispatch();
-  const {user} = useAppSelector(state => state.homefeed);
+  const { user } = useAppSelector((state) => state.homefeed);
+  const myClient = Client.myClient;
 
   const showJoinAlert = () =>
     Alert.alert(
-      'Join this chatroom?',
-      'You are about to join this secret chatroom.',
+      "Join this chatroom?",
+      "You are about to join this secret chatroom.",
       [
         {
           text: CANCEL_BUTTON,
-          style: 'default',
+          style: "default",
         },
         {
           text: CONFIRM_BUTTON,
@@ -92,28 +95,28 @@ const HomeFeedItem: React.FC<Props> = ({
             });
             dispatch({
               type: SHOW_TOAST,
-              body: {isToast: true, msg: 'Invitation accepted'},
+              body: { isToast: true, msg: "Invitation accepted" },
             });
-            dispatch({type: ACCEPT_INVITE_SUCCESS, body: chatroomID});
-            dispatch({type: SET_PAGE, body: 1});
+            dispatch({ type: ACCEPT_INVITE_SUCCESS, body: chatroomID });
+            dispatch({ type: SET_PAGE, body: 1 });
             await paginatedSyncAPI(1, user, false);
           },
-          style: 'default',
+          style: "default",
         },
       ],
       {
         cancelable: false,
-      },
+      }
     );
 
   const showRejectAlert = () =>
     Alert.alert(
-      'Reject Invitation?',
-      'Are you sure you want to reject the invitation to join this chatroom?',
+      "Reject Invitation?",
+      "Are you sure you want to reject the invitation to join this chatroom?",
       [
         {
           text: CANCEL_BUTTON,
-          style: 'default',
+          style: "default",
         },
         {
           text: CONFIRM_BUTTON,
@@ -124,17 +127,17 @@ const HomeFeedItem: React.FC<Props> = ({
             });
             dispatch({
               type: SHOW_TOAST,
-              body: {isToast: true, msg: 'Invitation rejected'},
+              body: { isToast: true, msg: "Invitation rejected" },
             });
 
-            dispatch({type: REJECT_INVITE_SUCCESS, body: chatroomID});
+            dispatch({ type: REJECT_INVITE_SUCCESS, body: chatroomID });
           },
-          style: 'default',
+          style: "default",
         },
       ],
       {
         cancelable: false,
-      },
+      }
     );
 
   const getFeedIconAttachment = (val: any) => {
@@ -166,21 +169,21 @@ const HomeFeedItem: React.FC<Props> = ({
           <View style={styles.alignCenter}>
             <Text style={styles.attachment_msg}>{imageCount}</Text>
             <Image
-              source={require('../../assets/images/image_icon3x.png')}
+              source={require("../../assets/images/image_icon3x.png")}
               style={styles.icon}
             />
           </View>
           <View style={styles.alignCenter}>
             <Text style={styles.attachment_msg}>{videosCount}</Text>
             <Image
-              source={require('../../assets/images/video_icon3x.png')}
+              source={require("../../assets/images/video_icon3x.png")}
               style={styles.icon}
             />
           </View>
           <View style={styles.alignCenter}>
             <Text style={styles.attachment_msg}>{pdfCount}</Text>
             <Image
-              source={require('../../assets/images/document_icon3x.png')}
+              source={require("../../assets/images/document_icon3x.png")}
               style={styles.icon}
             />
           </View>
@@ -192,14 +195,14 @@ const HomeFeedItem: React.FC<Props> = ({
           <View style={styles.alignCenter}>
             <Text style={styles.attachment_msg}>{imageCount}</Text>
             <Image
-              source={require('../../assets/images/image_icon3x.png')}
+              source={require("../../assets/images/image_icon3x.png")}
               style={styles.icon}
             />
           </View>
           <View style={styles.alignCenter}>
             <Text style={styles.attachment_msg}>{videosCount}</Text>
             <Image
-              source={require('../../assets/images/video_icon3x.png')}
+              source={require("../../assets/images/video_icon3x.png")}
               style={styles.icon}
             />
           </View>
@@ -211,14 +214,14 @@ const HomeFeedItem: React.FC<Props> = ({
           <View style={styles.alignCenter}>
             <Text style={styles.attachment_msg}>{videosCount}</Text>
             <Image
-              source={require('../../assets/images/video_icon3x.png')}
+              source={require("../../assets/images/video_icon3x.png")}
               style={styles.icon}
             />
           </View>
           <View style={styles.alignCenter}>
             <Text style={styles.attachment_msg}>{pdfCount}</Text>
             <Image
-              source={require('../../assets/images/document_icon3x.png')}
+              source={require("../../assets/images/document_icon3x.png")}
               style={styles.icon}
             />
           </View>
@@ -230,14 +233,14 @@ const HomeFeedItem: React.FC<Props> = ({
           <View style={styles.alignCenter}>
             <Text style={styles.attachment_msg}>{imageCount}</Text>
             <Image
-              source={require('../../assets/images/image_icon3x.png')}
+              source={require("../../assets/images/image_icon3x.png")}
               style={styles.icon}
             />
           </View>
           <View style={styles.alignCenter}>
             <Text style={styles.attachment_msg}>{pdfCount}</Text>
             <Image
-              source={require('../../assets/images/document_icon3x.png')}
+              source={require("../../assets/images/document_icon3x.png")}
               style={styles.icon}
             />
           </View>
@@ -250,11 +253,11 @@ const HomeFeedItem: React.FC<Props> = ({
             <Text style={styles.attachment_msg}>{pdfCount}</Text>
           )}
           <Image
-            source={require('../../assets/images/document_icon3x.png')}
+            source={require("../../assets/images/document_icon3x.png")}
             style={styles.icon}
           />
           <Text style={styles.attachment_msg}>
-            {pdfCount > 1 ? 'Documents' : 'Document'}
+            {pdfCount > 1 ? "Documents" : "Document"}
           </Text>
         </View>
       );
@@ -264,18 +267,27 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
-          ]}>
+          ]}
+        >
           {videosCount > 1 && (
             <Text style={styles.attachment_msg}>{videosCount}</Text>
           )}
           <Image
-            source={require('../../assets/images/video_icon3x.png')}
-            style={[styles.icon, {height: Platform.OS === 'ios' ? 15 : 10}]}
+            source={require("../../assets/images/video_icon3x.png")}
+            style={[
+              styles.icon,
+              {
+                height:
+                  Platform.OS === "ios"
+                    ? Layout.normalize(15)
+                    : Layout.normalize(10),
+              },
+            ]}
           />
           <Text style={styles.attachment_msg}>
-            {videosCount > 1 ? 'Videos' : 'Video'}
+            {videosCount > 1 ? "Videos" : "Video"}
           </Text>
         </View>
       );
@@ -285,18 +297,19 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
-          ]}>
+          ]}
+        >
           {imageCount > 1 && (
             <Text style={styles.attachment_msg}>{imageCount}</Text>
           )}
           <Image
-            source={require('../../assets/images/image_icon3x.png')}
+            source={require("../../assets/images/image_icon3x.png")}
             style={styles.icon}
           />
           <Text style={styles.attachment_msg}>
-            {imageCount > 1 ? 'Photos' : 'Photo'}
+            {imageCount > 1 ? "Photos" : "Photo"}
           </Text>
         </View>
       );
@@ -306,14 +319,15 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
-          ]}>
+          ]}
+        >
           <Image
-            source={require('../../assets/images/mic_icon3x.png')}
-            style={[styles.icon, {tintColor: 'grey'}]}
+            source={require("../../assets/images/mic_icon3x.png")}
+            style={[styles.icon, { tintColor: "grey" }]}
           />
-          <Text style={styles.attachment_msg}>{'Voice Note'}</Text>
+          <Text style={styles.attachment_msg}>{"Voice Note"}</Text>
         </View>
       );
     } else if (gifCount > 0) {
@@ -322,10 +336,11 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
-              gap: 5,
+              marginBottom: Layout.normalize(-2),
+              gap: Layout.normalize(5),
             },
-          ]}>
+          ]}
+        >
           <View style={styles.gifView}>
             <Text style={styles.gifText}>{CAPITAL_GIF_TEXT}</Text>
           </View>
@@ -336,8 +351,8 @@ const HomeFeedItem: React.FC<Props> = ({
       return (
         <View style={[styles.alignCenter]}>
           <Image
-            source={require('../../assets/images/poll_icon3x.png')}
-            style={[styles.icon, {tintColor: STYLES.$COLORS.PRIMARY}]}
+            source={require("../../assets/images/poll_icon3x.png")}
+            style={[styles.icon, { tintColor: STYLES.$COLORS.PRIMARY }]}
           />
           <Text style={styles.attachment_msg}>{val?.answer}</Text>
         </View>
@@ -348,22 +363,19 @@ const HomeFeedItem: React.FC<Props> = ({
           style={[
             styles.alignCenter,
             {
-              marginBottom: -2,
+              marginBottom: Layout.normalize(-2),
             },
-          ]}>
+          ]}
+        >
           <Image
-            source={require('../../assets/images/link_icon.png')}
+            source={require("../../assets/images/link_icon.png")}
             style={styles.icon}
           />
           <Text style={styles.attachment_msg}>{val?.answer}</Text>
         </View>
       );
     } else {
-      return (
-        <Text style={styles.deletedMessage}>
-          This message is not supported yet
-        </Text>
-      );
+      return <Text style={styles.deletedMessage}>{MESSAGE_NOT_SUPPORTED}</Text>;
     }
   };
 
@@ -381,23 +393,24 @@ const HomeFeedItem: React.FC<Props> = ({
           });
         }, 300);
       }}
-      style={({pressed}) => [
-        {opacity: pressed ? 0.5 : 1.0},
+      style={({ pressed }) => [
+        { opacity: pressed ? 0.5 : 1.0 },
         styles.itemContainer,
-      ]}>
+      ]}
+    >
       <View>
         <Image
           source={
             avatar
-              ? {uri: avatar}
-              : require('../../assets/images/default_pic.png')
+              ? { uri: avatar }
+              : require("../../assets/images/default_pic.png")
           }
           style={styles.avatar}
         />
         {chatroomType === ChatroomType.DMCHATROOM ? (
           <View style={styles.dmAvatarBubble}>
             <Image
-              source={require('../../assets/images/dm_message_bubble3x.png')}
+              source={require("../../assets/images/dm_message_bubble3x.png")}
               style={styles.dmAvatarBubbleImg}
             />
           </View>
@@ -410,7 +423,7 @@ const HomeFeedItem: React.FC<Props> = ({
             {title}
             {isSecret ? (
               <Image
-                source={require('../../assets/images/lock_icon3x.png')}
+                source={require("../../assets/images/lock_icon3x.png")}
                 style={styles.lockIcon}
               />
             ) : null}
@@ -423,28 +436,27 @@ const HomeFeedItem: React.FC<Props> = ({
             style={[
               styles.parentLastMessage,
               {
-                width: '80%',
+                width: "80%",
               },
-            ]}>
-            {deletedBy !== 'null' &&
+            ]}
+          >
+            {deletedBy !== "null" &&
             deletedBy !== null &&
             deletedBy !== undefined ? (
-              <Text style={styles.deletedMessage}>
-                {'This message has been deleted'}
-              </Text>
+              <Text style={styles.deletedMessage}>{DELETED_MESSAGE}</Text>
             ) : (
               <Text
                 style={[
                   styles.alignCenter,
                   {
-                    overflow: 'hidden',
+                    overflow: "hidden",
                   },
-                ]}>
+                ]}
+              >
                 {chatroomType !== ChatroomType.DMCHATROOM ? (
                   <Text
-                    style={
-                      styles.lastMessage
-                    }>{`${lastConversationMember}: `}</Text>
+                    style={styles.lastMessage}
+                  >{`${lastConversationMember}: `}</Text>
                 ) : null}
 
                 <Text numberOfLines={1} style={[styles.parentLastMessage]}>
@@ -467,31 +479,38 @@ const HomeFeedItem: React.FC<Props> = ({
           </Text>
         ) : inviteReceiver ? (
           <Text
-            style={
-              styles.lastMessage
-            }>{`${'Member'} invited you to join `}</Text>
+            style={styles.lastMessage}
+          >{`${"Member"} invited you to join `}</Text>
         ) : null}
       </View>
       {!lastConversation && !!inviteReceiver ? (
-        <View style={{display: 'flex', flexDirection: 'row', gap: 10}}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            gap: Layout.normalize(10),
+          }}
+        >
           <TouchableOpacity
             onPress={() => {
               showRejectAlert();
             }}
-            style={styles.inviteIcon}>
+            style={styles.inviteIcon}
+          >
             <Image
               style={styles.secretInviteIcons}
-              source={require('../../assets/images/invite_cross3x.png')}
+              source={require("../../assets/images/invite_cross3x.png")}
             />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
               showJoinAlert();
             }}
-            style={[styles.inviteIcon, {borderColor: '#5046E5'}]}>
+            style={[styles.inviteIcon, { borderColor: "#5046E5" }]}
+          >
             <Image
               style={styles.secretInviteIcons}
-              source={require('../../assets/images/invite_tick3x.png')}
+              source={require("../../assets/images/invite_tick3x.png")}
             />
           </TouchableOpacity>
         </View>
@@ -501,12 +520,13 @@ const HomeFeedItem: React.FC<Props> = ({
         <View
           style={[
             styles.unreadCountContainer,
-            {backgroundColor: 'transparent'},
-            unreadCount > 0 ? {right: 45} : null,
-          ]}>
+            { backgroundColor: "transparent" },
+            unreadCount > 0 ? { right: Layout.normalize(45) } : null,
+          ]}
+        >
           <Image
-            source={require('../../assets/images/mute_icon.png')}
-            style={[styles.muteIcon, {tintColor: '#5A5A5A'}]}
+            source={require("../../assets/images/mute_icon.png")}
+            style={[styles.muteIcon, { tintColor: "#5A5A5A" }]}
           />
         </View>
       ) : null}

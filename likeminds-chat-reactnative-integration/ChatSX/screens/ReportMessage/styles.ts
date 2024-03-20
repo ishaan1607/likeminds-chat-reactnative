@@ -1,24 +1,30 @@
 import { StyleSheet } from "react-native";
 import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 const styles = StyleSheet.create({
   page: {
     backgroundColor: STYLES.$BACKGROUND_COLORS.LIGHT,
     flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 8,
+    paddingHorizontal: Layout.normalize(20),
+    paddingTop: Layout.normalize(8),
   },
   headingContainer: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: 15,
+    gap: Layout.normalize(15),
   },
-  backBtn: { height: 35, width: 40, borderRadius: 10, resizeMode: "contain" },
-  chatRoomInfo: { gap: 5 },
+  backBtn: {
+    height: Layout.normalize(35),
+    width: Layout.normalize(40),
+    borderRadius: Layout.normalize(10),
+    resizeMode: "contain",
+  },
+  chatRoomInfo: { gap: Layout.normalize(5) },
   threeDots: {
-    height: 10,
-    width: 10,
+    height: Layout.normalize(10),
+    width: Layout.normalize(10),
     resizeMode: "contain",
   },
   textHeading: {
@@ -37,9 +43,9 @@ const styles = StyleSheet.create({
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
   },
   reasonsBtn: {
-    borderRadius: 16,
-    padding: 8,
-    margin: 8,
+    borderRadius: Layout.normalize(16),
+    padding: Layout.normalize(8),
+    margin: Layout.normalize(8),
     borderWidth: 1,
     borderColor: STYLES.$COLORS.MSG,
   },
@@ -47,13 +53,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignSelf: "center",
     position: "absolute",
-    bottom: 40,
+    bottom: Layout.normalize(40),
   },
   reportBtn: {
     backgroundColor: STYLES.$COLORS.RED,
-    borderRadius: 25,
-    paddingHorizontal: 30,
-    paddingVertical: 15,
+    borderRadius: Layout.normalize(25),
+    paddingHorizontal: Layout.normalize(30),
+    paddingVertical: Layout.normalize(15),
   },
   reportBtnText: {
     color: "white",

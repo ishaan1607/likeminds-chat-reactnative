@@ -1,14 +1,19 @@
-import {combineReducers, configureStore} from '@reduxjs/toolkit';
-import {TypedUseSelectorHook, useDispatch, useSelector} from 'react-redux';
-import thunk, {ThunkMiddleware} from 'redux-thunk';
-import apiMiddleware from './store/apiMiddleware';
-import {chatroomReducer} from './store/reducers/chatroomReducer';
-import {explorefeedReducer} from './store/reducers/explorefeedReducer';
-import {homefeedReducer} from './store/reducers/homefeedReducer';
-import {loader} from './store/reducers/loader';
-import {fileUploadReducer} from './store/reducers/fileUploadReducer';
+import { chatroomReducer } from "./store/reducers/chatroomReducer";
+import { explorefeedReducer } from "./store/reducers/explorefeedReducer";
+import { homefeedReducer } from "./store/reducers/homefeedReducer";
+import { loader } from "./store/reducers/loader";
+import { fileUploadReducer } from "./store/reducers/fileUploadReducer";
+import { useContextState } from "./contextStore";
 
-const rootReducer = combineReducers({
+// Combine multiple reducers into one
+const combineReducers = (reducers) => (state, action) => {
+  return Object.keys(reducers).reduce((nextState, key) => {
+    nextState[key] = reducers[key](state[key], action);
+    return nextState;
+  }, {});
+};
+
+export const rootReducer = combineReducers({
   homefeed: homefeedReducer,
   chatroom: chatroomReducer,
   explorefeed: explorefeedReducer,
@@ -16,16 +21,12 @@ const rootReducer = combineReducers({
   upload: fileUploadReducer,
 });
 
-const store = configureStore({
-  reducer: rootReducer,
-  middleware: [thunk as ThunkMiddleware, apiMiddleware],
-});
+export const useAppSelector = (selector) => {
+  const { state } = useContextState();
+  return selector(state);
+};
 
-export default store;
-
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppDispatch = () => {
+  const { dispatch } = useContextState();
+  return dispatch;
+};

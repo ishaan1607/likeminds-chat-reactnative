@@ -1,17 +1,18 @@
-import {StyleSheet} from 'react-native';
-import STYLES from '../../constants/Styles';
+import { StyleSheet } from "react-native";
+import STYLES from "../../constants/Styles";
+import Layout from "../../constants/Layout";
 
 export const styles = StyleSheet.create({
   itemContainer: {
-    flexDirection: 'row',
+    flexDirection: "row",
     padding: STYLES.$PADDINGS.MEDIUM,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
     backgroundColor: STYLES.$COLORS.TERTIARY,
   },
   icon: {
-    width: 30,
-    height: 30,
+    width: Layout.normalize(30),
+    height: Layout.normalize(30),
     borderRadius: STYLES.$AVATAR.BORDER_RADIUS,
     marginRight: STYLES.$MARGINS.LARGE,
     marginLeft: STYLES.$MARGINS.SMALL,
@@ -19,9 +20,9 @@ export const styles = StyleSheet.create({
   },
   infoContainer: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   title: {
     fontSize: STYLES.$FONT_SIZES.XL,
@@ -29,12 +30,12 @@ export const styles = StyleSheet.create({
     color: STYLES.$COLORS.FONT_PRIMARY,
   },
   newCountContainer: {
-    height: 25,
+    height: Layout.normalize(25),
     backgroundColor: STYLES.$COLORS.SECONDARY,
-    borderRadius: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 5,
+    borderRadius: Layout.normalize(15),
+    justifyContent: "center",
+    alignItems: "center",
+    padding: Layout.normalize(5),
   },
   newCount: {
     color: STYLES.$COLORS.TERTIARY,

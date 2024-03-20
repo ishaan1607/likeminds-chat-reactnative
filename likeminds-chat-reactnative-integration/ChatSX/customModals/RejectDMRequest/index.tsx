@@ -8,17 +8,19 @@ import {
   REPORT_AND_REJECT_BUTTON,
 } from '../../constants/Strings';
 import {REPORT} from '../../constants/Screens';
-import {ChatroomChatRequestState} from '../../enums';
 import {ChatroomType} from '../../enums';
+import { ChatroomContextValues, useChatroomContext } from '../../context/ChatroomContext';
 
-const RejectDMRequestModal = ({
-  hideDMRejectAlert,
-  DMRejectAlertModalVisible,
-  onReject,
-  navigation,
-  chatroomID,
-  chatroomType,
-}: any) => {
+const RejectDMRequestModal = () => {
+  const {
+    navigation,
+    chatroomID,
+    chatroomType,
+    DMRejectAlertModalVisible,
+
+    onReject,
+    hideDMRejectAlert,
+  }: ChatroomContextValues = useChatroomContext();
   return (
     <Modal
       visible={DMRejectAlertModalVisible}

@@ -4,10 +4,10 @@ import Layout from "../../constants/Layout";
 
 export const styles = StyleSheet.create({
   linkPreview: {
-    padding: 10,
+    padding: Layout.normalize(10),
     width: "80%",
     alignSelf: "flex-end",
-    borderRadius: 15,
+    borderRadius: Layout.normalize(15),
     backgroundColor: "#fff",
   },
   sentMessage: {
@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
     alignSelf: "flex-start",
     backgroundColor: STYLES.$COLORS.TERTIARY,
     borderBottomLeftRadius: 0,
+    marginLeft: Layout.normalize(30),
   },
   messageText: {
     fontSize: STYLES.$FONT_SIZES.SMALL,
@@ -27,27 +28,31 @@ export const styles = StyleSheet.create({
     maxWidth: Layout.window.width - 150,
   },
   messageDate: {
-    fontSize: 10,
+    fontSize: Layout.normalize(10),
     color: "#aaa",
     textAlign: "right",
   },
   linkPreviewBox: {
-    maxHeight: 350,
+    maxHeight: Layout.normalize(350),
     backgroundColor: STYLES.$COLORS.JOINED_BTN,
-    borderRadius: 5,
+    borderRadius: Layout.normalize(5),
     overflow: "hidden",
     marginBottom: STYLES.$MARGINS.XS,
   },
   linkPreviewIcon: {
-    height: 250,
+    height: Layout.normalize(250),
     resizeMode: "cover",
   },
-  displayRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  displayRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Layout.normalize(10),
+  },
   alignTime: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-end",
-    marginTop: 3,
+    marginTop: Layout.normalize(3),
   },
   messageInfo: {
     color: "green",
@@ -65,17 +70,17 @@ export const styles = StyleSheet.create({
     fontSize: STYLES.$FONT_SIZES.MEDIUM,
     fontFamily: STYLES.$FONT_TYPES.BOLD,
     overflow: "hidden",
-    marginLeft: 10,
-    marginRight: 10,
-    marginTop: 10,
+    marginLeft: Layout.normalize(10),
+    marginRight: Layout.normalize(10),
+    marginTop: Layout.normalize(10),
   },
   linkPreviewMessageText: {
     fontSize: STYLES.$FONT_SIZES.SMALL,
     fontFamily: STYLES.$FONT_TYPES.LIGHT,
     color: STYLES.$COLORS.FONT_PRIMARY,
     maxWidth: Layout.window.width - 150,
-    marginLeft: 10,
-    marginRight: 10,
-    marginBottom: 10,
+    marginLeft: Layout.normalize(10),
+    marginRight: Layout.normalize(10),
+    marginBottom: Layout.normalize(10),
   },
 });
