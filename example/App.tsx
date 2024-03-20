@@ -60,10 +60,6 @@ function App(): React.JSX.Element {
     setStyles();
   }, []);
 
-  // if (fileUploadStyles) {
-  //   STYLES.setFileUploadStyle(fileUploadStyles);
-  // }
-
   return (
     <LMOverlayProvider
       myClient={myClient}

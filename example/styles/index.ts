@@ -118,6 +118,15 @@ export const setStyles = () => {
     */
   }
 
+  // styling for file upload screen
+  {
+    /* 
+      const fileUploadStyles = {
+    selectedImageBorderColor:'red';
+    }
+    */
+  }
+
   // if (chatBubbleStyles) {
   //   STYLES.setChatBubbleStyle(chatBubbleStyles);
   // }
@@ -136,5 +145,9 @@ export const setStyles = () => {
 
   // if (chatroomTopicStyles) {
   //   STYLES.setChatroomTopicStyle(chatroomTopicStyles);
+  // }
+
+  // if (fileUploadStyles) {
+  //   STYLES.setFileUploadStyle(fileUploadStyles);
   // }
 };
