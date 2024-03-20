@@ -1,4 +1,4 @@
-import React, { Dispatch } from "react";
+import React, { Dispatch, ReactNode } from "react";
 import { createContext, useContext, useReducer } from "react";
 import { rootReducer } from "./store";
 import {
@@ -37,11 +37,15 @@ interface AppContextProps {
   dispatch: Dispatch<any>;
 }
 
+interface ContextProviderProps {
+  children: ReactNode;
+}
+
 // Create a context for the combined state
 const Context = createContext<AppContextProps | undefined>(undefined);
 
 // Create a provider to use in the component tree
-export const ContextProvider = ({ children }: any) => {
+export const ContextProvider = ({ children }: ContextProviderProps) => {
   const initialState: ContextState = {
     homefeed: HomefeedInitialState,
     chatroom: ChatroomInitialState,
