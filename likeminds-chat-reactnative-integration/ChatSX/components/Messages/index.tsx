@@ -22,9 +22,16 @@ interface Messages {
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
+  ReactionListProp: React.FC<{ ReactionListProp: React.ReactNode }>;
 }
 
-const Messages = ({ item, index, isStateIncluded, isIncluded }: Messages) => {
+const Messages = ({
+  item,
+  index,
+  isStateIncluded,
+  isIncluded,
+  ReactionListProp,
+}: Messages) => {
   return (
     <MessageContextProvider
       index={index}
@@ -32,12 +39,12 @@ const Messages = ({ item, index, isStateIncluded, isIncluded }: Messages) => {
       isStateIncluded={isStateIncluded}
       isIncluded={isIncluded}
     >
-      <MessagesComponent />
+      <MessagesComponent ReactionListProp={ReactionListProp} />
     </MessageContextProvider>
   );
 };
 
-const MessagesComponent = () => {
+const MessagesComponent = ({ ReactionListProp }) => {
   const {
     item,
     isIncluded,
@@ -45,7 +52,6 @@ const MessagesComponent = () => {
     isTypeSent,
     userIdStringified,
     isItemIncludedInStateArr,
-
     handleLongPress,
   } = useMessageContext();
 
@@ -148,16 +154,20 @@ const MessagesComponent = () => {
         ) : null}
 
         {/* Reaction List */}
-        <ReactionList
-          item={item}
-          chatroomID={chatroomID}
-          userIdStringified={userIdStringified}
-          reactionArr={reactionArr}
-          isTypeSent={isTypeSent}
-          isIncluded={isIncluded}
-          handleLongPress={handleLongPress}
-          removeReaction={removeReaction}
-        />
+        {ReactionListProp ? (
+          ReactionListProp
+        ) : (
+          <ReactionList
+            item={item}
+            chatroomID={chatroomID}
+            userIdStringified={userIdStringified}
+            reactionArr={reactionArr}
+            isTypeSent={isTypeSent}
+            isIncluded={isIncluded}
+            handleLongPress={handleLongPress}
+            removeReaction={removeReaction}
+          />
+        )}
       </View>
     </View>
   );
