@@ -127,6 +127,21 @@ export const setStyles = () => {
     */
   }
 
+    // styling for member directory screen
+    {
+      /*
+     const memberDirectoryStyles = {
+      userNameStyles: {
+        color: 'red',
+      },
+      userTitleStyles: {
+        color: 'blue',
+      },
+      searchPlaceholderText: 'Khojo',
+    };
+    */
+    }
+
   // if (chatBubbleStyles) {
   //   STYLES.setChatBubbleStyle(chatBubbleStyles);
   // }
@@ -149,5 +164,9 @@ export const setStyles = () => {
 
   // if (fileUploadStyles) {
   //   STYLES.setFileUploadStyle(fileUploadStyles);
+  // }
+
+  // if (memberDirectoryStyles) {
+  //   STYLES.setMemberDirectoryStyle(memberDirectoryStyles);
   // }
 };
