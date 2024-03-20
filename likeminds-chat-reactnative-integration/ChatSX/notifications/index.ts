@@ -1,17 +1,21 @@
 import messaging from "@react-native-firebase/messaging";
 import notifee, {
-  AndroidImportance,
-  EventType,
   AndroidGroupAlertBehavior,
+  AndroidImportance,
   AndroidLaunchActivityFlag,
+  EventType,
 } from "@notifee/react-native";
 import React from "react";
-import { decodeForNotifications, generateGifString } from "../commonFuctions";
+import {
+  decodeForNotifications,
+  generateGifString,
+  getNotificationsMessage,
+} from "../commonFuctions";
 import { Platform } from "react-native";
 import { Client } from "../client";
 import { getRoute } from "./routes";
 import { Credentials } from "../credentials";
-import { ChatroomData } from "./models/chatroomData";
+import { ChatroomData } from "./models";
 
 export async function requestUserPermission() {
   const authStatus = await messaging().requestPermission();
@@ -27,9 +31,8 @@ export const fetchFCMToken = async () => {
 };
 
 export default async function getNotification(remoteMessage: any) {
-  const users = await Client.myClient.getUserSchema();
+  const users = await Client.myClient?.getUserSchema();
   Credentials.setCredentials(users?.userName, users?.userUniqueID);
-
   const isIOS = Platform.OS === "ios" ? true : false;
   const message = isIOS
     ? generateGifString(remoteMessage?.notification?.body)
@@ -56,8 +59,12 @@ export default async function getNotification(remoteMessage: any) {
   const navigationRoute = route?.params?.navigationRoute;
 
   if (navigationRoute === "collabcard" && navigationRoute) {
-    const UUID = Credentials.userUniqueId;
-    const userName = Credentials.username;
+    const UUID =
+      Credentials.userUniqueId.length > 0
+        ? Credentials.userUniqueId
+        : users?.userUniqueID;
+    const userName =
+      Credentials.username.length > 0 ? Credentials.username : users?.username;
 
     const payload = {
       uuid: UUID, // uuid
@@ -138,14 +145,23 @@ export default async function getNotification(remoteMessage: any) {
           });
 
           // Children
-          for (let i = 0; i < sortedUnreadConversation?.length; i++) {
+          for (let i = 0; i < sortedUnreadConversation.length; i++) {
+            const convertedGifString = generateGifString(
+              sortedUnreadConversation[i]?.chatroomLastConversation
+            );
+
+            const decodedMessage = convertedGifString
+              ? decodeForNotifications(convertedGifString)
+              : "";
+
+            const message = getNotificationsMessage(
+              sortedUnreadConversation[i]?.attachments,
+              decodedMessage
+            );
+
             notifee.displayNotification({
               title: sortedUnreadConversation[i]?.chatroomName,
-              body: `<b>${
-                sortedUnreadConversation[i]?.chatroomLastConversationUserName
-              }</b>: ${generateGifString(
-                sortedUnreadConversation[i]?.chatroomLastConversation
-              )}`,
+              body: `<b>${sortedUnreadConversation[i]?.chatroomLastConversationUserName}</b>: ${message}`,
               android: {
                 channelId,
                 groupId: navigationRoute?.toString(16),

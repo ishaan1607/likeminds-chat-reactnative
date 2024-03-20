@@ -1893,6 +1893,14 @@ const MessageInputBox = ({
     }
   }, [isVoiceNoteIconPress]);
 
+  const marginValue = isKeyBoardFocused
+    ? Platform.OS === "android"
+      ? 5
+      : 5
+    : isIOS
+    ? 20
+    : 5;
+
   return (
     <View>
       {/* shows message how we record voice note */}
@@ -1916,13 +1924,9 @@ const MessageInputBox = ({
           styles.inputContainer,
           !isUploadScreen
             ? {
-                marginBottom: isKeyBoardFocused
-                  ? Platform.OS === "android"
-                    ? 5
-                    : 5
-                  : isIOS
-                  ? 20
-                  : 5,
+                marginBottom: inputBoxStyles?.messageInputMarginBottom
+                  ? inputBoxStyles?.messageInputMarginBottom
+                  : marginValue,
               }
             : null,
         ]}
@@ -1967,6 +1971,17 @@ const MessageInputBox = ({
                     <Pressable
                       onPress={() => {
                         const uuid = item?.sdkClientInfo?.uuid;
+                        const userName = item?.name;
+                        const communityId = item?.sdkClientInfo?.community;
+                        LMChatAnalytics.track(
+                          Events.USER_TAGS_SOMEONE,
+                          new Map<string, string>([
+                            [Keys.COMMUNITY_ID, communityId?.toString()],
+                            [Keys.CHATROOM_NAME, chatroomName?.toString()],
+                            [Keys.TAGGED_USER_ID, uuid?.toString()],
+                            [Keys.TAGGED_USER_NAME, userName?.toString()],
+                          ])
+                        );
                         const res = replaceLastMention(
                           message,
                           taggedUserName,
