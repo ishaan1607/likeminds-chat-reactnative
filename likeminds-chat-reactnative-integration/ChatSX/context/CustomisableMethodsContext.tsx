@@ -11,6 +11,7 @@ export interface CustomisableMethodsContextProps {
   showBlockMember?: boolean;
   showUnBlockMember?: boolean;
   showViewProfile?: boolean;
+  showSecretLeaveChatroom?: boolean;
   setChatroomTopicProp?: () => void;
   leaveChatroomProp?: () => void;
   leaveSecretChatroomProp?: () => void;
@@ -57,6 +58,7 @@ export const CustomisableMethodsContextProvider = ({
   showBlockMember,
   showUnBlockMember,
   showViewProfile,
+  showSecretLeaveChatroom,
   setChatroomTopicProp,
   leaveChatroomProp,
   leaveSecretChatroomProp,
@@ -85,6 +87,7 @@ export const CustomisableMethodsContextProvider = ({
     showBlockMember,
     showUnBlockMember,
     showViewProfile,
+    showSecretLeaveChatroom,
     setChatroomTopicProp,
     leaveChatroomProp,
     leaveSecretChatroomProp,

@@ -17,8 +17,9 @@ interface Data {
 
 interface ChatRoomProps {
   children: ReactNode;
-  showViewParticipants: boolean;
-  showShareChatroom: boolean;
+  ReactionList?: React.ReactNode;
+  showViewParticipants?: boolean;
+  showShareChatroom?: boolean;
   showMuteNotifications?: boolean;
   showLeaveChatroom?: boolean;
   showJoinChatroom?: boolean;
@@ -26,20 +27,22 @@ interface ChatRoomProps {
   showBlockMember?: boolean;
   showUnBlockMember?: boolean;
   showViewProfile?: boolean;
-  setChatroomTopic: () => void;
-  leaveChatroom: () => void;
-  leaveSecretChatroom: () => void;
-  joinChatroom: () => void;
-  muteNotifications: () => void;
-  unmuteNotifications: () => void;
-  onApprove: () => void;
-  onReject: () => void;
-  blockMember: () => void;
-  unblockMember: () => void;
+  showSecretLeaveChatroom?: boolean;
+  setChatroomTopic?: () => void;
+  leaveChatroom?: () => void;
+  leaveSecretChatroom?: () => void;
+  joinChatroom?: () => void;
+  muteNotifications?: () => void;
+  unmuteNotifications?: () => void;
+  onApprove?: () => void;
+  onReject?: () => void;
+  blockMember?: () => void;
+  unblockMember?: () => void;
 }
 
 const ChatRoom = ({
   children,
+  ReactionList,
   showViewParticipants,
   showShareChatroom,
   showMuteNotifications,
@@ -49,6 +52,7 @@ const ChatRoom = ({
   showBlockMember,
   showUnBlockMember,
   showViewProfile,
+  showSecretLeaveChatroom,
   setChatroomTopic,
   leaveChatroom,
   leaveSecretChatroom,
@@ -61,7 +65,7 @@ const ChatRoom = ({
   unblockMember,
 }: ChatRoomProps) => {
   return (
-    <ChatroomContextProvider>
+    <ChatroomContextProvider ReactionListProp={ReactionList}>
       <CustomisableMethodsContextProvider
         setChatroomTopicProp={setChatroomTopic}
         leaveChatroomProp={leaveChatroom}
@@ -82,6 +86,7 @@ const ChatRoom = ({
         showBlockMember={showBlockMember}
         showUnBlockMember={showUnBlockMember}
         showViewProfile={showViewProfile}
+        showSecretLeaveChatroom={showSecretLeaveChatroom}
       >
         <ChatroomComponent children={children} />
       </CustomisableMethodsContextProvider>

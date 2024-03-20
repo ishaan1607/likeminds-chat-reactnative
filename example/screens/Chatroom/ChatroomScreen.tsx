@@ -8,6 +8,7 @@ import {
   useMessageListContext,
   useExploreFeedContext,
 } from '@likeminds.community/chat-rn-core';
+import {ReactionList} from '../../customisableComponents/ReactionList';
 
 export function ChatroomScreen() {
   const showViewParticipants = true;
@@ -19,6 +20,7 @@ export function ChatroomScreen() {
   const showBlockMember = true;
   const showUnBlockMember = true;
   const showViewProfile = true;
+  const showSecretLeaveChatroom = true;
   const {
     setChatroomTopic,
     leaveChatroom,
@@ -134,6 +136,7 @@ export function ChatroomScreen() {
       showBlockMember={showBlockMember}
       showUnBlockMember={showUnBlockMember}
       showViewProfile={showViewProfile}
+      showSecretLeaveChatroom={showSecretLeaveChatroom}
       setChatroomTopic={customSetChatroomTopic}
       leaveChatroom={customLeaveChatroom}
       leaveSecretChatroom={customLeaveSecretChatroom}

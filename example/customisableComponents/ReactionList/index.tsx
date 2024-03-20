@@ -1,10 +1,6 @@
 import {View, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {
-  STYLES,
-  useMessageContext,
-  useChatroomContext,
-} from '@likeminds.community/chat-rn-core';
+import {STYLES, useMessageContext} from '@likeminds.community/chat-rn-core';
 import {styles} from './styles';
 
 export function ReactionList() {
