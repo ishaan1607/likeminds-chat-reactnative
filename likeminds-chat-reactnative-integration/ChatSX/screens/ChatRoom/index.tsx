@@ -16,17 +16,22 @@ interface Data {
 
 interface ChatRoomProps {
   children: ReactNode;
+  customReplyBox?: (item: any, chatroomName: string) => JSX.Element;
 }
 
-const ChatRoom = ({ children }: ChatRoomProps) => {
+interface ChatRoomComponentProps {
+  children: ReactNode;
+}
+
+const ChatRoom = ({ children, customReplyBox }: ChatRoomProps) => {
   return (
-    <ChatroomContextProvider>
+    <ChatroomContextProvider customReplyBox={customReplyBox}>
       <ChatroomComponent children={children} />
     </ChatroomContextProvider>
   );
 };
 
-const ChatroomComponent = ({ children }) => {
+const ChatroomComponent = ({ children }: ChatRoomComponentProps) => {
   const { isToast, msg, setIsToast }: ChatroomContextValues =
     useChatroomContext();
 

@@ -23,7 +23,7 @@ export const LMChatProvider = ({
   userUniqueId,
   profileImageUrl,
   lmChatInterface,
-}: LMChatProviderProps): JSX.Element => {
+}: LMChatProviderProps) => {
   const [isInitiated, setIsInitiated] = useState(false);
 
   // to initialise track player

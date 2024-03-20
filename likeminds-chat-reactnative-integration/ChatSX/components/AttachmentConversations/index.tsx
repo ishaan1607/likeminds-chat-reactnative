@@ -35,7 +35,7 @@ import Layout from "../../constants/Layout";
 import MessageHeader from "../MessageHeader";
 import MessageNotSupported from "../MessageNotSupported";
 import VoiceNoteConversations from "../VoiceNoteConversations";
-import GIFConversations from "../GifConversations";
+import GIFConversations from "../GIFConversations";
 import MessageText from "../MessageText";
 import MessageFooter from "../MessageFooter";
 import { useMessageListContext } from "../../context/MessageListContext";

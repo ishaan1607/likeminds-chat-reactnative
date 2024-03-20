@@ -119,6 +119,7 @@ interface UploadResource {
 
 interface ChatroomContextProps {
   children: ReactNode;
+  customReplyBox?: (item: any, chatroomName: string) => JSX.Element;
 }
 
 export interface ChatroomContextValues {
@@ -222,6 +223,9 @@ export interface ChatroomContextValues {
     voiceNotesToUpload?: any
   ) => void;
   onReplyPrivatelyClick: (uuid: string, conversationID: number) => void;
+
+  //customComponents
+  customReplyBox?: (item: any, chatroomName: string) => JSX.Element;
 }
 
 const ChatroomContext = createContext<ChatroomContextValues | undefined>(
@@ -238,7 +242,10 @@ export const useChatroomContext = () => {
   return context;
 };
 
-export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
+export const ChatroomContextProvider = ({
+  children,
+  customReplyBox,
+}: ChatroomContextProps) => {
   const myClient = Client.myClient;
 
   const navigation = useNavigation<StackNavigationProp<any>>();
@@ -2109,6 +2116,8 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
     hideDMBlockAlert,
     handleFileUpload,
     onReplyPrivatelyClick,
+
+    customReplyBox,
   };
 
   return (

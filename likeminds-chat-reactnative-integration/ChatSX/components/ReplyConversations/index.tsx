@@ -174,6 +174,7 @@ const ReplyConversations = () => {
   const dispatch = useAppDispatch();
   const { conversations, selectedMessages, stateArr, isLongPress }: any =
     useAppSelector((state) => state.chatroom);
+  const { customReplyBox } = useChatroomContext();
   const { user } = useAppSelector((state) => state.homefeed);
   const [flashListMounted, setFlashListMounted] = useState(false);
 
@@ -348,11 +349,15 @@ const ReplyConversations = () => {
           delayLongPress={200}
           onPress={handleOnPress}
         >
-          <ReplyBox
-            isIncluded={isIncluded}
-            item={item?.replyConversationObject}
-            chatroomName={chatroomName}
-          />
+          {customReplyBox ? (
+            customReplyBox(item?.replyConversationObject, chatroomName)
+          ) : (
+            <ReplyBox
+              isIncluded={isIncluded}
+              item={item?.replyConversationObject}
+              chatroomName={chatroomName}
+            />
+          )}
         </TouchableOpacity>
         {item?.attachmentCount > 0 ? (
           <AttachmentConversations isReplyConversation={true} isReply={true} />
