@@ -30,7 +30,9 @@ import Layout from "../../constants/Layout";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-const MessageList = ({ ReactionList }: any) => {
+const MessageList: React.FC<{ ReactionList: React.ReactNode }> = ({
+  ReactionList,
+}) => {
   return (
     <MessageListContextProvider>
       <MessageListComponent ReactionList={ReactionList} />
@@ -38,7 +40,9 @@ const MessageList = ({ ReactionList }: any) => {
   );
 };
 
-const MessageListComponent = ({ ReactionList }: any) => {
+const MessageListComponent: React.FC<{ ReactionList: React.ReactNode }> = ({
+  ReactionList,
+}) => {
   const {
     conversations,
     selectedMessages,
