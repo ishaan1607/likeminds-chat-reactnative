@@ -62,9 +62,20 @@ const InputBox = (props: InputBoxProps) => {
   );
 };
 
+interface CustomisableMethodsContext {
+  handleGalleryProp?: () => void;
+  handleCameraProp?: () => void;
+  handleDocProp?: () => void;
+  onEditProp?: () => void;
+}
+
 const InputBoxComponent = () => {
-  const { handleGalleryProp, handleCameraProp, handleDocProp, onEditProp } =
-    useCustomisableMethodsContext();
+  const {
+    handleGalleryProp,
+    handleCameraProp,
+    handleDocProp,
+    onEditProp,
+  }: CustomisableMethodsContext = useCustomisableMethodsContext();
   const {
     isVoiceNoteIconPress,
     hideDMSentAlert,
