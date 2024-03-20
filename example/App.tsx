@@ -17,6 +17,7 @@ import {
   ImageCropScreen,
   PollResult,
   VideoPlayer,
+  ExploreFeed,
   LMOverlayProvider,
   LMChatCallbacks,
   LMChatroomCallbacks,
@@ -69,6 +70,18 @@ function App(): React.JSX.Element {
       lmChatInterface={lmChatInterface}>
       <NavigationContainer ref={navigationRef} independent={true}>
         <Stack.Navigator>
+          <Stack.Screen
+            name={'ExploreFeed'}
+            component={ExploreFeed}
+            initialParams={{
+              backIconPath: '',
+              filterIconPath: '',
+              participantsIconPath: '',
+              totalMessagesIconPath: '',
+              joinButtonPath: '',
+              joinedButtonPath: '',
+            }}
+          />
           <Stack.Screen
             name="ChatRoom"
             component={ChatroomScreen}

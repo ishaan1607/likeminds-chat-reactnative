@@ -11,7 +11,7 @@ import {
   ExploreFeedContextProvider,
   useExploreFeedContext,
 } from "../../context/ExploreFeedContext";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 interface Props {
   navigation: any;
@@ -27,6 +27,23 @@ const ExploreFeed = () => {
 
 const ExploreFeedComponent = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const {
+    backIconPath,
+    filterIconPath,
+    participantsIconPath,
+    totalMessagesIconPath,
+    joinButtonPath,
+    joinedButtonPath,
+  } = route.params as {
+    backIconPath: string;
+    filterIconPath: string;
+    participantsIconPath: string;
+    totalMessagesIconPath: string;
+    joinButtonPath: string;
+    joinedButtonPath: string;
+  };
+
   const {
     exploreChatrooms,
     pinnedChatroomsCount,
@@ -41,6 +58,9 @@ const ExploreFeedComponent = () => {
   } = useExploreFeedContext();
   const { count } = useAppSelector((state) => state.loader);
 
+  const exploreChatroomStyles = STYLES.$EXPLORE_CHATROOM_STYLE;
+  const header = exploreChatroomStyles?.header;
+
   useLayoutEffect(() => {
     navigation.setOptions({
       title: "",
@@ -49,18 +69,30 @@ const ExploreFeedComponent = () => {
         <View style={styles.headingContainer}>
           <TouchableOpacity onPress={navigation.goBack}>
             <Image
-              source={require("../../assets/images/back_arrow3x.png")}
+              source={
+                backIconPath
+                  ? backIconPath
+                  : require("../../assets/images/back_arrow3x.png")
+              }
               style={styles.backBtn}
             />
           </TouchableOpacity>
           <Text
             style={{
-              color: STYLES.$COLORS.FONT_PRIMARY,
-              fontSize: STYLES.$FONT_SIZES.XL,
-              fontFamily: STYLES.$FONT_TYPES.BOLD,
+              color: header?.color
+                ? header?.color
+                : STYLES.$COLORS.FONT_PRIMARY,
+              fontSize: header?.fontSize
+                ? header?.fontSize
+                : STYLES.$FONT_SIZES.XL,
+              fontFamily: header?.fontFamily
+                ? header?.fontFamily
+                : STYLES.$FONT_TYPES.BOLD,
             }}
           >
-            Explore Chatrooms
+            {header?.placeHolderText
+              ? header?.placeHolderText
+              : "Explore Chatrooms"}
           </Text>
         </View>
       ),
@@ -71,7 +103,9 @@ const ExploreFeedComponent = () => {
     <View style={styles.page}>
       <FlashList
         data={chats}
-        ListHeaderComponent={() => <ExploreFeedFilters />}
+        ListHeaderComponent={() => (
+          <ExploreFeedFilters filterIconPath={filterIconPath} />
+        )}
         renderItem={({ item }: any) => {
           const exploreFeedProps = {
             header: item?.header,
@@ -88,6 +122,10 @@ const ExploreFeedComponent = () => {
             chatroomID: item?.id,
             filterState: filterState,
             navigation: navigation,
+            participantsIconPath,
+            totalMessagesIconPath,
+            joinButtonPath,
+            joinedButtonPath,
           };
           return (
             <View>

@@ -156,6 +156,18 @@ export const setStyles = () => {
   */
   }
 
+  // styling for explore chatroom screen
+  {
+    /* 
+    const exploreChatroomStyles = {
+      header: {
+        color: 'green',
+        placeHolderText: 'Look for new chatrooms',
+      },
+    };
+    */
+  }
+
   // if (chatBubbleStyles) {
   //   STYLES.setChatBubbleStyle(chatBubbleStyles);
   // }
@@ -186,5 +198,9 @@ export const setStyles = () => {
 
   // if (carouselScreenStyles) {
   //   STYLES.setCarouselScreenStyle(carouselScreenStyles);
+  // }
+
+  // if (exploreChatroomStyles) {
+  //   STYLES.setExploreChatroomStyle(exploreChatroomStyles);
   // }
 };

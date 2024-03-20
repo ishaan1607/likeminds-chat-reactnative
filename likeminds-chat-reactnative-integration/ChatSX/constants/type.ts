@@ -48,6 +48,51 @@ export interface CarouselScreenStyles {
   };
 }
 
+export interface ExploreChatroomStyles {
+  header?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+    placeHolderText?: string;
+  };
+  filterHeader?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  chatroomTitle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  chatroomSubTitle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  chatroomDescription?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  joinButton?: {
+    placeHolderText?: string;
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+    backgroundColor?: string;
+    borderRadius?: string;
+  };
+  joinedButton?: {
+    placeHolderText?: string;
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+    backgroundColor?: string;
+    borderRadius?: string;
+  };
+}
+
 export interface MemberDirectoryStyles {
   userNameStyles?: {
     color?: string;
