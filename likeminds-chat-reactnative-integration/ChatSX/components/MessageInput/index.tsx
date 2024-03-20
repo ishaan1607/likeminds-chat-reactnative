@@ -16,17 +16,26 @@ import {
   REJECT_BUTTON,
   REQUEST_SENT,
 } from "../../constants/Strings";
+import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
 
 interface MessageInput {
   joinSecretChatroomProp: () => void;
   showJoinAlertProp: () => void;
   showRejectAlertProp: () => void;
+  handleGallery: () => void;
+  handleCamera: () => void;
+  handleDoc: () => void;
+  onEdit: () => void;
 }
 
 const MessageInput = ({
   joinSecretChatroomProp,
   showJoinAlertProp,
   showRejectAlertProp,
+  handleGallery,
+  handleCamera,
+  handleDoc,
+  onEdit,
 }: MessageInput) => {
   const {
     navigation,
@@ -98,23 +107,30 @@ const MessageInput = ({
             !(user.state !== 1 && chatroomDBDetails?.type === 7) &&
               chatroomFollowStatus &&
               memberRights[3]?.isSelected === true ? (
-              <InputBox
-                chatroomName={chatroomName}
-                chatroomWithUser={chatroomWithUser}
-                replyChatID={replyChatID}
-                chatroomID={chatroomID}
-                navigation={navigation}
-                isUploadScreen={false}
-                myRef={refInput}
-                handleFileUpload={handleFileUpload}
-                isEditable={isEditable}
-                setIsEditable={(value: boolean) => {
-                  setIsEditable(value);
-                }}
-                isSecret={isSecret}
-                chatroomType={chatroomType}
-                currentChatroomTopic={currentChatroomTopic}
-              />
+              <CustomisableMethodsContextProvider
+                handleGalleryProp={handleGallery}
+                handleCameraProp={handleCamera}
+                handleDocProp={handleDoc}
+                onEditProp={onEdit}
+              >
+                <InputBox
+                  chatroomName={chatroomName}
+                  chatroomWithUser={chatroomWithUser}
+                  replyChatID={replyChatID}
+                  chatroomID={chatroomID}
+                  navigation={navigation}
+                  isUploadScreen={false}
+                  myRef={refInput}
+                  handleFileUpload={handleFileUpload}
+                  isEditable={isEditable}
+                  setIsEditable={(value: boolean) => {
+                    setIsEditable(value);
+                  }}
+                  isSecret={isSecret}
+                  chatroomType={chatroomType}
+                  currentChatroomTopic={currentChatroomTopic}
+                />
+              </CustomisableMethodsContextProvider>
             ) : //case to block normal users from messaging in an Announcement Room
             user.state !== 1 && chatroomDBDetails?.type === 7 ? (
               <View style={styles.disabledInput}>
@@ -247,21 +263,28 @@ const MessageInput = ({
             </View>
           ) : (showDM === true && chatRequestState === 1) ||
             chatRequestState === null ? (
-            <InputBox
-              replyChatID={replyChatID}
-              chatroomID={chatroomID}
-              chatRequestState={chatRequestState}
-              chatroomType={chatroomType}
-              navigation={navigation}
-              isUploadScreen={false}
-              isPrivateMember={chatroomDBDetails?.isPrivateMember}
-              myRef={refInput}
-              handleFileUpload={handleFileUpload}
-              isEditable={isEditable}
-              setIsEditable={(value: boolean) => {
-                setIsEditable(value);
-              }}
-            />
+            <CustomisableMethodsContextProvider
+              handleGalleryProp={handleGallery}
+              handleCameraProp={handleCamera}
+              handleDocProp={handleDoc}
+              onEditProp={onEdit}
+            >
+              <InputBox
+                replyChatID={replyChatID}
+                chatroomID={chatroomID}
+                chatRequestState={chatRequestState}
+                chatroomType={chatroomType}
+                navigation={navigation}
+                isUploadScreen={false}
+                isPrivateMember={chatroomDBDetails?.isPrivateMember}
+                myRef={refInput}
+                handleFileUpload={handleFileUpload}
+                isEditable={isEditable}
+                setIsEditable={(value: boolean) => {
+                  setIsEditable(value);
+                }}
+              />
+            </CustomisableMethodsContextProvider>
           ) : (
             <View style={styles.disabledInput}>
               <Text style={styles.disabledInputText}>Loading...</Text>

@@ -13,6 +13,7 @@ import MessageInput from "./ChatSX/components/MessageInput";
 import { ContextProvider } from "./ChatSX/contextStore";
 import { LMChatroomCallbacks } from "./ChatSX/callBacks/chatroomCallback";
 import { LMChatCallbacks } from "./ChatSX/callBacks/lmChatCallback";
+import HomeFeed from "./ChatSX/screens/HomeFeed";
 import {
   NavigateToProfileParams,
   NavigateToGroupDetailsParams,
@@ -26,6 +27,7 @@ import { useMessageContext } from "./ChatSX/context/MessageContext";
 import { useMessageListContext } from "./ChatSX/context/MessageListContext";
 import { useExploreFeedContext } from "./ChatSX/context/ExploreFeedContext";
 import { useCreatePollContext } from "./ChatSX/context/CreatePollContext";
+import { useInputBoxContext } from "./ChatSX/context/InputBoxContext";
 import Chat from "./ChatSX/context/Chat";
 
 export {
@@ -48,6 +50,7 @@ export {
   NavigateToProfileParams,
   NavigateToGroupDetailsParams,
   STYLES,
+  HomeFeed,
   RadialGradient,
   useChatroomContext,
   useMessageContext,
@@ -56,4 +59,5 @@ export {
   useMessageListContext,
   useExploreFeedContext,
   useCreatePollContext,
+  useInputBoxContext,
 };

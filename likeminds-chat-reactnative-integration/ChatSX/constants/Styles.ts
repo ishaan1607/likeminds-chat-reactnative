@@ -5,6 +5,7 @@ import {
   ChatroomTopicStyles,
   ExploreChatroomStyles,
   FileUploadStyles,
+  HomeFeedStyles,
   InputBoxStyles,
   MemberDirectoryStyles,
   ReactionListStyles,
@@ -92,6 +93,7 @@ export class STYLES {
   static $MEMBER_DIRECTORY_STYLE: MemberDirectoryStyles = {};
   static $CAROUSEL_SCREEN_STYLE: CarouselScreenStyles = {};
   static $EXPLORE_CHATROOM_STYLE: ExploreChatroomStyles = {};
+  static $HOME_FEED_STYLE: HomeFeedStyles = {};
   static setTheme({
     hue,
     fontColor,
@@ -169,6 +171,11 @@ export class STYLES {
   static setExploreChatroomStyle(exploreChatroomStyles: ExploreChatroomStyles) {
     STYLES.$EXPLORE_CHATROOM_STYLE = {
       ...exploreChatroomStyles,
+    };
+  }
+  static setHomeFeedStyle(homeFeedStyles: HomeFeedStyles) {
+    STYLES.$HOME_FEED_STYLE = {
+      ...homeFeedStyles,
     };
   }
 }

@@ -128,8 +128,8 @@ export const setStyles = () => {
   }
 
   // styling for member directory screen
-    {
-      /*
+  {
+    /*
      const memberDirectoryStyles = {
       userNameStyles: {
         color: 'red',
@@ -140,7 +140,7 @@ export const setStyles = () => {
       searchPlaceholderText: 'Khojo',
     };
     */
-    }
+  }
 
   // styling for carousel screen
   {
@@ -165,6 +165,17 @@ export const setStyles = () => {
         placeHolderText: 'Look for new chatrooms',
       },
     };
+    */
+  }
+
+  // styling for home feed screen
+  {
+    /* 
+    const homeFeedStyles = {
+      unreadCount:{
+        color:'red';
+      }
+    }
     */
   }
 
@@ -202,5 +213,9 @@ export const setStyles = () => {
 
   // if (exploreChatroomStyles) {
   //   STYLES.setExploreChatroomStyle(exploreChatroomStyles);
+  // }
+
+  // if(homeFeedStyles) {
+  //   STYLES.setHomeFeedStyle(homeFeedStyles)
   // }
 };

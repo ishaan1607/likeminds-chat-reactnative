@@ -18,6 +18,7 @@ import {
   PollResult,
   VideoPlayer,
   ExploreFeed,
+  HomeFeed,
   LMOverlayProvider,
   LMChatCallbacks,
   LMChatroomCallbacks,
@@ -69,7 +70,8 @@ function App(): React.JSX.Element {
       profileImageUrl={profileImageUrl}
       lmChatInterface={lmChatInterface}>
       <NavigationContainer ref={navigationRef} independent={true}>
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName={'Homefeed'}>
+          <Stack.Screen name={'Homefeed'} component={HomeFeed} />
           <Stack.Screen
             name="ChatRoom"
             component={ChatroomScreenWrapper}

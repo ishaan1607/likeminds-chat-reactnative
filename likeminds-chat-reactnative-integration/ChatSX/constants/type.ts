@@ -48,6 +48,34 @@ export interface CarouselScreenStyles {
   };
 }
 
+export interface HomeFeedStyles {
+  avatar?: {
+    borderRadius?: string;
+  };
+  title?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  lastConversation?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  unreadCount?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+    borderRadius?: string;
+    backgroundColor?: string;
+  };
+  lastConversationTime?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+}
+
 export interface ExploreChatroomStyles {
   header?: {
     color?: string;

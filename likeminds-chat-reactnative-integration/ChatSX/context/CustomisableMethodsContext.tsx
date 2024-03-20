@@ -29,6 +29,10 @@ export interface CustomisableMethodsContextProps {
   joinSecretChatroomProp?: () => void;
   showJoinAlertProp?: () => void;
   showRejectAlertProp?: () => void;
+  handleGalleryProp?: () => void;
+  handleCameraProp?: () => void;
+  handleDocProp?: () => void;
+  onEditProp?: () => void;
 }
 
 export interface CustomisableMethodsContext {}
@@ -76,6 +80,10 @@ export const CustomisableMethodsContextProvider = ({
   joinSecretChatroomProp,
   showJoinAlertProp,
   showRejectAlertProp,
+  handleGalleryProp,
+  handleCameraProp,
+  handleDocProp,
+  onEditProp,
 }: CustomisableMethodsContextProps) => {
   const contextValues: CustomisableMethodsContext = {
     showViewParticipants,
@@ -105,6 +113,10 @@ export const CustomisableMethodsContextProvider = ({
     joinSecretChatroomProp,
     showJoinAlertProp,
     showRejectAlertProp,
+    handleGalleryProp,
+    handleCameraProp,
+    handleDocProp,
+    onEditProp,
   };
 
   return (
