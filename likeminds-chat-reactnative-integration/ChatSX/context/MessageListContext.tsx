@@ -100,7 +100,6 @@ export const MessageListContextProvider = ({
   const dispatch = useAppDispatch();
   const { messageSent }: any = useAppSelector((state) => state.chatroom);
   const myClient = Client.myClient;
-  // const { user } = useAppSelector((state) => state.homefeed);
   const PAGE_SIZE = 200;
 
   const scrollToTop = async () => {

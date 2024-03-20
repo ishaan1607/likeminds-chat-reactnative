@@ -918,14 +918,17 @@ export const ChatroomContextProvider = ({
     }
   }, [selectedMessages]);
 
+  // method to close the three dot modal
   const handleModalClose = () => {
     setModalVisible(false);
   };
 
+  // method to close the reaction modal
   const handleReactionModalClose = () => {
     setIsReact(false);
   };
 
+  // method to leave chatroom
   const leaveChatroom = async () => {
     const payload = {
       collabcardId: chatroomID,
@@ -982,14 +985,17 @@ export const ChatroomContextProvider = ({
     return res;
   };
 
+  // method to show warning modal
   const showWarningModal = () => {
     setIsWarningMessageModalState(true);
   };
 
+  // method to hide warning modal
   const hideWarningModal = () => {
     setIsWarningMessageModalState(false);
   };
 
+  // method to leave secret chatroom
   const leaveSecretChatroom = async () => {
     const payload: any = {
       chatroomId: chatroomID,
@@ -1047,6 +1053,7 @@ export const ChatroomContextProvider = ({
     return res;
   };
 
+  // method to join chatroom
   const joinChatroom = async () => {
     const payload = {
       collabcardId: chatroomID,
@@ -1092,6 +1099,7 @@ export const ChatroomContextProvider = ({
     return res;
   };
 
+  // method to join secret chatroom
   const joinSecretChatroom = async () => {
     const payload = {
       collabcardId: chatroomID,
@@ -1141,6 +1149,7 @@ export const ChatroomContextProvider = ({
     return res;
   };
 
+  // method to mute notifications
   const muteNotifications = async () => {
     const payload = {
       chatroomId: chatroomID,
@@ -1163,6 +1172,7 @@ export const ChatroomContextProvider = ({
       });
   };
 
+  // method to unmute notifications
   const unmuteNotifications = async () => {
     const payload = {
       chatroomId: chatroomID,
@@ -1185,6 +1195,7 @@ export const ChatroomContextProvider = ({
       });
   };
 
+  // method to show join button alert
   const showJoinAlert = () =>
     Alert.alert(
       JOIN_CHATROOM,
@@ -1218,6 +1229,7 @@ export const ChatroomContextProvider = ({
       }
     );
 
+  // method to show reject button alert
   const showRejectAlert = () =>
     Alert.alert(
       REJECT_INVITATION,
@@ -1683,30 +1695,37 @@ export const ChatroomContextProvider = ({
     showDMBlockAlert();
   };
 
+  // method to show dm approve alert
   const showDMApproveAlert = () => {
     setDMApproveAlertModalVisible(true);
   };
 
+  // method to hide dm approve alert
   const hideDMApproveAlert = () => {
     setDMApproveAlertModalVisible(false);
   };
 
+  // method to show dm reject alert
   const showDMRejectAlert = () => {
     setDMRejectAlertModalVisible(true);
   };
 
+  // method to hide dm reject alert
   const hideDMRejectAlert = () => {
     setDMRejectAlertModalVisible(false);
   };
 
+  // method to show dm blocked alert
   const showDMBlockAlert = () => {
     setDMBlockAlertModalVisible(true);
   };
 
+  // method to hide dm blocked alert
   const hideDMBlockAlert = () => {
     setDMBlockAlertModalVisible(false);
   };
 
+  // method to create blob and upload to aws
   const uploadResource = async ({
     selectedImages,
     conversationID,
@@ -1873,6 +1892,7 @@ export const ChatroomContextProvider = ({
     );
   };
 
+  // method to handle file upload
   const handleFileUpload = async (
     conversationID: number,
     isRetry: boolean,
@@ -1940,6 +1960,7 @@ export const ChatroomContextProvider = ({
     }
   };
 
+  // method to be trigerred on initiating of reply privately
   const onReplyPrivatelyClick = async (
     uuid: string,
     conversationId: number
