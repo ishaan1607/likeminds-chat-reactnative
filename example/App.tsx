@@ -29,7 +29,7 @@ import {
 } from '@likeminds.community/chat-rn-core';
 import {myClient} from '.';
 import ChatroomScreenWrapper from './screens/Chatroom/ChatroomScreenWrapper';
-import { setStyles } from './styles';
+import {setStyles} from './styles';
 
 const Stack = createNativeStackNavigator();
 
@@ -75,7 +75,7 @@ function App(): React.JSX.Element {
         <Stack.Navigator initialRouteName={'Homefeed'}>
           <Stack.Screen name={'Homefeed'} component={HomeFeed} />
           <Stack.Screen
-            name="ChatRoom"
+            name="Chatroom"
             component={ChatroomScreenWrapper}
             initialParams={{
               chatroomID: chatroomId,
