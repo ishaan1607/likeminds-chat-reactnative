@@ -8,7 +8,11 @@ import { styles } from "../Messages/styles";
 import { decode } from "../../commonFuctions";
 import { ChatroomType } from "../../enums";
 
-const StateMessage = () => {
+interface StateMessage {
+  onTapToUndoProp: () => void;
+}
+
+const StateMessage = ({ onTapToUndoProp }: StateMessage) => {
   const { conversations }: any = useAppSelector((state) => state.chatroom);
   const { user } = useAppSelector((state) => state.homefeed);
   const {
@@ -70,7 +74,7 @@ const StateMessage = () => {
             : null) ? (
             <Pressable
               onPress={() => {
-                onTapToUndo();
+                onTapToUndoProp ? onTapToUndoProp() : onTapToUndo();
               }}
               style={[
                 styles.statusMessage,

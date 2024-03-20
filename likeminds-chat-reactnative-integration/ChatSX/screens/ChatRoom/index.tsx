@@ -8,6 +8,7 @@ import {
   useChatroomContext,
 } from "../../context/ChatroomContext";
 import ChatroomModals from "../../components/ChatroomModals";
+import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
 
 interface Data {
   id: string;
@@ -15,20 +16,89 @@ interface Data {
 }
 
 interface ChatRoomProps {
-  navigation: any;
-  route: any;
   children: ReactNode;
+  ReactionList?: React.ReactNode;
+  showViewParticipants?: boolean;
+  showShareChatroom?: boolean;
+  showMuteNotifications?: boolean;
+  showLeaveChatroom?: boolean;
+  showJoinChatroom?: boolean;
+  showUnmuteNotifications?: boolean;
+  showBlockMember?: boolean;
+  showUnBlockMember?: boolean;
+  showViewProfile?: boolean;
+  showSecretLeaveChatroom?: boolean;
+  setChatroomTopic?: () => void;
+  leaveChatroom?: () => void;
+  leaveSecretChatroom?: () => void;
+  joinChatroom?: () => void;
+  muteNotifications?: () => void;
+  unmuteNotifications?: () => void;
+  onApprove?: () => void;
+  onReject?: () => void;
+  blockMember?: () => void;
+  unblockMember?: () => void;
 }
 
-const ChatRoom = ({ navigation, route, children }: ChatRoomProps) => {
+const ChatRoom = ({
+  children,
+  ReactionList,
+  showViewParticipants,
+  showShareChatroom,
+  showMuteNotifications,
+  showLeaveChatroom,
+  showJoinChatroom,
+  showUnmuteNotifications,
+  showBlockMember,
+  showUnBlockMember,
+  showViewProfile,
+  showSecretLeaveChatroom,
+  setChatroomTopic,
+  leaveChatroom,
+  leaveSecretChatroom,
+  joinChatroom,
+  muteNotifications,
+  unmuteNotifications,
+  onApprove,
+  onReject,
+  blockMember,
+  unblockMember,
+}: ChatRoomProps) => {
   return (
-    <ChatroomContextProvider navigation={navigation} route={route}>
-      <ChatroomComponent children={children} />
+    <ChatroomContextProvider ReactionListProp={ReactionList}>
+      <CustomisableMethodsContextProvider
+        setChatroomTopicProp={setChatroomTopic}
+        leaveChatroomProp={leaveChatroom}
+        leaveSecretChatroomProp={leaveSecretChatroom}
+        joinChatroomProp={joinChatroom}
+        muteNotificationsProp={muteNotifications}
+        unmuteNotificationsProp={unmuteNotifications}
+        onApproveProp={onApprove}
+        onRejectProp={onReject}
+        blockMemberProp={blockMember}
+        unblockMemberProp={unblockMember}
+        showViewParticipants={showViewParticipants}
+        showShareChatroom={showShareChatroom}
+        showMuteNotifications={showMuteNotifications}
+        showLeaveChatroom={showLeaveChatroom}
+        showJoinChatroom={showJoinChatroom}
+        showUnmuteNotifications={showUnmuteNotifications}
+        showBlockMember={showBlockMember}
+        showUnBlockMember={showUnBlockMember}
+        showViewProfile={showViewProfile}
+        showSecretLeaveChatroom={showSecretLeaveChatroom}
+      >
+        <ChatroomComponent children={children} />
+      </CustomisableMethodsContextProvider>
     </ChatroomContextProvider>
   );
 };
 
-const ChatroomComponent = ({ children }) => {
+interface ChatroomComponent {
+  children: ReactNode;
+}
+
+const ChatroomComponent = ({ children }: ChatroomComponent) => {
   const { isToast, msg, setIsToast }: ChatroomContextValues =
     useChatroomContext();
 

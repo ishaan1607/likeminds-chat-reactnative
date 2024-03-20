@@ -25,8 +25,8 @@ import {
   NavigateToGroupDetailsParams,
 } from '@likeminds.community/chat-rn-core';
 import {myClient} from '.';
-import ChatroomScreen from './screens/Chatroom';
-import {setStyles} from './styles';
+import ChatroomScreenWrapper from './screens/Chatroom/ChatroomScreenWrapper';
+import { setStyles } from './styles';
 
 const Stack = createNativeStackNavigator();
 
@@ -71,20 +71,8 @@ function App(): React.JSX.Element {
       <NavigationContainer ref={navigationRef} independent={true}>
         <Stack.Navigator>
           <Stack.Screen
-            name={'ExploreFeed'}
-            component={ExploreFeed}
-            initialParams={{
-              backIconPath: '',
-              filterIconPath: '',
-              participantsIconPath: '',
-              totalMessagesIconPath: '',
-              joinButtonPath: '',
-              joinedButtonPath: '',
-            }}
-          />
-          <Stack.Screen
             name="ChatRoom"
-            component={ChatroomScreen}
+            component={ChatroomScreenWrapper}
             initialParams={{
               chatroomID: chatroomId,
               isInvited: false,

@@ -22,7 +22,7 @@ interface Messages {
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
-  ReactionListProp: React.FC<{ ReactionListProp: React.ReactNode }>;
+  onTapToUndoProp?: () => void;
 }
 
 const Messages = ({
@@ -30,7 +30,7 @@ const Messages = ({
   index,
   isStateIncluded,
   isIncluded,
-  ReactionListProp,
+  onTapToUndoProp,
 }: Messages) => {
   return (
     <MessageContextProvider
@@ -39,12 +39,17 @@ const Messages = ({
       isStateIncluded={isStateIncluded}
       isIncluded={isIncluded}
     >
-      <MessagesComponent ReactionListProp={ReactionListProp} />
+      <MessagesComponent onTapToUndoProp={onTapToUndoProp} />
     </MessageContextProvider>
   );
 };
 
-const MessagesComponent = ({ ReactionListProp }) => {
+interface MessagesComponentProps {
+  ReactionListProp: React.FC<React.ReactNode>;
+  onTapToUndoProp: () => void;
+}
+
+const MessagesComponent = ({ onTapToUndoProp }: any) => {
   const {
     item,
     isIncluded,
@@ -54,6 +59,7 @@ const MessagesComponent = ({ ReactionListProp }) => {
     isItemIncludedInStateArr,
     handleLongPress,
   } = useMessageContext();
+  const { ReactionListProp } = useChatroomContext();
 
   const { removeReaction, chatroomID } = useChatroomContext();
 
@@ -88,7 +94,7 @@ const MessagesComponent = ({ ReactionListProp }) => {
         ) : item?.ogTags?.url != null && item?.ogTags != undefined ? (
           <LinkPreview />
         ) : (
-          <StateMessage />
+          <StateMessage onTapToUndoProp={onTapToUndoProp} />
         )}
 
         {/* Sharp corner styles of a chat bubble */}

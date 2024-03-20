@@ -17,7 +17,17 @@ import {
   REQUEST_SENT,
 } from "../../constants/Strings";
 
-const MessageInput = () => {
+interface MessageInput {
+  joinSecretChatroomProp: () => void;
+  showJoinAlertProp: () => void;
+  showRejectAlertProp: () => void;
+}
+
+const MessageInput = ({
+  joinSecretChatroomProp,
+  showJoinAlertProp,
+  showRejectAlertProp,
+}: MessageInput) => {
   const {
     navigation,
     chatroomID,
@@ -61,7 +71,9 @@ const MessageInput = () => {
             ? !chatroomFollowStatus && (
                 <TouchableOpacity
                   onPress={() => {
-                    joinSecretChatroom();
+                    joinSecretChatroomProp
+                      ? joinSecretChatroomProp()
+                      : joinSecretChatroom();
                   }}
                   style={[styles.joinBtnContainer, { alignSelf: "center" }]}
                 >
@@ -132,7 +144,7 @@ const MessageInput = () => {
                 <View style={{ marginTop: 10 }}>
                   <TouchableOpacity
                     onPress={() => {
-                      showJoinAlert();
+                      showJoinAlertProp ? showJoinAlertProp() : showJoinAlert();
                     }}
                     style={{
                       display: "flex",
@@ -151,7 +163,9 @@ const MessageInput = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      showRejectAlert();
+                      showRejectAlertProp
+                        ? showRejectAlertProp()
+                        : showRejectAlert();
                     }}
                     style={{
                       display: "flex",

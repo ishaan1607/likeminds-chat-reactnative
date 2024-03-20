@@ -9,8 +9,14 @@ import {
 import { REPORT } from "../../constants/Screens";
 import { SELECTED_MESSAGES } from "../../store/types/types";
 import { useAppDispatch } from "../../store";
+import {
+  CustomisableMethodsContextProps,
+  useCustomisableMethodsContext,
+} from "../../context/CustomisableMethodsContext";
 
 const ReportActionModal = () => {
+  const { setChatroomTopicProp }: CustomisableMethodsContextProps =
+    useCustomisableMethodsContext();
   const dispatch = useAppDispatch();
 
   const {
@@ -28,7 +34,7 @@ const ReportActionModal = () => {
     handleReportModalClose,
     onReplyPrivatelyClick,
   }: ChatroomContextValues = useChatroomContext();
-  
+
   return (
     <Modal
       transparent={true}
@@ -59,7 +65,9 @@ const ReportActionModal = () => {
             {isChatroomTopic && chatroomType !== ChatroomType.DMCHATROOM ? (
               <TouchableOpacity
                 onPress={async () => {
-                  setChatroomTopic();
+                  setChatroomTopicProp
+                    ? setChatroomTopicProp()
+                    : setChatroomTopic();
                   setReportModalVisible(false);
                 }}
                 style={styles.filtersView}

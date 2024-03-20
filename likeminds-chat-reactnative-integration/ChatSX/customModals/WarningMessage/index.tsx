@@ -11,8 +11,16 @@ import {
   ChatroomContextValues,
   useChatroomContext,
 } from "../../context/ChatroomContext";
+import {
+  CustomisableMethodsContextProps,
+  useCustomisableMethodsContext,
+} from "../../context/CustomisableMethodsContext";
 
 const WarningMessageModal = () => {
+  const {
+    leaveChatroomProp,
+    leaveSecretChatroomProp,
+  }: CustomisableMethodsContextProps = useCustomisableMethodsContext();
   const {
     isWarningMessageModalState,
     isSecret,
@@ -50,9 +58,11 @@ const WarningMessageModal = () => {
               onPress={() => {
                 () => {
                   if (isSecret) {
-                    leaveSecretChatroom();
+                    leaveSecretChatroomProp
+                      ? leaveSecretChatroomProp()
+                      : leaveSecretChatroom();
                   } else {
-                    leaveChatroom();
+                    leaveChatroomProp ? leaveChatroomProp() : leaveChatroom();
                   }
                 };
                 hideWarningModal();

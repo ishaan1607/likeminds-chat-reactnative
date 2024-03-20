@@ -30,19 +30,31 @@ import Layout from "../../constants/Layout";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-const MessageList: React.FC<{ ReactionList: React.ReactNode }> = ({
-  ReactionList,
-}) => {
+interface MessageList {
+  onTapToUndo?: () => void;
+  scrollToBottom?: () => void;
+}
+
+const MessageList = ({ onTapToUndo, scrollToBottom }: MessageList) => {
   return (
     <MessageListContextProvider>
-      <MessageListComponent ReactionList={ReactionList} />
+      <MessageListComponent
+        onTapToUndo={onTapToUndo}
+        scrollToBottomProp={scrollToBottom}
+      />
     </MessageListContextProvider>
   );
 };
 
-const MessageListComponent: React.FC<{ ReactionList: React.ReactNode }> = ({
-  ReactionList,
-}) => {
+interface MessageListComponent {
+  onTapToUndo?: () => void;
+  scrollToBottomProp?: () => void;
+}
+
+const MessageListComponent = ({
+  onTapToUndo,
+  scrollToBottomProp,
+}: MessageListComponent) => {
   const {
     conversations,
     selectedMessages,
@@ -66,7 +78,7 @@ const MessageListComponent: React.FC<{ ReactionList: React.ReactNode }> = ({
     setReplyConversationId,
     keyboardVisible,
     isScrollingUp,
-    scrollToTop,
+    scrollToBottom,
   }: MessageListContextValues = useMessageListContext();
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -364,7 +376,7 @@ const MessageListComponent: React.FC<{ ReactionList: React.ReactNode }> = ({
                         item={item}
                         isStateIncluded={isStateIncluded}
                         index={index}
-                        ReactionListProp={ReactionList}
+                        onTapToUndoProp={onTapToUndo}
                       />
                     </Pressable>
                   </Swipeable>
@@ -387,7 +399,7 @@ const MessageListComponent: React.FC<{ ReactionList: React.ReactNode }> = ({
                     : Layout.normalize(20),
                 },
               ]}
-              onPress={scrollToTop}
+              onPress={scrollToBottomProp ? scrollToBottomProp : scrollToBottom}
             >
               <Image
                 source={require("../../assets/images/scrollDown.png")}
