@@ -11,22 +11,23 @@ import {
   ExploreFeedContextProvider,
   useExploreFeedContext,
 } from "../../context/ExploreFeedContext";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 interface Props {
   navigation: any;
 }
 
-const ExploreFeed = ({ route }: any) => {
+const ExploreFeed = () => {
   return (
     <ExploreFeedContextProvider>
-      <ExploreFeedComponent route={route} />
+      <ExploreFeedComponent />
     </ExploreFeedContextProvider>
   );
 };
 
-const ExploreFeedComponent = ({ route }: any) => {
+const ExploreFeedComponent = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const {
     backIconPath,
     filterIconPath,
@@ -34,7 +35,14 @@ const ExploreFeedComponent = ({ route }: any) => {
     totalMessagesIconPath,
     joinButtonPath,
     joinedButtonPath,
-  } = route.params;
+  } = route.params as {
+    backIconPath: string;
+    filterIconPath: string;
+    participantsIconPath: string;
+    totalMessagesIconPath: string;
+    joinButtonPath: string;
+    joinedButtonPath: string;
+  };
 
   const {
     exploreChatrooms,

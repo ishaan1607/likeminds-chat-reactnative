@@ -33,7 +33,7 @@ const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 interface MessageList {
   onTapToUndo?: () => void;
   scrollToBottom?: () => void;
-  ReactionList?: any;
+  ReactionList?: React.FC<React.ReactNode>;
 }
 
 const MessageList = ({
@@ -52,11 +52,17 @@ const MessageList = ({
   );
 };
 
+interface MessageListComponent {
+  onTapToUndo?: () => void;
+  scrollToBottomProp?: () => void;
+  ReactionList?: React.FC<React.ReactNode>;
+}
+
 const MessageListComponent = ({
   onTapToUndo,
   scrollToBottomProp,
   ReactionList,
-}: any) => {
+}: MessageListComponent) => {
   const {
     conversations,
     selectedMessages,

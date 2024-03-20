@@ -22,7 +22,7 @@ interface Messages {
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
-  ReactionListProp: any;
+  ReactionListProp: React.FC<React.ReactNode>;
   onTapToUndoProp: () => void;
 }
 
@@ -48,6 +48,11 @@ const Messages = ({
     </MessageContextProvider>
   );
 };
+
+interface MessagesComponentProps {
+  ReactionListProp: React.FC<React.ReactNode>;
+  onTapToUndoProp: () => void;
+}
 
 const MessagesComponent = ({ ReactionListProp, onTapToUndoProp }: any) => {
   const {

@@ -11,8 +11,7 @@
   },
   "dependencies": {
     "@giphy/react-native-sdk": "3.2.1",
-    "@likeminds.community/chat-rn": "1.5.0",
-    "@likeminds.community/chat-rn-core": "0.5.4",
+    "@likeminds.community/chat-rn": "1.5.2",
     "@notifee/react-native": "7.6.1",
     "@react-native-clipboard/clipboard": "1.11.2",
     "@react-native-community/datetimepicker": "7.4.1",
@@ -25,6 +24,7 @@
     "@types/react-native-video": "5.0.19",
     "aws-sdk": "2.1380.0",
     "firebase": "9.17.1",
+    "@likeminds.community/chat-rn-core": "0.5.9",
     "lottie-react-native": "6.4.0",
     "moment": "2.29.4",
     "react": "18.2.0",
