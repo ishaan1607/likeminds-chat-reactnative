@@ -52,6 +52,11 @@ interface UploadResource {
 }
 
 const FileUpload = ({ navigation, route }: any) => {
+  const { backIconPath, imageCropIcon } = route.params;
+
+  const selectedImageBorderColor =
+    STYLES.$FILE_UPLOAD_STYLE?.selectedImageBorderColor;
+
   const myClient = Client.myClient;
   const video = useRef<any>(null);
 
@@ -337,10 +342,14 @@ const FileUpload = ({ navigation, route }: any) => {
                 navigation.goBack();
               }}
             >
-              <Image
-                source={require("../../assets/images/blue_back_arrow3x.png")}
-                style={styles.backBtn}
-              />
+              {backIconPath ? (
+                <Image source={backIconPath} style={styles.backBtn} />
+              ) : (
+                <Image
+                  source={require("../../assets/images/blue_back_arrow3x.png")}
+                  style={styles.backBtn}
+                />
+              )}
             </TouchableOpacity>
             {itemType === IMAGE_TEXT ? (
               <TouchableOpacity
@@ -352,10 +361,14 @@ const FileUpload = ({ navigation, route }: any) => {
                   });
                 }}
               >
-                <Image
-                  source={require("../../assets/images/crop_icon3x.png")}
-                  style={styles.cropIcon}
-                />
+                {imageCropIcon ? (
+                  <Image source={imageCropIcon} style={styles.cropIcon} />
+                ) : (
+                  <Image
+                    source={require("../../assets/images/crop_icon3x.png")}
+                    style={styles.cropIcon}
+                  />
+                )}
               </TouchableOpacity>
             ) : null}
           </View>
@@ -433,10 +446,14 @@ const FileUpload = ({ navigation, route }: any) => {
                         borderColor:
                           docItemType === PDF_TEXT
                             ? selectedFileToView?.name === item?.name
-                              ? "red"
+                              ? selectedImageBorderColor
+                                ? selectedImageBorderColor
+                                : "red"
                               : "black"
                             : selectedFileToView?.fileName === item?.fileName
-                            ? "red"
+                            ? selectedImageBorderColor
+                              ? selectedImageBorderColor
+                              : "red"
                             : "black",
                         borderWidth: 1,
                       },

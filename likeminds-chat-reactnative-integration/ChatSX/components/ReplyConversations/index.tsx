@@ -39,6 +39,7 @@ import { useMessageListContext } from "../../context/MessageListContext";
 import Layout from "../../constants/Layout";
 import MessageHeader from "../MessageHeader";
 import MessageFooter from "../MessageFooter";
+import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 
 interface ReplyConversations {
   item: any;
@@ -176,7 +177,7 @@ const ReplyConversations = () => {
   const dispatch = useAppDispatch();
   const { conversations, selectedMessages, stateArr, isLongPress }: any =
     useAppSelector((state) => state.chatroom);
-  const { customReplyBox } = useChatroomContext();
+  const { customReplyBox } = useCustomComponentsContext();
   const { user } = useAppSelector((state) => state.homefeed);
   const [flashListMounted, setFlashListMounted] = useState(false);
 
@@ -212,8 +213,10 @@ const ReplyConversations = () => {
     handleOnPress: openKeyboard,
   } = useMessageContext();
 
-  const { chatroomID, chatroomName, customMessageHeader, customMessageFooter } =
-    useChatroomContext();
+  const { chatroomID, chatroomName } = useChatroomContext();
+
+  const { customMessageHeader, customMessageFooter } =
+    useCustomComponentsContext();
 
   const { scrollToIndex, setReplyConversationId, setIsReplyFound } =
     useMessageListContext();

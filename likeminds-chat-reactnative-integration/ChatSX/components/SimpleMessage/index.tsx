@@ -9,8 +9,13 @@ import { decode } from "../../commonFuctions";
 import MessageFooter from "../MessageFooter";
 import MessageHeader from "../MessageHeader";
 import StateMessage from "../StateMessage";
+import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 
-const SimpleMessage = () => {
+interface SimpleMessageProps {
+  onTapToUndoProp?: () => void;
+}
+
+const SimpleMessage = ({ onTapToUndoProp }: SimpleMessageProps) => {
   const { user } = useAppSelector((state) => state.homefeed);
   const {
     item,
@@ -24,12 +29,9 @@ const SimpleMessage = () => {
     handleOnPress,
   } = useMessageContext();
 
-  const {
-    chatroomName,
-    customMessageHeader,
-    customMessageFooter,
-    customStateMessage,
-  } = useChatroomContext();
+  const { chatroomName } = useChatroomContext();
+  const { customMessageHeader, customMessageFooter, customStateMessage } =
+    useCustomComponentsContext();
 
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -55,7 +57,7 @@ const SimpleMessage = () => {
         customStateMessage ? (
           customStateMessage
         ) : (
-          <StateMessage />
+          <StateMessage onTapToUndoProp={onTapToUndoProp} />
         )
       ) : (
         <View

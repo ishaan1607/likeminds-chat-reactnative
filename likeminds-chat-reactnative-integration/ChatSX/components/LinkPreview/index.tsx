@@ -11,13 +11,16 @@ import { NavigateToProfileParams } from "../../callBacks/type";
 import { CallBack } from "../../callBacks/callBackClass";
 import MessageHeader from "../MessageHeader";
 import MessageFooter from "../MessageFooter";
+import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 
 const LinkPreview = () => {
   const { user } = useAppSelector((state) => state.homefeed);
 
   const { isIncluded, item, isTypeSent } = useMessageContext();
-  const { chatroomName, customMessageHeader, customMessageFooter } =
-    useChatroomContext();
+  const { chatroomName } = useChatroomContext();
+
+  const { customMessageHeader, customMessageFooter } =
+    useCustomComponentsContext();
 
   const description = item?.ogTags?.description;
   const title = item?.ogTags?.title;

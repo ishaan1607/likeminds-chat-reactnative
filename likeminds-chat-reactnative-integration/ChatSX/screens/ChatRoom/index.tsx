@@ -3,11 +3,12 @@ import { View } from "react-native";
 import ToastMessage from "../../components/ToastMessage";
 import { styles } from "./styles";
 import {
-  ChatroomContextProvider,
   ChatroomContextValues,
   useChatroomContext,
 } from "../../context/ChatroomContext";
 import ChatroomModals from "../../components/ChatroomModals";
+import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
+import { CustomComponentContextProvider } from "../../context/CustomComponentContextProvider";
 
 interface Data {
   id: string;
@@ -29,6 +30,27 @@ interface ChatRoomProps {
   customPollConversationView?: ReactNode;
   customLinkPreview?: ReactNode;
   customStateMessage?: ReactNode;
+  customReactionList?: React.ReactNode;
+  showViewParticipants?: boolean;
+  showShareChatroom?: boolean;
+  showMuteNotifications?: boolean;
+  showLeaveChatroom?: boolean;
+  showJoinChatroom?: boolean;
+  showUnmuteNotifications?: boolean;
+  showBlockMember?: boolean;
+  showUnBlockMember?: boolean;
+  showViewProfile?: boolean;
+  showSecretLeaveChatroom?: boolean;
+  setChatroomTopic?: () => void;
+  leaveChatroom?: () => void;
+  leaveSecretChatroom?: () => void;
+  joinChatroom?: () => void;
+  muteNotifications?: () => void;
+  unmuteNotifications?: () => void;
+  onApprove?: () => void;
+  onReject?: () => void;
+  blockMember?: () => void;
+  unblockMember?: () => void;
 }
 
 interface ChatRoomComponentProps {
@@ -50,9 +72,30 @@ const ChatRoom = ({
   customPollConversationView,
   customLinkPreview,
   customStateMessage,
+  customReactionList,
+  showViewParticipants,
+  showShareChatroom,
+  showMuteNotifications,
+  showLeaveChatroom,
+  showJoinChatroom,
+  showUnmuteNotifications,
+  showBlockMember,
+  showUnBlockMember,
+  showViewProfile,
+  showSecretLeaveChatroom,
+  setChatroomTopic,
+  leaveChatroom,
+  leaveSecretChatroom,
+  joinChatroom,
+  muteNotifications,
+  unmuteNotifications,
+  onApprove,
+  onReject,
+  blockMember,
+  unblockMember,
 }: ChatRoomProps) => {
   return (
-    <ChatroomContextProvider
+    <CustomComponentContextProvider
       customReplyBox={customReplyBox}
       customMessageHeader={customMessageHeader}
       customMessageFooter={customMessageFooter}
@@ -72,9 +115,33 @@ const ChatRoom = ({
       customPollConversationView={customPollConversationView}
       customLinkPreview={customLinkPreview}
       customStateMessage={customStateMessage}
+      customReactionList={customReactionList}
     >
-      <ChatroomComponent children={children} />
-    </ChatroomContextProvider>
+      <CustomisableMethodsContextProvider
+        setChatroomTopicProp={setChatroomTopic}
+        leaveChatroomProp={leaveChatroom}
+        leaveSecretChatroomProp={leaveSecretChatroom}
+        joinChatroomProp={joinChatroom}
+        muteNotificationsProp={muteNotifications}
+        unmuteNotificationsProp={unmuteNotifications}
+        onApproveProp={onApprove}
+        onRejectProp={onReject}
+        blockMemberProp={blockMember}
+        unblockMemberProp={unblockMember}
+        showViewParticipants={showViewParticipants}
+        showShareChatroom={showShareChatroom}
+        showMuteNotifications={showMuteNotifications}
+        showLeaveChatroom={showLeaveChatroom}
+        showJoinChatroom={showJoinChatroom}
+        showUnmuteNotifications={showUnmuteNotifications}
+        showBlockMember={showBlockMember}
+        showUnBlockMember={showUnBlockMember}
+        showViewProfile={showViewProfile}
+        showSecretLeaveChatroom={showSecretLeaveChatroom}
+      >
+        <ChatroomComponent children={children} />
+      </CustomisableMethodsContextProvider>
+    </CustomComponentContextProvider>
   );
 };
 

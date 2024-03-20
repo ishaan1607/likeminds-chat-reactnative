@@ -16,8 +16,27 @@ import {
   REJECT_BUTTON,
   REQUEST_SENT,
 } from "../../constants/Strings";
+import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
 
-const MessageInput = () => {
+interface MessageInput {
+  joinSecretChatroomProp: () => void;
+  showJoinAlertProp: () => void;
+  showRejectAlertProp: () => void;
+  handleGallery: () => void;
+  handleCamera: () => void;
+  handleDoc: () => void;
+  onEdit: () => void;
+}
+
+const MessageInput = ({
+  joinSecretChatroomProp,
+  showJoinAlertProp,
+  showRejectAlertProp,
+  handleGallery,
+  handleCamera,
+  handleDoc,
+  onEdit,
+}: MessageInput) => {
   const {
     navigation,
     chatroomID,
@@ -61,7 +80,9 @@ const MessageInput = () => {
             ? !chatroomFollowStatus && (
                 <TouchableOpacity
                   onPress={() => {
-                    joinSecretChatroom();
+                    joinSecretChatroomProp
+                      ? joinSecretChatroomProp()
+                      : joinSecretChatroom();
                   }}
                   style={[styles.joinBtnContainer, { alignSelf: "center" }]}
                 >
@@ -86,23 +107,30 @@ const MessageInput = () => {
             !(user.state !== 1 && chatroomDBDetails?.type === 7) &&
               chatroomFollowStatus &&
               memberRights[3]?.isSelected === true ? (
-              <InputBox
-                chatroomName={chatroomName}
-                chatroomWithUser={chatroomWithUser}
-                replyChatID={replyChatID}
-                chatroomID={chatroomID}
-                navigation={navigation}
-                isUploadScreen={false}
-                myRef={refInput}
-                handleFileUpload={handleFileUpload}
-                isEditable={isEditable}
-                setIsEditable={(value: boolean) => {
-                  setIsEditable(value);
-                }}
-                isSecret={isSecret}
-                chatroomType={chatroomType}
-                currentChatroomTopic={currentChatroomTopic}
-              />
+              <CustomisableMethodsContextProvider
+                handleGalleryProp={handleGallery}
+                handleCameraProp={handleCamera}
+                handleDocProp={handleDoc}
+                onEditProp={onEdit}
+              >
+                <InputBox
+                  chatroomName={chatroomName}
+                  chatroomWithUser={chatroomWithUser}
+                  replyChatID={replyChatID}
+                  chatroomID={chatroomID}
+                  navigation={navigation}
+                  isUploadScreen={false}
+                  myRef={refInput}
+                  handleFileUpload={handleFileUpload}
+                  isEditable={isEditable}
+                  setIsEditable={(value: boolean) => {
+                    setIsEditable(value);
+                  }}
+                  isSecret={isSecret}
+                  chatroomType={chatroomType}
+                  currentChatroomTopic={currentChatroomTopic}
+                />
+              </CustomisableMethodsContextProvider>
             ) : //case to block normal users from messaging in an Announcement Room
             user.state !== 1 && chatroomDBDetails?.type === 7 ? (
               <View style={styles.disabledInput}>
@@ -132,7 +160,7 @@ const MessageInput = () => {
                 <View style={{ marginTop: 10 }}>
                   <TouchableOpacity
                     onPress={() => {
-                      showJoinAlert();
+                      showJoinAlertProp ? showJoinAlertProp() : showJoinAlert();
                     }}
                     style={{
                       display: "flex",
@@ -151,7 +179,9 @@ const MessageInput = () => {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
-                      showRejectAlert();
+                      showRejectAlertProp
+                        ? showRejectAlertProp()
+                        : showRejectAlert();
                     }}
                     style={{
                       display: "flex",
@@ -233,21 +263,28 @@ const MessageInput = () => {
             </View>
           ) : (showDM === true && chatRequestState === 1) ||
             chatRequestState === null ? (
-            <InputBox
-              replyChatID={replyChatID}
-              chatroomID={chatroomID}
-              chatRequestState={chatRequestState}
-              chatroomType={chatroomType}
-              navigation={navigation}
-              isUploadScreen={false}
-              isPrivateMember={chatroomDBDetails?.isPrivateMember}
-              myRef={refInput}
-              handleFileUpload={handleFileUpload}
-              isEditable={isEditable}
-              setIsEditable={(value: boolean) => {
-                setIsEditable(value);
-              }}
-            />
+            <CustomisableMethodsContextProvider
+              handleGalleryProp={handleGallery}
+              handleCameraProp={handleCamera}
+              handleDocProp={handleDoc}
+              onEditProp={onEdit}
+            >
+              <InputBox
+                replyChatID={replyChatID}
+                chatroomID={chatroomID}
+                chatRequestState={chatRequestState}
+                chatroomType={chatroomType}
+                navigation={navigation}
+                isUploadScreen={false}
+                isPrivateMember={chatroomDBDetails?.isPrivateMember}
+                myRef={refInput}
+                handleFileUpload={handleFileUpload}
+                isEditable={isEditable}
+                setIsEditable={(value: boolean) => {
+                  setIsEditable(value);
+                }}
+              />
+            </CustomisableMethodsContextProvider>
           ) : (
             <View style={styles.disabledInput}>
               <Text style={styles.disabledInputText}>Loading...</Text>

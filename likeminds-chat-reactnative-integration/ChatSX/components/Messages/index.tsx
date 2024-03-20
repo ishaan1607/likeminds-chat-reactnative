@@ -16,15 +16,23 @@ import DeletedMessage from "../DeletedMessage";
 import SimpleMessage from "../SimpleMessage";
 import { NavigateToProfileParams } from "../../callBacks/type";
 import { CallBack } from "../../callBacks/callBackClass";
+import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 
 interface Messages {
   item: any;
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
+  onTapToUndoProp?: () => void;
 }
 
-const Messages = ({ item, index, isStateIncluded, isIncluded }: Messages) => {
+const Messages = ({
+  item,
+  index,
+  isStateIncluded,
+  isIncluded,
+  onTapToUndoProp,
+}: Messages) => {
   return (
     <MessageContextProvider
       index={index}
@@ -32,12 +40,20 @@ const Messages = ({ item, index, isStateIncluded, isIncluded }: Messages) => {
       isStateIncluded={isStateIncluded}
       isIncluded={isIncluded}
     >
-      <MessagesComponent />
+      <MessagesComponent onTapToUndoProp={onTapToUndoProp} />
     </MessageContextProvider>
   );
 };
 
-const MessagesComponent = () => {
+interface MessagesComponentProps {
+  onTapToUndoProp?: () => void;
+}
+
+interface CustomReactionList {
+  customReactionList?: ReactNode;
+}
+
+const MessagesComponent = ({ onTapToUndoProp }: MessagesComponentProps) => {
   const {
     item,
     isIncluded,
@@ -45,18 +61,19 @@ const MessagesComponent = () => {
     isTypeSent,
     userIdStringified,
     isItemIncludedInStateArr,
-
     handleLongPress,
   } = useMessageContext();
+  const { customReactionList }: CustomReactionList =
+    useCustomComponentsContext();
+
+  const { removeReaction, chatroomID } = useChatroomContext();
 
   const {
-    removeReaction,
-    chatroomID,
     customDeletedMessage,
     customReplyConversations,
     customPollConversationView,
     customLinkPreview,
-  } = useChatroomContext();
+  } = useCustomComponentsContext();
 
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -105,7 +122,7 @@ const MessagesComponent = () => {
             <LinkPreview />
           )
         ) : (
-          <SimpleMessage />
+          <SimpleMessage onTapToUndoProp={onTapToUndoProp} />
         )}
 
         {/* Sharp corner styles of a chat bubble */}
@@ -171,16 +188,20 @@ const MessagesComponent = () => {
         ) : null}
 
         {/* Reaction List */}
-        <ReactionList
-          item={item}
-          chatroomID={chatroomID}
-          userIdStringified={userIdStringified}
-          reactionArr={reactionArr}
-          isTypeSent={isTypeSent}
-          isIncluded={isIncluded}
-          handleLongPress={handleLongPress}
-          removeReaction={removeReaction}
-        />
+        {customReactionList ? (
+          customReactionList
+        ) : (
+          <ReactionList
+            item={item}
+            chatroomID={chatroomID}
+            userIdStringified={userIdStringified}
+            reactionArr={reactionArr}
+            isTypeSent={isTypeSent}
+            isIncluded={isIncluded}
+            handleLongPress={handleLongPress}
+            removeReaction={removeReaction}
+          />
+        )}
       </View>
     </View>
   );

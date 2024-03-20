@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Text, Image, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  Alert,
+  TextStyle,
+} from "react-native";
 import STYLES from "../../constants/Styles";
 import { useAppDispatch, useAppSelector } from "../../store";
 import { getExploreFeedData } from "../../store/actions/explorefeed";
@@ -30,6 +37,10 @@ interface Props {
   chatroomID: number;
   filterState: any;
   navigation: any;
+  participantsIconPath: any;
+  totalMessagesIconPath: any;
+  joinButtonPath: any;
+  joinedButtonPath: any;
 }
 
 const ExploreFeedItem: React.FC<Props> = ({
@@ -46,11 +57,22 @@ const ExploreFeedItem: React.FC<Props> = ({
   chatroomID,
   filterState,
   navigation,
+  participantsIconPath,
+  totalMessagesIconPath,
+  joinButtonPath,
+  joinedButtonPath,
 }) => {
   const [isToast, setIsToast] = useState(false);
   const [msg, setMsg] = useState("");
   const { user } = useAppSelector((state) => state.homefeed);
   const [isChatroomJoined, setIsChatroomJoined] = useState(isJoined);
+
+  const exploreChatroomStyles = STYLES?.$EXPLORE_CHATROOM_STYLE;
+  const chatroomTitle = exploreChatroomStyles?.chatroomTitle;
+  const chatroomSubTitle = exploreChatroomStyles?.chatroomSubTitle;
+  const chatroomDescription = exploreChatroomStyles?.chatroomDescription;
+  const joinButton = exploreChatroomStyles?.joinButton;
+  const joinedButton = exploreChatroomStyles?.joinedButton;
 
   const myClient = Client?.myClient;
 
@@ -145,7 +167,23 @@ const ExploreFeedItem: React.FC<Props> = ({
         <View style={styles.infoContainer}>
           <View>
             <View style={styles.headerContainer}>
-              <Text style={styles.title} numberOfLines={1}>
+              <Text
+                style={
+                  [
+                    styles.title,
+                    chatroomTitle?.color && {
+                      color: chatroomTitle?.color,
+                    },
+                    chatroomTitle?.fontSize && {
+                      fontSize: chatroomTitle?.fontSize,
+                    },
+                    chatroomTitle?.fontFamily && {
+                      fontFamily: chatroomTitle?.fontFamily,
+                    },
+                  ] as TextStyle
+                }
+                numberOfLines={1}
+              >
                 {header}
                 {isSecret ? (
                   <Image
@@ -157,19 +195,53 @@ const ExploreFeedItem: React.FC<Props> = ({
             </View>
             <View style={styles.info}>
               <Image
-                source={require("../../assets/images/participants_icon3x.png")}
+                source={
+                  participantsIconPath
+                    ? participantsIconPath
+                    : require("../../assets/images/participants_icon3x.png")
+                }
                 style={styles.info_icons}
               />
               <Text
-                style={styles.lastMessage}
+                style={
+                  [
+                    styles.lastMessage,
+                    chatroomSubTitle?.color && {
+                      color: chatroomSubTitle?.color,
+                    },
+                    chatroomSubTitle?.fontSize && {
+                      fontSize: chatroomSubTitle?.fontSize,
+                    },
+                    chatroomSubTitle?.fontFamily && {
+                      fontFamily: chatroomSubTitle?.fontFamily,
+                    },
+                  ] as TextStyle
+                }
                 numberOfLines={1}
               >{`${participants} • `}</Text>
               <Image
-                source={require("../../assets/images/message_icon3x.png")}
+                source={
+                  totalMessagesIconPath
+                    ? totalMessagesIconPath
+                    : require("../../assets/images/message_icon3x.png")
+                }
                 style={styles.info_icons}
               />
               <Text
-                style={styles.lastMessage}
+                style={
+                  [
+                    styles.lastMessage,
+                    chatroomSubTitle?.color && {
+                      color: chatroomSubTitle?.color,
+                    },
+                    chatroomSubTitle?.fontSize && {
+                      fontSize: chatroomSubTitle?.fontSize,
+                    },
+                    chatroomSubTitle?.fontFamily && {
+                      fontFamily: chatroomSubTitle?.fontFamily,
+                    },
+                  ] as TextStyle
+                }
                 numberOfLines={1}
               >{`${messageCount}`}</Text>
             </View>
@@ -185,10 +257,39 @@ const ExploreFeedItem: React.FC<Props> = ({
                   style={styles.joinBtnContainer}
                 >
                   <Image
-                    source={require("../../assets/images/join_group3x.png")}
+                    source={
+                      joinButtonPath
+                        ? joinButtonPath
+                        : require("../../assets/images/join_group3x.png")
+                    }
                     style={styles.joinIcon}
                   />
-                  <Text style={styles.join}>{"Join"}</Text>
+                  <Text
+                    style={
+                      [
+                        styles.join,
+                        joinButton?.color && {
+                          color: joinButton?.color,
+                        },
+                        joinButton?.fontSize && {
+                          fontSize: joinButton?.fontSize,
+                        },
+                        joinButton?.fontFamily && {
+                          fontFamily: joinButton?.fontFamily,
+                        },
+                        joinButton?.backgroundColor && {
+                          backgroundColor: joinButton?.backgroundColor,
+                        },
+                        joinButton?.borderRadius && {
+                          borderRadius: joinButton?.borderRadius,
+                        },
+                      ] as TextStyle
+                    }
+                  >
+                    {joinButton?.placeHolderText
+                      ? joinButton?.placeHolderText
+                      : "Join"}
+                  </Text>
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
@@ -200,17 +301,63 @@ const ExploreFeedItem: React.FC<Props> = ({
                   style={styles.joinedBtnContainer}
                 >
                   <Image
-                    source={require("../../assets/images/joined_group3x.png")}
+                    source={
+                      joinedButtonPath
+                        ? joinedButtonPath
+                        : require("../../assets/images/joined_group3x.png")
+                    }
                     style={styles.icon}
                   />
-                  <Text style={styles.joined}>{"Joined"}</Text>
+                  <Text
+                    style={
+                      [
+                        styles.joined,
+                        joinedButton?.color && {
+                          color: joinedButton?.color,
+                        },
+                        joinedButton?.fontSize && {
+                          fontSize: joinedButton?.fontSize,
+                        },
+                        joinedButton?.fontFamily && {
+                          fontFamily: joinedButton?.fontFamily,
+                        },
+                        joinedButton?.backgroundColor && {
+                          backgroundColor: joinedButton?.backgroundColor,
+                        },
+                        joinedButton?.borderRadius && {
+                          borderRadius: joinedButton?.borderRadius,
+                        },
+                      ] as TextStyle
+                    }
+                  >
+                    {joinButton?.placeHolderText
+                      ? joinButton?.placeHolderText
+                      : "Joined"}
+                  </Text>
                 </TouchableOpacity>
               )}
             </View>
           ) : null}
         </View>
         <View style={{ flex: 1 }}>
-          <Text style={styles.chatroomInfo}>{title}</Text>
+          <Text
+            style={
+              [
+                styles.chatroomInfo,
+                chatroomDescription?.color && {
+                  color: chatroomDescription?.color,
+                },
+                chatroomDescription?.fontSize && {
+                  fontSize: chatroomDescription?.fontSize,
+                },
+                chatroomDescription?.fontFamily && {
+                  fontFamily: chatroomDescription?.fontFamily,
+                },
+              ] as TextStyle
+            }
+          >
+            {title}
+          </Text>
         </View>
       </View>
       <ToastMessage

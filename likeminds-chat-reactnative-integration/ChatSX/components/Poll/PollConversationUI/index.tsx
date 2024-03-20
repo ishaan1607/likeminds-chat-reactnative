@@ -14,6 +14,7 @@ import { CallBack } from "../../../callBacks/callBackClass";
 import MessageHeader from "../../MessageHeader";
 import MessageFooter from "../../MessageFooter";
 import { useChatroomContext } from "../../../context/ChatroomContext";
+import { useCustomComponentsContext } from "../../../context/CustomComponentContextProvider";
 
 const PollConversationUI = ({
   text,
@@ -58,7 +59,8 @@ const PollConversationUI = ({
     messageReceivedHeader?.senderDesignationStyles;
   const pollVoteSliderColor = chatBubbleStyles?.pollVoteSliderColor;
 
-  const { customMessageHeader, customMessageFooter } = useChatroomContext();
+  const { customMessageHeader, customMessageFooter } =
+    useCustomComponentsContext();
   return (
     <View>
       {isIncluded ? (

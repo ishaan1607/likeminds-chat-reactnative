@@ -320,6 +320,7 @@ export const CreatePollContextProvider = ({
         body: { conversations: conversations },
       });
       handleOnCancel();
+      return res;
     } catch (error) {
       // process error
     }

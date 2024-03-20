@@ -36,18 +36,31 @@ import Layout from "../../constants/Layout";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
+interface MessageList {
+  onTapToUndo?: () => void;
+  scrollToBottom?: () => void;
+}
 
-
-const MessageList = () => {
+const MessageList = ({ onTapToUndo, scrollToBottom }: MessageList) => {
   return (
     <MessageListContextProvider>
       <MessageListComponent
+        onTapToUndo={onTapToUndo}
+        scrollToBottomProp={scrollToBottom}
       />
     </MessageListContextProvider>
   );
 };
 
-const MessageListComponent = () => {
+interface MessageListComponent {
+  onTapToUndo?: () => void;
+  scrollToBottomProp?: () => void;
+}
+
+const MessageListComponent = ({
+  onTapToUndo,
+  scrollToBottomProp,
+}: MessageListComponent) => {
   const {
     conversations,
     selectedMessages,
@@ -71,7 +84,7 @@ const MessageListComponent = () => {
     setReplyConversationId,
     keyboardVisible,
     isScrollingUp,
-    scrollToTop,
+    scrollToBottom,
   }: MessageListContextValues = useMessageListContext();
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -257,6 +270,8 @@ const MessageListComponent = () => {
         </View>
       ) : (
         <>
+          {/* Chatroom Topic */}
+          <ChatroomTopic />
           {/* List of messages */}
           <FlashList
             ref={flatlistRef}
@@ -367,6 +382,7 @@ const MessageListComponent = () => {
                         item={item}
                         isStateIncluded={isStateIncluded}
                         index={index}
+                        onTapToUndoProp={onTapToUndo}
                       />
                     </Pressable>
                   </Swipeable>
@@ -379,7 +395,6 @@ const MessageListComponent = () => {
             keyboardShouldPersistTaps={"handled"}
             inverted
           />
-
           {isScrollingUp && (
             <TouchableOpacity
               style={[
@@ -390,7 +405,7 @@ const MessageListComponent = () => {
                     : Layout.normalize(20),
                 },
               ]}
-              onPress={scrollToTop}
+              onPress={scrollToBottomProp ? scrollToBottomProp : scrollToBottom}
             >
               <Image
                 source={require("../../assets/images/scrollDown.png")}
@@ -398,9 +413,6 @@ const MessageListComponent = () => {
               />
             </TouchableOpacity>
           )}
-
-          {/* Chatroom Topic */}
-          <ChatroomTopic />
         </>
       )}
     </>

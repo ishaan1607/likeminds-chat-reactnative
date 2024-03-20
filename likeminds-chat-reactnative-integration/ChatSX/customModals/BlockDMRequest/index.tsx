@@ -10,8 +10,14 @@ import {
   ChatroomContextValues,
   useChatroomContext,
 } from "../../context/ChatroomContext";
+import {
+  CustomisableMethodsContextProps,
+  useCustomisableMethodsContext,
+} from "../../context/CustomisableMethodsContext";
 
 const BlockDMRequestModal = () => {
+  const { blockMemberProp }: CustomisableMethodsContextProps =
+    useCustomisableMethodsContext();
   const {
     DMBlockAlertModalVisible,
     chatroomName,
@@ -44,7 +50,7 @@ const BlockDMRequestModal = () => {
             <TouchableOpacity
               style={[styles.button, styles.okButton]}
               onPress={() => {
-                blockMember();
+                blockMemberProp ? blockMemberProp() : blockMember();
                 hideDMBlockAlert();
               }}
             >

@@ -38,6 +38,7 @@ import VoiceNoteConversations from "../VoiceNoteConversations";
 import GIFConversations from "../GIFConversations";
 import MessageText from "../MessageText";
 import MessageFooter from "../MessageFooter";
+import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 
 interface AttachmentConversations {
   isReplyConversation?: any;
@@ -64,7 +65,7 @@ const AttachmentConversations = ({
     customVoiceNoteAttachmentConversation,
     customGifAttachmentConversation,
     customMessageNotSupportedConversation,
-  } = useChatroomContext();
+  } = useCustomComponentsContext();
 
   let firstAttachment = item?.attachments[0];
 

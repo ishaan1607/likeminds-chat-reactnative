@@ -8,8 +8,12 @@ import { decode } from "../../commonFuctions";
 import { ChatroomType } from "../../enums";
 import { styles } from "../Messages/styles";
 
-const StateMessage = () => {
-  const { conversations } = useAppSelector((state) => state.chatroom);
+interface StateMessage {
+  onTapToUndoProp?: () => void;
+}
+
+const StateMessage = ({ onTapToUndoProp }: StateMessage) => {
+  const { conversations }: any = useAppSelector((state) => state.chatroom);
   const { user } = useAppSelector((state) => state.homefeed);
   const {
     item,
@@ -27,8 +31,6 @@ const StateMessage = () => {
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
   //styling props
-  const selectedMessageBackgroundColor =
-    chatBubbleStyles?.selectedMessageBackgroundColor;
   const linkTextColor = chatBubbleStyles?.linkTextColor;
   const taggingTextColor = chatBubbleStyles?.taggingTextColor;
   const stateMessagesBackgroundColor =
@@ -50,7 +52,7 @@ const StateMessage = () => {
       (chatroomWithUser ? chatroomWithUser?.id == userIdStringified : null) ? (
         <Pressable
           onPress={() => {
-            onTapToUndo();
+            onTapToUndoProp ? onTapToUndoProp() : onTapToUndo();
           }}
           style={[
             styles.statusMessage,

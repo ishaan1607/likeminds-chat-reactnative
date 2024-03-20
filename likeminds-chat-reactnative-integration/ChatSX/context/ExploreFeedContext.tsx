@@ -32,7 +32,7 @@ interface ExploreFeedContextValues {
   setFilterState: Dispatch<SetStateAction<number>>;
   setChats: Dispatch<SetStateAction<any[]>>;
   handleLoadMore: () => void;
-  renderFooter: () => React.JSX.Element | null;
+  renderFooterExploreFeed: () => React.JSX.Element | null;
 }
 
 const ExploreFeedContext = createContext<ExploreFeedContextValues | undefined>(
@@ -119,7 +119,7 @@ export const ExploreFeedContextProvider = ({
     }
   };
 
-  const renderFooter = () => {
+  const renderFooterExploreFeed = () => {
     return isLoading ? (
       <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
@@ -138,7 +138,7 @@ export const ExploreFeedContextProvider = ({
     setFilterState,
     setChats,
     handleLoadMore,
-    renderFooter,
+    renderFooterExploreFeed,
   };
 
   return (

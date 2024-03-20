@@ -1,4 +1,4 @@
-import React, { Alert, Linking, Platform, Text } from "react-native";
+import React, { Alert, Linking, Platform, Text, TextStyle } from "react-native";
 import STYLES from "../constants/Styles";
 import {
   DOCUMENT_ICON,
@@ -206,6 +206,9 @@ export const decode = ({
       }
     }
 
+    const chatroomTopicStyles = STYLES.$CHATROOM_TOPIC_STYLE;
+    const topicDescription = chatroomTopicStyles?.topicDescription;
+
     return enableClick ? (
       <Text>
         {arr.map((val, index) => (
@@ -254,10 +257,25 @@ export const decode = ({
       <Text>
         {arr.map((val, index) => (
           <Text
-            style={{
-              color: STYLES.$COLORS.FONT_PRIMARY,
-              fontFamily: STYLES.$FONT_TYPES.LIGHT,
-            }}
+            style={
+              [
+                {
+                  color: topicDescription?.color
+                    ? topicDescription?.color
+                    : STYLES.$COLORS.FONT_PRIMARY,
+                },
+                {
+                  fontFamily: topicDescription?.fontFamily
+                    ? topicDescription?.fontFamily
+                    : STYLES.$FONT_TYPES.LIGHT,
+                },
+                {
+                  fontSize: topicDescription?.fontSize
+                    ? topicDescription?.fontSize
+                    : null,
+                },
+              ] as TextStyle
+            }
             key={val.key + index}
           >
             {val.route ? (

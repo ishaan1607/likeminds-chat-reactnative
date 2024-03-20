@@ -31,6 +31,124 @@ export interface ChatroomHeaderStyles {
   };
 }
 
+export interface FileUploadStyles {
+  selectedImageBorderColor?: string;
+}
+
+export interface CarouselScreenStyles {
+  headerTitle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  headerSubtitle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+}
+
+export interface HomeFeedStyles {
+  avatar?: {
+    borderRadius?: string;
+  };
+  title?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  lastConversation?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  unreadCount?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+    borderRadius?: string;
+    backgroundColor?: string;
+  };
+  lastConversationTime?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+}
+
+export interface ExploreChatroomStyles {
+  header?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+    placeHolderText?: string;
+  };
+  filterHeader?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  chatroomTitle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  chatroomSubTitle?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  chatroomDescription?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  joinButton?: {
+    placeHolderText?: string;
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+    backgroundColor?: string;
+    borderRadius?: string;
+  };
+  joinedButton?: {
+    placeHolderText?: string;
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+    backgroundColor?: string;
+    borderRadius?: string;
+  };
+}
+
+export interface MemberDirectoryStyles {
+  userNameStyles?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  userTitleStyles?: {
+    color?: string;
+    fontSize?: number;
+    fontFamily?: string;
+  };
+  searchPlaceholderText?: string;
+}
+
+export interface ChatroomTopicStyles {
+  topicHeader?: {
+    fontSize?: number;
+    fontFamily?: string;
+    color?: string;
+  };
+  topicDescription?: {
+    fontSize?: number;
+    fontFamily?: string;
+    color?: string;
+  };
+  topicPlaceholder?: string;
+}
+
 export interface ChatBubbleStyles {
   borderRadius?: number;
   sentMessageBackgroundColor?: string;
