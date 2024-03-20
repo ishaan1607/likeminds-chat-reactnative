@@ -17,20 +17,42 @@ interface Data {
 
 interface ChatRoomProps {
   children: ReactNode;
-  setChatroomTopic: () => void;
-  leaveChatroom: () => void;
-  leaveSecretChatroom: () => void;
-  joinChatroom: () => void;
-  muteNotifications: () => void;
-  unmuteNotifications: () => void;
-  onApprove: () => void;
-  onReject: () => void;
-  blockMember: () => void;
-  unblockMember: () => void;
+  ReactionList?: React.ReactNode;
+  showViewParticipants?: boolean;
+  showShareChatroom?: boolean;
+  showMuteNotifications?: boolean;
+  showLeaveChatroom?: boolean;
+  showJoinChatroom?: boolean;
+  showUnmuteNotifications?: boolean;
+  showBlockMember?: boolean;
+  showUnBlockMember?: boolean;
+  showViewProfile?: boolean;
+  showSecretLeaveChatroom?: boolean;
+  setChatroomTopic?: () => void;
+  leaveChatroom?: () => void;
+  leaveSecretChatroom?: () => void;
+  joinChatroom?: () => void;
+  muteNotifications?: () => void;
+  unmuteNotifications?: () => void;
+  onApprove?: () => void;
+  onReject?: () => void;
+  blockMember?: () => void;
+  unblockMember?: () => void;
 }
 
 const ChatRoom = ({
   children,
+  ReactionList,
+  showViewParticipants,
+  showShareChatroom,
+  showMuteNotifications,
+  showLeaveChatroom,
+  showJoinChatroom,
+  showUnmuteNotifications,
+  showBlockMember,
+  showUnBlockMember,
+  showViewProfile,
+  showSecretLeaveChatroom,
   setChatroomTopic,
   leaveChatroom,
   leaveSecretChatroom,
@@ -43,7 +65,7 @@ const ChatRoom = ({
   unblockMember,
 }: ChatRoomProps) => {
   return (
-    <ChatroomContextProvider>
+    <ChatroomContextProvider ReactionListProp={ReactionList}>
       <CustomisableMethodsContextProvider
         setChatroomTopicProp={setChatroomTopic}
         leaveChatroomProp={leaveChatroom}
@@ -55,6 +77,16 @@ const ChatRoom = ({
         onRejectProp={onReject}
         blockMemberProp={blockMember}
         unblockMemberProp={unblockMember}
+        showViewParticipants={showViewParticipants}
+        showShareChatroom={showShareChatroom}
+        showMuteNotifications={showMuteNotifications}
+        showLeaveChatroom={showLeaveChatroom}
+        showJoinChatroom={showJoinChatroom}
+        showUnmuteNotifications={showUnmuteNotifications}
+        showBlockMember={showBlockMember}
+        showUnBlockMember={showUnBlockMember}
+        showViewProfile={showViewProfile}
+        showSecretLeaveChatroom={showSecretLeaveChatroom}
       >
         <ChatroomComponent children={children} />
       </CustomisableMethodsContextProvider>

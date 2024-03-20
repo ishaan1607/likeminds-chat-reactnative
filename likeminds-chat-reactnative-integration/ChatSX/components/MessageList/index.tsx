@@ -32,35 +32,29 @@ const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
 interface MessageList {
   onTapToUndo?: () => void;
-  ReactionList?: any;
   scrollToBottom?: () => void;
-  renderFooter?: () => void;
 }
 
-const MessageList = ({
-  onTapToUndo,
-  ReactionList,
-  scrollToBottom,
-  renderFooter,
-}: MessageList) => {
+const MessageList = ({ onTapToUndo, scrollToBottom }: MessageList) => {
   return (
     <MessageListContextProvider>
       <MessageListComponent
-        ReactionList={ReactionList}
         onTapToUndo={onTapToUndo}
         scrollToBottomProp={scrollToBottom}
-        renderFooterProp={renderFooter}
       />
     </MessageListContextProvider>
   );
 };
 
+interface MessageListComponent {
+  onTapToUndo?: () => void;
+  scrollToBottomProp?: () => void;
+}
+
 const MessageListComponent = ({
-  ReactionList,
   onTapToUndo,
   scrollToBottomProp,
-  renderFooterProp,
-}: any) => {
+}: MessageListComponent) => {
   const {
     conversations,
     selectedMessages,
@@ -382,7 +376,6 @@ const MessageListComponent = ({
                         item={item}
                         isStateIncluded={isStateIncluded}
                         index={index}
-                        ReactionListProp={ReactionList}
                         onTapToUndoProp={onTapToUndo}
                       />
                     </Pressable>
@@ -391,12 +384,8 @@ const MessageListComponent = ({
               );
             }}
             onScroll={handleOnScroll}
-            ListHeaderComponent={
-              renderFooterProp ? renderFooterProp : renderFooter
-            }
-            ListFooterComponent={
-              renderFooterProp ? renderFooterProp : renderFooter
-            }
+            ListHeaderComponent={renderFooter}
+            ListFooterComponent={renderFooter}
             keyboardShouldPersistTaps={"handled"}
             inverted
           />

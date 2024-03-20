@@ -2,6 +2,16 @@ import React, { createContext, ReactNode, useContext } from "react";
 
 export interface CustomisableMethodsContextProps {
   children?: ReactNode;
+  showViewParticipants?: boolean;
+  showShareChatroom?: boolean;
+  showMuteNotifications?: boolean;
+  showLeaveChatroom?: boolean;
+  showJoinChatroom?: boolean;
+  showUnmuteNotifications?: boolean;
+  showBlockMember?: boolean;
+  showUnBlockMember?: boolean;
+  showViewProfile?: boolean;
+  showSecretLeaveChatroom?: boolean;
   setChatroomTopicProp?: () => void;
   leaveChatroomProp?: () => void;
   leaveSecretChatroomProp?: () => void;
@@ -43,6 +53,16 @@ export const useCustomisableMethodsContext = () => {
 
 export const CustomisableMethodsContextProvider = ({
   children,
+  showViewParticipants,
+  showShareChatroom,
+  showMuteNotifications,
+  showLeaveChatroom,
+  showJoinChatroom,
+  showUnmuteNotifications,
+  showBlockMember,
+  showUnBlockMember,
+  showViewProfile,
+  showSecretLeaveChatroom,
   setChatroomTopicProp,
   leaveChatroomProp,
   leaveSecretChatroomProp,
@@ -66,6 +86,16 @@ export const CustomisableMethodsContextProvider = ({
   onEditProp,
 }: CustomisableMethodsContextProps) => {
   const contextValues: CustomisableMethodsContext = {
+    showViewParticipants,
+    showShareChatroom,
+    showMuteNotifications,
+    showJoinChatroom,
+    showLeaveChatroom,
+    showUnmuteNotifications,
+    showBlockMember,
+    showUnBlockMember,
+    showViewProfile,
+    showSecretLeaveChatroom,
     setChatroomTopicProp,
     leaveChatroomProp,
     leaveSecretChatroomProp,

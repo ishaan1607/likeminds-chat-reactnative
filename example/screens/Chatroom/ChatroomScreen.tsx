@@ -9,8 +9,19 @@ import {
   useExploreFeedContext,
   useInputBoxContext,
 } from '@likeminds.community/chat-rn-core';
+import {ReactionList} from '../../customisableComponents/ReactionList';
 
 export function ChatroomScreen() {
+  const showViewParticipants = true;
+  const showShareChatroom = true;
+  const showMuteNotifications = true;
+  const showLeaveChatroom = true;
+  const showJoinChatroom = true;
+  const showUnmuteNotifications = true;
+  const showBlockMember = true;
+  const showUnBlockMember = true;
+  const showViewProfile = true;
+  const showSecretLeaveChatroom = true;
   const {
     setChatroomTopic,
     leaveChatroom,
@@ -27,7 +38,7 @@ export function ChatroomScreen() {
     blockMember,
     unblockMember,
   } = useChatroomContext();
-  const {scrollToBottom, renderFooter} = useMessageListContext();
+  const {scrollToBottom} = useMessageListContext();
   const {renderFooterExploreFeed, handleLoadMore} = useExploreFeedContext();
   const {handleGallery, handleDoc, handleCamera, onEdit} = useInputBoxContext();
   const customHandleGallery = async () => {
@@ -125,11 +136,6 @@ export function ChatroomScreen() {
     await scrollToBottom();
     console.log('after custom scroll to bottom');
   };
-  const customRenderFooter = async () => {
-    console.log('before custom render footer');
-    await renderFooter();
-    console.log('after custom render footer');
-  };
   const customExploreFeedRenderFooter = async () => {
     console.log('before custom render footer');
     await renderFooterExploreFeed();
@@ -143,6 +149,16 @@ export function ChatroomScreen() {
 
   return (
     <ChatRoom
+      showViewParticipants={showViewParticipants}
+      showShareChatroom={showShareChatroom}
+      showMuteNotifications={showMuteNotifications}
+      showLeaveChatroom={showLeaveChatroom}
+      showJoinChatroom={showJoinChatroom}
+      showUnmuteNotifications={showUnmuteNotifications}
+      showBlockMember={showBlockMember}
+      showUnBlockMember={showUnBlockMember}
+      showViewProfile={showViewProfile}
+      showSecretLeaveChatroom={showSecretLeaveChatroom}
       setChatroomTopic={customSetChatroomTopic}
       leaveChatroom={customLeaveChatroom}
       leaveSecretChatroom={customLeaveSecretChatroom}
@@ -160,7 +176,6 @@ export function ChatroomScreen() {
       <MessageList
         onTapToUndo={customOnTapToUndo}
         scrollToBottom={customScrollToBottom}
-        renderFooter={customRenderFooter}
       />
 
       {/* Input Box Flow */}

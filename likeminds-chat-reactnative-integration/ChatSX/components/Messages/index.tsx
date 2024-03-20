@@ -22,8 +22,7 @@ interface Messages {
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
-  ReactionListProp: any;
-  onTapToUndoProp: () => void;
+  onTapToUndoProp?: () => void;
 }
 
 const Messages = ({
@@ -31,7 +30,6 @@ const Messages = ({
   index,
   isStateIncluded,
   isIncluded,
-  ReactionListProp,
   onTapToUndoProp,
 }: Messages) => {
   return (
@@ -41,15 +39,17 @@ const Messages = ({
       isStateIncluded={isStateIncluded}
       isIncluded={isIncluded}
     >
-      <MessagesComponent
-        ReactionListProp={ReactionListProp}
-        onTapToUndoProp={onTapToUndoProp}
-      />
+      <MessagesComponent onTapToUndoProp={onTapToUndoProp} />
     </MessageContextProvider>
   );
 };
 
-const MessagesComponent = ({ ReactionListProp, onTapToUndoProp }: any) => {
+interface MessagesComponentProps {
+  ReactionListProp: React.FC<React.ReactNode>;
+  onTapToUndoProp: () => void;
+}
+
+const MessagesComponent = ({ onTapToUndoProp }: any) => {
   const {
     item,
     isIncluded,
@@ -59,6 +59,7 @@ const MessagesComponent = ({ ReactionListProp, onTapToUndoProp }: any) => {
     isItemIncludedInStateArr,
     handleLongPress,
   } = useMessageContext();
+  const { ReactionListProp } = useChatroomContext();
 
   const { removeReaction, chatroomID } = useChatroomContext();
 
