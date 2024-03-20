@@ -9,12 +9,15 @@ import { useChatroomContext } from "../../context/ChatroomContext";
 import { useMessageContext } from "../../context/MessageContext";
 import { NavigateToProfileParams } from "../../callBacks/type";
 import { CallBack } from "../../callBacks/callBackClass";
+import MessageHeader from "../MessageHeader";
+import MessageFooter from "../MessageFooter";
 
 const LinkPreview = () => {
   const { user } = useAppSelector((state) => state.homefeed);
 
   const { isIncluded, item, isTypeSent } = useMessageContext();
-  const { chatroomName } = useChatroomContext();
+  const { chatroomName, customMessageHeader, customMessageFooter } =
+    useChatroomContext();
 
   const description = item?.ogTags?.description;
   const title = item?.ogTags?.title;
@@ -79,47 +82,10 @@ const LinkPreview = () => {
         ]}
       >
         {/* Reply conversation message sender name */}
-        {item?.member?.id == user?.id ? null : (
-          <Text
-            style={[
-              styles.messageInfo,
-              senderNameStyles?.color
-                ? { color: senderNameStyles?.color }
-                : null,
-              senderNameStyles?.fontSize
-                ? { fontSize: senderNameStyles?.fontSize }
-                : null,
-              senderNameStyles?.fontFamily
-                ? { color: senderNameStyles?.color }
-                : null,
-            ]}
-            numberOfLines={1}
-            onPress={() => {
-              const params: NavigateToProfileParams = {
-                taggedUserId: null,
-                member: item?.member,
-              };
-              lmChatInterface.navigateToProfile(params);
-            }}
-          >
-            {item?.member?.name}
-            {item?.member?.customTitle ? (
-              <Text
-                style={[
-                  styles.messageCustomTitle,
-                  senderDesignationStyles?.color
-                    ? { color: senderDesignationStyles?.color }
-                    : null,
-                  senderDesignationStyles?.fontSize
-                    ? { fontSize: senderDesignationStyles?.fontSize }
-                    : null,
-                  senderDesignationStyles?.fontFamily
-                    ? { color: senderDesignationStyles?.color }
-                    : null,
-                ]}
-              >{` • ${item?.member?.customTitle}`}</Text>
-            ) : null}
-          </Text>
+        {item?.member?.id == user?.id ? null : customMessageHeader ? (
+          customMessageHeader
+        ) : (
+          <MessageHeader />
         )}
         <LinkPreviewBox
           description={description}
@@ -139,12 +105,7 @@ const LinkPreview = () => {
               taggingTextColor: taggingTextColor,
             })}
           </View>
-          <View style={styles.alignTime}>
-            {item?.isEdited ? (
-              <Text style={styles.messageDate}>{"Edited • "}</Text>
-            ) : null}
-            <Text style={styles.messageDate}>{item?.createdAt}</Text>
-          </View>
+          {customMessageFooter ? customMessageFooter : <MessageFooter />}
         </View>
       </View>
     </View>

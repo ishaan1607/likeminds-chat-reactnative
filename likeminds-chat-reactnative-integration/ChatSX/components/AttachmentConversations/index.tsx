@@ -38,7 +38,6 @@ import VoiceNoteConversations from "../VoiceNoteConversations";
 import GIFConversations from "../GIFConversations";
 import MessageText from "../MessageText";
 import MessageFooter from "../MessageFooter";
-import { useMessageListContext } from "../../context/MessageListContext";
 
 interface AttachmentConversations {
   isReplyConversation?: any;
@@ -53,11 +52,19 @@ const AttachmentConversations = ({
     isIncluded,
     item,
     isTypeSent,
-    CustomMessageHeader,
-    CustomMessageFooter,
     handleLongPress,
     handleOnPress: openKeyboard,
   } = useMessageContext();
+
+  const {
+    customMessageHeader,
+    customMessageFooter,
+    customVideoImageAttachmentConversation,
+    customPdfAttachmentConversation,
+    customVoiceNoteAttachmentConversation,
+    customGifAttachmentConversation,
+    customMessageNotSupportedConversation,
+  } = useChatroomContext();
 
   let firstAttachment = item?.attachments[0];
 
@@ -117,33 +124,57 @@ const AttachmentConversations = ({
         ]}
       >
         {/* Message Header */}
-        {!!(item?.member?.id == user?.id) ||
-        isReply ? null : CustomMessageHeader ? (
-          CustomMessageHeader
+        {!!(item?.member?.id !== user?.id) ||
+        isReply ? null : customMessageHeader ? (
+          customMessageHeader
         ) : (
           <MessageHeader />
         )}
 
         {/* Message Type */}
         {firstAttachment?.type === IMAGE_TEXT ? (
-          <ImageConversations />
+          customVideoImageAttachmentConversation ? (
+            customVideoImageAttachmentConversation
+          ) : (
+            <ImageConversations />
+          )
         ) : firstAttachment?.type === PDF_TEXT ? (
-          <PDFConversations />
+          customPdfAttachmentConversation ? (
+            customPdfAttachmentConversation
+          ) : (
+            <PDFConversations />
+          )
         ) : firstAttachment?.type === VIDEO_TEXT ? (
-          <ImageConversations />
+          customVideoImageAttachmentConversation ? (
+            customVideoImageAttachmentConversation
+          ) : (
+            <ImageConversations />
+          )
         ) : firstAttachment?.type === AUDIO_TEXT ? (
-          <MessageNotSupported />
+          customMessageNotSupportedConversation ? (
+            customMessageNotSupportedConversation
+          ) : (
+            <MessageNotSupported />
+          )
         ) : firstAttachment?.type === VOICE_NOTE_TEXT ? (
-          <VoiceNoteConversations />
+          customVoiceNoteAttachmentConversation ? (
+            customVoiceNoteAttachmentConversation
+          ) : (
+            <VoiceNoteConversations />
+          )
         ) : isGif ? (
-          <GIFConversations />
+          customGifAttachmentConversation ? (
+            customGifAttachmentConversation
+          ) : (
+            <GIFConversations />
+          )
         ) : null}
 
         {/* Message text */}
         {isAnswer ? <MessageText /> : null}
 
         {/* Message Footer */}
-        {CustomMessageFooter ? CustomMessageFooter : <MessageFooter />}
+        {customMessageFooter ? customMessageFooter : <MessageFooter />}
       </View>
 
       {/* Add reaction emoji */}

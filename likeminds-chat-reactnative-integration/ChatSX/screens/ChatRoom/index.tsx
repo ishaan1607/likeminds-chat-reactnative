@@ -17,15 +17,62 @@ interface Data {
 interface ChatRoomProps {
   children: ReactNode;
   customReplyBox?: (item: any, chatroomName: string) => JSX.Element;
+  customMessageHeader?: ReactNode;
+  customMessageFooter?: ReactNode;
+  customVideoImageAttachmentConversation?: ReactNode;
+  customPdfAttachmentConversation?: ReactNode;
+  customVoiceNoteAttachmentConversation?: ReactNode;
+  customGifAttachmentConversation?: ReactNode;
+  customMessageNotSupportedConversation?: ReactNode;
+  customDeletedMessage?: ReactNode;
+  customReplyConversations?: ReactNode;
+  customPollConversationView?: ReactNode;
+  customLinkPreview?: ReactNode;
+  customStateMessage?: ReactNode;
 }
 
 interface ChatRoomComponentProps {
   children: ReactNode;
 }
 
-const ChatRoom = ({ children, customReplyBox }: ChatRoomProps) => {
+const ChatRoom = ({
+  children,
+  customReplyBox,
+  customMessageHeader,
+  customMessageFooter,
+  customVideoImageAttachmentConversation,
+  customPdfAttachmentConversation,
+  customVoiceNoteAttachmentConversation,
+  customGifAttachmentConversation,
+  customMessageNotSupportedConversation,
+  customDeletedMessage,
+  customReplyConversations,
+  customPollConversationView,
+  customLinkPreview,
+  customStateMessage,
+}: ChatRoomProps) => {
   return (
-    <ChatroomContextProvider customReplyBox={customReplyBox}>
+    <ChatroomContextProvider
+      customReplyBox={customReplyBox}
+      customMessageHeader={customMessageHeader}
+      customMessageFooter={customMessageFooter}
+      customVideoImageAttachmentConversation={
+        customVideoImageAttachmentConversation
+      }
+      customPdfAttachmentConversation={customPdfAttachmentConversation}
+      customVoiceNoteAttachmentConversation={
+        customVoiceNoteAttachmentConversation
+      }
+      customGifAttachmentConversation={customGifAttachmentConversation}
+      customMessageNotSupportedConversation={
+        customMessageNotSupportedConversation
+      }
+      customDeletedMessage={customDeletedMessage}
+      customReplyConversations={customReplyConversations}
+      customPollConversationView={customPollConversationView}
+      customLinkPreview={customLinkPreview}
+      customStateMessage={customStateMessage}
+    >
       <ChatroomComponent children={children} />
     </ChatroomContextProvider>
   );

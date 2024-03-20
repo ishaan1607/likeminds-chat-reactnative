@@ -36,29 +36,18 @@ import Layout from "../../constants/Layout";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-interface MessageListProps {
-  CustomMessageHeader?: ReactNode;
-  CustomMessageFooter?: ReactNode;
-}
 
-const MessageList = ({
-  CustomMessageHeader,
-  CustomMessageFooter,
-}: MessageListProps) => {
+
+const MessageList = () => {
   return (
     <MessageListContextProvider>
       <MessageListComponent
-        CustomMessageHeader={CustomMessageHeader}
-        CustomMessageFooter={CustomMessageFooter}
       />
     </MessageListContextProvider>
   );
 };
 
-const MessageListComponent = ({
-  CustomMessageHeader,
-  CustomMessageFooter,
-}: MessageListProps) => {
+const MessageListComponent = () => {
   const {
     conversations,
     selectedMessages,
@@ -378,8 +367,6 @@ const MessageListComponent = ({
                         item={item}
                         isStateIncluded={isStateIncluded}
                         index={index}
-                        CustomMessageHeader={CustomMessageHeader}
-                        CustomMessageFooter={CustomMessageFooter}
                       />
                     </Pressable>
                   </Swipeable>

@@ -13,7 +13,7 @@ import {
 } from "../../context/MessageContext";
 import { useChatroomContext } from "../../context/ChatroomContext";
 import DeletedMessage from "../DeletedMessage";
-import StateMessage from "../StateMessage";
+import SimpleMessage from "../SimpleMessage";
 import { NavigateToProfileParams } from "../../callBacks/type";
 import { CallBack } from "../../callBacks/callBackClass";
 
@@ -22,26 +22,15 @@ interface Messages {
   index: number;
   isStateIncluded: boolean;
   isIncluded: boolean;
-  CustomMessageHeader?: ReactNode;
-  CustomMessageFooter?: ReactNode;
 }
 
-const Messages = ({
-  item,
-  index,
-  isStateIncluded,
-  isIncluded,
-  CustomMessageHeader,
-  CustomMessageFooter,
-}: Messages) => {
+const Messages = ({ item, index, isStateIncluded, isIncluded }: Messages) => {
   return (
     <MessageContextProvider
       index={index}
       item={item}
       isStateIncluded={isStateIncluded}
       isIncluded={isIncluded}
-      CustomMessageHeader={CustomMessageHeader}
-      CustomMessageFooter={CustomMessageFooter}
     >
       <MessagesComponent />
     </MessageContextProvider>
@@ -60,7 +49,14 @@ const MessagesComponent = () => {
     handleLongPress,
   } = useMessageContext();
 
-  const { removeReaction, chatroomID } = useChatroomContext();
+  const {
+    removeReaction,
+    chatroomID,
+    customDeletedMessage,
+    customReplyConversations,
+    customPollConversationView,
+    customLinkPreview,
+  } = useChatroomContext();
 
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
 
@@ -83,17 +79,33 @@ const MessagesComponent = () => {
     <View style={styles.messageParent}>
       <View>
         {item?.deletedBy ? (
-          <DeletedMessage />
+          customDeletedMessage ? (
+            customDeletedMessage
+          ) : (
+            <DeletedMessage />
+          )
         ) : item?.replyConversationObject ? (
-          <ReplyConversations />
+          customReplyConversations ? (
+            customReplyConversations
+          ) : (
+            <ReplyConversations />
+          )
         ) : !item?.replyConversationObject && item?.attachmentCount > 0 ? (
           <AttachmentConversations />
         ) : item?.state === 10 ? (
-          <PollConversationView />
+          customPollConversationView ? (
+            customPollConversationView
+          ) : (
+            <PollConversationView />
+          )
         ) : item?.ogTags?.url != null && item?.ogTags != undefined ? (
-          <LinkPreview />
+          customLinkPreview ? (
+            customLinkPreview
+          ) : (
+            <LinkPreview />
+          )
         ) : (
-          <StateMessage />
+          <SimpleMessage />
         )}
 
         {/* Sharp corner styles of a chat bubble */}

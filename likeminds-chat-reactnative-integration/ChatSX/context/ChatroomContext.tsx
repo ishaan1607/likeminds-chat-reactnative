@@ -120,6 +120,18 @@ interface UploadResource {
 interface ChatroomContextProps {
   children: ReactNode;
   customReplyBox?: (item: any, chatroomName: string) => JSX.Element;
+  customMessageHeader?: ReactNode;
+  customMessageFooter?: ReactNode;
+  customVideoImageAttachmentConversation?: ReactNode;
+  customPdfAttachmentConversation?: ReactNode;
+  customVoiceNoteAttachmentConversation?: ReactNode;
+  customGifAttachmentConversation?: ReactNode;
+  customMessageNotSupportedConversation?: ReactNode;
+  customDeletedMessage?: ReactNode;
+  customReplyConversations?: ReactNode;
+  customPollConversationView?: ReactNode;
+  customLinkPreview?: ReactNode;
+  customStateMessage?: ReactNode;
 }
 
 export interface ChatroomContextValues {
@@ -226,6 +238,18 @@ export interface ChatroomContextValues {
 
   //customComponents
   customReplyBox?: (item: any, chatroomName: string) => JSX.Element;
+  customMessageHeader?: ReactNode;
+  customMessageFooter?: ReactNode;
+  customVideoImageAttachmentConversation?: ReactNode;
+  customPdfAttachmentConversation?: ReactNode;
+  customVoiceNoteAttachmentConversation?: ReactNode;
+  customGifAttachmentConversation?: ReactNode;
+  customMessageNotSupportedConversation?: ReactNode;
+  customDeletedMessage?: ReactNode;
+  customReplyConversations?: ReactNode;
+  customPollConversationView?: ReactNode;
+  customLinkPreview?: ReactNode;
+  customStateMessage?: ReactNode;
 }
 
 const ChatroomContext = createContext<ChatroomContextValues | undefined>(
@@ -245,6 +269,18 @@ export const useChatroomContext = () => {
 export const ChatroomContextProvider = ({
   children,
   customReplyBox,
+  customMessageHeader,
+  customMessageFooter,
+  customVideoImageAttachmentConversation,
+  customPdfAttachmentConversation,
+  customVoiceNoteAttachmentConversation,
+  customGifAttachmentConversation,
+  customMessageNotSupportedConversation,
+  customDeletedMessage,
+  customReplyConversations,
+  customPollConversationView,
+  customLinkPreview,
+  customStateMessage,
 }: ChatroomContextProps) => {
   const myClient = Client.myClient;
 
@@ -2118,6 +2154,18 @@ export const ChatroomContextProvider = ({
     onReplyPrivatelyClick,
 
     customReplyBox,
+    customMessageHeader,
+    customMessageFooter,
+    customVideoImageAttachmentConversation,
+    customPdfAttachmentConversation,
+    customVoiceNoteAttachmentConversation,
+    customGifAttachmentConversation,
+    customMessageNotSupportedConversation,
+    customDeletedMessage,
+    customReplyConversations,
+    customPollConversationView,
+    customLinkPreview,
+    customStateMessage,
   };
 
   return (
