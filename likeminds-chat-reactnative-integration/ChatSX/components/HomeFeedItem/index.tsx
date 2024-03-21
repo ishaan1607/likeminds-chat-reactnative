@@ -39,6 +39,8 @@ import { ChatroomChatRequestState } from "../../enums";
 import { ChatroomType } from "../../enums";
 import { DocumentType } from "../../enums";
 import { Client } from "../../client";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Props {
   avatar: string;
@@ -48,7 +50,6 @@ interface Props {
   pinned: boolean;
   unreadCount: number;
   lastConversation: any;
-  navigation: any;
   chatroomID: number;
   lastConversationMember?: string;
   isSecret: boolean;
@@ -66,7 +67,6 @@ const HomeFeedItem: React.FC<Props> = ({
   pinned = false,
   unreadCount,
   lastConversation,
-  navigation,
   chatroomID,
   lastConversationMember,
   isSecret,
@@ -77,6 +77,7 @@ const HomeFeedItem: React.FC<Props> = ({
 }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.homefeed);
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const myClient = Client.myClient;
   const homeFeedStyles = STYLES.$HOME_FEED_STYLE;
   const unreadCountStyle = homeFeedStyles.unreadCount;

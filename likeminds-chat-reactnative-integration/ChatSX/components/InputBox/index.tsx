@@ -9,11 +9,13 @@ import {
   ImageStyle,
   TextStyle,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { styles } from "./styles";
 import { useAppDispatch } from "../../store";
 import {
+  CLEAR_SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
   SELECTED_MESSAGES,
+  SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
   SET_EDIT_MESSAGE,
   SET_IS_REPLY,
   SET_REPLY_MESSAGE,
@@ -36,8 +38,8 @@ import { replaceLastMention } from "../../commonFuctions";
 import { FlashList } from "@shopify/flash-list";
 import { ChatroomChatRequestState, Events, Keys } from "../../enums";
 import { ChatroomType } from "../../enums";
-import { InputBoxProps } from "./models";
-import Animated from "react-native-reanimated";
+import { InputBoxProps, VoiceNotesPlayerProps, VoiceNotesProps } from "./models";
+import Animated, { Easing } from "react-native-reanimated";
 import { GestureDetector } from "react-native-gesture-handler";
 import LottieView from "lottie-react-native";
 import LinkPreviewInputBox from "../linkPreviewInputBox";
@@ -53,6 +55,22 @@ import {
   useInputBoxContext,
 } from "../../context/InputBoxContext";
 import { useCustomisableMethodsContext } from "../../context/CustomisableMethodsContext";
+import {
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSpring,
+  withTiming,
+} from "react-native-reanimated";
+import {
+  Gesture,
+  GestureUpdateEvent,
+  PanGestureHandlerEventPayload,
+} from "react-native-gesture-handler";
+import { generateAudioSet, generateVoiceNoteName } from "../../audio";
+import ReactNativeBlobUtil from "react-native-blob-util";
+import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
+import AudioRecorderPlayer from "react-native-audio-recorder-player";
 
 const InputBox = (props: InputBoxProps) => {
   return (
@@ -61,6 +79,8 @@ const InputBox = (props: InputBoxProps) => {
     </InputBoxContextProvider>
   );
 };
+
+const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
 
 interface CustomisableMethodsContext {
   handleGalleryProp?: () => void;
@@ -76,12 +96,26 @@ const InputBoxComponent = () => {
     handleDocProp,
     onEditProp,
   }: CustomisableMethodsContext = useCustomisableMethodsContext();
+  const [isDraggable, setIsDraggable] = useState(true);
+  const [isLongPressedState, setIsLongPressedState] = useState(false);
+  const [voiceNotesPlayer, setVoiceNotesPlayer] =
+    useState<VoiceNotesPlayerProps>({
+      currentPositionSec: 0,
+      currentDurationSec: 0,
+      playTime: "",
+      duration: "",
+    });
+  const [voiceNotesLink, setVoiceNotesLink] = useState("");
+  const [isVoiceResult, setIsVoiceResult] = useState(false);
+  const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
+  const [isVoiceNoteRecording, setIsVoiceNoteRecording] = useState(false);
+  const [isRecordingLocked, setIsRecordingLocked] = useState(false);
+  const [stopRecording, setStopRecording] = useState(false);
+  const [isDeleteAnimation, setIsDeleteAnimation] = useState(false);
+
   const {
     isVoiceNoteIconPress,
     hideDMSentAlert,
-    lockAnimatedStyles,
-    upChevronAnimatedStyles,
-    panStyle,
     selectGallery,
     selectDoc,
     handleModalClose,
@@ -94,13 +128,6 @@ const InputBoxComponent = () => {
     renderFooter,
     handleInputChange,
     onEdit,
-    stopRecord,
-    handleStopRecord,
-    clearVoiceRecord,
-    startPlay,
-    stopPlay,
-    onPausePlay,
-    onResumePlay,
     askPermission,
     setModalVisible,
     chatroomType,
@@ -119,7 +146,6 @@ const InputBoxComponent = () => {
     groupTags,
     taggedUserName,
     setMessage,
-    setFormattedConversation,
     setUserTaggingList,
     setGroupTags,
     setIsUserTagging,
@@ -134,30 +160,392 @@ const InputBoxComponent = () => {
     setIsEditable,
     isDoc,
     isGif,
-    isDeleteAnimation,
-    voiceNotes,
-    isVoiceResult,
-    micIconOpacity,
-    isRecordingLocked,
-    isVoiceNotePlaying,
-    voiceNotesPlayer,
-    voiceNotesLink,
     chatRequestState,
     inputHeight,
     setInputHeight,
     myRef,
     MAX_LENGTH,
     isPrivateMember,
-    isVoiceNoteRecording,
     isRecordingPermission,
-    composedGesture,
     setIsVoiceNoteIconPress,
     modalVisible,
     navigation,
     chatroomID,
     conversations,
+    voiceNotes,
+    setVoiceNotes
   } = useInputBoxContext();
   const dispatch = useAppDispatch();
+
+    // this useEffect is to stop audio player when going out of chatroom, if any audio is running
+    useEffect(() => {
+      return () => {
+        stopRecord();
+        stopPlay();
+      };
+    }, []);
+
+    // Animation
+
+    const pressed = useSharedValue(false);
+    const x = useSharedValue(0);
+    const y = useSharedValue(0);
+    const lockOffset = useSharedValue(4);
+    const upChevronOffset = useSharedValue(3);
+    const micIconOpacity = useSharedValue(1); // Initial opacity value
+    const isLongPressed = useSharedValue(false);
+  
+    // lock icon animation styles
+    const lockAnimatedStyles = useAnimatedStyle(() => ({
+      transform: [{ translateY: lockOffset.value }],
+    }));
+  
+    // up chevron animated styles
+    const upChevronAnimatedStyles = useAnimatedStyle(() => ({
+      transform: [{ translateY: upChevronOffset.value }],
+    }));
+  
+    // recorder mic icon animation effect
+    useEffect(() => {
+      micIconOpacity.value = withRepeat(
+        withTiming(0, { duration: 800, easing: Easing.inOut(Easing.ease) }),
+        -1, // Infinite repetition (-1)
+        true // Reverse the animation direction after each iteration
+      );
+    }, []);
+  
+    // lock icon animation useEffect
+    useEffect(() => {
+      lockOffset.value = withRepeat(
+        withTiming(-lockOffset.value, { duration: 800 }),
+        -1, // Infinite repetition (-1)
+        true // Reverse the animation direction after each iteration
+      );
+    }, []);
+  
+    // up chevron animation useEffect
+    useEffect(() => {
+      upChevronOffset.value = withRepeat(
+        withTiming(-upChevronOffset.value, { duration: 400 }),
+        -1,
+        true
+      );
+    }, []);
+  
+    // to hide delete animation
+    useEffect(() => {
+      if (isDeleteAnimation) {
+        setTimeout(() => {
+          setIsDeleteAnimation(false);
+          setIsVoiceResult(false);
+        }, 2200);
+      }
+    }, [isDeleteAnimation]);
+  
+    // to stop the recorder
+    useEffect(() => {
+      setTimeout(async () => {
+        if (!isLongPressedState && isVoiceNoteRecording && !isRecordingLocked) {
+          await stopRecord();
+          setIsVoiceResult(true);
+        }
+      }, 300);
+    }, [isLongPressedState, isRecordingLocked]);
+  
+    // to start Recorder
+    useEffect(() => {
+      if (isLongPressedState && !isVoiceNoteRecording) {
+        Vibration.vibrate(0.5 * 100);
+        startRecord();
+      }
+    }, [isLongPressedState]);
+  
+    // long press gesture
+    const longPressGesture = Gesture.LongPress()
+      .runOnJS(true)
+      .minDuration(250)
+      .onStart(() => {
+        isLongPressed.value = true;
+        setIsLongPressedState(true);
+      });
+  
+    // this method handles onUpdate callback of pan gesture
+    const onUpdatePanGesture = (
+      event: GestureUpdateEvent<PanGestureHandlerEventPayload>
+    ) => {
+      "worklet";
+      if (isLongPressed.value) {
+        if (Math.abs(x.value) >= 120) {
+          x.value = withSpring(0);
+          if (isDraggable) {
+            stopRecord();
+            setIsDraggable(false);
+            setIsDeleteAnimation(true);
+            clearVoiceRecord();
+            setIsDraggable(true);
+            isLongPressed.value = false;
+          }
+          pressed.value = false;
+          isLongPressed.value = false;
+        } else if (Math.abs(y.value) >= 100) {
+          y.value = withSpring(0);
+          if (isDraggable) {
+            setIsDraggable(false);
+            setIsDraggable(true);
+            setIsRecordingLocked(true);
+            setIsLongPressedState(false);
+            isLongPressed.value = false;
+          }
+        } else if (Math.abs(x.value) > 5) {
+          x.value = event.translationX;
+        } else if (Math.abs(y.value) > 5) {
+          y.value = event.translationY;
+        } else {
+          x.value = event.translationX;
+          y.value = event.translationY;
+        }
+      }
+    };
+  
+    // this method handles onEnd callback of pan gesture
+    const onEndPanGesture = () => {
+      "worklet";
+      if (
+        (Math.abs(x.value) > 5 && Math.abs(x.value) < 120) ||
+        (Math.abs(y.value) > 5 && Math.abs(y.value) < 100)
+      ) {
+        setIsRecordingLocked(false);
+        handleStopRecord();
+      }
+      x.value = withSpring(0);
+      y.value = withSpring(0);
+      pressed.value = false;
+      isLongPressed.value = false;
+      setIsLongPressedState(false);
+    };
+  
+    // draggle mic pan gesture on x-axis and y-axis
+    const panGesture = Gesture.Pan()
+      .runOnJS(true)
+      .enabled(isDraggable)
+      .onUpdate(onUpdatePanGesture)
+      .onEnd(onEndPanGesture)
+      .onFinalize(() => {
+        "worklet";
+        pressed.value = false;
+        isLongPressed.value = false;
+        setIsLongPressedState(false);
+        setIsDraggable(true);
+      })
+      .onTouchesCancelled(() => {
+        setIsDraggable(true);
+      })
+      .simultaneousWithExternalGesture(longPressGesture);
+  
+    const composedGesture = Gesture.Simultaneous(longPressGesture, panGesture);
+  
+    // draggle mic panGesture styles
+    const panStyle = useAnimatedStyle(() => {
+      return {
+        transform: [
+          {
+            translateX: x.value,
+          },
+          {
+            translateY: y.value,
+          },
+          { scale: withTiming(isLongPressed.value ? 1.5 : 1) },
+        ],
+      };
+    }, [x, y]);
+  
+    // Animation stop
+
+      // Audio and play section
+
+  // to stop recorder after 15 min
+  useEffect(() => {
+    (async function stopRecorder() {
+      if (isVoiceNoteRecording) {
+        await handleStopRecord();
+      }
+    })();
+  }, [stopRecording]);
+
+  // to start audio recording
+  const startRecord = async () => {
+    if (!isVoiceNoteRecording) {
+      const audioSet = generateAudioSet();
+
+      const name = generateVoiceNoteName();
+      const path =
+        Platform.OS === "android"
+          ? `${ReactNativeBlobUtil.fs.dirs.CacheDir}/${name}.mp3`
+          : `${name}.m4a`;
+
+      const result = await audioRecorderPlayerAttachment.startRecorder(
+        path,
+        audioSet
+      );
+      setIsVoiceNoteRecording(true);
+      setVoiceNotesLink(result);
+      audioRecorderPlayerAttachment.addRecordBackListener((e) => {
+        const seconds = Math.floor(e.currentPosition / 1000);
+        if (seconds >= 900) {
+          setStopRecording(!stopRecording);
+        }
+        setVoiceNotes({
+          recordSecs: e.currentPosition,
+          recordTime: audioRecorderPlayerAttachment
+            .mmssss(Math.floor(e.currentPosition))
+            .slice(0, 5),
+          name: name,
+        });
+        return;
+      });
+    }
+  };
+
+  // to stop audio recording
+  const stopRecord = async () => {
+    if (isVoiceNoteRecording) {
+      await audioRecorderPlayerAttachment.stopRecorder();
+      audioRecorderPlayerAttachment.removeRecordBackListener();
+
+      // if isVoiceResult is true we show audio player instead of audio recorder
+      const voiceNote = {
+        uri: voiceNotesLink,
+        type: VOICE_NOTE_TEXT,
+        name: `${voiceNotes.name}.${isIOS ? "m4a" : "mp3"}`,
+        duration: Math.floor(voiceNotes.recordSecs / 1000),
+      };
+      dispatch({
+        type: SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
+        body: {
+          audio: [voiceNote],
+        },
+      });
+
+      setIsVoiceNoteRecording(false);
+
+      LMChatAnalytics.track(
+        Events.VOICE_NOTE_RECORDED,
+        new Map<string, string>([
+          [Keys.CHATROOM_TYPE, chatroomType?.toString()],
+          [Keys.CHATROOM_ID, chatroomID?.toString()],
+        ])
+      );
+    }
+  };
+
+  const handleStopRecord = async () => {
+    // to give some time for initiating the start recorder, then only stop it
+    setTimeout(async () => {
+      await stopRecord();
+      setIsVoiceResult(true);
+      setIsRecordingLocked(false);
+    }, 500);
+  };
+
+  // to reset all the recording data we had previously
+  const clearVoiceRecord = async () => {
+    if (isVoiceNoteRecording) {
+      await stopRecord();
+    } else if (isVoiceNotePlaying) {
+      await stopPlay();
+    }
+    setVoiceNotes({
+      recordSecs: 0,
+      recordTime: "",
+      name: "",
+    });
+    setVoiceNotesPlayer({
+      currentPositionSec: 0,
+      currentDurationSec: 0,
+      playTime: "",
+      duration: "",
+    });
+    setVoiceNotesLink("");
+    setIsRecordingLocked(false);
+
+    dispatch({
+      type: CLEAR_SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
+    });
+
+    // if isVoiceResult is false we show audio recorder instead of audio player
+    setIsVoiceResult(false);
+
+    LMChatAnalytics.track(
+      Events.VOICE_NOTE_CANCELED,
+      new Map<string, string>([
+        [Keys.CHATROOM_TYPE, chatroomType?.toString()],
+        [Keys.CHATROOM_ID, chatroomID?.toString()],
+      ])
+    );
+  };
+
+  // to start playing audio recording
+  const startPlay = async (path: string) => {
+    await audioRecorderPlayerAttachment.startPlayer(path);
+    audioRecorderPlayerAttachment.addPlayBackListener((e) => {
+      const playTime = audioRecorderPlayerAttachment.mmssss(
+        Math.floor(e.currentPosition)
+      );
+      const duration = audioRecorderPlayerAttachment.mmssss(
+        Math.floor(e.duration)
+      );
+      setVoiceNotesPlayer({
+        currentPositionSec: e.currentPosition,
+        currentDurationSec: e.duration,
+        playTime: audioRecorderPlayerAttachment
+          .mmssss(Math.floor(e.currentPosition))
+          .slice(0, 5),
+        duration: audioRecorderPlayerAttachment
+          .mmssss(Math.floor(e.duration))
+          .slice(0, 5),
+      });
+
+      // to reset the player after audio player completed it duration
+      if (playTime === duration) {
+        setIsVoiceNotePlaying(false);
+        setVoiceNotesPlayer({
+          currentPositionSec: 0,
+          currentDurationSec: 0,
+          playTime: "",
+          duration: "",
+        });
+      }
+      return;
+    });
+
+    LMChatAnalytics.track(
+      Events.VOICE_NOTE_PREVIEWED,
+      new Map<string, string>([
+        [Keys.CHATROOM_TYPE, chatroomType?.toString()],
+        [Keys.CHATROOM_ID, chatroomID?.toString()],
+      ])
+    );
+    setIsVoiceNotePlaying(true);
+  };
+
+  // to stop playing audio recording
+  const stopPlay = async () => {
+    await audioRecorderPlayerAttachment.stopPlayer();
+    setIsVoiceNotePlaying(false);
+  };
+
+  // to pause playing audio recording
+  const onPausePlay = async () => {
+    await audioRecorderPlayerAttachment.pausePlayer();
+    setIsVoiceNotePlaying(false);
+  };
+
+  // to resume playing audio recording
+  const onResumePlay = async () => {
+    await audioRecorderPlayerAttachment.resumePlayer();
+    setIsVoiceNotePlaying(true);
+  };
+
   return (
     <View>
       {/* shows message how we record voice note */}
@@ -239,7 +627,6 @@ const InputBoxComponent = () => {
                           uuid ? `user_profile/${uuid}` : uuid
                         );
                         setMessage(res);
-                        setFormattedConversation(res);
                         setUserTaggingList([]);
                         setGroupTags([]);
                         setIsUserTagging(false);

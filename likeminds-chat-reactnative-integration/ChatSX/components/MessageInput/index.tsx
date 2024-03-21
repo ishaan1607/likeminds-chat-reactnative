@@ -107,30 +107,23 @@ const MessageInput = ({
             !(user.state !== 1 && chatroomDBDetails?.type === 7) &&
               chatroomFollowStatus &&
               memberRights[3]?.isSelected === true ? (
-              <CustomisableMethodsContextProvider
-                handleGalleryProp={handleGallery}
-                handleCameraProp={handleCamera}
-                handleDocProp={handleDoc}
-                onEditProp={onEdit}
-              >
-                <InputBox
-                  chatroomName={chatroomName}
-                  chatroomWithUser={chatroomWithUser}
-                  replyChatID={replyChatID}
-                  chatroomID={chatroomID}
-                  navigation={navigation}
-                  isUploadScreen={false}
-                  myRef={refInput}
-                  handleFileUpload={handleFileUpload}
-                  isEditable={isEditable}
-                  setIsEditable={(value: boolean) => {
-                    setIsEditable(value);
-                  }}
-                  isSecret={isSecret}
-                  chatroomType={chatroomType}
-                  currentChatroomTopic={currentChatroomTopic}
-                />
-              </CustomisableMethodsContextProvider>
+              <InputBox
+                chatroomName={chatroomName}
+                chatroomWithUser={chatroomWithUser}
+                replyChatID={replyChatID}
+                chatroomID={chatroomID}
+                navigation={navigation}
+                isUploadScreen={false}
+                myRef={refInput}
+                handleFileUpload={handleFileUpload}
+                isEditable={isEditable}
+                setIsEditable={(value: boolean) => {
+                  setIsEditable(value);
+                }}
+                isSecret={isSecret}
+                chatroomType={chatroomType}
+                currentChatroomTopic={currentChatroomTopic}
+              />
             ) : //case to block normal users from messaging in an Announcement Room
             user.state !== 1 && chatroomDBDetails?.type === 7 ? (
               <View style={styles.disabledInput}>
@@ -263,28 +256,21 @@ const MessageInput = ({
             </View>
           ) : (showDM === true && chatRequestState === 1) ||
             chatRequestState === null ? (
-            <CustomisableMethodsContextProvider
-              handleGalleryProp={handleGallery}
-              handleCameraProp={handleCamera}
-              handleDocProp={handleDoc}
-              onEditProp={onEdit}
-            >
-              <InputBox
-                replyChatID={replyChatID}
-                chatroomID={chatroomID}
-                chatRequestState={chatRequestState}
-                chatroomType={chatroomType}
-                navigation={navigation}
-                isUploadScreen={false}
-                isPrivateMember={chatroomDBDetails?.isPrivateMember}
-                myRef={refInput}
-                handleFileUpload={handleFileUpload}
-                isEditable={isEditable}
-                setIsEditable={(value: boolean) => {
-                  setIsEditable(value);
-                }}
-              />
-            </CustomisableMethodsContextProvider>
+            <InputBox
+              replyChatID={replyChatID}
+              chatroomID={chatroomID}
+              chatRequestState={chatRequestState}
+              chatroomType={chatroomType}
+              navigation={navigation}
+              isUploadScreen={false}
+              isPrivateMember={chatroomDBDetails?.isPrivateMember}
+              myRef={refInput}
+              handleFileUpload={handleFileUpload}
+              isEditable={isEditable}
+              setIsEditable={(value: boolean) => {
+                setIsEditable(value);
+              }}
+            />
           ) : (
             <View style={styles.disabledInput}>
               <Text style={styles.disabledInputText}>Loading...</Text>

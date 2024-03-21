@@ -51,6 +51,10 @@ interface ChatRoomProps {
   onReject?: () => void;
   blockMember?: () => void;
   unblockMember?: () => void;
+  handleGallery: () => void;
+  handleCamera: () => void;
+  handleDoc: () => void;
+  onEdit: () => void;
 }
 
 interface ChatRoomComponentProps {
@@ -93,6 +97,10 @@ const ChatRoom = ({
   onReject,
   blockMember,
   unblockMember,
+  handleGallery,
+  handleCamera,
+  handleDoc,
+  onEdit,
 }: ChatRoomProps) => {
   return (
     <CustomComponentContextProvider
@@ -138,6 +146,10 @@ const ChatRoom = ({
         showUnBlockMember={showUnBlockMember}
         showViewProfile={showViewProfile}
         showSecretLeaveChatroom={showSecretLeaveChatroom}
+        handleGalleryProp={handleGallery}
+        handleCameraProp={handleCamera}
+        handleDocProp={handleDoc}
+        onEditProp={onEdit}
       >
         <ChatroomComponent children={children} />
       </CustomisableMethodsContextProvider>

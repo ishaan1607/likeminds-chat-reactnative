@@ -43,12 +43,10 @@ interface MessageList {
 
 const MessageList = ({ onTapToUndo, scrollToBottom }: MessageList) => {
   return (
-    <MessageListContextProvider>
-      <MessageListComponent
-        onTapToUndo={onTapToUndo}
-        scrollToBottomProp={scrollToBottom}
-      />
-    </MessageListContextProvider>
+    <MessageListComponent
+      onTapToUndo={onTapToUndo}
+      scrollToBottomProp={scrollToBottom}
+    />
   );
 };
 

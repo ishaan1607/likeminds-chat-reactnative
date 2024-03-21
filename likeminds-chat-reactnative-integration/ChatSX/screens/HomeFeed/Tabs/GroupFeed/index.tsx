@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Children, ReactNode } from "react";
 import { View } from "react-native";
 import HomeFeedExplore from "../../../../components/HomeFeedExplore";
 import HomeFeedItem from "../../../../components/HomeFeedItem";
@@ -7,15 +7,22 @@ import { FlashList } from "@shopify/flash-list";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import Layout from "../../../../constants/Layout";
-import { useHomeFeedContext } from "../../../../context/HomeFeedContext";
+import {
+  GroupFeedContextProvider,
+  useGroupFeedContext,
+} from "../../../../context/GroupFeedContextProvider";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
-interface Props {
-  navigation: any;
-}
+const GroupFeed = () => {
+  return (
+    <GroupFeedContextProvider>
+      <GroupFeedComponent />
+    </GroupFeedContextProvider>
+  );
+};
 
-const GroupFeed = ({ navigation }: Props) => {
+const GroupFeedComponent = () => {
   const {
     shimmerIsLoading,
     groupFeedChatrooms,
@@ -23,7 +30,7 @@ const GroupFeed = ({ navigation }: Props) => {
     totalCount,
     renderFooter,
     handleLoadMore,
-  } = useHomeFeedContext();
+  } = useGroupFeedContext();
 
   return (
     <View style={styles.page}>
@@ -130,11 +137,7 @@ const GroupFeed = ({ navigation }: Props) => {
         <FlashList
           data={groupFeedChatrooms}
           ListHeaderComponent={() => (
-            <HomeFeedExplore
-              newCount={unseenCount}
-              totalCount={totalCount}
-              navigation={navigation}
-            />
+            <HomeFeedExplore newCount={unseenCount} totalCount={totalCount} />
           )}
           renderItem={({ item }: any) => {
             const lastConversation = item?.lastConversation;
@@ -164,7 +167,7 @@ const GroupFeed = ({ navigation }: Props) => {
               chatroomType: item?.type,
               muteStatus: item?.muteStatus,
             };
-            return <HomeFeedItem {...homeFeedProps} navigation={navigation} />;
+            return <HomeFeedItem {...homeFeedProps} />;
           }}
           extraData={{
             value: [groupFeedChatrooms, unseenCount, totalCount],

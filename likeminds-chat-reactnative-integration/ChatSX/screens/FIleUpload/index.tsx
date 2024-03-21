@@ -41,6 +41,8 @@ import { IMAGE_CROP_SCREEN } from "../../constants/Screens";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Client } from "../../client";
+import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 interface UploadResource {
   selectedImages: any;
@@ -51,8 +53,22 @@ interface UploadResource {
   isRetry: boolean;
 }
 
-const FileUpload = ({ navigation, route }: any) => {
-  const { backIconPath, imageCropIcon } = route.params;
+interface FileUploadProps {
+  handleGallery: () => void;
+  handleCamera: () => void;
+  handleDoc: () => void;
+  onEdit: () => void;
+}
+
+const FileUpload = ({
+  handleGallery,
+  handleCamera,
+  handleDoc,
+  onEdit,
+}: FileUploadProps) => {
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { backIconPath, imageCropIcon }: any = route.params;
 
   const selectedImageBorderColor =
     STYLES.$FILE_UPLOAD_STYLE?.selectedImageBorderColor;
@@ -60,7 +76,7 @@ const FileUpload = ({ navigation, route }: any) => {
   const myClient = Client.myClient;
   const video = useRef<any>(null);
 
-  const { chatroomID, previousMessage = "" } = route?.params;
+  const { chatroomID, previousMessage = "" }: any = route?.params;
   const {
     selectedFilesToUpload = [],
     selectedFileToView = {},
@@ -410,15 +426,22 @@ const FileUpload = ({ navigation, route }: any) => {
 
       <View style={styles.bottomBar}>
         {len > 0 ? (
-          <InputBox
-            isUploadScreen={true}
-            isDoc={docItemType === PDF_TEXT ? true : false}
-            chatroomID={chatroomID}
-            navigation={navigation}
-            previousMessage={previousMessage}
-            handleFileUpload={handleFileUpload}
-            isGif={isGif}
-          />
+          <CustomisableMethodsContextProvider
+            handleGalleryProp={handleGallery}
+            handleCameraProp={handleCamera}
+            handleDocProp={handleDoc}
+            onEditProp={onEdit}
+          >
+            <InputBox
+              isUploadScreen={true}
+              isDoc={docItemType === PDF_TEXT ? true : false}
+              chatroomID={chatroomID}
+              navigation={navigation}
+              previousMessage={previousMessage}
+              handleFileUpload={handleFileUpload}
+              isGif={isGif}
+            />
+          </CustomisableMethodsContextProvider>
         ) : null}
 
         {!isGif && (

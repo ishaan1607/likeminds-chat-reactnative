@@ -29,6 +29,11 @@ import { useExploreFeedContext } from "./ChatSX/context/ExploreFeedContext";
 import { useCreatePollContext } from "./ChatSX/context/CreatePollContext";
 import { useInputBoxContext } from "./ChatSX/context/InputBoxContext";
 import Chat from "./ChatSX/context/Chat";
+import ImageScreen from "./ChatSX/components/ImageScreen";
+import ReportScreen from "./ChatSX/screens/ReportMessage";
+import ViewParticipants from "./ChatSX/screens/ViewParticipants";
+import AddParticipants from "./ChatSX/screens/AddParticipants";
+import DmAllMembers from "./ChatSX/screens/DmAllMembers";
 
 export {
   ChatRoom,
@@ -60,4 +65,9 @@ export {
   useExploreFeedContext,
   useCreatePollContext,
   useInputBoxContext,
+  ReportScreen,
+  ImageScreen,
+  ViewParticipants,
+  AddParticipants,
+  DmAllMembers,
 };
