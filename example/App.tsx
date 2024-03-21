@@ -75,6 +75,18 @@ function App(): React.JSX.Element {
         <Stack.Navigator initialRouteName={'Homefeed'}>
           <Stack.Screen name={'Homefeed'} component={HomeFeed} />
           <Stack.Screen
+            name={'ExploreFeed'}
+            component={ExploreFeed}
+            initialParams={{
+              backIconPath: '',
+              filterIconPath: '',
+              participantsIconPath: '',
+              totalMessagesIconPath: '',
+              joinButtonPath: '',
+              joinedButtonPath: '',
+            }}
+          />
+          <Stack.Screen
             name="Chatroom"
             component={ChatroomScreenWrapper}
             initialParams={{

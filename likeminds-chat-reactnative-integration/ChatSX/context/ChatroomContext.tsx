@@ -222,6 +222,7 @@ export interface ChatroomContextValues {
     voiceNotesToUpload?: any
   ) => void;
   onReplyPrivatelyClick: (uuid: string, conversationID: number) => void;
+  backAction: any;
 }
 
 const ChatroomContext = createContext<ChatroomContextValues | undefined>(
@@ -2130,6 +2131,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
     hideDMBlockAlert,
     handleFileUpload,
     onReplyPrivatelyClick,
+    backAction,
   };
 
   return (

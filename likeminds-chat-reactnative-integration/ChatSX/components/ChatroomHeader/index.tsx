@@ -1,4 +1,11 @@
-import { View, Text, TouchableOpacity, Image, Alert } from "react-native";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  Image,
+  Alert,
+  Keyboard,
+} from "react-native";
 import React, { useEffect } from "react";
 import { Client } from "../../client";
 import {
@@ -9,6 +16,8 @@ import { styles } from "../../screens/ChatRoom/styles";
 import { ChatroomType, Events, Keys } from "../../enums";
 import STYLES from "../../constants/Styles";
 import {
+  CLEAR_CHATROOM_CONVERSATION,
+  CLEAR_CHATROOM_DETAILS,
   CLEAR_CHATROOM_TOPIC,
   GET_CONVERSATIONS_SUCCESS,
   LONG_PRESSED,
@@ -51,6 +60,7 @@ const ChatroomHeader = () => {
     setReplyChatID,
     setModalVisible,
     setReportModalVisible,
+    backAction,
   }: ChatroomContextValues = useChatroomContext();
 
   const dispatch = useAppDispatch();
@@ -62,7 +72,25 @@ const ChatroomHeader = () => {
       headerShadowVisible: false,
       headerLeft: () => (
         <View style={styles.headingContainer}>
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              dispatch({
+                type: CLEAR_CHATROOM_CONVERSATION,
+                body: { conversations: [] },
+              });
+              dispatch({
+                type: CLEAR_CHATROOM_DETAILS,
+                body: { chatroomDBDetails: {} },
+              });
+              dispatch({ type: SET_IS_REPLY, body: { isReply: false } });
+              dispatch({
+                type: SET_REPLY_MESSAGE,
+                body: { replyMessage: "" },
+              });
+              Keyboard.dismiss();
+              backAction();
+            }}
+          >
             <Image
               source={require("../../assets/images/back_arrow3x.png")}
               style={styles.backBtn}
