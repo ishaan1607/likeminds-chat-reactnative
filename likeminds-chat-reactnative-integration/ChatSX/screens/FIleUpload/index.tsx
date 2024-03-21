@@ -43,6 +43,7 @@ import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { Client } from "../../client";
 import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface UploadResource {
   selectedImages: any;
@@ -66,7 +67,7 @@ const FileUpload = ({
   handleDoc,
   onEdit,
 }: FileUploadProps) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<StackNavigationProp<any>>();
   const route = useRoute();
   const { backIconPath, imageCropIcon }: any = route.params;
 

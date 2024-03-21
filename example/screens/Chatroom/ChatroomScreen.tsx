@@ -39,8 +39,9 @@ export function ChatroomScreen() {
     unblockMember,
   } = useChatroomContext();
   const {scrollToBottom} = useMessageListContext();
-  const {renderFooterExploreFeed, handleLoadMore} = useExploreFeedContext();
+  // const {renderFooterExploreFeed, handleLoadMore} = useExploreFeedContext();
   const {handleGallery, handleDoc, handleCamera, onEdit} = useInputBoxContext();
+
   const customHandleGallery = async () => {
     console.log('before custom handle gallery');
     await handleGallery();
@@ -136,16 +137,16 @@ export function ChatroomScreen() {
     await scrollToBottom();
     console.log('after custom scroll to bottom');
   };
-  const customExploreFeedRenderFooter = async () => {
-    console.log('before custom render footer');
-    await renderFooterExploreFeed();
-    console.log('after custom render footer');
-  };
-  const customHandleLoadMore = async () => {
-    console.log('before handle load more');
-    await handleLoadMore();
-    console.log('after handle load more');
-  };
+  // const customExploreFeedRenderFooter = async () => {
+  //   console.log('before custom render footer');
+  //   await renderFooterExploreFeed();
+  //   console.log('after custom render footer');
+  // };
+  // const customHandleLoadMore = async () => {
+  //   console.log('before handle load more');
+  //   await handleLoadMore();
+  //   console.log('after handle load more');
+  // };
 
   return (
     <ChatRoom
@@ -168,7 +169,11 @@ export function ChatroomScreen() {
       onApprove={customOnApprove}
       onReject={customOnReject}
       blockMember={customBlockMember}
-      unblockMember={customUnBlockMember}>
+      unblockMember={customUnBlockMember}
+      handleGallery={customHandleGallery}
+      handleCamera={customHandleCamera}
+      handleDoc={customHandleDoc}
+      onEdit={customOnEdit}>
       {/* ChatroomHeader */}
       <ChatroomHeader />
 
@@ -183,10 +188,6 @@ export function ChatroomScreen() {
         joinSecretChatroomProp={customJoinSecretChatroom}
         showJoinAlertProp={customShowJoinAlert}
         showRejectAlertProp={customShowRejectAlert}
-        handleGallery={customHandleGallery}
-        handleCamera={customHandleCamera}
-        handleDoc={customHandleDoc}
-        onEdit={customOnEdit}
       />
     </ChatRoom>
   );
