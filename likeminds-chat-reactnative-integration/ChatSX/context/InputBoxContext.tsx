@@ -467,6 +467,7 @@ export const InputBoxContextProvider = ({
       mediaType: "mixed",
       selectionLimit: 0,
     };
+    
     navigation.navigate(FILE_UPLOAD, {
       chatroomID: chatroomID,
       previousMessage: message, // to keep message on uploadScreen InputBox

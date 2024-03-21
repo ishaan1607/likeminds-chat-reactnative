@@ -22,20 +22,12 @@ interface MessageInput {
   joinSecretChatroomProp: () => void;
   showJoinAlertProp: () => void;
   showRejectAlertProp: () => void;
-  handleGallery: () => void;
-  handleCamera: () => void;
-  handleDoc: () => void;
-  onEdit: () => void;
 }
 
 const MessageInput = ({
   joinSecretChatroomProp,
   showJoinAlertProp,
   showRejectAlertProp,
-  handleGallery,
-  handleCamera,
-  handleDoc,
-  onEdit,
 }: MessageInput) => {
   const {
     navigation,

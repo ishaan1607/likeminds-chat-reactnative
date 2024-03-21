@@ -51,10 +51,10 @@ interface ChatRoomProps {
   onReject?: () => void;
   blockMember?: () => void;
   unblockMember?: () => void;
-  handleGallery: () => void;
-  handleCamera: () => void;
-  handleDoc: () => void;
-  onEdit: () => void;
+  handleGallery?: () => void;
+  handleCamera?: () => void;
+  handleDoc?: () => void;
+  onEdit?: () => void;
 }
 
 interface ChatRoomComponentProps {
