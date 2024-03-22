@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -77,6 +77,10 @@ const ExploreFeedItem: React.FC<Props> = ({
   const myClient = Client?.myClient;
 
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    setIsChatroomJoined(isJoined);
+  }, [isJoined]);
 
   const leaveChatroom = async (val: boolean) => {
     try {
