@@ -269,6 +269,8 @@ const CommonAllMembers = ({
             memberState: 1,
           };
     const res = await myClient.getAllMembers(initialPayload);
+    res?.data?.members?.shift(); // to remove current from the list
+    
     setParticipants(res?.data?.members);
     setCount(0);
   };
