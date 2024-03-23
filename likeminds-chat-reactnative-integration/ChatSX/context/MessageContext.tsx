@@ -155,7 +155,7 @@ export const MessageContextProvider = ({
     const chatroomWithUser =
       chatroomDBDetails?.chatroomWithUser?.sdkClientInfo?.uuid;
 
-    if (loggedInMember === chatroomWithUser) {
+    if (loggedInMember !== chatroomWithUser) {
       const startingIndex = answer.lastIndexOf("<");
       const receivingUser = answer.substring(0, startingIndex - 2);
       return receivingUser;

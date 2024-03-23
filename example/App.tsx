@@ -24,6 +24,7 @@ import {
   LMChatroomCallbacks,
   NavigateToProfileParams,
   NavigateToGroupDetailsParams,
+  DmAllMembers,
   STYLES,
   ContextProvider,
 } from '@likeminds.community/chat-rn-core';
@@ -94,6 +95,7 @@ function App(): React.JSX.Element {
               isInvited: false,
             }}
           />
+          <Stack.Screen name={'DMAllMembers'} component={DmAllMembers} />
           <Stack.Screen
             options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
             name={'FileUpload'}
