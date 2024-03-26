@@ -10,7 +10,9 @@ interface ChatProps {
 function Chat({ children }: ChatProps) {
   return (
     <ChatroomContextProvider>
-      <MessageListContextProvider>{children}</MessageListContextProvider>
+      <MessageListContextProvider>
+        <InputBoxContextProvider>{children}</InputBoxContextProvider>
+      </MessageListContextProvider>
     </ChatroomContextProvider>
   );
 }

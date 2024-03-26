@@ -44,6 +44,7 @@ import { Client } from "../../client";
 import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
+import { useChatroomContext } from "../../context/ChatroomContext";
 
 interface UploadResource {
   selectedImages: any;
@@ -70,6 +71,8 @@ const FileUpload = ({
   const navigation = useNavigation<StackNavigationProp<any>>();
   const route = useRoute();
   const { backIconPath, imageCropIcon }: any = route.params;
+
+  const { chatroomType } = useChatroomContext();
 
   const selectedImageBorderColor =
     STYLES.$FILE_UPLOAD_STYLE?.selectedImageBorderColor;
@@ -441,6 +444,7 @@ const FileUpload = ({
               previousMessage={previousMessage}
               handleFileUpload={handleFileUpload}
               isGif={isGif}
+              chatroomType={chatroomType}
             />
           </CustomisableMethodsContextProvider>
         ) : null}

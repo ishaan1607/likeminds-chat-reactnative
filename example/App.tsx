@@ -70,9 +70,9 @@ class CustomCallbacks implements LMChatCallbacks, LMChatroomCallbacks {
 const lmChatInterface = new CustomCallbacks();
 
 function App(): React.JSX.Element {
-  const userName = 'Peer2';
-  const userUniqueId = 'Peer2';
-  // const chatroomId = '4262787';
+  const userName = '';
+  const userUniqueId = '';
+  const chatroomId = '';
   const profileImageUrl = '';
 
   useEffect(() => {

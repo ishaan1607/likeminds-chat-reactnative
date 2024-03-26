@@ -1558,7 +1558,10 @@ const MessageInputBox = ({
       clearTimeout(debounceTimeout);
 
       const len = newMentions.length;
-      if (len > 0) {
+      if (
+        len > 0 &&
+        !(chatroomType === ChatroomType.DMCHATROOM && isUploadScreen)
+      ) {
         const timeoutID = setTimeout(async () => {
           setPage(1);
           const res = await taggingAPI({
