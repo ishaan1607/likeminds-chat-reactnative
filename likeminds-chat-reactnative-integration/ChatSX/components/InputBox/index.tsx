@@ -1236,7 +1236,7 @@ const MessageInputBox = ({
             payload.shareLink = url;
           }
 
-          const response = await dispatch(
+          const response: any = await dispatch(
             onConversationsCreate(payload) as any
           );
 
@@ -1336,7 +1336,7 @@ const MessageInputBox = ({
             payload.shareLink = url;
           }
 
-          const response = await dispatch(
+          const response: any = await dispatch(
             onConversationsCreate(payload) as any
           );
 
@@ -1558,7 +1558,10 @@ const MessageInputBox = ({
       clearTimeout(debounceTimeout);
 
       const len = newMentions.length;
-      if (len > 0) {
+      if (
+        len > 0 &&
+        !(chatroomType === ChatroomType.DMCHATROOM && isUploadScreen)
+      ) {
         const timeoutID = setTimeout(async () => {
           setPage(1);
           const res = await taggingAPI({
@@ -2442,7 +2445,8 @@ const MessageInputBox = ({
               if (
                 chatroomType === ChatroomType.DMCHATROOM && // if DM
                 chatRequestState === null &&
-                isPrivateMember // isPrivateMember = false when none of the member on both sides is CM.
+                isPrivateMember && // isPrivateMember = false when none of the member on both sides is CM.
+                !!message
               ) {
                 sendDmRequest();
               } else {

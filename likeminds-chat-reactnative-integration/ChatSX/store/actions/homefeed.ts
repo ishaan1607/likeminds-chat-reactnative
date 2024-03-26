@@ -29,12 +29,11 @@ import {
   UPDATE_INVITES_FAILED,
   UPDATE_INVITES_SUCCESS,
 } from "../types/types";
-import { Dispatch } from "@reduxjs/toolkit";
 import { Client } from "../../client";
 
-export const initAPI = (payload: any) => async (dispatch: Dispatch) => {
+export const initAPI = (payload: any) => () => {
   try {
-    const temp = await dispatch({
+    const temp = {
       type: INIT_API_SUCCESS,
       [CALL_API]: {
         func: Client.myClient?.initiateUser(payload),
@@ -42,16 +41,16 @@ export const initAPI = (payload: any) => async (dispatch: Dispatch) => {
         types: [INIT_API, INIT_API_SUCCESS, INIT_API_FAILED],
         showLoader: true,
       },
-    });
+    };
     return temp;
   } catch (error) {
     Alert.alert(`${error}`);
   }
 };
 
-export const getMemberState = (payload?: any) => async (dispatch: Dispatch) => {
+export const getMemberState = (payload?: any) => () => {
   try {
-    return await dispatch({
+    return {
       type: PROFILE_DATA_SUCCESS,
       [CALL_API]: {
         func: Client.myClient?.getMemberState(),
@@ -59,75 +58,68 @@ export const getMemberState = (payload?: any) => async (dispatch: Dispatch) => {
         types: [PROFILE_DATA, PROFILE_DATA_SUCCESS, PROFILE_DATA_FAILED],
         showLoader: true,
       },
-    });
+    };
   } catch (error) {
     Alert.alert(`${error}`);
   }
 };
 
-export const getInvites =
-  (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {
-    try {
-      return await dispatch({
-        type: GET_INVITES_SUCCESS,
-        [CALL_API]: {
-          func: Client.myClient?.getInvites(payload),
-          body: payload,
-          types: [GET_INVITES, GET_INVITES_SUCCESS, GET_INVITES_FAILED],
-          showLoader: showLoader,
-        },
-      });
-    } catch (error) {
-      Alert.alert(`${error}`);
-    }
-  };
+export const getInvites = (payload: any, showLoader?: boolean) => () => {
+  try {
+    return {
+      type: GET_INVITES_SUCCESS,
+      [CALL_API]: {
+        func: Client.myClient?.getInvites(payload),
+        body: payload,
+        types: [GET_INVITES, GET_INVITES_SUCCESS, GET_INVITES_FAILED],
+        showLoader: showLoader,
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};
 
-export const updateInvites =
-  (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {
-    try {
-      return await dispatch({
-        type: UPDATE_INVITES_SUCCESS,
-        [CALL_API]: {
-          func: Client.myClient?.getInvites(payload),
-          body: payload,
-          types: [
-            UPDATE_INVITES,
-            UPDATE_INVITES_SUCCESS,
-            UPDATE_INVITES_FAILED,
-          ],
-          showLoader: showLoader,
-        },
-      });
-    } catch (error) {
-      Alert.alert(`${error}`);
-    }
-  };
+export const updateInvites = (payload: any, showLoader?: boolean) => () => {
+  try {
+    return {
+      type: UPDATE_INVITES_SUCCESS,
+      [CALL_API]: {
+        func: Client.myClient?.getInvites(payload),
+        body: payload,
+        types: [UPDATE_INVITES, UPDATE_INVITES_SUCCESS, UPDATE_INVITES_FAILED],
+        showLoader: showLoader,
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};
 
-export const getHomeFeedData =
-  (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {
-    try {
-      return await dispatch({
-        type: GET_HOMEFEED_CHAT_SUCCESS,
-        [CALL_API]: {
-          func: Client.myClient?.getHomeFeed(payload),
-          body: payload,
-          types: [
-            GET_HOMEFEED_CHAT,
-            GET_HOMEFEED_CHAT_SUCCESS,
-            GET_HOMEFEED_CHAT_FAILED,
-          ],
-          showLoader: showLoader ? true : false,
-        },
-      });
-    } catch (error) {
-      Alert.alert(`${error}`);
-    }
-  };
+export const getHomeFeedData = (payload: any, showLoader?: boolean) => () => {
+  try {
+    return {
+      type: GET_HOMEFEED_CHAT_SUCCESS,
+      [CALL_API]: {
+        func: Client.myClient?.getHomeFeed(payload),
+        body: payload,
+        types: [
+          GET_HOMEFEED_CHAT,
+          GET_HOMEFEED_CHAT_SUCCESS,
+          GET_HOMEFEED_CHAT_FAILED,
+        ],
+        showLoader: showLoader ? true : false,
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};
 
 export const updateHomeFeedData =
-  (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {
+  (payload: any, showLoader?: boolean) => () => {
     try {
-      return await dispatch({
+      return {
         type: UPDATE_HOMEFEED_CHAT_SUCCESS,
         [CALL_API]: {
           func: Client.myClient?.getHomeFeed(payload),
@@ -139,50 +131,48 @@ export const updateHomeFeedData =
           ],
           showLoader: showLoader != undefined ? false : true,
         },
-      });
+      };
     } catch (error) {
       Alert.alert(`${error}`);
     }
   };
 
-export const getDMFeedData =
-  (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {
-    try {
-      return await dispatch({
-        type: GET_DMFEED_CHAT_SUCCESS,
-        [CALL_API]: {
-          func: Client.myClient?.fetchDMFeed(payload),
-          body: payload,
-          types: [
-            GET_DMFEED_CHAT,
-            GET_DMFEED_CHAT_SUCCESS,
-            GET_DMFEED_CHAT_FAILED,
-          ],
-          showLoader: showLoader ? true : false,
-        },
-      });
-    } catch (error) {
-      Alert.alert(`${error}`);
-    }
-  };
+export const getDMFeedData = (payload: any, showLoader?: boolean) => () => {
+  try {
+    return {
+      type: GET_DMFEED_CHAT_SUCCESS,
+      [CALL_API]: {
+        func: Client.myClient?.fetchDMFeed(payload),
+        body: payload,
+        types: [
+          GET_DMFEED_CHAT,
+          GET_DMFEED_CHAT_SUCCESS,
+          GET_DMFEED_CHAT_FAILED,
+        ],
+        showLoader: showLoader ? true : false,
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};
 
-export const updateDMFeedData =
-  (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {
-    try {
-      return await dispatch({
-        type: UPDATE_DMFEED_CHAT_SUCCESS,
-        [CALL_API]: {
-          func: Client.myClient?.fetchDMFeed(payload),
-          body: payload,
-          types: [
-            UPDATE_DMFEED_CHAT,
-            UPDATE_DMFEED_CHAT_SUCCESS,
-            UPDATE_DMFEED_CHAT_FAILED,
-          ],
-          showLoader: showLoader ? true : false,
-        },
-      });
-    } catch (error) {
-      Alert.alert(`${error}`);
-    }
-  };
+export const updateDMFeedData = (payload: any, showLoader?: boolean) => () => {
+  try {
+    return {
+      type: UPDATE_DMFEED_CHAT_SUCCESS,
+      [CALL_API]: {
+        func: Client.myClient?.fetchDMFeed(payload),
+        body: payload,
+        types: [
+          UPDATE_DMFEED_CHAT,
+          UPDATE_DMFEED_CHAT_SUCCESS,
+          UPDATE_DMFEED_CHAT_FAILED,
+        ],
+        showLoader: showLoader ? true : false,
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};

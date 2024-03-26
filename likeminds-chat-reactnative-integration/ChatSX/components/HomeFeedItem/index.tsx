@@ -8,8 +8,10 @@ import {
   Alert,
   Pressable,
   Platform,
+  TextStyle,
+  ImageStyle,
 } from "react-native";
-import { decode, getFullDate } from "../../commonFuctions";
+import { decode } from "../../commonFuctions";
 import { useAppDispatch, useAppSelector } from "../../store";
 import {
   ACCEPT_INVITE,
@@ -37,6 +39,8 @@ import { ChatroomChatRequestState } from "../../enums";
 import { ChatroomType } from "../../enums";
 import { DocumentType } from "../../enums";
 import { Client } from "../../client";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Props {
   avatar: string;
@@ -46,7 +50,6 @@ interface Props {
   pinned: boolean;
   unreadCount: number;
   lastConversation: any;
-  navigation: any;
   chatroomID: number;
   lastConversationMember?: string;
   isSecret: boolean;
@@ -64,7 +67,6 @@ const HomeFeedItem: React.FC<Props> = ({
   pinned = false,
   unreadCount,
   lastConversation,
-  navigation,
   chatroomID,
   lastConversationMember,
   isSecret,
@@ -73,9 +75,16 @@ const HomeFeedItem: React.FC<Props> = ({
   chatroomType,
   muteStatus,
 }) => {
-  const myClient = Client.myClient;
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.homefeed);
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  const myClient = Client.myClient;
+  const homeFeedStyles = STYLES.$HOME_FEED_STYLE;
+  const unreadCountStyle = homeFeedStyles.unreadCount;
+  const lastConversationTime = homeFeedStyles.lastConversationTime;
+  const titleStyle = homeFeedStyles.title;
+  const lastConversationStyle = homeFeedStyles.lastConversation;
+  const avatarStyles = homeFeedStyles.avatar;
 
   const showJoinAlert = () =>
     Alert.alert(
@@ -405,13 +414,27 @@ const HomeFeedItem: React.FC<Props> = ({
               ? { uri: avatar }
               : require("../../assets/images/default_pic.png")
           }
-          style={styles.avatar}
+          style={
+            [
+              styles.avatar,
+              avatarStyles?.borderRadius && {
+                borderRadius: avatarStyles?.borderRadius,
+              },
+            ] as ImageStyle
+          }
         />
         {chatroomType === ChatroomType.DMCHATROOM ? (
           <View style={styles.dmAvatarBubble}>
             <Image
               source={require("../../assets/images/dm_message_bubble3x.png")}
-              style={styles.dmAvatarBubbleImg}
+              style={
+                [
+                  styles.dmAvatarBubbleImg,
+                  avatarStyles?.borderRadius && {
+                    borderRadius: avatarStyles?.borderRadius,
+                  },
+                ] as ImageStyle
+              }
             />
           </View>
         ) : null}
@@ -419,7 +442,23 @@ const HomeFeedItem: React.FC<Props> = ({
 
       <View style={styles.infoContainer}>
         <View style={styles.headerContainer}>
-          <Text style={styles.title} numberOfLines={1}>
+          <Text
+            style={
+              [
+                styles.title,
+                titleStyle?.color && {
+                  color: titleStyle?.color,
+                },
+                titleStyle?.fontSize && {
+                  fontSize: titleStyle?.fontSize,
+                },
+                titleStyle?.fontFamily && {
+                  fontFamily: titleStyle?.fontFamily,
+                },
+              ] as TextStyle
+            }
+            numberOfLines={1}
+          >
             {title}
             {isSecret ? (
               <Image
@@ -428,7 +467,26 @@ const HomeFeedItem: React.FC<Props> = ({
               />
             ) : null}
           </Text>
-          {time ? <Text style={styles.time}>{time}</Text> : null}
+          {time ? (
+            <Text
+              style={
+                [
+                  styles.time,
+                  lastConversationTime?.color && {
+                    color: lastConversationTime?.color,
+                  },
+                  lastConversationTime?.fontSize && {
+                    fontSize: lastConversationTime?.fontSize,
+                  },
+                  lastConversationTime?.fontFamily && {
+                    fontFamily: lastConversationTime?.fontFamily,
+                  },
+                ] as TextStyle
+              }
+            >
+              {time}
+            </Text>
+          ) : null}
         </View>
         {!!lastConversation && !inviteReceiver ? (
           <Text
@@ -459,7 +517,23 @@ const HomeFeedItem: React.FC<Props> = ({
                   >{`${lastConversationMember}: `}</Text>
                 ) : null}
 
-                <Text numberOfLines={1} style={[styles.parentLastMessage]}>
+                <Text
+                  numberOfLines={1}
+                  style={
+                    [
+                      styles.parentLastMessage,
+                      lastConversationStyle?.color && {
+                        color: lastConversationStyle?.color,
+                      },
+                      lastConversationStyle?.fontSize && {
+                        fontSize: lastConversationStyle?.fontSize,
+                      },
+                      lastConversationStyle?.fontFamily && {
+                        fontFamily: lastConversationStyle?.fontFamily,
+                      },
+                    ] as TextStyle
+                  }
+                >
                   {lastConversation.hasFiles > 0
                     ? getFeedIconAttachment(lastConversation)
                     : lastConversation?.state === 10
@@ -533,11 +607,57 @@ const HomeFeedItem: React.FC<Props> = ({
       {unreadCount ? (
         unreadCount > 100 ? (
           <View style={styles.unreadCountContainer}>
-            <Text style={styles.unreadCount}>99+</Text>
+            <Text
+              style={
+                [
+                  styles.unreadCount,
+                  unreadCountStyle?.color && {
+                    color: unreadCountStyle?.color,
+                  },
+                  unreadCountStyle?.fontSize && {
+                    fontSize: unreadCountStyle?.fontSize,
+                  },
+                  unreadCountStyle?.fontFamily && {
+                    fontFamily: unreadCountStyle?.fontFamily,
+                  },
+                  unreadCountStyle?.borderRadius && {
+                    borderRadius: unreadCountStyle?.borderRadius,
+                  },
+                  unreadCountStyle?.backgroundColor && {
+                    backgroundColor: unreadCountStyle?.backgroundColor,
+                  },
+                ] as TextStyle
+              }
+            >
+              99+
+            </Text>
           </View>
         ) : (
           <View style={styles.unreadCountContainer}>
-            <Text style={styles.unreadCount}>{unreadCount}</Text>
+            <Text
+              style={
+                [
+                  styles.unreadCount,
+                  unreadCountStyle?.color && {
+                    color: unreadCountStyle?.color,
+                  },
+                  unreadCountStyle?.fontSize && {
+                    fontSize: unreadCountStyle?.fontSize,
+                  },
+                  unreadCountStyle?.fontFamily && {
+                    fontFamily: unreadCountStyle?.fontFamily,
+                  },
+                  unreadCountStyle?.borderRadius && {
+                    borderRadius: unreadCountStyle?.borderRadius,
+                  },
+                  unreadCountStyle?.backgroundColor && {
+                    backgroundColor: unreadCountStyle?.backgroundColor,
+                  },
+                ] as TextStyle
+              }
+            >
+              {unreadCount}
+            </Text>
           </View>
         )
       ) : null}

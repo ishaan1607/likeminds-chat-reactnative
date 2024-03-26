@@ -6,7 +6,13 @@ import {
   UPDATE_FILE_UPLOADING_OBJECT,
 } from "../types/types";
 
-const initialState = {
+export interface FileUploadReducerState {
+  isFileUploading: boolean;
+  fileUploadingID: null | number;
+  uploadingFilesMessages: any;
+}
+
+export const initialState: FileUploadReducerState = {
   isFileUploading: false,
   fileUploadingID: null,
   uploadingFilesMessages: {} as any,

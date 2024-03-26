@@ -1,46 +1,65 @@
-import React, { useState, useLayoutEffect, useRef, useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  Image,
-  ActivityIndicator,
-  Alert,
-} from "react-native";
+import React, { useLayoutEffect } from "react";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import ExploreFeedFilters from "../../components/ExploreFeedFilters";
 import ExploreFeedItem from "../../components/ExploreFeedItem";
-import ToastMessage from "../../components/ToastMessage";
 import STYLES from "../../constants/Styles";
-import { useAppDispatch, useAppSelector } from "../../store";
-import {
-  getExploreFeedData,
-  updateExploreFeedData,
-} from "../../store/actions/explorefeed";
-import { SET_EXPLORE_FEED_PAGE } from "../../store/types/types";
+import { useAppSelector } from "../../store";
 import styles from "./styles";
 import { FlashList } from "@shopify/flash-list";
 import { LoaderComponent } from "../../components/LoaderComponent";
-import Layout from "../../constants/Layout";
+import {
+  ExploreFeedContextProvider,
+  useExploreFeedContext,
+} from "../../context/ExploreFeedContext";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 interface Props {
   navigation: any;
 }
 
-const ExploreFeed = ({ navigation }: Props) => {
+const ExploreFeed = () => {
+  return (
+    <ExploreFeedContextProvider>
+      <ExploreFeedComponent />
+    </ExploreFeedContextProvider>
+  );
+};
+
+const ExploreFeedComponent = () => {
+  const navigation = useNavigation();
+  const route = useRoute();
   const {
-    exploreChatrooms = [],
-    page,
+    backIconPath,
+    filterIconPath,
+    participantsIconPath,
+    totalMessagesIconPath,
+    joinButtonPath,
+    joinedButtonPath,
+  } = route.params as {
+    backIconPath: string;
+    filterIconPath: string;
+    participantsIconPath: string;
+    totalMessagesIconPath: string;
+    joinButtonPath: string;
+    joinedButtonPath: string;
+  };
+
+  const {
+    exploreChatrooms,
     pinnedChatroomsCount,
-  }: any = useAppSelector((state) => state.explorefeed);
-  const { community }: any = useAppSelector((state) => state.homefeed);
-  const [chats, setChats] = useState(exploreChatrooms);
-  const [filterState, setFilterState] = useState(0);
-  const [isPinned, setIsPinned] = useState(false);
-  // const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+    chats,
+    filterState,
+    isPinned,
+    setIsPinned,
+    setFilterState,
+    setChats,
+    handleLoadMore,
+    renderFooterExploreFeed,
+  } = useExploreFeedContext();
   const { count } = useAppSelector((state) => state.loader);
-  const dispatch = useAppDispatch();
+
+  const exploreChatroomStyles = STYLES.$EXPLORE_CHATROOM_STYLE;
+  const header = exploreChatroomStyles?.header;
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -50,109 +69,42 @@ const ExploreFeed = ({ navigation }: Props) => {
         <View style={styles.headingContainer}>
           <TouchableOpacity onPress={navigation.goBack}>
             <Image
-              source={require("../../assets/images/back_arrow3x.png")}
+              source={
+                backIconPath
+                  ? backIconPath
+                  : require("../../assets/images/back_arrow3x.png")
+              }
               style={styles.backBtn}
             />
           </TouchableOpacity>
           <Text
             style={{
-              color: STYLES.$COLORS.FONT_PRIMARY,
-              fontSize: STYLES.$FONT_SIZES.XL,
-              fontFamily: STYLES.$FONT_TYPES.BOLD,
+              color: header?.color
+                ? header?.color
+                : STYLES.$COLORS.FONT_PRIMARY,
+              fontSize: header?.fontSize
+                ? header?.fontSize
+                : STYLES.$FONT_SIZES.XL,
+              fontFamily: header?.fontFamily
+                ? header?.fontFamily
+                : STYLES.$FONT_TYPES.BOLD,
             }}
           >
-            Explore Chatrooms
+            {header?.placeHolderText
+              ? header?.placeHolderText
+              : "Explore Chatrooms"}
           </Text>
         </View>
       ),
     });
   }, [navigation]);
 
-  async function fetchData() {
-    dispatch({ type: SET_EXPLORE_FEED_PAGE, body: 1 });
-    const payload = {
-      orderType: filterState,
-      page: 1,
-    };
-    const response = await dispatch(getExploreFeedData(payload, true) as any);
-    return response;
-  }
-
-  async function updateData(newPage: number) {
-    const payload = {
-      orderType: filterState,
-      page: newPage,
-    };
-    const response = await dispatch(updateExploreFeedData(payload) as any);
-    return response;
-  }
-
-  useEffect(() => {
-    fetchData();
-  }, [filterState]);
-
-  useEffect(() => {
-    if (isPinned) {
-      const pinnedChats = exploreChatrooms.filter((item: any) =>
-        item?.isPinned ? item : null
-      );
-      setChats(pinnedChats);
-    } else {
-      setChats(exploreChatrooms);
-    }
-  }, [exploreChatrooms]);
-
-  const loadData = async (newPage: number) => {
-    setIsLoading(true);
-    const res = await updateData(newPage);
-    if (res) {
-      setIsLoading(false);
-    }
-  };
-
-  const handleLoadMore = () => {
-    if (!isLoading) {
-      if (chats.length > 0 && chats.length % 10 === 0) {
-        const newPage = page + 1;
-        dispatch({ type: SET_EXPLORE_FEED_PAGE, body: newPage });
-        loadData(newPage);
-      }
-    }
-  };
-
-  const renderFooter = () => {
-    return isLoading ? (
-      <View style={{ paddingVertical: Layout.normalize(20) }}>
-        <ActivityIndicator size="large" color={STYLES.$COLORS.SECONDARY} />
-      </View>
-    ) : null;
-  };
-
   return (
     <View style={styles.page}>
       <FlashList
         data={chats}
         ListHeaderComponent={() => (
-          <ExploreFeedFilters
-            filterState={filterState}
-            setFilterState={(val) => {
-              setFilterState(val);
-            }}
-            setIsPinned={(val) => {
-              if (val) {
-                const pinnedChats = chats.filter((item: any) =>
-                  item?.isPinned ? item : null
-                );
-                setChats(pinnedChats);
-                setIsPinned(val);
-              } else {
-                setChats(exploreChatrooms);
-                setIsPinned(val);
-              }
-            }}
-            isPinned={isPinned}
-            pinnedChatroomsCount={pinnedChatroomsCount}
-          />
+          <ExploreFeedFilters filterIconPath={filterIconPath} />
         )}
         renderItem={({ item }: any) => {
           const exploreFeedProps = {
@@ -170,6 +122,10 @@ const ExploreFeed = ({ navigation }: Props) => {
             chatroomID: item?.id,
             filterState: filterState,
             navigation: navigation,
+            participantsIconPath,
+            totalMessagesIconPath,
+            joinButtonPath,
+            joinedButtonPath,
           };
           return (
             <View>
@@ -183,7 +139,7 @@ const ExploreFeed = ({ navigation }: Props) => {
         estimatedItemSize={15}
         onEndReached={handleLoadMore}
         onEndReachedThreshold={0.1}
-        ListFooterComponent={renderFooter}
+        ListFooterComponent={renderFooterExploreFeed}
         keyExtractor={(item: any) => (item?.id ? item?.id?.toString() : null)}
       />
       {count > 0 && <LoaderComponent />}

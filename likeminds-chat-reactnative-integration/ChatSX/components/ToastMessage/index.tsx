@@ -1,7 +1,7 @@
-import {View, Text, Modal} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {styles} from './styles';
-import Layout from '../../constants/Layout';
+import { View, Text, Modal } from "react-native";
+import React, { useEffect, useState } from "react";
+import { styles } from "./styles";
+import Layout from "../../constants/Layout";
 
 interface Props {
   message: string;
@@ -9,7 +9,7 @@ interface Props {
   onDismiss: () => void;
 }
 
-const ToastMessage = ({isToast, onDismiss, message}: Props) => {
+const ToastMessage = ({ isToast, onDismiss, message }: Props) => {
   useEffect(() => {
     if (isToast) {
       setTimeout(() => {
@@ -26,7 +26,8 @@ const ToastMessage = ({isToast, onDismiss, message}: Props) => {
         visible={isToast}
         onRequestClose={() => {
           onDismiss();
-        }}>
+        }}
+      >
         <View style={styles.centeredView}>
           <View style={styles.modalParent}>
             <View style={styles.modalView}>

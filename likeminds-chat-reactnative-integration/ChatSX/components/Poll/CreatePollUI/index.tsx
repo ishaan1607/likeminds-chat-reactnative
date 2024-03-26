@@ -24,49 +24,49 @@ import ActionAlertModal from "../../../customModals/ActionListModel";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { CreatePollProps } from "../models";
 import STYLES from "../../../constants/Styles";
+import { useCreatePollContext } from "../../../context/CreatePollContext";
 import Layout from "../../../constants/Layout";
 
-const CreatePollUI = ({
-  hue,
-  show,
-  date,
-  mode,
-  onChange,
-  showDatePicker,
-  userCanVoteForArr,
-  optionsArray,
-  showAdvancedOption,
-  formatedDateTime,
-  timeZoneOffsetInMinutes,
-  addOptionsEnabled,
-  anonymousPollEnabled,
-  liveResultsEnabled,
-  question,
+const CreatePollUI = () => {
+  const {
+    show,
+    date,
+    mode,
+    userCanVoteForArr,
+    optionsArray,
+    showAdvancedOption,
+    formatedDateTime,
+    timeZoneOffsetInMinutes,
+    addOptionsEnabled,
+    anonymousPollEnabled,
+    liveResultsEnabled,
+    question,
+    isSelectOptionModal,
+    userVoteForOptionsArrValue,
+    userVoteFor,
+    voteAllowedPerUser,
+    isActionAlertModalVisible,
 
-  hideActionModal,
-  hideSelectOptionModal,
-  isSelectOptionModal,
-  userVoteForOptionsArrValue,
+    onChange,
+    showDatePicker,
+    handleShowAdvanceOption,
+    hideActionModal,
+    hideSelectOptionModal,
+    handleAddOptions,
+    handleAnonymousPoll,
+    handleLiveResults,
+    handleInputOptionsChangeFunction,
+    addNewOption,
+    removeAnOption,
+    postPoll,
+    handleQuestion,
+    handleOnSelect,
+    handleOnSelectOption,
+    handleOpenActionModal,
+    handleOpenOptionModal,
+    resetDateTimePicker,
+  }: CreatePollProps = useCreatePollContext();
 
-  isActionAlertModalVisible,
-
-  handleShowAdvanceOption,
-  userVoteFor,
-  voteAllowedPerUser,
-  handleAddOptions,
-  handleAnonymousPoll,
-  handleLiveResults,
-  handleInputOptionsChangeFunction,
-  addNewOption,
-  removeAnOption,
-  postPoll,
-  handleQuestion,
-  handleOnSelect,
-  handleOnSelectOption,
-  handleOpenActionModal,
-  handleOpenOptionModal,
-  resetDateTimePicker,
-}: CreatePollProps) => {
   return (
     <View>
       <ScrollView
@@ -77,14 +77,7 @@ const CreatePollUI = ({
         {/* Poll question */}
         <View style={styles.pollQuestion}>
           <View>
-            <Text
-              style={[
-                styles.font,
-                hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
-              ]}
-            >
-              Poll question
-            </Text>
+            <Text style={[styles.font]}>Poll question</Text>
           </View>
           <View style={styles.question}>
             <TextInput
@@ -101,14 +94,7 @@ const CreatePollUI = ({
         {/* Answers options */}
         <View style={styles.answerOptions}>
           <View style={styles.paddingHorizontal15}>
-            <Text
-              style={[
-                styles.font,
-                hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
-              ]}
-            >
-              Answer options
-            </Text>
+            <Text style={[styles.font]}>Answer options</Text>
           </View>
 
           {optionsArray.map((option: any, index: any) => {
@@ -165,19 +151,10 @@ const CreatePollUI = ({
             ]}
           >
             <Image
-              style={[
-                styles.optionIcon,
-                hue ? { tintColor: `hsl(${hue}, 53%, 15%)` } : null,
-              ]}
+              style={[styles.optionIcon]}
               source={require("../../../assets/images/add_options3x.png")}
             />
-            <Text
-              style={[
-                styles.text,
-                styles.addOptionText,
-                hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
-              ]}
-            >
+            <Text style={[styles.text, styles.addOptionText]}>
               Add an option...
             </Text>
           </TouchableOpacity>
@@ -186,14 +163,7 @@ const CreatePollUI = ({
         {/* Poll expire Time and Date selection */}
         <View style={[styles.answerOptions, styles.paddingHorizontal15]}>
           <View>
-            <Text
-              style={[
-                styles.font,
-                hue ? { color: `hsl(${hue}, 53%, 15%)` } : null,
-              ]}
-            >
-              Poll expires on
-            </Text>
+            <Text style={[styles.font]}>Poll expires on</Text>
           </View>
           <View style={styles.question}>
             <TouchableOpacity
@@ -299,15 +269,11 @@ const CreatePollUI = ({
               <Switch
                 trackColor={{
                   false: styles.lightGreyBackground.color,
-                  true: hue
-                    ? `hsl(${hue}, 53%, 15%)`
-                    : styles.primaryColor.color,
+                  true: styles.primaryColor.color,
                 }}
                 thumbColor={
                   addOptionsEnabled
-                    ? hue
-                      ? `hsl(${hue}, 40%, 40%)`
-                      : styles.lightPrimaryColor.color
+                    ? styles.lightPrimaryColor.color
                     : styles.lightGreyThumb.color
                 }
                 ios_backgroundColor={styles.lightGreyBackground.color}
@@ -330,15 +296,11 @@ const CreatePollUI = ({
               <Switch
                 trackColor={{
                   false: styles.lightGreyBackground.color,
-                  true: hue
-                    ? `hsl(${hue}, 53%, 15%)`
-                    : styles.primaryColor.color,
+                  true: styles.primaryColor.color,
                 }}
                 thumbColor={
                   anonymousPollEnabled
-                    ? hue
-                      ? `hsl(${hue}, 40%, 40%)`
-                      : styles.lightPrimaryColor.color
+                    ? styles.lightPrimaryColor.color
                     : styles.lightGreyThumb.color
                 }
                 ios_backgroundColor={styles.lightGreyBackground.color}
@@ -361,15 +323,11 @@ const CreatePollUI = ({
               <Switch
                 trackColor={{
                   false: styles.lightGreyBackground.color,
-                  true: hue
-                    ? `hsl(${hue}, 53%, 15%)`
-                    : styles.primaryColor.color,
+                  true: styles.primaryColor.color,
                 }}
                 thumbColor={
                   liveResultsEnabled
-                    ? hue
-                      ? `hsl(${hue}, 40%, 40%)`
-                      : styles.lightPrimaryColor.color
+                    ? styles.lightPrimaryColor.color
                     : styles.lightGreyThumb.color
                 }
                 ios_backgroundColor={styles.lightGreyBackground.color}
@@ -449,11 +407,7 @@ const CreatePollUI = ({
           onPress={() => {
             postPoll();
           }}
-          style={[
-            styles.extraMarginSpace,
-            styles.postButton,
-            hue ? { backgroundColor: `hsl(${hue}, 53%, 15%)` } : null,
-          ]}
+          style={[styles.extraMarginSpace, styles.postButton]}
         >
           <Text style={[styles.font, styles.whiteColor]}>{POST_TITLE}</Text>
         </TouchableOpacity>

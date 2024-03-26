@@ -1,7 +1,13 @@
 import {
+  CarouselScreenStyles,
   ChatBubbleStyles,
   ChatroomHeaderStyles,
+  ChatroomTopicStyles,
+  ExploreChatroomStyles,
+  FileUploadStyles,
+  HomeFeedStyles,
   InputBoxStyles,
+  MemberDirectoryStyles,
   ReactionListStyles,
   StylesProps,
 } from "./type";
@@ -82,6 +88,12 @@ export class STYLES {
   static $INPUT_BOX_STYLE: InputBoxStyles = {};
   static $REACTION_LIST_STYLE: ReactionListStyles = {};
   static $CHATROOM_HEADER_STYLE: ChatroomHeaderStyles = {};
+  static $CHATROOM_TOPIC_STYLE: ChatroomTopicStyles = {};
+  static $FILE_UPLOAD_STYLE: FileUploadStyles = {};
+  static $MEMBER_DIRECTORY_STYLE: MemberDirectoryStyles = {};
+  static $CAROUSEL_SCREEN_STYLE: CarouselScreenStyles = {};
+  static $EXPLORE_CHATROOM_STYLE: ExploreChatroomStyles = {};
+  static $HOME_FEED_STYLE: HomeFeedStyles = {};
   static setTheme({
     hue,
     fontColor,
@@ -134,6 +146,36 @@ export class STYLES {
   static setChatroomHeaderStyle(chatroomHeaderStyles: ChatroomHeaderStyles) {
     STYLES.$CHATROOM_HEADER_STYLE = {
       ...chatroomHeaderStyles,
+    };
+  }
+  static setChatroomTopicStyle(chatroomTopicStyles: ChatroomTopicStyles) {
+    STYLES.$CHATROOM_TOPIC_STYLE = {
+      ...chatroomTopicStyles,
+    };
+  }
+  static setFileUploadStyle(fileUploadStyles: FileUploadStyles) {
+    STYLES.$FILE_UPLOAD_STYLE = {
+      ...fileUploadStyles,
+    };
+  }
+  static setMemberDirectoryStyle(memberDirectoryStyles: MemberDirectoryStyles) {
+    STYLES.$MEMBER_DIRECTORY_STYLE = {
+      ...memberDirectoryStyles,
+    };
+  }
+  static setCarouselScreenStyle(carouselScreenStyles: CarouselScreenStyles) {
+    STYLES.$CAROUSEL_SCREEN_STYLE = {
+      ...carouselScreenStyles,
+    };
+  }
+  static setExploreChatroomStyle(exploreChatroomStyles: ExploreChatroomStyles) {
+    STYLES.$EXPLORE_CHATROOM_STYLE = {
+      ...exploreChatroomStyles,
+    };
+  }
+  static setHomeFeedStyle(homeFeedStyles: HomeFeedStyles) {
+    STYLES.$HOME_FEED_STYLE = {
+      ...homeFeedStyles,
     };
   }
 }

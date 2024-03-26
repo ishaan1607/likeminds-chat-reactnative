@@ -40,7 +40,29 @@ import {
   SET_TEMP_STATE_MESSAGE,
 } from "../types/types";
 
-const initialState = {
+export interface ChatroomReducerState {
+  conversations: any[];
+  chatroomDetails: any;
+  messageSent: any;
+  isLongPress: boolean;
+  selectedMessages: any[];
+  stateArr: number[];
+  position: { x: number; y: number };
+  selectedFilesToUpload: any[];
+  selectedFilesToUploadThumbnails: any[];
+  selectedFileToView: any;
+  isReply: boolean;
+  replyMessage: string;
+  editConversation: string;
+  fileSent: number;
+  chatroomDBDetails: any;
+  selectedVoiceNoteFilesToUpload: any[];
+  chatroomCreator: string;
+  currentChatroomTopic: any;
+  temporaryStateMessage: any;
+}
+
+export const initialState: ChatroomReducerState = {
   conversations: [],
   chatroomDetails: {} as any,
   messageSent: "" as any,

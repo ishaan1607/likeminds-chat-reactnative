@@ -162,7 +162,6 @@ export const styles = StyleSheet.create({
   },
   replyBoxParent: {
     backgroundColor: "white",
-    borderBottom: "none",
     borderBottomWidth: 0,
     borderBottomRightRadius: Layout.normalize(30),
     borderBottomLeftRadius: Layout.normalize(30),

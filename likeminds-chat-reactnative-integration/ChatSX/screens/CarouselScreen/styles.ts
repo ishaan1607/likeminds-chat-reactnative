@@ -6,7 +6,7 @@ const styles = StyleSheet.create({
   header: {
     display: "flex",
     flex: 1,
-    top: Platform.OS === "ios" ? Layout.normalize(70) : Layout.normalize(30),
+    top: Platform.OS === "ios" ? 50 : 20,
     justifyContent: "center",
     position: "absolute",
     left: 0,

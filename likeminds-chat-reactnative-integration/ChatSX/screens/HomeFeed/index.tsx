@@ -145,7 +145,7 @@ const HomeFeed = ({ navigation }: Props) => {
       isGuest: false,
     };
 
-    const res = await dispatch(initAPI(payload) as any);
+    const res: any = await dispatch(initAPI(payload) as any);
 
     if (res) {
       setCommunityId(res?.community?.id);
@@ -305,7 +305,7 @@ const HomeFeed = ({ navigation }: Props) => {
           />
         </Tab.Navigator>
       ) : community?.hideDmTab === true ? (
-        <GroupFeed navigation={navigation} />
+        <GroupFeed />
       ) : null}
     </View>
   );

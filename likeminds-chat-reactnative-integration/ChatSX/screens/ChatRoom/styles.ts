@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
   },
   chatRoomInfo: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
   },
   chatRoomTopicInfo: {
     gap: Layout.normalize(5),

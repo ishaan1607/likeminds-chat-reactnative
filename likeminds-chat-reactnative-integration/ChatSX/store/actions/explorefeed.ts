@@ -8,13 +8,12 @@ import {
   UPDATE_EXPLORE_FEED_CHAT_FAILED,
   UPDATE_EXPLORE_FEED_CHAT_SUCCESS,
 } from "../types/types";
-import { Dispatch } from "@reduxjs/toolkit";
 import { Client } from "../../client";
 
 export const getExploreFeedData =
-  (payload: any, showLoader?: boolean) => async (dispatch: Dispatch) => {
+  (payload: any, showLoader?: boolean) => () => {
     try {
-      return await dispatch({
+      return {
         type: GET_EXPLORE_FEED_CHAT_SUCCESS,
         [CALL_API]: {
           func: Client.myClient?.getExploreFeed(payload),
@@ -26,29 +25,28 @@ export const getExploreFeedData =
           ],
           showLoader: showLoader ? showLoader : false,
         },
-      });
+      };
     } catch (error) {
       Alert.alert(`${error}`);
     }
   };
 
-export const updateExploreFeedData =
-  (payload: any) => async (dispatch: Dispatch) => {
-    try {
-      return await dispatch({
-        type: UPDATE_EXPLORE_FEED_CHAT_SUCCESS,
-        [CALL_API]: {
-          func: Client.myClient?.getExploreFeed(payload),
-          body: payload,
-          types: [
-            UPDATE_EXPLORE_FEED_CHAT,
-            UPDATE_EXPLORE_FEED_CHAT_SUCCESS,
-            UPDATE_EXPLORE_FEED_CHAT_FAILED,
-          ],
-          showLoader: false,
-        },
-      });
-    } catch (error) {
-      Alert.alert(`${error}`);
-    }
-  };
+export const updateExploreFeedData = (payload: any) => () => {
+  try {
+    return {
+      type: UPDATE_EXPLORE_FEED_CHAT_SUCCESS,
+      [CALL_API]: {
+        func: Client.myClient?.getExploreFeed(payload),
+        body: payload,
+        types: [
+          UPDATE_EXPLORE_FEED_CHAT,
+          UPDATE_EXPLORE_FEED_CHAT_SUCCESS,
+          UPDATE_EXPLORE_FEED_CHAT_FAILED,
+        ],
+        showLoader: false,
+      },
+    };
+  } catch (error) {
+    Alert.alert(`${error}`);
+  }
+};

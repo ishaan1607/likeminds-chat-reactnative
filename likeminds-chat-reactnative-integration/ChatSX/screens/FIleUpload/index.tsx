@@ -1,19 +1,17 @@
 import {
   View,
-  Text,
   TouchableOpacity,
   Image,
   ScrollView,
   Pressable,
-  TextInput,
   BackHandler,
   LogBox,
 } from "react-native";
 import { Image as CompressedImage } from "react-native-compressor";
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef } from "react";
 import styles from "./styles";
+import InputBox from "../../components/InputBox";
 import Layout from "../../constants/Layout";
-import MessageInputBox from "../../components/InputBox";
 import {
   CLEAR_FILE_UPLOADING_MESSAGES,
   CLEAR_SELECTED_FILES_TO_UPLOAD,
@@ -42,11 +40,11 @@ import { fetchResourceFromURI, generateGifName } from "../../commonFuctions";
 import { IMAGE_CROP_SCREEN } from "../../constants/Screens";
 import { Events, Keys } from "../../enums";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
-import { GiphyMediaView } from "@giphy/react-native-sdk";
-import { TouchableWithoutFeedback } from "react-native-gesture-handler";
-import { generateVoiceNoteName } from "../../audio";
-import { createThumbnail } from "react-native-create-thumbnail";
 import { Client } from "../../client";
+import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useChatroomContext } from "../../context/ChatroomContext";
 
 interface UploadResource {
   selectedImages: any;
@@ -57,11 +55,32 @@ interface UploadResource {
   isRetry: boolean;
 }
 
-const FileUpload = ({ navigation, route }: any) => {
+interface FileUploadProps {
+  handleGallery?: () => void;
+  handleCamera?: () => void;
+  handleDoc?: () => void;
+  onEdit?: () => void;
+}
+
+const FileUpload = ({
+  handleGallery,
+  handleCamera,
+  handleDoc,
+  onEdit,
+}: FileUploadProps) => {
+  const navigation = useNavigation<StackNavigationProp<any>>();
+  const route = useRoute();
+  const { backIconPath, imageCropIcon }: any = route.params;
+
+  const { chatroomType } = useChatroomContext();
+
+  const selectedImageBorderColor =
+    STYLES.$FILE_UPLOAD_STYLE?.selectedImageBorderColor;
+
   const myClient = Client.myClient;
   const video = useRef<any>(null);
 
-  const { chatroomID, previousMessage = "" } = route?.params;
+  const { chatroomID, previousMessage = "" }: any = route?.params;
   const {
     selectedFilesToUpload = [],
     selectedFileToView = {},
@@ -343,10 +362,14 @@ const FileUpload = ({ navigation, route }: any) => {
                 navigation.goBack();
               }}
             >
-              <Image
-                source={require("../../assets/images/blue_back_arrow3x.png")}
-                style={styles.backBtn}
-              />
+              {backIconPath ? (
+                <Image source={backIconPath} style={styles.backBtn} />
+              ) : (
+                <Image
+                  source={require("../../assets/images/blue_back_arrow3x.png")}
+                  style={styles.backBtn}
+                />
+              )}
             </TouchableOpacity>
             {itemType === IMAGE_TEXT ? (
               <TouchableOpacity
@@ -358,10 +381,14 @@ const FileUpload = ({ navigation, route }: any) => {
                   });
                 }}
               >
-                <Image
-                  source={require("../../assets/images/crop_icon3x.png")}
-                  style={styles.cropIcon}
-                />
+                {imageCropIcon ? (
+                  <Image source={imageCropIcon} style={styles.cropIcon} />
+                ) : (
+                  <Image
+                    source={require("../../assets/images/crop_icon3x.png")}
+                    style={styles.cropIcon}
+                  />
+                )}
               </TouchableOpacity>
             ) : null}
           </View>
@@ -374,7 +401,6 @@ const FileUpload = ({ navigation, route }: any) => {
             style={styles.mainImage}
           />
         ) : itemType === VIDEO_TEXT ? (
-          /* jshint ignore:start */
           <View style={styles.video}>
             <VideoPlayer
               source={{ uri: selectedFileToView?.uri }}
@@ -387,8 +413,7 @@ const FileUpload = ({ navigation, route }: any) => {
               showOnStart={true}
             />
           </View>
-        ) : /* jshint ignore:end */
-        docItemType === PDF_TEXT ? (
+        ) : docItemType === PDF_TEXT ? (
           <Image
             source={{ uri: selectedFileToView?.thumbnailUrl }}
             style={styles.mainImage}
@@ -405,15 +430,23 @@ const FileUpload = ({ navigation, route }: any) => {
 
       <View style={styles.bottomBar}>
         {len > 0 ? (
-          <MessageInputBox
-            isUploadScreen={true}
-            isDoc={docItemType === PDF_TEXT ? true : false}
-            chatroomID={chatroomID}
-            navigation={navigation}
-            previousMessage={previousMessage}
-            handleFileUpload={handleFileUpload}
-            isGif={isGif}
-          />
+          <CustomisableMethodsContextProvider
+            handleGalleryProp={handleGallery}
+            handleCameraProp={handleCamera}
+            handleDocProp={handleDoc}
+            onEditProp={onEdit}
+          >
+            <InputBox
+              isUploadScreen={true}
+              isDoc={docItemType === PDF_TEXT ? true : false}
+              chatroomID={chatroomID}
+              navigation={navigation}
+              previousMessage={previousMessage}
+              handleFileUpload={handleFileUpload}
+              isGif={isGif}
+              chatroomType={chatroomType}
+            />
+          </CustomisableMethodsContextProvider>
         ) : null}
 
         {!isGif && (
@@ -441,10 +474,14 @@ const FileUpload = ({ navigation, route }: any) => {
                         borderColor:
                           docItemType === PDF_TEXT
                             ? selectedFileToView?.name === item?.name
-                              ? "red"
+                              ? selectedImageBorderColor
+                                ? selectedImageBorderColor
+                                : "red"
                               : "black"
                             : selectedFileToView?.fileName === item?.fileName
-                            ? "red"
+                            ? selectedImageBorderColor
+                              ? selectedImageBorderColor
+                              : "red"
                             : "black",
                         borderWidth: 1,
                       },

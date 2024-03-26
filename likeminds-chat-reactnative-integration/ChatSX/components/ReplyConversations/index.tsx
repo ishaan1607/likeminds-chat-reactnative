@@ -33,7 +33,13 @@ import {
 } from "../../constants/Strings";
 import AttachmentConversations from "../AttachmentConversations";
 import { getCurrentConversation } from "../../utils/chatroomUtils";
+import { useMessageContext } from "../../context/MessageContext";
+import { useChatroomContext } from "../../context/ChatroomContext";
+import { useMessageListContext } from "../../context/MessageListContext";
 import Layout from "../../constants/Layout";
+import MessageHeader from "../MessageHeader";
+import MessageFooter from "../MessageFooter";
+import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 
 interface ReplyConversations {
   item: any;
@@ -167,24 +173,11 @@ export const ReplyBox = ({ item, chatroomName }: ReplyBox) => {
   );
 };
 
-const ReplyConversations = ({
-  isIncluded,
-  item,
-  isTypeSent,
-  onScrollToIndex,
-  openKeyboard,
-  longPressOpenKeyboard,
-  reactionArr,
-  navigation,
-  handleFileUpload,
-  chatroomID,
-  chatroomName,
-  setIsReplyFound,
-  setReplyConversationId,
-}: ReplyConversations) => {
+const ReplyConversations = () => {
   const dispatch = useAppDispatch();
   const { conversations, selectedMessages, stateArr, isLongPress }: any =
     useAppSelector((state) => state.chatroom);
+  const { customReplyBox } = useCustomComponentsContext();
   const { user } = useAppSelector((state) => state.homefeed);
   const [flashListMounted, setFlashListMounted] = useState(false);
 
@@ -211,14 +204,22 @@ const ReplyConversations = ({
     : STYLES.$COLORS.SELECTED_BLUE;
   // styling props ended
 
-  const handleLongPress = (event: any) => {
-    const { pageX, pageY } = event.nativeEvent;
-    dispatch({
-      type: SET_POSITION,
-      body: { pageX: pageX, pageY: pageY },
-    });
-    longPressOpenKeyboard();
-  };
+  const {
+    isIncluded,
+    item,
+    isTypeSent,
+    reactionArr,
+    handleLongPress,
+    handleOnPress: openKeyboard,
+  } = useMessageContext();
+
+  const { chatroomID, chatroomName } = useChatroomContext();
+
+  const { customMessageHeader, customMessageFooter } =
+    useCustomComponentsContext();
+
+  const { scrollToIndex, setReplyConversationId, setIsReplyFound } =
+    useMessageListContext();
 
   const handleOnPress = async (event: any) => {
     const isStateIncluded = stateArr.includes(item?.state);
@@ -254,13 +255,13 @@ const ReplyConversations = ({
       if (index >= 0) {
         if (!flashListMounted) {
           setTimeout(() => {
-            onScrollToIndex(index);
+            scrollToIndex(index);
             setReplyConversationId(item?.replyConversationObject?.id);
             setIsReplyFound(true);
             setFlashListMounted(true);
           }, 100);
         } else {
-          onScrollToIndex(index);
+          scrollToIndex(index);
           setReplyConversationId(item?.replyConversationObject?.id);
           setIsReplyFound(true);
         }
@@ -277,7 +278,7 @@ const ReplyConversations = ({
           (element) => element?.id == item?.replyConversationObject?.id
         );
         if (index >= 0) {
-          onScrollToIndex(index);
+          scrollToIndex(index);
           setReplyConversationId(item?.replyConversationObject?.id);
           setIsReplyFound(true);
         }
@@ -314,69 +315,28 @@ const ReplyConversations = ({
         ]}
       >
         {/* Reply conversation message sender name */}
-        {item?.member?.id == user?.id ? null : (
-          <Text
-            style={[
-              styles.messageInfo,
-              senderNameStyles?.color
-                ? { color: senderNameStyles?.color }
-                : null,
-              senderNameStyles?.fontSize
-                ? { fontSize: senderNameStyles?.fontSize }
-                : null,
-              senderNameStyles?.fontFamily
-                ? { color: senderNameStyles?.color }
-                : null,
-            ]}
-            numberOfLines={1}
-          >
-            {item?.member?.name}
-            {item?.member?.customTitle ? (
-              <Text
-                style={[
-                  styles.messageCustomTitle,
-                  senderDesignationStyles?.color
-                    ? { color: senderDesignationStyles?.color }
-                    : null,
-                  senderDesignationStyles?.fontSize
-                    ? { fontSize: senderDesignationStyles?.fontSize }
-                    : null,
-                  senderDesignationStyles?.fontFamily
-                    ? { color: senderDesignationStyles?.color }
-                    : null,
-                ]}
-              >{` • ${item?.member?.customTitle}`}</Text>
-            ) : null}
-          </Text>
+        {item?.member?.id == user?.id ? null : customMessageHeader ? (
+          customMessageHeader
+        ) : (
+          <MessageHeader />
         )}
         <TouchableOpacity
           onLongPress={handleLongPress}
           delayLongPress={200}
           onPress={handleOnPress}
         >
-          <ReplyBox
-            isIncluded={isIncluded}
-            item={item?.replyConversationObject}
-            chatroomName={chatroomName}
-          />
+          {customReplyBox ? (
+            customReplyBox(item?.replyConversationObject, chatroomName)
+          ) : (
+            <ReplyBox
+              isIncluded={isIncluded}
+              item={item?.replyConversationObject}
+              chatroomName={chatroomName}
+            />
+          )}
         </TouchableOpacity>
         {item?.attachmentCount > 0 ? (
-          <AttachmentConversations
-            isReplyConversation={true}
-            navigation={navigation}
-            isIncluded={isIncluded}
-            item={item}
-            isTypeSent={isTypeSent}
-            openKeyboard={() => {
-              openKeyboard();
-            }}
-            longPressOpenKeyboard={() => {
-              longPressOpenKeyboard();
-            }}
-            handleFileUpload={handleFileUpload}
-            isReply={true}
-            chatroomName={chatroomName}
-          />
+          <AttachmentConversations isReplyConversation={true} isReply={true} />
         ) : (
           <View>
             <View
@@ -397,12 +357,7 @@ const ReplyConversations = ({
                 taggingTextColor: taggingTextColor,
               })}
             </View>
-            <View style={styles.alignTime}>
-              {item?.isEdited ? (
-                <Text style={styles.messageDate}>{"Edited • "}</Text>
-              ) : null}
-              <Text style={styles.messageDate}>{item?.createdAt}</Text>
-            </View>
+            {customMessageFooter ? customMessageFooter : <MessageFooter />}
           </View>
         )}
       </View>
@@ -411,14 +366,7 @@ const ReplyConversations = ({
         <Pressable
           onLongPress={handleLongPress}
           delayLongPress={200}
-          onPress={(event) => {
-            const { pageX, pageY } = event.nativeEvent;
-            dispatch({
-              type: SET_POSITION,
-              body: { pageX: pageX, pageY: pageY },
-            });
-            openKeyboard();
-          }}
+          onPress={openKeyboard}
         >
           <Image
             style={{

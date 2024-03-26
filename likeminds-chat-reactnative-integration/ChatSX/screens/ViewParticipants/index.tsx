@@ -7,6 +7,7 @@ import {
   FlatList,
   ActivityIndicator,
   TextInput,
+  TextStyle,
 } from "react-native";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { styles } from "./styles";
@@ -32,6 +33,11 @@ const ViewParticipants = ({ navigation, route }: any) => {
 
   const { chatroomID, isSecret, chatroomName } = route.params;
   const user = useAppSelector((state) => state.homefeed.user);
+
+  const memberDirectoryStyles = STYLES.$MEMBER_DIRECTORY_STYLE;
+  const userNameStyles = memberDirectoryStyles?.userNameStyles;
+  const userTitleStyles = memberDirectoryStyles?.userTitleStyles;
+  const searchPlaceholderText = memberDirectoryStyles?.searchPlaceholderText;
 
   const setInitialHeader = () => {
     navigation.setOptions({
@@ -115,7 +121,9 @@ const ViewParticipants = ({ navigation, route }: any) => {
             onChangeText={setSearch}
             style={[styles.input]}
             autoFocus={true}
-            placeholder="Search..."
+            placeholder={
+              searchPlaceholderText ? searchPlaceholderText : "Search..."
+            }
             placeholderTextColor="#aaa"
           />
         </View>
@@ -317,11 +325,40 @@ const ViewParticipants = ({ navigation, route }: any) => {
                 style={styles.avatar}
               />
               <View style={styles.infoContainer}>
-                <Text style={styles.title} numberOfLines={1}>
+                <Text
+                  style={
+                    [
+                      styles.title,
+                      userNameStyles?.color && {
+                        color: userNameStyles?.color,
+                      },
+                      userNameStyles?.fontSize && {
+                        fontSize: userNameStyles?.fontSize,
+                      },
+                      userNameStyles?.fontFamily && {
+                        fontFamily: userNameStyles?.fontFamily,
+                      },
+                    ] as TextStyle
+                  }
+                  numberOfLines={1}
+                >
                   {item?.name}
                   {item?.customTitle ? (
                     <Text
-                      style={styles.messageCustomTitle}
+                      style={
+                        [
+                          styles.messageCustomTitle,
+                          userTitleStyles?.color && {
+                            color: userTitleStyles?.color,
+                          },
+                          userTitleStyles?.fontSize && {
+                            fontSize: userTitleStyles?.fontSize,
+                          },
+                          userTitleStyles?.fontFamily && {
+                            fontFamily: userTitleStyles?.fontFamily,
+                          },
+                        ] as TextStyle
+                      }
                     >{` • ${item?.customTitle}`}</Text>
                   ) : null}
                 </Text>
