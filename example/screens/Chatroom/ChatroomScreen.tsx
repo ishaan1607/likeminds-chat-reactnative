@@ -39,7 +39,6 @@ export function ChatroomScreen() {
     unblockMember,
   } = useChatroomContext();
   const {scrollToBottom} = useMessageListContext();
-  // const {renderFooterExploreFeed, handleLoadMore} = useExploreFeedContext();
   const {handleGallery, handleDoc, handleCamera, onEdit} = useInputBoxContext();
 
   const customHandleGallery = async () => {
@@ -137,16 +136,6 @@ export function ChatroomScreen() {
     await scrollToBottom();
     console.log('after custom scroll to bottom');
   };
-  // const customExploreFeedRenderFooter = async () => {
-  //   console.log('before custom render footer');
-  //   await renderFooterExploreFeed();
-  //   console.log('after custom render footer');
-  // };
-  // const customHandleLoadMore = async () => {
-  //   console.log('before handle load more');
-  //   await handleLoadMore();
-  //   console.log('after handle load more');
-  // };
 
   return (
     <ChatRoom
