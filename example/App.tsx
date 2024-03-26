@@ -6,7 +6,7 @@
  */
 
 import React, {useEffect} from 'react';
-import {Platform} from 'react-native';
+import {KeyboardAvoidingView, Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {navigationRef} from './RootNavigation';
@@ -26,10 +26,25 @@ import {
   NavigateToGroupDetailsParams,
   STYLES,
   ContextProvider,
+  ReportScreen,
+  ImageScreen,
+  ViewParticipants,
+  AddParticipants,
+  DmAllMembers,
 } from '@likeminds.community/chat-rn-core';
 import {myClient} from '.';
 import ChatroomScreenWrapper from './screens/Chatroom/ChatroomScreenWrapper';
 import {setStyles} from './styles';
+import {
+  ADD_PARTICIPANTS,
+  DM_ALL_MEMBERS,
+  EXPLORE_FEED,
+  IMAGE_SCREEN,
+  REPORT,
+  VIEW_PARTICIPANTS,
+} from '@likeminds.community/chat-rn-core/ChatSX/constants/Screens';
+import FileUploadScreen from './screens/FileUpload';
+import FileUploadScreenWrapper from './screens/FileUpload/FileUploadWrapper';
 
 const Stack = createNativeStackNavigator();
 
@@ -65,58 +80,171 @@ function App(): React.JSX.Element {
   }, []);
 
   return (
-    <LMOverlayProvider
-      myClient={myClient}
-      userName={userName}
-      userUniqueId={userUniqueId}
-      profileImageUrl={profileImageUrl}
-      lmChatInterface={lmChatInterface}>
-      <NavigationContainer ref={navigationRef} independent={true}>
-        <Stack.Navigator initialRouteName={'Homefeed'}>
-          <Stack.Screen name={'Homefeed'} component={HomeFeed} />
-          <Stack.Screen
-            name="Chatroom"
-            component={ChatroomScreenWrapper}
-            initialParams={{
-              chatroomID: chatroomId,
-              isInvited: false,
-            }}
-          />
-          <Stack.Screen
-            options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
-            name={'FileUpload'}
-            component={FileUpload}
-            initialParams={{
-              backIconPath: '', // add your back icon path here
-              imageCropIcon: '', // add your image crop icon path here
-            }}
-          />
-          <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
-          <Stack.Screen
-            options={{gestureEnabled: false}}
-            name={'CarouselScreen'}
-            component={CarouselScreen}
-            initialParams={{
-              backIconPath: '', // add your back icon path here
-            }}
-          />
-          <Stack.Screen
-            options={{gestureEnabled: false}}
-            name={'PollResult'}
-            component={PollResult}
-          />
-          <Stack.Screen
-            name={'CreatePollScreen'}
-            component={CreatePollScreen}
-          />
-          <Stack.Screen
-            options={{headerShown: false}}
-            name={'ImageCropScreen'}
-            component={ImageCropScreen}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </LMOverlayProvider>
+    <>
+      {Platform.OS === 'ios' ? (
+        <KeyboardAvoidingView
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+          style={{flex: 1}}>
+          <LMOverlayProvider
+            myClient={myClient}
+            userName={userName}
+            userUniqueId={userUniqueId}
+            profileImageUrl={profileImageUrl}
+            lmChatInterface={lmChatInterface}>
+            <NavigationContainer ref={navigationRef} independent={true}>
+              <Stack.Navigator initialRouteName={'Homefeed'}>
+                <Stack.Screen name={'Homefeed'} component={HomeFeed} />
+                <Stack.Screen
+                  name={'ExploreFeed'}
+                  component={ExploreFeed}
+                  initialParams={{
+                    backIconPath: '',
+                    filterIconPath: '',
+                    participantsIconPath: '',
+                    totalMessagesIconPath: '',
+                    joinButtonPath: '',
+                    joinedButtonPath: '',
+                  }}
+                />
+                <Stack.Screen
+                  name="Chatroom"
+                  component={ChatroomScreenWrapper}
+                  options={{
+                    gestureEnabled: Platform.OS === 'ios' ? false : true,
+                  }}
+                  // initialParams={{
+                  //   chatroomID: chatroomId,
+                  //   isInvited: false,
+                  // }}
+                />
+                <Stack.Screen
+                  options={{
+                    gestureEnabled: Platform.OS === 'ios' ? false : true,
+                  }}
+                  name={'FileUpload'}
+                  component={FileUploadScreenWrapper}
+                  initialParams={{
+                    backIconPath: '', // add your back icon path here
+                    imageCropIcon: '', // add your image crop icon path here
+                  }}
+                />
+                <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
+                <Stack.Screen
+                  options={{gestureEnabled: false}}
+                  name={'CarouselScreen'}
+                  component={CarouselScreen}
+                  initialParams={{
+                    backIconPath: '', // add your back icon path here
+                  }}
+                />
+                <Stack.Screen
+                  options={{gestureEnabled: false}}
+                  name={'PollResult'}
+                  component={PollResult}
+                />
+                <Stack.Screen
+                  name={'CreatePollScreen'}
+                  component={CreatePollScreen}
+                />
+                <Stack.Screen
+                  options={{headerShown: false}}
+                  name={'ImageCropScreen'}
+                  component={ImageCropScreen}
+                />
+                <Stack.Screen name={REPORT} component={ReportScreen} />
+                <Stack.Screen name={IMAGE_SCREEN} component={ImageScreen} />
+                <Stack.Screen
+                  name={VIEW_PARTICIPANTS}
+                  component={ViewParticipants}
+                />
+                <Stack.Screen
+                  name={ADD_PARTICIPANTS}
+                  component={AddParticipants}
+                />
+                <Stack.Screen name={DM_ALL_MEMBERS} component={DmAllMembers} />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </LMOverlayProvider>
+        </KeyboardAvoidingView>
+      ) : (
+        <LMOverlayProvider
+          myClient={myClient}
+          userName={userName}
+          userUniqueId={userUniqueId}
+          profileImageUrl={profileImageUrl}
+          lmChatInterface={lmChatInterface}>
+          <NavigationContainer ref={navigationRef} independent={true}>
+            <Stack.Navigator initialRouteName={'Homefeed'}>
+              <Stack.Screen name={'Homefeed'} component={HomeFeed} />
+              <Stack.Screen
+                name={'ExploreFeed'}
+                component={ExploreFeed}
+                initialParams={{
+                  backIconPath: '',
+                  filterIconPath: '',
+                  participantsIconPath: '',
+                  totalMessagesIconPath: '',
+                  joinButtonPath: '',
+                  joinedButtonPath: '',
+                }}
+              />
+              <Stack.Screen
+                name="Chatroom"
+                component={ChatroomScreenWrapper}
+                options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
+                // initialParams={{
+                //   chatroomID: chatroomId,
+                //   isInvited: false,
+                // }}
+              />
+              <Stack.Screen
+                options={{gestureEnabled: Platform.OS === 'ios' ? false : true}}
+                name={'FileUpload'}
+                component={FileUploadScreenWrapper}
+                initialParams={{
+                  backIconPath: '', // add your back icon path here
+                  imageCropIcon: '', // add your image crop icon path here
+                }}
+              />
+              <Stack.Screen name={'VideoPlayer'} component={VideoPlayer} />
+              <Stack.Screen
+                options={{gestureEnabled: false}}
+                name={'CarouselScreen'}
+                component={CarouselScreen}
+                initialParams={{
+                  backIconPath: '', // add your back icon path here
+                }}
+              />
+              <Stack.Screen
+                options={{gestureEnabled: false}}
+                name={'PollResult'}
+                component={PollResult}
+              />
+              <Stack.Screen
+                name={'CreatePollScreen'}
+                component={CreatePollScreen}
+              />
+              <Stack.Screen
+                options={{headerShown: false}}
+                name={'ImageCropScreen'}
+                component={ImageCropScreen}
+              />
+              <Stack.Screen name={REPORT} component={ReportScreen} />
+              <Stack.Screen name={IMAGE_SCREEN} component={ImageScreen} />
+              <Stack.Screen
+                name={VIEW_PARTICIPANTS}
+                component={ViewParticipants}
+              />
+              <Stack.Screen
+                name={ADD_PARTICIPANTS}
+                component={AddParticipants}
+              />
+              <Stack.Screen name={DM_ALL_MEMBERS} component={DmAllMembers} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </LMOverlayProvider>
+      )}
+    </>
   );
 }
 

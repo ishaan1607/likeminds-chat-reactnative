@@ -28,9 +28,9 @@ const CarouselScreen = ({ navigation, route }: any) => {
   let gifCount = 0;
   for (let i = 0; i < data.length; i++) {
     if (data[i].type == DocumentType.VIDEO) {
-      imageCount++;
-    } else if (data[i].type == DocumentType.IMAGE) {
       videoCount++;
+    } else if (data[i].type == DocumentType.IMAGE) {
+      imageCount++;
     } else if (data[i].type == DocumentType.GIF_TEXT) {
       gifCount++;
     } else {

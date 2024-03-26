@@ -1,27 +1,26 @@
-import React from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
-import {styles} from './styles';
-import {EXPLORE_FEED} from '../../constants/Screens';
+import React from "react";
+import { View, Text, Image, TouchableOpacity } from "react-native";
+import { styles } from "./styles";
+import { EXPLORE_FEED } from "../../constants/Screens";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 interface Props {
   newCount: number;
-  navigation: any;
   totalCount: number;
 }
 
-const HomeFeedExplore: React.FC<Props> = ({
-  newCount,
-  totalCount,
-  navigation,
-}) => {
+const HomeFeedExplore: React.FC<Props> = ({ newCount, totalCount }) => {
+  const navigation = useNavigation<StackNavigationProp<any>>();
   return (
     <TouchableOpacity
       onPress={() => {
         navigation.navigate(EXPLORE_FEED);
       }}
-      style={styles.itemContainer}>
+      style={styles.itemContainer}
+    >
       <Image
-        source={require('../../assets/images/explore_icon3x.png')}
+        source={require("../../assets/images/explore_icon3x.png")}
         style={styles.icon}
       />
       <View style={styles.infoContainer}>

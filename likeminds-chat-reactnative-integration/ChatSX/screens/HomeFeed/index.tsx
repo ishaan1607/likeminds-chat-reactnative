@@ -32,7 +32,6 @@ import { Events, Keys } from "../../enums";
 import { Credentials } from "../../credentials";
 import { Client } from "../../client";
 import Layout from "../../constants/Layout";
-import { HomeFeedContextProvider } from "../../context/HomeFeedContext";
 
 interface Props {
   navigation: any;
@@ -256,61 +255,59 @@ const HomeFeed = ({ navigation }: Props) => {
   );
 
   return (
-    <HomeFeedContextProvider>
-      <View style={styles.page}>
-        {community?.hideDmTab === false ? (
-          <Tab.Navigator
-            screenOptions={{
-              tabBarLabelStyle: styles.font,
-              tabBarIndicatorStyle: { backgroundColor: STYLES.$COLORS.PRIMARY },
+    <View style={styles.page}>
+      {community?.hideDmTab === false ? (
+        <Tab.Navigator
+          screenOptions={{
+            tabBarLabelStyle: styles.font,
+            tabBarIndicatorStyle: { backgroundColor: STYLES.$COLORS.PRIMARY },
+          }}
+        >
+          <Tab.Screen
+            name={GROUP_FEED}
+            options={{
+              tabBarLabel: ({ focused }) => (
+                <Text
+                  style={[
+                    styles.font,
+                    {
+                      color: focused
+                        ? STYLES.$COLORS.PRIMARY
+                        : STYLES.$COLORS.MSG,
+                    },
+                  ]}
+                >
+                  Groups
+                </Text>
+              ),
             }}
-          >
-            <Tab.Screen
-              name={GROUP_FEED}
-              options={{
-                tabBarLabel: ({ focused }) => (
-                  <Text
-                    style={[
-                      styles.font,
-                      {
-                        color: focused
-                          ? STYLES.$COLORS.PRIMARY
-                          : STYLES.$COLORS.MSG,
-                      },
-                    ]}
-                  >
-                    Groups
-                  </Text>
-                ),
-              }}
-              component={GroupFeed}
-            />
-            <Tab.Screen
-              name={DM_FEED}
-              options={{
-                tabBarLabel: ({ focused }) => (
-                  <Text
-                    style={[
-                      styles.font,
-                      {
-                        color: focused
-                          ? STYLES.$COLORS.PRIMARY
-                          : STYLES.$COLORS.MSG,
-                      },
-                    ]}
-                  >
-                    DMs
-                  </Text>
-                ),
-              }}
-              component={DMFeed}
-            />
-          </Tab.Navigator>
-        ) : community?.hideDmTab === true ? (
-          <GroupFeed navigation={navigation} />
-        ) : null}
-      </View>
-    </HomeFeedContextProvider>
+            component={GroupFeed}
+          />
+          <Tab.Screen
+            name={DM_FEED}
+            options={{
+              tabBarLabel: ({ focused }) => (
+                <Text
+                  style={[
+                    styles.font,
+                    {
+                      color: focused
+                        ? STYLES.$COLORS.PRIMARY
+                        : STYLES.$COLORS.MSG,
+                    },
+                  ]}
+                >
+                  DMs
+                </Text>
+              ),
+            }}
+            component={DMFeed}
+          />
+        </Tab.Navigator>
+      ) : community?.hideDmTab === true ? (
+        <GroupFeed />
+      ) : null}
+    </View>
   );
 };
 

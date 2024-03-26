@@ -56,15 +56,13 @@ const WarningMessageModal = () => {
             <TouchableOpacity
               style={[styles.button, styles.okButton]}
               onPress={() => {
-                () => {
-                  if (isSecret) {
-                    leaveSecretChatroomProp
-                      ? leaveSecretChatroomProp()
-                      : leaveSecretChatroom();
-                  } else {
-                    leaveChatroomProp ? leaveChatroomProp() : leaveChatroom();
-                  }
-                };
+                if (isSecret) {
+                  leaveSecretChatroomProp
+                    ? leaveSecretChatroomProp()
+                    : leaveSecretChatroom();
+                } else {
+                  leaveChatroomProp ? leaveChatroomProp() : leaveChatroom();
+                }
                 hideWarningModal();
               }}
             >

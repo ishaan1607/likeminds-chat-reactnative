@@ -14,7 +14,12 @@ import { FlashList } from "@shopify/flash-list";
 import LinearGradient from "react-native-linear-gradient";
 import { createShimmerPlaceholder } from "react-native-shimmer-placeholder";
 import Layout from "../../../../constants/Layout";
-import { useHomeFeedContext } from "../../../../context/HomeFeedContext";
+import {
+  DmFeedContextProvider,
+  useDmFeedContext,
+} from "../../../../context/DmFeedContextProvider";
+import { useNavigation } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 
@@ -22,16 +27,25 @@ interface Props {
   navigation: any;
 }
 
-const DMFeed = ({ navigation }: Props) => {
+const DMFeed = () => {
+  return (
+    <DmFeedContextProvider>
+      <DMFeedComponent />
+    </DmFeedContextProvider>
+  );
+};
+
+const DMFeedComponent = () => {
   const {
     dmFeedChatrooms,
-    shimmerIsLoadingDM,
+    shimmerIsLoading,
     showDM,
     showList,
-    renderFooterDM,
-    handleLoadMoreDM,
-  } = useHomeFeedContext();
+    renderFooter,
+    handleLoadMore,
+  } = useDmFeedContext();
   const user = useAppSelector((state) => state.homefeed.user);
+  const navigation = useNavigation<StackNavigationProp<any>>();
   return (
     <View style={styles.page}>
       {dmFeedChatrooms?.length === 0 ? (
@@ -73,7 +87,7 @@ const DMFeed = ({ navigation }: Props) => {
             {DM_INFO}
           </Text>
         </View>
-      ) : shimmerIsLoadingDM ? (
+      ) : shimmerIsLoading ? (
         <>
           <View
             style={{
@@ -211,10 +225,10 @@ const DMFeed = ({ navigation }: Props) => {
               chatroomType: item?.type,
               muteStatus: item?.muteStatus,
             };
-            return <HomeFeedItem {...homeFeedProps} navigation={navigation} />;
+            return <HomeFeedItem {...homeFeedProps} />;
           }}
-          onLoad={handleLoadMoreDM}
-          ListFooterComponent={renderFooterDM}
+          onLoad={handleLoadMore}
+          ListFooterComponent={renderFooter}
           keyExtractor={(item: any) => item?.id?.toString()}
         />
       )}
