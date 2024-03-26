@@ -56,10 +56,10 @@ interface UploadResource {
 }
 
 interface FileUploadProps {
-  handleGallery: () => void;
-  handleCamera: () => void;
-  handleDoc: () => void;
-  onEdit: () => void;
+  handleGallery?: () => void;
+  handleCamera?: () => void;
+  handleDoc?: () => void;
+  onEdit?: () => void;
 }
 
 const FileUpload = ({

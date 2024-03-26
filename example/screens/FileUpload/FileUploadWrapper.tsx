@@ -6,9 +6,7 @@ import {ChatroomContextProvider} from '@likeminds.community/chat-rn-core/ChatSX/
 function FileUploadScreenWrapper() {
   return (
     <ChatroomContextProvider>
-      <InputBoxContextProvider>
-        <FileUploadScreen />
-      </InputBoxContextProvider>
+      <FileUploadScreen />
     </ChatroomContextProvider>
   );
 }
