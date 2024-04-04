@@ -32,7 +32,7 @@ import { copySelectedMessages } from "../../commonFuctions";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { useAppDispatch } from "../../store";
 import { VOICE_NOTE_TEXT } from "../../constants/Strings";
-import TrackPlayer from "react-native-track-player";
+import { AudioPlayer } from "../../optionalDependecies/Audio";
 
 const ChatroomHeader = () => {
   const myClient = Client.myClient;
@@ -430,7 +430,9 @@ const ChatroomHeader = () => {
                           conversation[0]?.attachments[0]?.type ==
                           VOICE_NOTE_TEXT
                         ) {
-                          await TrackPlayer.reset();
+                          AudioPlayer
+                            ? await AudioPlayer?.default?.reset()
+                            : null;
                         }
                       }
                       dispatch({

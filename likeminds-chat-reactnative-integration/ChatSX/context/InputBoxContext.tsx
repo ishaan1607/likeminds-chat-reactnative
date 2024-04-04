@@ -99,7 +99,6 @@ import Layout from "../constants/Layout";
 import { LINK_PREVIEW_REGEX } from "../constants/Regex";
 import { generateAudioSet, generateVoiceNoteName } from "../audio";
 import ReactNativeBlobUtil from "react-native-blob-util";
-import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
 import GIFPicker from "../optionalDependecies/Gif";
 

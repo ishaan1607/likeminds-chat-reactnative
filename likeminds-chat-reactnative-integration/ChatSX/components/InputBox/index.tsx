@@ -114,10 +114,8 @@ import {
   GestureUpdateEvent,
   PanGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
-import LottieView from "lottie-react-native";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import { generateAudioSet, generateVoiceNoteName } from "../../audio";
-import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import { LINK_PREVIEW_REGEX } from "../../constants/Regex";
 import LinkPreviewInputBox from "../linkPreviewInputBox";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
@@ -140,9 +138,12 @@ import {
 } from "../../uiComponents/LMChatTextInput/utils";
 import Layout from "../../constants/Layout";
 import GIFPicker from "../../optionalDependecies/Gif";
+import { AudioRecorder, LottieView } from "../../optionalDependecies/Audio";
 
 // to intialise audio recorder player
-const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
+const audioRecorderPlayerAttachment = AudioRecorder
+  ? new AudioRecorder.default()
+  : null;
 
 const MessageInputBox = ({
   replyChatID,
@@ -166,6 +167,8 @@ const MessageInputBox = ({
 }: InputBoxProps) => {
   const myClient = Client.myClient;
   const inputBoxStyles = STYLES.$INPUT_BOX_STYLE;
+
+  console.log("LottieView", LottieView);
 
   const [isKeyBoardFocused, setIsKeyBoardFocused] = useState(false);
   const [message, setMessage] = useState(previousMessage);
@@ -2203,7 +2206,7 @@ const MessageInputBox = ({
               <View style={styles.paddingHorizontal} />
             ) : null}
 
-            {isDeleteAnimation ? (
+            {isDeleteAnimation && LottieView ? (
               <View
                 style={[
                   styles.voiceNotesInputParent,
@@ -2492,7 +2495,7 @@ const MessageInputBox = ({
           </TouchableOpacity>
         ) : (
           <View>
-            {isRecordingPermission ? (
+            {isRecordingPermission && AudioRecorder ? (
               <GestureDetector gesture={composedGesture}>
                 <Animated.View>
                   {voiceNotes.recordTime && !isRecordingLocked && (
@@ -2535,7 +2538,7 @@ const MessageInputBox = ({
                   </Animated.View>
                 </Animated.View>
               </GestureDetector>
-            ) : (
+            ) : AudioRecorder ? (
               <Animated.View style={[styles.sendButton, panStyle]}>
                 <Pressable
                   onPress={askPermission}
@@ -2550,6 +2553,15 @@ const MessageInputBox = ({
                   />
                 </Pressable>
               </Animated.View>
+            ) : (
+              <TouchableOpacity>
+                <LMChatIcon
+                  assetPath={require("../../assets/images/send_button3x.png")}
+                  iconStyle={
+                    [styles.send, inputBoxStyles?.sendIconStyles] as ImageStyle
+                  }
+                />
+              </TouchableOpacity>
             )}
           </View>
         )}

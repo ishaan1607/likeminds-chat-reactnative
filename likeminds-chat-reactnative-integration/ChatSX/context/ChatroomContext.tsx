@@ -83,7 +83,6 @@ import {
   EXPLORE_FEED,
   HOMEFEED,
 } from "../constants/Screens";
-import TrackPlayer from "react-native-track-player";
 import { DataSnapshot, onValue, ref } from "firebase/database";
 import { getExploreFeedData } from "../store/actions/explorefeed";
 import {
@@ -107,6 +106,7 @@ import { fetchResourceFromURI, formatTime } from "../commonFuctions";
 import { Image as CompressedImage } from "react-native-compressor";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
 import { Client } from "../client";
+import { AudioPlayer } from "../optionalDependecies/Audio";
 
 interface UploadResource {
   selectedImages: any;
@@ -721,14 +721,14 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
   // this useEffect is to stop audio player when going out of chatroom, if any audio is running
   useEffect(() => {
     return () => {
-      TrackPlayer.reset();
+      AudioPlayer ? AudioPlayer?.default?.reset() : null;
     };
   }, []);
 
   // this useEffect is to stop audio player when the app is in background
   useEffect(() => {
     if (!isFocused) {
-      TrackPlayer.reset();
+      AudioPlayer ? AudioPlayer?.default?.reset() : null;
     }
   }, [isFocused]);
 

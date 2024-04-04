@@ -19,6 +19,7 @@ import ImageVideoConversation from "../ImageVideoConversation";
 import VoiceNoteConversation from "../VoiceNoteConversation";
 import GIFConversation from "../GIFConversation";
 import PDFConversation from "../PDFConversation";
+import { AudioPlayer, Slider } from "../../optionalDependecies/Audio";
 
 interface AttachmentConversations {
   isReplyConversation?: any;
@@ -76,9 +77,9 @@ const AttachmentConversations = ({
         ) : firstAttachment?.type === VOICE_NOTE_TEXT ? (
           customVoiceNoteAttachmentConversation ? (
             customVoiceNoteAttachmentConversation
-          ) : (
+          ) : AudioPlayer && Slider ? (
             <VoiceNoteConversation />
-          )
+          ) : null
         ) : isGif ? (
           customGifAttachmentConversation ? (
             customGifAttachmentConversation

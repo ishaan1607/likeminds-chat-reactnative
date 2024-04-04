@@ -1,30 +1,36 @@
-import {
-  AVEncoderAudioQualityIOSType,
-  AVEncodingOption,
-  AVModeIOSOption,
-  AudioEncoderAndroidType,
-  AudioSet,
-  AudioSourceAndroidType,
-} from 'react-native-audio-recorder-player';
+import { AudioRecorder, AudioSet } from "../optionalDependecies/Audio";
 
 export function generateVoiceNoteName() {
   const currentDate = new Date();
   const timestamp = currentDate
     .toISOString()
-    .replace(/[-T:]/g, '')
+    .replace(/[-T:]/g, "")
     .slice(0, -5); // Remove dashes, colons, and seconds
 
   return `VOC_${timestamp}`; // You can change the file extension or format as needed
 }
 
 export function generateAudioSet() {
-  const audioSet: AudioSet = {
-    AudioEncoderAndroid: AudioEncoderAndroidType.AAC,
-    AudioSourceAndroid: AudioSourceAndroidType.MIC,
-    AVModeIOS: AVModeIOSOption.measurement,
-    AVEncoderAudioQualityKeyIOS: AVEncoderAudioQualityIOSType.high,
+  console.log("AudioRecorder", AudioRecorder);
+  console.log("AudioSet", AudioSet);
+
+  const audioSet: typeof AudioSet = {
+    AudioEncoderAndroid: AudioRecorder
+      ? AudioRecorder?.AudioEncoderAndroidType.AAC
+      : null,
+    AudioSourceAndroid: AudioRecorder
+      ? AudioRecorder?.AudioSourceAndroidType.MIC
+      : null,
+    AVModeIOS: AudioRecorder
+      ? AudioRecorder?.AVModeIOSOption.measurement
+      : null,
+    AVEncoderAudioQualityKeyIOS: AudioRecorder
+      ? AudioRecorder?.AVEncoderAudioQualityIOSType.high
+      : null,
     AVNumberOfChannelsKeyIOS: 2,
-    AVFormatIDKeyIOS: AVEncodingOption.aac,
+    AVFormatIDKeyIOS: AudioRecorder
+      ? AudioRecorder?.AVEncodingOption.aac
+      : null,
   };
   return audioSet;
 }
