@@ -276,13 +276,12 @@ export const InputBoxContextProvider = ({
 
   let refInput = useRef<any>();
 
-  const {
-    GiphyContentType,
-    GiphyDialog,
-    GiphyDialogEvent,
-    GiphyDialogMediaSelectEventHandler,
-    GiphyMedia,
-  } = GIFPicker;
+  const GiphyContentType = GIFPicker?.GiphyContentType;
+  const GiphyDialog = GIFPicker?.GiphyDialog;
+  const GiphyDialogEvent = GIFPicker?.GiphyDialogEvent;
+  const GiphyDialogMediaSelectEventHandler =
+    GIFPicker?.GiphyDialogMediaSelectEventHandler;
+  const GiphyMedia = GIFPicker?.GiphyMedia;
   type GiphyDialogMediaSelectEventHandlerType =
     typeof GiphyDialogMediaSelectEventHandler;
   type GiphyMediaType = typeof GiphyMedia;

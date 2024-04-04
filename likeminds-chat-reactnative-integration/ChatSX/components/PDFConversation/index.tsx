@@ -15,6 +15,9 @@ import { useAttachmentConversationContext } from "../../context/AttachmentConver
 import { styles } from "../AttachmentConversations/styles";
 import VoiceNoteView from "../VoiceNoteView";
 import { PDFConversationView } from "../PDFConversationView";
+import { TouchableOpacity } from "react-native-gesture-handler";
+import { NavigateToProfileParams } from "../../callBacks/type";
+import { CallBack } from "../../callBacks/callBackClass";
 
 const PDFConversation = () => {
   const {
@@ -23,6 +26,7 @@ const PDFConversation = () => {
     isTypeSent,
     handleLongPress,
     handleOnPress: openKeyboard,
+    isItemIncludedInStateArr,
   } = useMessageContext();
 
   const { customMessageHeader, customMessageFooter } =
@@ -52,6 +56,8 @@ const PDFConversation = () => {
   // styling props ended
 
   const delayLongPress = 200;
+
+  const lmChatInterface = CallBack.lmChatInterface;
 
   return (
     <>
@@ -122,6 +128,68 @@ const PDFConversation = () => {
           </Pressable>
         ) : null}
       </View>
+
+      {/* Sharp corner styles of a chat bubble */}
+      {!isItemIncludedInStateArr ? (
+        <View>
+          {isTypeSent ? (
+            <View
+              style={[
+                styles.typeSent,
+                sentMessageBackgroundColor
+                  ? {
+                      borderBottomColor: sentMessageBackgroundColor,
+                      borderLeftColor: sentMessageBackgroundColor,
+                    }
+                  : null,
+                isIncluded
+                  ? {
+                      borderBottomColor: SELECTED_BACKGROUND_COLOR,
+                      borderLeftColor: SELECTED_BACKGROUND_COLOR,
+                    }
+                  : null,
+              ]}
+            />
+          ) : (
+            <View
+              style={[
+                styles.typeReceived,
+                receivedMessageBackgroundColor
+                  ? {
+                      borderBottomColor: receivedMessageBackgroundColor,
+                      borderRightColor: receivedMessageBackgroundColor,
+                    }
+                  : null,
+                isIncluded
+                  ? {
+                      borderBottomColor: SELECTED_BACKGROUND_COLOR,
+                      borderRightColor: SELECTED_BACKGROUND_COLOR,
+                    }
+                  : null,
+              ]}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  const params: NavigateToProfileParams = {
+                    taggedUserId: null,
+                    member: item?.member,
+                  };
+                  lmChatInterface.navigateToProfile(params);
+                }}
+              >
+                <Image
+                  source={
+                    item?.member?.imageUrl
+                      ? { uri: item?.member?.imageUrl }
+                      : require("../../assets/images/default_pic.png")
+                  }
+                  style={styles.chatroomTopicAvatar}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      ) : null}
     </>
   );
 };

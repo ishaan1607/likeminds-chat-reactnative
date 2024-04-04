@@ -229,16 +229,15 @@ const MessageInputBox = ({
 
   let refInput = useRef<any>();
 
-  const {
-    GiphyContentType,
-    GiphyDialog,
-    GiphyDialogEvent,
-    GiphyDialogMediaSelectEventHandler,
-    GiphyMedia,
-  } = GIFPicker;
-  type GiphyDialogMediaSelectEventHandler =
+  const GiphyContentType = GIFPicker?.GiphyContentType;
+  const GiphyDialog = GIFPicker?.GiphyDialog;
+  const GiphyDialogEvent = GIFPicker?.GiphyDialogEvent;
+  const GiphyDialogMediaSelectEventHandler =
+    GIFPicker?.GiphyDialogMediaSelectEventHandler;
+  const GiphyMedia = GIFPicker?.GiphyMedia;
+  type GiphyDialogMediaSelectEventHandlerType =
     typeof GiphyDialogMediaSelectEventHandler;
-  type GiphyMedia = typeof GiphyMedia;
+  type GiphyMediaType = typeof GiphyMedia;
 
   const {
     selectedFilesToUpload = [],
@@ -539,7 +538,7 @@ const MessageInputBox = ({
       GiphyDialog.configure({
         mediaTypeConfig: [GiphyContentType.Recents, GiphyContentType.Gif],
       });
-      const handler: GiphyDialogMediaSelectEventHandler = (e) => {
+      const handler: GiphyDialogMediaSelectEventHandlerType = (e) => {
         selectGIF(e.media, message);
         GiphyDialog.hide();
       };
@@ -784,7 +783,7 @@ const MessageInputBox = ({
   };
 
   // to select gif from list of GIFs
-  const selectGIF = async (gif: GiphyMedia, message: string) => {
+  const selectGIF = async (gif: GiphyMediaType, message: string) => {
     const item = { ...gif, thumbnailUrl: "" };
 
     navigation.navigate(FILE_UPLOAD, {

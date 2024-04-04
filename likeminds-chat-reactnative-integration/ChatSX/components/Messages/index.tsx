@@ -126,7 +126,7 @@ const MessagesComponent = ({ onTapToUndoProp }: MessagesComponentProps) => {
         )}
 
         {/* Sharp corner styles of a chat bubble */}
-        {!isItemIncludedInStateArr ? (
+        {!isItemIncludedInStateArr && !(item?.attachmentCount > 0) ? (
           <View>
             {isTypeSent ? (
               <View
