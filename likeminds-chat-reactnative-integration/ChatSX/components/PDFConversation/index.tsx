@@ -13,9 +13,10 @@ import MessageFooter from "../MessageFooter";
 import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 import { useAttachmentConversationContext } from "../../context/AttachmentConversationContext";
 import { styles } from "../AttachmentConversations/styles";
-import MessageNotSupportedView from "../MessageNotSupportedView";
+import VoiceNoteView from "../VoiceNoteView";
+import { PDFConversationView } from "../PDFConversationView";
 
-const MessageNotSupported = () => {
+const PDFConversation = () => {
   const {
     isIncluded,
     item,
@@ -94,7 +95,7 @@ const MessageNotSupported = () => {
             <MessageHeader />
           )}
 
-          <MessageNotSupportedView />
+          <PDFConversationView />
 
           {/* Message text */}
           {isAnswer ? <MessageText /> : null}
@@ -125,4 +126,4 @@ const MessageNotSupported = () => {
   );
 };
 
-export default MessageNotSupported;
+export default PDFConversation;

@@ -27,7 +27,7 @@ import TrackPlayer, {
 import { useChatroomContext } from "../../context/ChatroomContext";
 import { useMessageContext } from "../../context/MessageContext";
 
-const VoiceNoteConversations = () => {
+const VoiceNoteView = () => {
   const { item } = useMessageContext();
   const { handleFileUpload } = useChatroomContext();
   const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
@@ -219,4 +219,4 @@ const VoiceNoteConversations = () => {
   );
 };
 
-export default VoiceNoteConversations;
+export default VoiceNoteView;

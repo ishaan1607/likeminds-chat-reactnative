@@ -50,13 +50,6 @@ import {
   replaceMentionValues,
 } from "../uiComponents/LMChatTextInput/utils";
 import {
-  GiphyContentType,
-  GiphyDialog,
-  GiphyDialogEvent,
-  GiphyDialogMediaSelectEventHandler,
-  GiphyMedia,
-} from "@giphy/react-native-sdk";
-import {
   CLEAR_SELECTED_FILE_TO_VIEW,
   CLEAR_SELECTED_FILES_TO_UPLOAD,
   CLEAR_SELECTED_VOICE_NOTE_FILES_TO_UPLOAD,
@@ -108,6 +101,7 @@ import { generateAudioSet, generateVoiceNoteName } from "../audio";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
+import GIFPicker from "../optionalDependecies/Gif";
 
 export interface InputBoxContextProps {
   children: ReactNode;
@@ -283,6 +277,17 @@ export const InputBoxContextProvider = ({
   let refInput = useRef<any>();
 
   const {
+    GiphyContentType,
+    GiphyDialog,
+    GiphyDialogEvent,
+    GiphyDialogMediaSelectEventHandler,
+    GiphyMedia,
+  } = GIFPicker;
+  type GiphyDialogMediaSelectEventHandlerType =
+    typeof GiphyDialogMediaSelectEventHandler;
+  type GiphyMediaType = typeof GiphyMedia;
+
+  const {
     selectedFilesToUpload = [],
     selectedVoiceNoteFilesToUpload = [],
     selectedFilesToUploadThumbnails = [],
@@ -386,20 +391,22 @@ export const InputBoxContextProvider = ({
 
   // Handling GIFs selection in GiphyDialog
   useEffect(() => {
-    GiphyDialog.configure({
-      mediaTypeConfig: [GiphyContentType.Recents, GiphyContentType.Gif],
-    });
-    const handler: GiphyDialogMediaSelectEventHandler = (e) => {
-      selectGIF(e.media, message);
-      GiphyDialog.hide();
-    };
-    const listener = GiphyDialog.addListener(
-      GiphyDialogEvent.MediaSelected,
-      handler
-    );
-    return () => {
-      listener.remove();
-    };
+    if (GIFPicker) {
+      GiphyDialog.configure({
+        mediaTypeConfig: [GiphyContentType.Recents, GiphyContentType.Gif],
+      });
+      const handler: GiphyDialogMediaSelectEventHandlerType = (e) => {
+        selectGIF(e.media, message);
+        GiphyDialog.hide();
+      };
+      const listener = GiphyDialog.addListener(
+        GiphyDialogEvent.MediaSelected,
+        handler
+      );
+      return () => {
+        listener.remove();
+      };
+    }
   }, [message]);
 
   // to handle video thumbnail
@@ -467,7 +474,7 @@ export const InputBoxContextProvider = ({
       mediaType: "mixed",
       selectionLimit: 0,
     };
-    
+
     navigation.navigate(FILE_UPLOAD, {
       chatroomID: chatroomID,
       previousMessage: message, // to keep message on uploadScreen InputBox
@@ -634,7 +641,7 @@ export const InputBoxContextProvider = ({
   };
 
   // to select gif from list of GIFs
-  const selectGIF = async (gif: GiphyMedia, message: string) => {
+  const selectGIF = async (gif: GiphyMediaType, message: string) => {
     const item = { ...gif, thumbnailUrl: "" };
 
     navigation.navigate(FILE_UPLOAD, {

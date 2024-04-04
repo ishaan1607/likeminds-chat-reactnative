@@ -126,13 +126,6 @@ import {
   getConversationType,
 } from "../../utils/analyticsUtils";
 import { PERMISSIONS, check, request } from "react-native-permissions";
-import {
-  GiphyContentType,
-  GiphyDialog,
-  GiphyDialogEvent,
-  GiphyDialogMediaSelectEventHandler,
-  GiphyMedia,
-} from "@giphy/react-native-sdk";
 import { createThumbnail } from "react-native-create-thumbnail";
 import {
   LMChatIcon,
@@ -146,6 +139,7 @@ import {
   replaceMentionValues,
 } from "../../uiComponents/LMChatTextInput/utils";
 import Layout from "../../constants/Layout";
+import GIFPicker from "../../optionalDependecies/Gif";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
@@ -234,6 +228,17 @@ const MessageInputBox = ({
   const taggedUserNames: any = [];
 
   let refInput = useRef<any>();
+
+  const {
+    GiphyContentType,
+    GiphyDialog,
+    GiphyDialogEvent,
+    GiphyDialogMediaSelectEventHandler,
+    GiphyMedia,
+  } = GIFPicker;
+  type GiphyDialogMediaSelectEventHandler =
+    typeof GiphyDialogMediaSelectEventHandler;
+  type GiphyMedia = typeof GiphyMedia;
 
   const {
     selectedFilesToUpload = [],
@@ -530,20 +535,22 @@ const MessageInputBox = ({
 
   // Handling GIFs selection in GiphyDialog
   useEffect(() => {
-    GiphyDialog.configure({
-      mediaTypeConfig: [GiphyContentType.Recents, GiphyContentType.Gif],
-    });
-    const handler: GiphyDialogMediaSelectEventHandler = (e) => {
-      selectGIF(e.media, message);
-      GiphyDialog.hide();
-    };
-    const listener = GiphyDialog.addListener(
-      GiphyDialogEvent.MediaSelected,
-      handler
-    );
-    return () => {
-      listener.remove();
-    };
+    if (GIFPicker) {
+      GiphyDialog.configure({
+        mediaTypeConfig: [GiphyContentType.Recents, GiphyContentType.Gif],
+      });
+      const handler: GiphyDialogMediaSelectEventHandler = (e) => {
+        selectGIF(e.media, message);
+        GiphyDialog.hide();
+      };
+      const listener = GiphyDialog.addListener(
+        GiphyDialogEvent.MediaSelected,
+        handler
+      );
+      return () => {
+        listener.remove();
+      };
+    }
   }, [message]);
 
   // to handle video thumbnail
@@ -2337,14 +2344,16 @@ const MessageInputBox = ({
                 !isEditable &&
                 !voiceNotes?.recordTime &&
                 !isDeleteAnimation ? (
-                  <TouchableOpacity
-                    style={styles.gifView}
-                    onPress={() => GiphyDialog.show()}
-                  >
-                    <LMChatTextView textStyle={styles.gifText}>
-                      {CAPITAL_GIF_TEXT}
-                    </LMChatTextView>
-                  </TouchableOpacity>
+                  GIFPicker ? (
+                    <TouchableOpacity
+                      style={styles.gifView}
+                      onPress={() => GiphyDialog.show()}
+                    >
+                      <LMChatTextView textStyle={styles.gifText}>
+                        {CAPITAL_GIF_TEXT}
+                      </LMChatTextView>
+                    </TouchableOpacity>
+                  ) : null
                 ) : null}
                 <LMChatTextInput
                   placeholderText={

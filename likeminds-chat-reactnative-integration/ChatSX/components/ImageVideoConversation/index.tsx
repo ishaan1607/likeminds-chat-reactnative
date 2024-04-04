@@ -12,10 +12,11 @@ import MessageText from "../MessageText";
 import MessageFooter from "../MessageFooter";
 import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 import { useAttachmentConversationContext } from "../../context/AttachmentConversationContext";
+import GIFView from "../GifView";
 import { styles } from "../AttachmentConversations/styles";
-import MessageNotSupportedView from "../MessageNotSupportedView";
+import { ImageVideoConversationView } from "../ImageVideoConversationView";
 
-const MessageNotSupported = () => {
+const ImageVideoConversation = () => {
   const {
     isIncluded,
     item,
@@ -94,7 +95,7 @@ const MessageNotSupported = () => {
             <MessageHeader />
           )}
 
-          <MessageNotSupportedView />
+          <ImageVideoConversationView />
 
           {/* Message text */}
           {isAnswer ? <MessageText /> : null}
@@ -125,4 +126,4 @@ const MessageNotSupported = () => {
   );
 };
 
-export default MessageNotSupported;
+export default ImageVideoConversation;

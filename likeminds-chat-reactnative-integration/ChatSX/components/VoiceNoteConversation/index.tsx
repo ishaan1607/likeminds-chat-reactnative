@@ -13,9 +13,9 @@ import MessageFooter from "../MessageFooter";
 import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 import { useAttachmentConversationContext } from "../../context/AttachmentConversationContext";
 import { styles } from "../AttachmentConversations/styles";
-import MessageNotSupportedView from "../MessageNotSupportedView";
+import VoiceNoteView from "../VoiceNoteView";
 
-const MessageNotSupported = () => {
+const VoiceNoteConversation = () => {
   const {
     isIncluded,
     item,
@@ -94,7 +94,7 @@ const MessageNotSupported = () => {
             <MessageHeader />
           )}
 
-          <MessageNotSupportedView />
+          <VoiceNoteView />
 
           {/* Message text */}
           {isAnswer ? <MessageText /> : null}
@@ -125,4 +125,4 @@ const MessageNotSupported = () => {
   );
 };
 
-export default MessageNotSupported;
+export default VoiceNoteConversation;
