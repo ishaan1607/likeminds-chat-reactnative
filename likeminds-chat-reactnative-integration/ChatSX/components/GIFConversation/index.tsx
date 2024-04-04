@@ -12,7 +12,7 @@ import MessageText from "../MessageText";
 import MessageFooter from "../MessageFooter";
 import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 import { useAttachmentConversationContext } from "../../context/AttachmentConversationContext";
-import GIFView from "../GifView";
+import GIFView from "../GIFView";
 import { styles } from "../AttachmentConversations/styles";
 import { NavigateToProfileParams } from "../../callBacks/type";
 import { CallBack } from "../../callBacks/callBackClass";
@@ -58,7 +58,7 @@ const GIFConversation = () => {
   const lmChatInterface = CallBack.lmChatInterface;
 
   return (
-    <>
+    <View style={styles.messageParent}>
       <View
         style={[
           styles.displayRow,
@@ -187,7 +187,7 @@ const GIFConversation = () => {
           )}
         </View>
       ) : null}
-    </>
+    </View>
   );
 };
 

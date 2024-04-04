@@ -90,8 +90,6 @@ const MessagesComponent = ({ onTapToUndoProp }: MessagesComponentProps) => {
     : STYLES.$COLORS.SELECTED_BLUE;
   // styling props ended
 
-  const lmChatInterface = CallBack.lmChatInterface;
-
   return (
     <View style={styles.messageParent}>
       <View>
@@ -124,68 +122,6 @@ const MessagesComponent = ({ onTapToUndoProp }: MessagesComponentProps) => {
         ) : (
           <SimpleMessage onTapToUndoProp={onTapToUndoProp} />
         )}
-
-        {/* Sharp corner styles of a chat bubble */}
-        {!isItemIncludedInStateArr && !(item?.attachmentCount > 0) ? (
-          <View>
-            {isTypeSent ? (
-              <View
-                style={[
-                  styles.typeSent,
-                  sentMessageBackgroundColor
-                    ? {
-                        borderBottomColor: sentMessageBackgroundColor,
-                        borderLeftColor: sentMessageBackgroundColor,
-                      }
-                    : null,
-                  isIncluded
-                    ? {
-                        borderBottomColor: SELECTED_BACKGROUND_COLOR,
-                        borderLeftColor: SELECTED_BACKGROUND_COLOR,
-                      }
-                    : null,
-                ]}
-              />
-            ) : (
-              <View
-                style={[
-                  styles.typeReceived,
-                  receivedMessageBackgroundColor
-                    ? {
-                        borderBottomColor: receivedMessageBackgroundColor,
-                        borderRightColor: receivedMessageBackgroundColor,
-                      }
-                    : null,
-                  isIncluded
-                    ? {
-                        borderBottomColor: SELECTED_BACKGROUND_COLOR,
-                        borderRightColor: SELECTED_BACKGROUND_COLOR,
-                      }
-                    : null,
-                ]}
-              >
-                <TouchableOpacity
-                  onPress={() => {
-                    const params: NavigateToProfileParams = {
-                      taggedUserId: null,
-                      member: item?.member,
-                    };
-                    lmChatInterface.navigateToProfile(params);
-                  }}
-                >
-                  <Image
-                    source={
-                      item?.member?.imageUrl
-                        ? { uri: item?.member?.imageUrl }
-                        : require("../../assets/images/default_pic.png")
-                    }
-                    style={styles.chatroomTopicAvatar}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
-          </View>
-        ) : null}
 
         {/* Reaction List */}
         {customReactionList ? (

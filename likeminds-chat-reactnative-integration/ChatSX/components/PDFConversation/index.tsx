@@ -60,7 +60,7 @@ const PDFConversation = () => {
   const lmChatInterface = CallBack.lmChatInterface;
 
   return (
-    <>
+    <View style={styles.messageParent}>
       <View
         style={[
           styles.displayRow,
@@ -190,7 +190,7 @@ const PDFConversation = () => {
           )}
         </View>
       ) : null}
-    </>
+    </View>
   );
 };
 

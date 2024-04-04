@@ -456,6 +456,7 @@ const PollConversationView = () => {
     <View
       style={[
         styles.pollMessage,
+        styles.messageParent,
         isTypeSent
           ? [
               styles.sentMessage,

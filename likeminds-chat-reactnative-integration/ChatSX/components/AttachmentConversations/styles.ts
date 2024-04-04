@@ -230,4 +230,8 @@ export const styles = StyleSheet.create({
     borderRightColor: STYLES.$COLORS.TERTIARY,
     marginLeft: Layout.normalize(30),
   },
+  messageParent: {
+    margin: Layout.normalize(20),
+    marginVertical: Layout.normalize(10),
+  },
 });
