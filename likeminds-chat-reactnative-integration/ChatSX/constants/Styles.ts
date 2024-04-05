@@ -1,3 +1,4 @@
+import { Platform } from "react-native";
 import {
   CarouselScreenStyles,
   ChatBubbleStyles,
@@ -11,6 +12,8 @@ import {
   ReactionListStyles,
   StylesProps,
 } from "./type";
+
+const isIOS = Platform.OS === "ios" ? true : false;
 
 export class STYLES {
   static $COLORS = {
@@ -40,11 +43,11 @@ export class STYLES {
     BOLD: "700" as const,
   };
   static $FONT_TYPES = {
-    LIGHT: "SofiaPro-Light",
-    MEDIUM: "SofiaPro-Medium",
-    SEMI_BOLD: "SofiaPro-SemiBold",
-    BOLD: "SofiaPro-Bold",
-    BLACK: "SofiaPro-Black",
+    LIGHT: isIOS ? "San Francisco" : "Roboto",
+    MEDIUM: isIOS ? "San Francisco" : "Roboto",
+    SEMI_BOLD: isIOS ? "San Francisco" : "Roboto",
+    BOLD: isIOS ? "San Francisco" : "Roboto",
+    BLACK: isIOS ? "San Francisco" : "Roboto",
   };
   static $BACKGROUND_COLORS = {
     LIGHT: "#ffffff",
@@ -119,13 +122,31 @@ export class STYLES {
     };
     STYLES.$FONT_TYPES = {
       ...STYLES.$FONT_TYPES,
-      LIGHT: fontTypes?.LIGHT ? fontTypes?.LIGHT : "SofiaPro-Light",
-      MEDIUM: fontTypes?.MEDIUM ? fontTypes?.MEDIUM : "SofiaPro-Medium",
+      LIGHT: fontTypes?.LIGHT
+        ? fontTypes?.LIGHT
+        : isIOS
+        ? "San Francisco"
+        : "Roboto",
+      MEDIUM: fontTypes?.MEDIUM
+        ? fontTypes?.MEDIUM
+        : isIOS
+        ? "San Francisco"
+        : "Roboto",
       SEMI_BOLD: fontTypes?.SEMI_BOLD
         ? fontTypes?.SEMI_BOLD
-        : "SofiaPro-SemiBold",
-      BOLD: fontTypes?.BOLD ? fontTypes?.BOLD : "SofiaPro-Bold",
-      BLACK: fontTypes?.BLACK ? fontTypes?.BLACK : "SofiaPro-Black",
+        : isIOS
+        ? "San Francisco"
+        : "Roboto",
+      BOLD: fontTypes?.BOLD
+        ? fontTypes?.BOLD
+        : isIOS
+        ? "San Francisco"
+        : "Roboto",
+      BLACK: fontTypes?.BLACK
+        ? fontTypes?.BLACK
+        : isIOS
+        ? "San Francisco"
+        : "Roboto",
     };
   }
   static setChatBubbleStyle(chatBubbleStyles: ChatBubbleStyles) {
