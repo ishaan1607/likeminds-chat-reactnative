@@ -3,10 +3,10 @@ import getNotification from "./notifications";
 import { getRoute } from "./notifications/routes";
 import * as RootNavigation from "./RootNavigation";
 import messaging from "@react-native-firebase/messaging";
-import TrackPlayer from "react-native-track-player";
 import { playbackService } from "./audio";
 import { ConversationState, LMChatClient } from "@likeminds.community/chat-rn";
 import { Client } from "./client";
+import AudioPlayer from "./optionalDependecies/AudioPlayer";
 
 export const initMyClient = (
   apiKey: string,
@@ -18,7 +18,9 @@ export const initMyClient = (
 
   Client.setMyClient(myClient);
 
-  TrackPlayer.registerPlaybackService(() => playbackService);
+  AudioPlayer
+    ? AudioPlayer?.default?.registerPlaybackService(() => playbackService)
+    : null;
 
   return myClient;
 };

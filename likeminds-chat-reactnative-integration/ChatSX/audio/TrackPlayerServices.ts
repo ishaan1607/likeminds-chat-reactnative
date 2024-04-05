@@ -1,14 +1,14 @@
-import TrackPlayer, {Event} from 'react-native-track-player';
+import AudioPlayer from "../optionalDependecies/AudioPlayer";
 
 export async function setupPlayer() {
   let isSetup = false;
   try {
-    await TrackPlayer.getActiveTrack();
+    AudioPlayer ? await AudioPlayer?.default?.getActiveTrack() : null;
     isSetup = true;
     return isSetup;
   } catch {
-    await TrackPlayer.setupPlayer();
-    await TrackPlayer.updateOptions();
+    AudioPlayer ? await AudioPlayer?.default?.setupPlayer() : null;
+    AudioPlayer ? await AudioPlayer?.default?.updateOptions() : null;
 
     isSetup = true;
     return isSetup;
@@ -19,12 +19,22 @@ export async function setupPlayer() {
 
 export async function playbackService() {
   // to pause audio from notification
-  TrackPlayer.addEventListener(Event.RemotePause, () => {
-    TrackPlayer.pause();
-  });
+  AudioPlayer
+    ? AudioPlayer?.default?.addEventListener(
+        AudioPlayer?.Event.RemotePause,
+        () => {
+          AudioPlayer?.default?.pause();
+        }
+      )
+    : null;
 
   // to play audio from notification
-  TrackPlayer.addEventListener(Event.RemotePlay, () => {
-    TrackPlayer.play();
-  });
+  AudioPlayer
+    ? AudioPlayer?.default?.addEventListener(
+        AudioPlayer?.Event.RemotePlay,
+        () => {
+          AudioPlayer?.default?.play();
+        }
+      )
+    : null;
 }

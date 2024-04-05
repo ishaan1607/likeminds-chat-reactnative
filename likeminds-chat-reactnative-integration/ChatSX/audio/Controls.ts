@@ -1,10 +1,11 @@
-import TrackPlayer, {AddTrack} from 'react-native-track-player';
-import {setupPlayer} from './TrackPlayerServices';
-import {AUDIO_NOTIFICATION_TITLE} from '../constants/Strings';
+import { setupPlayer } from "./TrackPlayerServices";
+import { AUDIO_NOTIFICATION_TITLE } from "../constants/Strings";
+import AudioPlayer from "../optionalDependecies/AudioPlayer";
+import AddTrack from "../optionalDependecies/AddTrack";
 
 // to add track in queue so that we can play it
-export async function addTracks(track: AddTrack) {
-  await TrackPlayer.add([track]);
+export async function addTracks(track: typeof AddTrack) {
+  AudioPlayer ? await AudioPlayer?.default?.add([track]) : null;
 }
 
 // to start audio player
@@ -12,16 +13,16 @@ export const startPlay = async (path: string, url: string) => {
   const isSetup = await setupPlayer();
 
   const track = {
-    id: '1',
+    id: "1",
     url: path,
     title: AUDIO_NOTIFICATION_TITLE,
     externalUrl: url,
   };
   if (isSetup) {
-    await TrackPlayer.reset();
+    AudioPlayer ? await AudioPlayer?.default?.reset() : null;
     await addTracks(track);
 
-    await TrackPlayer.play();
+    AudioPlayer ? await AudioPlayer?.default?.play() : null;
 
     return true;
   } else {
@@ -31,24 +32,24 @@ export const startPlay = async (path: string, url: string) => {
 
 // to stop playing audio recording
 export const stopPlay = async () => {
-  await TrackPlayer.stop();
-  await TrackPlayer.reset();
+  AudioPlayer ? await AudioPlayer?.default?.stop() : null;
+  AudioPlayer ? await AudioPlayer?.default?.reset() : null;
   return false;
 };
 
 // to pause playing audio recording
 export const onPausePlay = async () => {
-  await TrackPlayer.pause();
+  AudioPlayer ? await AudioPlayer?.default?.pause() : null;
   return false;
 };
 
 // to resume playing audio recording
 export const onResumePlay = async () => {
-  await TrackPlayer.play();
+  AudioPlayer ? await AudioPlayer?.default?.play() : null;
   return true;
 };
 
 // seek to player on provided seconds
 export const onSeekTo = async (seconds: number) => {
-  await TrackPlayer.seekTo(seconds);
+  AudioPlayer ? await AudioPlayer?.default?.seekTo(seconds) : null;
 };
