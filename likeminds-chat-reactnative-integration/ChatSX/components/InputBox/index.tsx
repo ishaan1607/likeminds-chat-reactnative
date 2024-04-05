@@ -146,6 +146,7 @@ import {
   replaceMentionValues,
 } from "../../uiComponents/LMChatTextInput/utils";
 import Layout from "../../constants/Layout";
+import { SyncConversationRequest } from "@likeminds.community/chat-rn";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
@@ -877,6 +878,25 @@ const MessageInputBox = ({
     }
   };
 
+  async function syncConversationAPI(
+    page: number,
+    maxTimeStamp: number,
+    minTimeStamp: number,
+    conversationId?: string
+  ) {
+    const res = myClient?.syncConversation(
+      SyncConversationRequest.builder()
+        .setChatroomId(chatroomID)
+        .setPage(page)
+        .setMinTimestamp(minTimeStamp)
+        .setMaxTimestamp(maxTimeStamp)
+        .setPageSize(500)
+        .setConversationId(conversationId)
+        .build()
+    );
+    return res;
+  }
+
   // this method is trigerred whenever user presses the send button
   const onSend = async (
     conversation: string,
@@ -1174,6 +1194,23 @@ const MessageInputBox = ({
           text: conversation?.trim(),
         });
 
+        const val = await syncConversationAPI(
+          page,
+          Math.floor(Date.now() * 1000),
+          0
+        );
+        const conversationData = val?.data?.conversationsData;
+        let matchingObject = conversationData.find(
+          (obj) => obj.answer === conversation
+        );
+        matchingObject.member = user;
+
+        // saving the first message to localDB
+        await myClient?.saveNewConversation(
+          chatroomID?.toString(),
+          matchingObject
+        );
+
         dispatch({
           type: SHOW_TOAST,
           body: { isToast: true, msg: "Direct messaging request sent" },
@@ -1202,6 +1239,23 @@ const MessageInputBox = ({
           chatRequestState: ChatroomChatRequestState.ACCEPTED,
           text: conversation?.trim(),
         });
+
+        const val = await syncConversationAPI(
+          page,
+          Math.floor(Date.now() * 1000),
+          0
+        );
+        const conversationData = val?.data?.conversationsData;
+        let matchingObject = conversationData.find(
+          (obj) => obj.answer === conversation
+        );
+        matchingObject.member = user;
+
+        // saving the first message to localDB
+        await myClient?.saveNewConversation(
+          chatroomID?.toString(),
+          matchingObject
+        );
 
         dispatch({
           type: UPDATE_CHAT_REQUEST_STATE,
