@@ -14,10 +14,16 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
 interface ChatroomScreenProps {
-  lmChatInterface?: any;
+  lmChatInterface: any;
+  chatroomId: string;
+  announcementRoomId: string;
 }
 
-export function ChatroomScreen({lmChatInterface}: ChatroomScreenProps) {
+export function ChatroomScreen({
+  lmChatInterface,
+  chatroomId,
+  announcementRoomId,
+}: ChatroomScreenProps) {
   const showViewParticipants = true;
   const showShareChatroom = true;
   const showMuteNotifications = true;
@@ -125,8 +131,6 @@ export function ChatroomScreen({lmChatInterface}: ChatroomScreenProps) {
 
   const navigation = useNavigation<StackNavigationProp<any>>();
 
-  console.log('navigation', navigation);
-
   return (
     <ChatRoom
       showViewParticipants={showViewParticipants}
@@ -154,8 +158,8 @@ export function ChatroomScreen({lmChatInterface}: ChatroomScreenProps) {
 
       <ChatroomTabNavigator
         navigation={navigation}
-        chatroomId="4205696"
-        announcementRoomId="4157720"
+        chatroomId={chatroomId}
+        announcementRoomId={announcementRoomId}
         gender="male"
         lmChatInterface={lmChatInterface}
       />

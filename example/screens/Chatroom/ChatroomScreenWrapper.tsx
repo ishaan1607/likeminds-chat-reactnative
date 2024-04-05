@@ -3,13 +3,23 @@ import React from 'react';
 import {ChatroomScreen} from './ChatroomScreen';
 
 interface ChatroomScreenWrapperProps {
-  lmChatInterface?: any;
+  lmChatInterface: any;
+  chatroomId: string;
+  announcementRoomId: string;
 }
 
-function ChatroomScreenWrapper({lmChatInterface}: ChatroomScreenWrapperProps) {
+function ChatroomScreenWrapper({
+  lmChatInterface,
+  chatroomId,
+  announcementRoomId,
+}: ChatroomScreenWrapperProps) {
   return (
     <Chat>
-      <ChatroomScreen lmChatInterface={lmChatInterface} />
+      <ChatroomScreen
+        lmChatInterface={lmChatInterface}
+        chatroomId={chatroomId}
+        announcementRoomId={announcementRoomId}
+      />
     </Chat>
   );
 }
