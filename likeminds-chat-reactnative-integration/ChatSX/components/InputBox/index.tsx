@@ -138,7 +138,8 @@ import {
 } from "../../uiComponents/LMChatTextInput/utils";
 import Layout from "../../constants/Layout";
 import GIFPicker from "../../optionalDependecies/Gif";
-import { AudioRecorder, LottieView } from "../../optionalDependecies/Audio";
+import AudioRecorder from "../../optionalDependecies/AudioRecorder";
+import LottieView from "../../optionalDependecies/LottieView";
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = AudioRecorder

@@ -32,7 +32,7 @@ import { copySelectedMessages } from "../../commonFuctions";
 import Clipboard from "@react-native-clipboard/clipboard";
 import { useAppDispatch } from "../../store";
 import { VOICE_NOTE_TEXT } from "../../constants/Strings";
-import { AudioPlayer } from "../../optionalDependecies/Audio";
+import AudioPlayer from "../../optionalDependecies/AudioPlayer";
 
 const ChatroomHeader = () => {
   const myClient = Client.myClient;

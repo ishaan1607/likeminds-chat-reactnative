@@ -1,4 +1,4 @@
-import { AudioPlayer } from "../optionalDependecies/Audio";
+import AudioPlayer from "../optionalDependecies/AudioPlayer";
 
 export async function setupPlayer() {
   let isSetup = false;

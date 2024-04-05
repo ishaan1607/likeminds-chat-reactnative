@@ -1,4 +1,5 @@
-import { AudioRecorder, AudioSet } from "../optionalDependecies/Audio";
+import AudioRecorder from "../optionalDependecies/AudioRecorder";
+import AudioSet from "../optionalDependecies/AudioSet";
 
 export function generateVoiceNoteName() {
   const currentDate = new Date();
@@ -11,9 +12,6 @@ export function generateVoiceNoteName() {
 }
 
 export function generateAudioSet() {
-  console.log("AudioRecorder", AudioRecorder);
-  console.log("AudioSet", AudioSet);
-
   const audioSet: typeof AudioSet = {
     AudioEncoderAndroid: AudioRecorder
       ? AudioRecorder?.AudioEncoderAndroidType.AAC

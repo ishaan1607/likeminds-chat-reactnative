@@ -19,7 +19,8 @@ import ImageVideoConversation from "../ImageVideoConversation";
 import VoiceNoteConversation from "../VoiceNoteConversation";
 import GIFConversation from "../GIFConversation";
 import PDFConversation from "../PDFConversation";
-import { AudioPlayer, Slider } from "../../optionalDependecies/Audio";
+import AudioPlayer from "../../optionalDependecies/AudioPlayer";
+import Slider from "../../optionalDependecies/Slider";
 
 interface AttachmentConversations {
   isReplyConversation?: any;

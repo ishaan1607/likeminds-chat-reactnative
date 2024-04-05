@@ -6,7 +6,7 @@ import messaging from "@react-native-firebase/messaging";
 import { playbackService } from "./audio";
 import { ConversationState, LMChatClient } from "@likeminds.community/chat-rn";
 import { Client } from "./client";
-import { AudioPlayer } from "./optionalDependecies/Audio";
+import AudioPlayer from "./optionalDependecies/AudioPlayer";
 
 export const initMyClient = (
   apiKey: string,

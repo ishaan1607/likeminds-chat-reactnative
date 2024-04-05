@@ -21,7 +21,8 @@ import { Base64 } from "../../awsExports";
 import { onSeekTo } from "../../audio/Controls";
 import { useChatroomContext } from "../../context/ChatroomContext";
 import { useMessageContext } from "../../context/MessageContext";
-import { AudioPlayer, Slider } from "../../optionalDependecies/Audio";
+import AudioPlayer from "../../optionalDependecies/AudioPlayer";
+import Slider from "../../optionalDependecies/Slider";
 
 const VoiceNoteView = () => {
   const { item } = useMessageContext();

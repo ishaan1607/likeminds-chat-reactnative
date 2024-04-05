@@ -1,6 +1,7 @@
 import { setupPlayer } from "./TrackPlayerServices";
 import { AUDIO_NOTIFICATION_TITLE } from "../constants/Strings";
-import { AudioPlayer, AddTrack } from "../optionalDependecies/Audio";
+import AudioPlayer from "../optionalDependecies/AudioPlayer";
+import AddTrack from "../optionalDependecies/AddTrack";
 
 // to add track in queue so that we can play it
 export async function addTracks(track: typeof AddTrack) {
