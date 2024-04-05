@@ -1,4 +1,7 @@
+import { Platform } from "react-native";
 import Layout from "../../constants/Layout";
+
+const isIOS = Platform.OS === "ios" ? true : false;
 
 export default {
   $COLORS: {
@@ -26,11 +29,11 @@ export default {
     BOLD: "700" as "700",
   },
   $FONT_TYPES: {
-    LIGHT: "SofiaPro-Light",
-    MEDIUM: "SofiaPro-Medium",
-    SEMI_BOLD: "SofiaPro-SemiBold",
-    BOLD: "SofiaPro-Bold",
-    BLACK: "SofiaPro-Black",
+    LIGHT: isIOS ? "San Francisco" : "Roboto",
+    MEDIUM: isIOS ? "San Francisco" : "Roboto",
+    SEMI_BOLD: isIOS ? "San Francisco" : "Roboto",
+    BOLD: isIOS ? "San Francisco" : "Roboto",
+    BLACK: isIOS ? "San Francisco" : "Roboto",
   },
   $BACKGROUND_COLORS: {
     LIGHT: "#ffffff",
