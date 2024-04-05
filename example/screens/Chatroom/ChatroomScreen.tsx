@@ -9,6 +9,9 @@ import {
   useExploreFeedContext,
 } from '@likeminds.community/chat-rn-core';
 import {ReactionList} from '../../customisableComponents/ReactionList';
+import ChatroomTabNavigator from '../../src/ChatroomTabNavigator';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
 export function ChatroomScreen() {
   const showViewParticipants = true;
@@ -21,6 +24,7 @@ export function ChatroomScreen() {
   const showUnBlockMember = true;
   const showViewProfile = true;
   const showSecretLeaveChatroom = true;
+  const showChatroomTopic = false;
   const {
     setChatroomTopic,
     leaveChatroom,
@@ -115,6 +119,8 @@ export function ChatroomScreen() {
     console.log('after custom scroll to bottom');
   };
 
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
   return (
     <ChatRoom
       showViewParticipants={showViewParticipants}
@@ -144,6 +150,7 @@ export function ChatroomScreen() {
       <MessageList
         onTapToUndo={customOnTapToUndo}
         scrollToBottom={customScrollToBottom}
+        showChatroomTopic={showChatroomTopic}
       />
 
       {/* Input Box Flow */}

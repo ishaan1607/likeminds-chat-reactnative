@@ -29,12 +29,19 @@ import {
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { getConversationType } from "../../utils/analyticsUtils";
 import { copySelectedMessages } from "../../commonFuctions";
-import Clipboard from "@react-native-clipboard/clipboard";
+
+// TODO
+// import Clipboard from "@react-native-clipboard/clipboard";
+
 import { useAppDispatch } from "../../store";
 import { VOICE_NOTE_TEXT } from "../../constants/Strings";
-import TrackPlayer from "react-native-track-player";
+import AudioPlayer from "../../optionalDependecies/AudioPlayer";
 
-const ChatroomHeader = () => {
+interface ChatroomHeaderProps {
+  hideThreeDotsMenu?: boolean;
+}
+
+const ChatroomHeader = ({ hideThreeDotsMenu }: ChatroomHeaderProps) => {
   const myClient = Client.myClient;
   const {
     navigation,
@@ -143,7 +150,8 @@ const ChatroomHeader = () => {
         </View>
       ),
       headerRight: () =>
-        filteredChatroomActions?.length > 0 && (
+        filteredChatroomActions?.length > 0 &&
+        !hideThreeDotsMenu && (
           <View style={styles.headerRight}>
             {chatroomDetails ? (
               <TouchableOpacity
@@ -315,14 +323,15 @@ const ChatroomHeader = () => {
                 </TouchableOpacity>
               )}
 
-            {len === 1 && !isFirstMessageDeleted && isCopy ? (
+            {/* {len === 1 && !isFirstMessageDeleted && isCopy ? (
               <TouchableOpacity
                 onPress={() => {
                   const output = copySelectedMessages(
                     selectedMessages,
                     chatroomID
                   );
-                  Clipboard.setString(output);
+                  // TODO
+                  // Clipboard.setString(output);
                   dispatch({ type: SELECTED_MESSAGES, body: [] });
                   dispatch({ type: LONG_PRESSED, body: false });
                   setInitialHeader();
@@ -340,7 +349,8 @@ const ChatroomHeader = () => {
                     selectedMessages,
                     chatroomID
                   );
-                  Clipboard.setString(output);
+                  // TODO
+                  // Clipboard.setString(output);
                   dispatch({ type: SELECTED_MESSAGES, body: [] });
                   dispatch({ type: LONG_PRESSED, body: false });
                   setInitialHeader();
@@ -351,7 +361,7 @@ const ChatroomHeader = () => {
                   style={styles.threeDots}
                 />
               </TouchableOpacity>
-            ) : null}
+            ) : null} */}
 
             {isSelectedMessageEditable &&
             (chatroomType === ChatroomType.DMCHATROOM
@@ -430,7 +440,9 @@ const ChatroomHeader = () => {
                           conversation[0]?.attachments[0]?.type ==
                           VOICE_NOTE_TEXT
                         ) {
-                          await TrackPlayer.reset();
+                          AudioPlayer
+                            ? await AudioPlayer?.default?.reset()
+                            : null;
                         }
                       }
                       dispatch({
@@ -450,7 +462,7 @@ const ChatroomHeader = () => {
                 />
               </TouchableOpacity>
             )}
-            {len === 1 && !isFirstMessageDeleted && (
+            {len === 1 && !isFirstMessageDeleted && !hideThreeDotsMenu && (
               <TouchableOpacity
                 onPress={() => {
                   setReportModalVisible(true);

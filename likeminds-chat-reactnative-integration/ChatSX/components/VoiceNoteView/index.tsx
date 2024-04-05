@@ -10,7 +10,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { styles } from "../AttachmentConversations/styles";
 import Layout from "../../constants/Layout";
-import Slider from "@react-native-community/slider";
 import { convertSecondsToTime } from "../../commonFuctions";
 import { FAILED, SUCCESS } from "../../constants/Strings";
 import STYLES from "../../constants/Styles";
@@ -20,19 +19,17 @@ import { Events, Keys } from "../../enums";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import { Base64 } from "../../awsExports";
 import { onSeekTo } from "../../audio/Controls";
-import TrackPlayer, {
-  useActiveTrack,
-  useProgress,
-} from "react-native-track-player";
 import { useChatroomContext } from "../../context/ChatroomContext";
 import { useMessageContext } from "../../context/MessageContext";
+import AudioPlayer from "../../optionalDependecies/AudioPlayer";
+import Slider from "../../optionalDependecies/Slider";
 
-const VoiceNoteConversations = () => {
+const VoiceNoteView = () => {
   const { item } = useMessageContext();
   const { handleFileUpload } = useChatroomContext();
   const [isVoiceNotePlaying, setIsVoiceNotePlaying] = useState(false);
-  const progress = useProgress();
-  const activeTrack = useActiveTrack();
+  const progress = AudioPlayer ? AudioPlayer?.useProgress() : null;
+  const activeTrack = AudioPlayer ? AudioPlayer?.useActiveTrack() : null;
 
   let firstAttachment = item?.attachments[0];
   const chatBubbleStyles = STYLES.$CHAT_BUBBLE_STYLE;
@@ -44,7 +41,7 @@ const VoiceNoteConversations = () => {
   // to stop the audio if move out of the chatroom
   useEffect(() => {
     if (progress.duration <= progress.position) {
-      TrackPlayer.reset();
+      AudioPlayer ? AudioPlayer?.default?.reset() : null;
       setIsVoiceNotePlaying(false);
     }
   }, [progress]);
@@ -219,4 +216,4 @@ const VoiceNoteConversations = () => {
   );
 };
 
-export default VoiceNoteConversations;
+export default VoiceNoteView;

@@ -83,7 +83,6 @@ import {
   EXPLORE_FEED,
   HOMEFEED,
 } from "../constants/Screens";
-import TrackPlayer from "react-native-track-player";
 import { DataSnapshot, onValue, ref } from "firebase/database";
 import { getExploreFeedData } from "../store/actions/explorefeed";
 import {
@@ -107,6 +106,7 @@ import { fetchResourceFromURI, formatTime } from "../commonFuctions";
 import { Image as CompressedImage } from "react-native-compressor";
 import { Conversation } from "@likeminds.community/chat-rn/dist/shared/responseModels/Conversation";
 import { Client } from "../client";
+import AudioPlayer from "../optionalDependecies/AudioPlayer";
 
 interface UploadResource {
   selectedImages: any;
@@ -610,7 +610,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
       type: SET_REPLY_MESSAGE,
       body: { replyMessage: "" },
     });
-  }, []);
+  }, [chatroomID]);
 
   // This useEffect is used to highlight the chatroom topic conversation for 1 sec on scrolling to it
   useEffect(() => {
@@ -619,7 +619,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
         setIsFound(false);
       }, 1000);
     }
-  }, [isFound]);
+  }, [isFound, chatroomID]);
 
   // local handling for chatroom topic updation's state message
   useEffect(() => {
@@ -644,7 +644,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
     if (selectedMessages.length !== 0 && isChatroomTopic) {
       addChatroomTopic();
     }
-  }, [currentChatroomTopic]);
+  }, [currentChatroomTopic, chatroomID]);
 
   // To trigger analytics for Message Selected
   useEffect(() => {
@@ -657,7 +657,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
         ])
       );
     }
-  }, [selectedMessages]);
+  }, [selectedMessages, chatroomID]);
 
   // To trigger analytics for Chatroom opened
   useEffect(() => {
@@ -682,7 +682,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
         [Keys.SOURCE, source],
       ])
     );
-  }, [chatroomType]);
+  }, [chatroomType, chatroomID]);
 
   //this useEffect fetch chatroom details only after initiate API got fetched if `navigation from Notification` else fetch chatroom details
   useEffect(() => {
@@ -700,7 +700,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
       }
     };
     invokeFunction();
-  }, [navigation, user]);
+  }, [navigation, user, chatroomID]);
 
   // this useEffect set unseenCount to zero when closing the chatroom
   useEffect(() => {
@@ -716,21 +716,21 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
         closingChatroom();
       }
     };
-  }, [temporaryStateMessage]);
+  }, [temporaryStateMessage, chatroomID]);
 
   // this useEffect is to stop audio player when going out of chatroom, if any audio is running
   useEffect(() => {
     return () => {
-      TrackPlayer.reset();
+      AudioPlayer ? AudioPlayer?.default?.reset() : null;
     };
-  }, []);
+  }, [chatroomID]);
 
   // this useEffect is to stop audio player when the app is in background
   useEffect(() => {
     if (!isFocused) {
-      TrackPlayer.reset();
+      AudioPlayer ? AudioPlayer?.default?.reset() : null;
     }
-  }, [isFocused]);
+  }, [isFocused, chatroomID]);
 
   //Logic for navigation backAction
   function backAction() {
@@ -786,7 +786,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
       backActionCall
     );
     return () => backHandlerAndroid.remove();
-  }, [chatroomType]);
+  }, [chatroomType, chatroomID]);
 
   // this useEffect call API to show InputBox based on showDM key.
   useEffect(() => {
@@ -816,7 +816,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
     if (chatroomDBDetails) {
       callApi();
     }
-  }, [chatroomDBDetails]);
+  }, [chatroomDBDetails, chatroomID]);
 
   // sync conversation call with conversation_id from firebase listener
   const firebaseConversationSyncAPI = async (
@@ -877,7 +877,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
         }
       }
     });
-  }, []);
+  }, [chatroomID]);
 
   // this useffect updates routes, previousRoute variables when we come to chatroom.
   useEffect(() => {
@@ -885,7 +885,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
       routes = navigation.getState()?.routes;
       previousRoute = routes[routes?.length - 2];
     }
-  }, [isFocused]);
+  }, [isFocused, chatroomID]);
 
   //This useEffect has logic to or hide message privately when long press on a message
   useEffect(() => {
@@ -907,7 +907,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
         setIsMessagePrivately(false);
       }
     }
-  }, [selectedMessages, showDM, showList]);
+  }, [selectedMessages, showDM, showList, chatroomID]);
 
   // This is to check eligibity of user that whether he/she can set chatroom topic or not
   useEffect(() => {
@@ -922,7 +922,7 @@ export const ChatroomContextProvider = ({ children }: ChatroomContextProps) => {
     ) {
       setIsChatroomTopic(true);
     }
-  }, [selectedMessages]);
+  }, [selectedMessages, chatroomID]);
 
   // method to close the three dot modal
   const handleModalClose = () => {

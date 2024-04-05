@@ -58,6 +58,7 @@ const LinkPreview = () => {
         {
           justifyContent: isTypeSent ? "flex-end" : "flex-start",
         },
+        styles.messageParent,
       ]}
     >
       <View

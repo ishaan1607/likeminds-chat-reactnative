@@ -9,12 +9,12 @@ import {
   UPDATE_FILE_UPLOADING_OBJECT,
 } from "../store/types/types";
 import { setupPlayer } from "../audio";
-import { GiphySDK } from "@giphy/react-native-sdk";
 import { GIPHY_SDK_API_KEY } from "../awsExports";
 import { Client } from "../client";
 import { FAILED } from "../constants/Strings";
 import { LMChatProviderProps } from "./type";
 import { CallBack } from "../callBacks/callBackClass";
+import GIFPicker from "../optionalDependecies/Gif";
 
 export const LMChatProvider = ({
   myClient,
@@ -36,7 +36,10 @@ export const LMChatProvider = ({
 
   // to configure gifphy sdk
   useEffect(() => {
-    GiphySDK.configure({ apiKey: GIPHY_SDK_API_KEY });
+    if(GIFPicker){
+      const {GiphySDK} = GIFPicker;
+      GiphySDK?.configure({ apiKey: GIPHY_SDK_API_KEY });
+    }
   }, []);
 
   useEffect(() => {

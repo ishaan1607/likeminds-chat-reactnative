@@ -29,7 +29,7 @@ const DeletedMessage = () => {
     : STYLES.$COLORS.SELECTED_BLUE;
   // styling props ended
   return (
-    <View>
+    <View style={styles.messageParent}>
       {chatroomType !== ChatroomType.DMCHATROOM ? (
         currentUserUuid === conversationDeletor ? (
           <View

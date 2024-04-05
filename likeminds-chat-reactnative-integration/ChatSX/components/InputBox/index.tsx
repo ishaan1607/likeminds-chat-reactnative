@@ -114,10 +114,8 @@ import {
   GestureUpdateEvent,
   PanGestureHandlerEventPayload,
 } from "react-native-gesture-handler";
-import LottieView from "lottie-react-native";
 import ReactNativeBlobUtil from "react-native-blob-util";
 import { generateAudioSet, generateVoiceNoteName } from "../../audio";
-import AudioRecorderPlayer from "react-native-audio-recorder-player";
 import { LINK_PREVIEW_REGEX } from "../../constants/Regex";
 import LinkPreviewInputBox from "../linkPreviewInputBox";
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
@@ -126,13 +124,6 @@ import {
   getConversationType,
 } from "../../utils/analyticsUtils";
 import { PERMISSIONS, check, request } from "react-native-permissions";
-import {
-  GiphyContentType,
-  GiphyDialog,
-  GiphyDialogEvent,
-  GiphyDialogMediaSelectEventHandler,
-  GiphyMedia,
-} from "@giphy/react-native-sdk";
 import { createThumbnail } from "react-native-create-thumbnail";
 import {
   LMChatIcon,
@@ -146,9 +137,15 @@ import {
   replaceMentionValues,
 } from "../../uiComponents/LMChatTextInput/utils";
 import Layout from "../../constants/Layout";
+import GIFPicker from "../../optionalDependecies/Gif";
+import AudioRecorder from "../../optionalDependecies/AudioRecorder";
+import LottieView from "../../optionalDependecies/LottieView";
+import { SyncConversationRequest } from "@likeminds.community/chat-rn";
 
 // to intialise audio recorder player
-const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
+const audioRecorderPlayerAttachment = AudioRecorder
+  ? new AudioRecorder.default()
+  : null;
 
 const MessageInputBox = ({
   replyChatID,
@@ -234,6 +231,16 @@ const MessageInputBox = ({
   const taggedUserNames: any = [];
 
   let refInput = useRef<any>();
+
+  const GiphyContentType = GIFPicker?.GiphyContentType;
+  const GiphyDialog = GIFPicker?.GiphyDialog;
+  const GiphyDialogEvent = GIFPicker?.GiphyDialogEvent;
+  const GiphyDialogMediaSelectEventHandler =
+    GIFPicker?.GiphyDialogMediaSelectEventHandler;
+  const GiphyMedia = GIFPicker?.GiphyMedia;
+  type GiphyDialogMediaSelectEventHandlerType =
+    typeof GiphyDialogMediaSelectEventHandler;
+  type GiphyMediaType = typeof GiphyMedia;
 
   const {
     selectedFilesToUpload = [],
@@ -530,20 +537,22 @@ const MessageInputBox = ({
 
   // Handling GIFs selection in GiphyDialog
   useEffect(() => {
-    GiphyDialog.configure({
-      mediaTypeConfig: [GiphyContentType.Recents, GiphyContentType.Gif],
-    });
-    const handler: GiphyDialogMediaSelectEventHandler = (e) => {
-      selectGIF(e.media, message);
-      GiphyDialog.hide();
-    };
-    const listener = GiphyDialog.addListener(
-      GiphyDialogEvent.MediaSelected,
-      handler
-    );
-    return () => {
-      listener.remove();
-    };
+    if (GIFPicker) {
+      GiphyDialog.configure({
+        mediaTypeConfig: [GiphyContentType.Recents, GiphyContentType.Gif],
+      });
+      const handler: GiphyDialogMediaSelectEventHandlerType = (e) => {
+        selectGIF(e.media, message);
+        GiphyDialog.hide();
+      };
+      const listener = GiphyDialog.addListener(
+        GiphyDialogEvent.MediaSelected,
+        handler
+      );
+      return () => {
+        listener.remove();
+      };
+    }
   }, [message]);
 
   // to handle video thumbnail
@@ -777,7 +786,7 @@ const MessageInputBox = ({
   };
 
   // to select gif from list of GIFs
-  const selectGIF = async (gif: GiphyMedia, message: string) => {
+  const selectGIF = async (gif: GiphyMediaType, message: string) => {
     const item = { ...gif, thumbnailUrl: "" };
 
     navigation.navigate(FILE_UPLOAD, {
@@ -876,6 +885,25 @@ const MessageInputBox = ({
       }
     }
   };
+
+  async function syncConversationAPI(
+    page: number,
+    maxTimeStamp: number,
+    minTimeStamp: number,
+    conversationId?: string
+  ) {
+    const res = myClient?.syncConversation(
+      SyncConversationRequest.builder()
+        .setChatroomId(chatroomID)
+        .setPage(page)
+        .setMinTimestamp(minTimeStamp)
+        .setMaxTimestamp(maxTimeStamp)
+        .setPageSize(500)
+        .setConversationId(conversationId)
+        .build()
+    );
+    return res;
+  }
 
   // this method is trigerred whenever user presses the send button
   const onSend = async (
@@ -1174,6 +1202,23 @@ const MessageInputBox = ({
           text: conversation?.trim(),
         });
 
+        const val = await syncConversationAPI(
+          page,
+          Math.floor(Date.now() * 1000),
+          0
+        );
+        const conversationData = val?.data?.conversationsData;
+        let matchingObject = conversationData.find(
+          (obj) => obj.answer === conversation
+        );
+        matchingObject.member = user;
+
+        // saving the first message to localDB
+        await myClient?.saveNewConversation(
+          chatroomID?.toString(),
+          matchingObject
+        );
+
         dispatch({
           type: SHOW_TOAST,
           body: { isToast: true, msg: "Direct messaging request sent" },
@@ -1202,6 +1247,23 @@ const MessageInputBox = ({
           chatRequestState: ChatroomChatRequestState.ACCEPTED,
           text: conversation?.trim(),
         });
+
+        const val = await syncConversationAPI(
+          page,
+          Math.floor(Date.now() * 1000),
+          0
+        );
+        const conversationData = val?.data?.conversationsData;
+        let matchingObject = conversationData.find(
+          (obj) => obj.answer === conversation
+        );
+        matchingObject.member = user;
+
+        // saving the first message to localDB
+        await myClient?.saveNewConversation(
+          chatroomID?.toString(),
+          matchingObject
+        );
 
         dispatch({
           type: UPDATE_CHAT_REQUEST_STATE,
@@ -1717,13 +1779,13 @@ const MessageInputBox = ({
           ? `${ReactNativeBlobUtil.fs.dirs.CacheDir}/${name}.mp3`
           : `${name}.m4a`;
 
-      const result = await audioRecorderPlayerAttachment.startRecorder(
+      const result = await audioRecorderPlayerAttachment?.startRecorder(
         path,
         audioSet
       );
       setIsVoiceNoteRecording(true);
       setVoiceNotesLink(result);
-      audioRecorderPlayerAttachment.addRecordBackListener((e) => {
+      audioRecorderPlayerAttachment?.addRecordBackListener((e) => {
         const seconds = Math.floor(e.currentPosition / 1000);
         if (seconds >= 900) {
           setStopRecording(!stopRecording);
@@ -1731,7 +1793,7 @@ const MessageInputBox = ({
         setVoiceNotes({
           recordSecs: e.currentPosition,
           recordTime: audioRecorderPlayerAttachment
-            .mmssss(Math.floor(e.currentPosition))
+            ?.mmssss(Math.floor(e.currentPosition))
             .slice(0, 5),
           name: name,
         });
@@ -1743,8 +1805,8 @@ const MessageInputBox = ({
   // to stop audio recording
   const stopRecord = async () => {
     if (isVoiceNoteRecording) {
-      await audioRecorderPlayerAttachment.stopRecorder();
-      audioRecorderPlayerAttachment.removeRecordBackListener();
+      await audioRecorderPlayerAttachment?.stopRecorder();
+      audioRecorderPlayerAttachment?.removeRecordBackListener();
 
       // if isVoiceResult is true we show audio player instead of audio recorder
       const voiceNote = {
@@ -1820,22 +1882,22 @@ const MessageInputBox = ({
 
   // to start playing audio recording
   const startPlay = async (path: string) => {
-    await audioRecorderPlayerAttachment.startPlayer(path);
-    audioRecorderPlayerAttachment.addPlayBackListener((e) => {
-      const playTime = audioRecorderPlayerAttachment.mmssss(
+    await audioRecorderPlayerAttachment?.startPlayer(path);
+    audioRecorderPlayerAttachment?.addPlayBackListener((e) => {
+      const playTime = audioRecorderPlayerAttachment?.mmssss(
         Math.floor(e.currentPosition)
       );
-      const duration = audioRecorderPlayerAttachment.mmssss(
+      const duration = audioRecorderPlayerAttachment?.mmssss(
         Math.floor(e.duration)
       );
       setVoiceNotesPlayer({
         currentPositionSec: e.currentPosition,
         currentDurationSec: e.duration,
         playTime: audioRecorderPlayerAttachment
-          .mmssss(Math.floor(e.currentPosition))
+          ?.mmssss(Math.floor(e.currentPosition))
           .slice(0, 5),
         duration: audioRecorderPlayerAttachment
-          .mmssss(Math.floor(e.duration))
+          ?.mmssss(Math.floor(e.duration))
           .slice(0, 5),
       });
 
@@ -1864,19 +1926,19 @@ const MessageInputBox = ({
 
   // to stop playing audio recording
   const stopPlay = async () => {
-    await audioRecorderPlayerAttachment.stopPlayer();
+    await audioRecorderPlayerAttachment?.stopPlayer();
     setIsVoiceNotePlaying(false);
   };
 
   // to pause playing audio recording
   const onPausePlay = async () => {
-    await audioRecorderPlayerAttachment.pausePlayer();
+    await audioRecorderPlayerAttachment?.pausePlayer();
     setIsVoiceNotePlaying(false);
   };
 
   // to resume playing audio recording
   const onResumePlay = async () => {
-    await audioRecorderPlayerAttachment.resumePlayer();
+    await audioRecorderPlayerAttachment?.resumePlayer();
     setIsVoiceNotePlaying(true);
   };
 
@@ -2197,7 +2259,7 @@ const MessageInputBox = ({
               <View style={styles.paddingHorizontal} />
             ) : null}
 
-            {isDeleteAnimation ? (
+            {isDeleteAnimation && LottieView ? (
               <View
                 style={[
                   styles.voiceNotesInputParent,
@@ -2337,14 +2399,16 @@ const MessageInputBox = ({
                 !isEditable &&
                 !voiceNotes?.recordTime &&
                 !isDeleteAnimation ? (
-                  <TouchableOpacity
-                    style={styles.gifView}
-                    onPress={() => GiphyDialog.show()}
-                  >
-                    <LMChatTextView textStyle={styles.gifText}>
-                      {CAPITAL_GIF_TEXT}
-                    </LMChatTextView>
-                  </TouchableOpacity>
+                  GIFPicker ? (
+                    <TouchableOpacity
+                      style={styles.gifView}
+                      onPress={() => GiphyDialog.show()}
+                    >
+                      <LMChatTextView textStyle={styles.gifText}>
+                        {CAPITAL_GIF_TEXT}
+                      </LMChatTextView>
+                    </TouchableOpacity>
+                  ) : null
                 ) : null}
                 <LMChatTextInput
                   placeholderText={
@@ -2484,7 +2548,7 @@ const MessageInputBox = ({
           </TouchableOpacity>
         ) : (
           <View>
-            {isRecordingPermission ? (
+            {isRecordingPermission && AudioRecorder ? (
               <GestureDetector gesture={composedGesture}>
                 <Animated.View>
                   {voiceNotes.recordTime && !isRecordingLocked && (
@@ -2527,7 +2591,7 @@ const MessageInputBox = ({
                   </Animated.View>
                 </Animated.View>
               </GestureDetector>
-            ) : (
+            ) : AudioRecorder ? (
               <Animated.View style={[styles.sendButton, panStyle]}>
                 <Pressable
                   onPress={askPermission}
@@ -2542,6 +2606,15 @@ const MessageInputBox = ({
                   />
                 </Pressable>
               </Animated.View>
+            ) : (
+              <TouchableOpacity style={styles.sendButton}>
+                <LMChatIcon
+                  assetPath={require("../../assets/images/send_button3x.png")}
+                  iconStyle={
+                    [styles.send, inputBoxStyles?.sendIconStyles] as ImageStyle
+                  }
+                />
+              </TouchableOpacity>
             )}
           </View>
         )}
