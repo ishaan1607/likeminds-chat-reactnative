@@ -9,8 +9,15 @@ import {
   useExploreFeedContext,
 } from '@likeminds.community/chat-rn-core';
 import {ReactionList} from '../../customisableComponents/ReactionList';
+import ChatroomTabNavigator from '../../src/ChatroomTabNavigator';
+import {useNavigation} from '@react-navigation/native';
+import {StackNavigationProp} from '@react-navigation/stack';
 
-export function ChatroomScreen() {
+interface ChatroomScreenProps {
+  lmChatInterface?: any;
+}
+
+export function ChatroomScreen({lmChatInterface}: ChatroomScreenProps) {
   const showViewParticipants = true;
   const showShareChatroom = true;
   const showMuteNotifications = true;
@@ -21,6 +28,7 @@ export function ChatroomScreen() {
   const showUnBlockMember = true;
   const showViewProfile = true;
   const showSecretLeaveChatroom = true;
+  const showChatroomTopic = false;
   const {
     setChatroomTopic,
     leaveChatroom,
@@ -115,6 +123,10 @@ export function ChatroomScreen() {
     console.log('after custom scroll to bottom');
   };
 
+  const navigation = useNavigation<StackNavigationProp<any>>();
+
+  console.log('navigation', navigation);
+
   return (
     <ChatRoom
       showViewParticipants={showViewParticipants}
@@ -140,10 +152,19 @@ export function ChatroomScreen() {
       {/* ChatroomHeader */}
       <ChatroomHeader />
 
+      <ChatroomTabNavigator
+        navigation={navigation}
+        chatroomId="4205696"
+        announcementRoomId="4157720"
+        gender="male"
+        lmChatInterface={lmChatInterface}
+      />
+
       {/* Message List */}
       <MessageList
         onTapToUndo={customOnTapToUndo}
         scrollToBottom={customScrollToBottom}
+        showChatroomTopic={showChatroomTopic}
       />
 
       {/* Input Box Flow */}

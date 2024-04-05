@@ -39,13 +39,19 @@ const ShimmerPlaceHolder = createShimmerPlaceholder(LinearGradient);
 interface MessageList {
   onTapToUndo?: () => void;
   scrollToBottom?: () => void;
+  showChatroomTopic?: boolean;
 }
 
-const MessageList = ({ onTapToUndo, scrollToBottom }: MessageList) => {
+const MessageList = ({
+  onTapToUndo,
+  scrollToBottom,
+  showChatroomTopic,
+}: MessageList) => {
   return (
     <MessageListComponent
       onTapToUndo={onTapToUndo}
       scrollToBottomProp={scrollToBottom}
+      showChatroomTopic={showChatroomTopic}
     />
   );
 };
@@ -53,11 +59,13 @@ const MessageList = ({ onTapToUndo, scrollToBottom }: MessageList) => {
 interface MessageListComponent {
   onTapToUndo?: () => void;
   scrollToBottomProp?: () => void;
+  showChatroomTopic?: boolean;
 }
 
 const MessageListComponent = ({
   onTapToUndo,
   scrollToBottomProp,
+  showChatroomTopic,
 }: MessageListComponent) => {
   const {
     conversations,
@@ -266,10 +274,154 @@ const MessageListComponent = ({
             />
           </View>
         </View>
-      ) : (
+      ) : showChatroomTopic ? (
         <>
           {/* Chatroom Topic */}
           <ChatroomTopic />
+          {/* List of messages */}
+          <FlashList
+            ref={flatlistRef}
+            data={conversations}
+            keyExtractor={(item: any, index) => {
+              const isArray = Array.isArray(item);
+              return isArray ? `${index}` : `${item?.id}`;
+            }}
+            extraData={{
+              value: [
+                selectedMessages,
+                uploadingFilesMessages,
+                stateArr,
+                conversations,
+              ],
+            }}
+            estimatedItemSize={250}
+            renderItem={({ item: value, index }: any) => {
+              const uploadingFilesMessagesIDArr = Object.keys(
+                uploadingFilesMessages
+              );
+              let item = { ...value };
+              if (uploadingFilesMessagesIDArr.includes(value?.id?.toString())) {
+                item = uploadingFilesMessages[value?.id];
+              }
+
+              const isStateIncluded = stateArr.includes(item?.state);
+
+              let isIncluded = selectedMessages.some(
+                (val: any) => val?.id === item?.id && !isStateIncluded
+              );
+
+              if (isFound && item?.id == currentChatroomTopic?.id) {
+                isIncluded = true;
+              }
+
+              if (isReplyFound && item?.id === replyConversationId) {
+                isIncluded = true;
+              }
+
+              return (
+                <View>
+                  {index < conversations?.length &&
+                  conversations[index]?.date !==
+                    conversations[index + 1]?.date ? (
+                    <View style={[styles.statusMessage]}>
+                      <Text
+                        style={{
+                          color: STYLES.$COLORS.FONT_PRIMARY,
+                          fontSize: STYLES.$FONT_SIZES.SMALL,
+                          fontFamily: STYLES.$FONT_TYPES.LIGHT,
+                        }}
+                      >
+                        {item?.date}
+                      </Text>
+                    </View>
+                  ) : null}
+
+                  <Swipeable
+                    onFocusKeyboard={() => {
+                      refInput?.current?.focus();
+                    }}
+                    item={item}
+                    isStateIncluded={isStateIncluded}
+                  >
+                    <Pressable
+                      onLongPress={(event) => {
+                        const { pageX, pageY } = event.nativeEvent;
+                        dispatch({
+                          type: SET_POSITION,
+                          body: { pageX: pageX, pageY: pageY },
+                        });
+                        handleLongPress(
+                          isStateIncluded,
+                          isIncluded,
+                          item,
+                          selectedMessages
+                        );
+                      }}
+                      delayLongPress={200}
+                      onPress={function (event) {
+                        const { pageX, pageY } = event.nativeEvent;
+                        dispatch({
+                          type: SET_POSITION,
+                          body: { pageX: pageX, pageY: pageY },
+                        });
+                        handleClick(
+                          isStateIncluded,
+                          isIncluded,
+                          item,
+                          false,
+                          selectedMessages
+                        );
+                      }}
+                      style={
+                        isIncluded
+                          ? selectedBackgroundColor
+                            ? { backgroundColor: SELECTED_BACKGROUND_COLOR }
+                            : {
+                                backgroundColor:
+                                  STYLES.$COLORS.SELECTED_CHAT_BUBBLE,
+                              }
+                          : null
+                      }
+                    >
+                      <Messages
+                        isIncluded={isIncluded}
+                        item={item}
+                        isStateIncluded={isStateIncluded}
+                        index={index}
+                        onTapToUndoProp={onTapToUndo}
+                      />
+                    </Pressable>
+                  </Swipeable>
+                </View>
+              );
+            }}
+            onScroll={handleOnScroll}
+            ListHeaderComponent={renderFooter}
+            ListFooterComponent={renderFooter}
+            keyboardShouldPersistTaps={"handled"}
+            inverted
+          />
+          {isScrollingUp && (
+            <TouchableOpacity
+              style={[
+                styles.arrowButton,
+                {
+                  bottom: keyboardVisible
+                    ? Layout.normalize(55)
+                    : Layout.normalize(20),
+                },
+              ]}
+              onPress={scrollToBottomProp ? scrollToBottomProp : scrollToBottom}
+            >
+              <Image
+                source={require("../../assets/images/scrollDown.png")}
+                style={styles.arrowButtonImage}
+              />
+            </TouchableOpacity>
+          )}
+        </>
+      ) : (
+        <>
           {/* List of messages */}
           <FlashList
             ref={flatlistRef}

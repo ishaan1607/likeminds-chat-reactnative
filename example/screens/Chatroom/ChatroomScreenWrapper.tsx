@@ -2,10 +2,14 @@ import {Chat} from '@likeminds.community/chat-rn-core';
 import React from 'react';
 import {ChatroomScreen} from './ChatroomScreen';
 
-function ChatroomScreenWrapper() {
+interface ChatroomScreenWrapperProps {
+  lmChatInterface?: any;
+}
+
+function ChatroomScreenWrapper({lmChatInterface}: ChatroomScreenWrapperProps) {
   return (
     <Chat>
-      <ChatroomScreen />
+      <ChatroomScreen lmChatInterface={lmChatInterface} />
     </Chat>
   );
 }
