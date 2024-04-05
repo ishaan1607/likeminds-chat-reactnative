@@ -155,7 +155,10 @@ export const MessageContextProvider = ({
     const chatroomWithUser =
       chatroomDBDetails?.chatroomWithUser?.sdkClientInfo?.uuid;
 
-    if (loggedInMember === chatroomWithUser) {
+    // checking for M2M or M2CM flow based on isPrivateMember key
+    const isPrivateMember = chatroomDBDetails?.isPrivateMember;
+
+    if (loggedInMember === chatroomWithUser && isPrivateMember) {
       const startingIndex = answer.lastIndexOf("<");
       const receivingUser = answer.substring(0, startingIndex - 2);
       return receivingUser;
