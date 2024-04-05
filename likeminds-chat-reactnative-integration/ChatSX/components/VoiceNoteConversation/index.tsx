@@ -58,7 +58,7 @@ const VoiceNoteConversation = () => {
   const lmChatInterface = CallBack.lmChatInterface;
 
   return (
-    <>
+    <View style={styles.messageParent}>
       <View
         style={[
           styles.displayRow,
@@ -188,7 +188,7 @@ const VoiceNoteConversation = () => {
           )}
         </View>
       ) : null}
-    </>
+    </View>
   );
 };
 

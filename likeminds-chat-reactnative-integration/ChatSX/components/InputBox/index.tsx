@@ -1725,13 +1725,13 @@ const MessageInputBox = ({
           ? `${ReactNativeBlobUtil.fs.dirs.CacheDir}/${name}.mp3`
           : `${name}.m4a`;
 
-      const result = await audioRecorderPlayerAttachment.startRecorder(
+      const result = await audioRecorderPlayerAttachment?.startRecorder(
         path,
         audioSet
       );
       setIsVoiceNoteRecording(true);
       setVoiceNotesLink(result);
-      audioRecorderPlayerAttachment.addRecordBackListener((e) => {
+      audioRecorderPlayerAttachment?.addRecordBackListener((e) => {
         const seconds = Math.floor(e.currentPosition / 1000);
         if (seconds >= 900) {
           setStopRecording(!stopRecording);
@@ -1739,7 +1739,7 @@ const MessageInputBox = ({
         setVoiceNotes({
           recordSecs: e.currentPosition,
           recordTime: audioRecorderPlayerAttachment
-            .mmssss(Math.floor(e.currentPosition))
+            ?.mmssss(Math.floor(e.currentPosition))
             .slice(0, 5),
           name: name,
         });
@@ -1751,8 +1751,8 @@ const MessageInputBox = ({
   // to stop audio recording
   const stopRecord = async () => {
     if (isVoiceNoteRecording) {
-      await audioRecorderPlayerAttachment.stopRecorder();
-      audioRecorderPlayerAttachment.removeRecordBackListener();
+      await audioRecorderPlayerAttachment?.stopRecorder();
+      audioRecorderPlayerAttachment?.removeRecordBackListener();
 
       // if isVoiceResult is true we show audio player instead of audio recorder
       const voiceNote = {
@@ -1828,22 +1828,22 @@ const MessageInputBox = ({
 
   // to start playing audio recording
   const startPlay = async (path: string) => {
-    await audioRecorderPlayerAttachment.startPlayer(path);
-    audioRecorderPlayerAttachment.addPlayBackListener((e) => {
-      const playTime = audioRecorderPlayerAttachment.mmssss(
+    await audioRecorderPlayerAttachment?.startPlayer(path);
+    audioRecorderPlayerAttachment?.addPlayBackListener((e) => {
+      const playTime = audioRecorderPlayerAttachment?.mmssss(
         Math.floor(e.currentPosition)
       );
-      const duration = audioRecorderPlayerAttachment.mmssss(
+      const duration = audioRecorderPlayerAttachment?.mmssss(
         Math.floor(e.duration)
       );
       setVoiceNotesPlayer({
         currentPositionSec: e.currentPosition,
         currentDurationSec: e.duration,
         playTime: audioRecorderPlayerAttachment
-          .mmssss(Math.floor(e.currentPosition))
+          ?.mmssss(Math.floor(e.currentPosition))
           .slice(0, 5),
         duration: audioRecorderPlayerAttachment
-          .mmssss(Math.floor(e.duration))
+          ?.mmssss(Math.floor(e.duration))
           .slice(0, 5),
       });
 
@@ -1872,19 +1872,19 @@ const MessageInputBox = ({
 
   // to stop playing audio recording
   const stopPlay = async () => {
-    await audioRecorderPlayerAttachment.stopPlayer();
+    await audioRecorderPlayerAttachment?.stopPlayer();
     setIsVoiceNotePlaying(false);
   };
 
   // to pause playing audio recording
   const onPausePlay = async () => {
-    await audioRecorderPlayerAttachment.pausePlayer();
+    await audioRecorderPlayerAttachment?.pausePlayer();
     setIsVoiceNotePlaying(false);
   };
 
   // to resume playing audio recording
   const onResumePlay = async () => {
-    await audioRecorderPlayerAttachment.resumePlayer();
+    await audioRecorderPlayerAttachment?.resumePlayer();
     setIsVoiceNotePlaying(true);
   };
 
@@ -2553,7 +2553,7 @@ const MessageInputBox = ({
                 </Pressable>
               </Animated.View>
             ) : (
-              <TouchableOpacity>
+              <TouchableOpacity style={styles.sendButton}>
                 <LMChatIcon
                   assetPath={require("../../assets/images/send_button3x.png")}
                   iconStyle={
