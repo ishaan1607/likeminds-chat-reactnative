@@ -37,7 +37,11 @@ import { useAppDispatch } from "../../store";
 import { VOICE_NOTE_TEXT } from "../../constants/Strings";
 import AudioPlayer from "../../optionalDependecies/AudioPlayer";
 
-const ChatroomHeader = () => {
+interface ChatroomHeaderProps {
+  hideThreeDotsMenu?: boolean;
+}
+
+const ChatroomHeader = ({ hideThreeDotsMenu }: ChatroomHeaderProps) => {
   const myClient = Client.myClient;
   const {
     navigation,
@@ -146,7 +150,8 @@ const ChatroomHeader = () => {
         </View>
       ),
       headerRight: () =>
-        filteredChatroomActions?.length > 0 && (
+        filteredChatroomActions?.length > 0 &&
+        !hideThreeDotsMenu && (
           <View style={styles.headerRight}>
             {chatroomDetails ? (
               <TouchableOpacity
@@ -318,7 +323,7 @@ const ChatroomHeader = () => {
                 </TouchableOpacity>
               )}
 
-            {len === 1 && !isFirstMessageDeleted && isCopy ? (
+            {/* {len === 1 && !isFirstMessageDeleted && isCopy ? (
               <TouchableOpacity
                 onPress={() => {
                   const output = copySelectedMessages(
@@ -356,7 +361,7 @@ const ChatroomHeader = () => {
                   style={styles.threeDots}
                 />
               </TouchableOpacity>
-            ) : null}
+            ) : null} */}
 
             {isSelectedMessageEditable &&
             (chatroomType === ChatroomType.DMCHATROOM
@@ -457,7 +462,7 @@ const ChatroomHeader = () => {
                 />
               </TouchableOpacity>
             )}
-            {len === 1 && !isFirstMessageDeleted && (
+            {len === 1 && !isFirstMessageDeleted && !hideThreeDotsMenu && (
               <TouchableOpacity
                 onPress={() => {
                   setReportModalVisible(true);
