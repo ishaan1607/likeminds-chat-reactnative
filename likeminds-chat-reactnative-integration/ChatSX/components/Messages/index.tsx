@@ -91,7 +91,7 @@ const MessagesComponent = ({ onTapToUndoProp }: MessagesComponentProps) => {
   // styling props ended
 
   return (
-    <View style={styles.messageParent}>
+    <View>
       <View>
         {item?.deletedBy ? (
           customDeletedMessage ? (
