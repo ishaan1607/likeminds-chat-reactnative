@@ -169,8 +169,6 @@ const MessageInputBox = ({
   const myClient = Client.myClient;
   const inputBoxStyles = STYLES.$INPUT_BOX_STYLE;
 
-  console.log("LottieView", LottieView);
-
   const [isKeyBoardFocused, setIsKeyBoardFocused] = useState(false);
   const [message, setMessage] = useState(previousMessage);
   const [formattedConversation, setFormattedConversation] =
