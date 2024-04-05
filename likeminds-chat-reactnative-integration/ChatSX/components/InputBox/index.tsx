@@ -139,11 +139,8 @@ import {
   replaceMentionValues,
 } from "../../uiComponents/LMChatTextInput/utils";
 import Layout from "../../constants/Layout";
-<<<<<<< HEAD
 import GIFPicker from "../../optionalDependecies/Gif";
-=======
 import { SyncConversationRequest } from "@likeminds.community/chat-rn";
->>>>>>> 87621aaf1075f7f803406f4e00cba52fb6b4989c
 
 // to intialise audio recorder player
 const audioRecorderPlayerAttachment = new AudioRecorderPlayer();
