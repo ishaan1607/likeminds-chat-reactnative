@@ -13,17 +13,7 @@ import ChatroomTabNavigator from '../../src/ChatroomTabNavigator';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
-interface ChatroomScreenProps {
-  lmChatInterface: any;
-  chatroomId: string;
-  announcementRoomId: string;
-}
-
-export function ChatroomScreen({
-  lmChatInterface,
-  chatroomId,
-  announcementRoomId,
-}: ChatroomScreenProps) {
+export function ChatroomScreen() {
   const showViewParticipants = true;
   const showShareChatroom = true;
   const showMuteNotifications = true;
@@ -155,14 +145,6 @@ export function ChatroomScreen({
       unblockMember={customUnBlockMember}>
       {/* ChatroomHeader */}
       <ChatroomHeader />
-
-      <ChatroomTabNavigator
-        navigation={navigation}
-        chatroomId={chatroomId}
-        announcementRoomId={announcementRoomId}
-        gender="male"
-        lmChatInterface={lmChatInterface}
-      />
 
       {/* Message List */}
       <MessageList

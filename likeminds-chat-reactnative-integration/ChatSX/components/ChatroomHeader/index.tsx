@@ -29,7 +29,10 @@ import {
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { getConversationType } from "../../utils/analyticsUtils";
 import { copySelectedMessages } from "../../commonFuctions";
-import Clipboard from "@react-native-clipboard/clipboard";
+
+// TODO
+// import Clipboard from "@react-native-clipboard/clipboard";
+
 import { useAppDispatch } from "../../store";
 import { VOICE_NOTE_TEXT } from "../../constants/Strings";
 import AudioPlayer from "../../optionalDependecies/AudioPlayer";
@@ -322,7 +325,8 @@ const ChatroomHeader = () => {
                     selectedMessages,
                     chatroomID
                   );
-                  Clipboard.setString(output);
+                  // TODO
+                  // Clipboard.setString(output);
                   dispatch({ type: SELECTED_MESSAGES, body: [] });
                   dispatch({ type: LONG_PRESSED, body: false });
                   setInitialHeader();
@@ -340,7 +344,8 @@ const ChatroomHeader = () => {
                     selectedMessages,
                     chatroomID
                   );
-                  Clipboard.setString(output);
+                  // TODO
+                  // Clipboard.setString(output);
                   dispatch({ type: SELECTED_MESSAGES, body: [] });
                   dispatch({ type: LONG_PRESSED, body: false });
                   setInitialHeader();
