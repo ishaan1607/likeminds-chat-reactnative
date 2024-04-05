@@ -83,4 +83,8 @@ export const styles = StyleSheet.create({
     marginRight: Layout.normalize(10),
     marginBottom: Layout.normalize(10),
   },
+  messageParent: {
+    margin: Layout.normalize(20),
+    marginVertical: Layout.normalize(10),
+  },
 });

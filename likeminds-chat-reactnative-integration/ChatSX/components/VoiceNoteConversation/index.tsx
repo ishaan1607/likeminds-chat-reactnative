@@ -13,11 +13,11 @@ import MessageFooter from "../MessageFooter";
 import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 import { useAttachmentConversationContext } from "../../context/AttachmentConversationContext";
 import { styles } from "../AttachmentConversations/styles";
-import MessageNotSupportedView from "../MessageNotSupportedView";
+import VoiceNoteView from "../VoiceNoteView";
 import { NavigateToProfileParams } from "../../callBacks/type";
 import { CallBack } from "../../callBacks/callBackClass";
 
-const MessageNotSupported = () => {
+const VoiceNoteConversation = () => {
   const {
     isIncluded,
     item,
@@ -58,7 +58,7 @@ const MessageNotSupported = () => {
   const lmChatInterface = CallBack.lmChatInterface;
 
   return (
-    <View style={styles.messageParent}>
+    <>
       <View
         style={[
           styles.displayRow,
@@ -99,7 +99,7 @@ const MessageNotSupported = () => {
             <MessageHeader />
           )}
 
-          <MessageNotSupportedView />
+          <VoiceNoteView />
 
           {/* Message text */}
           {isAnswer ? <MessageText /> : null}
@@ -188,8 +188,8 @@ const MessageNotSupported = () => {
           )}
         </View>
       ) : null}
-    </View>
+    </>
   );
 };
 
-export default MessageNotSupported;
+export default VoiceNoteConversation;

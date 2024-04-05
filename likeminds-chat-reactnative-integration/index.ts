@@ -28,6 +28,7 @@ import { useMessageListContext } from "./ChatSX/context/MessageListContext";
 import { useExploreFeedContext } from "./ChatSX/context/ExploreFeedContext";
 import { useCreatePollContext } from "./ChatSX/context/CreatePollContext";
 import { useInputBoxContext } from "./ChatSX/context/InputBoxContext";
+import { useAttachmentConversationContext } from "./ChatSX/context/AttachmentConversationContext";
 import Chat from "./ChatSX/context/Chat";
 import ImageScreen from "./ChatSX/components/ImageScreen";
 import ReportScreen from "./ChatSX/screens/ReportMessage";
@@ -65,6 +66,7 @@ export {
   useExploreFeedContext,
   useCreatePollContext,
   useInputBoxContext,
+  useAttachmentConversationContext,
   ReportScreen,
   ImageScreen,
   ViewParticipants,

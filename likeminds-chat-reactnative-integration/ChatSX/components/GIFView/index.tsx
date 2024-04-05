@@ -23,7 +23,7 @@ import {
   STATUS_BAR_STYLE,
 } from "../../store/types/types";
 
-const GIFConversations = () => {
+const GIFView = () => {
   const [isGifPlaying, setIsGifPlaying] = useState(false);
   const { isIncluded, item, handleLongPress } = useMessageContext();
   const { navigation, handleFileUpload } = useChatroomContext();
@@ -186,4 +186,4 @@ const GIFConversations = () => {
   );
 };
 
-export default GIFConversations;
+export default GIFView;

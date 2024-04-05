@@ -13,11 +13,11 @@ import MessageFooter from "../MessageFooter";
 import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 import { useAttachmentConversationContext } from "../../context/AttachmentConversationContext";
 import { styles } from "../AttachmentConversations/styles";
-import MessageNotSupportedView from "../MessageNotSupportedView";
+import { ImageVideoConversationView } from "../ImageVideoConversationView";
 import { NavigateToProfileParams } from "../../callBacks/type";
 import { CallBack } from "../../callBacks/callBackClass";
 
-const MessageNotSupported = () => {
+const ImageVideoConversation = () => {
   const {
     isIncluded,
     item,
@@ -99,7 +99,7 @@ const MessageNotSupported = () => {
             <MessageHeader />
           )}
 
-          <MessageNotSupportedView />
+          <ImageVideoConversationView />
 
           {/* Message text */}
           {isAnswer ? <MessageText /> : null}
@@ -192,4 +192,4 @@ const MessageNotSupported = () => {
   );
 };
 
-export default MessageNotSupported;
+export default ImageVideoConversation;

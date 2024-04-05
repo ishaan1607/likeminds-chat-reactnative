@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image } from "react-native";
+import { View, Text, Pressable, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { useMessageContext } from "../../context/MessageContext";
 import { useChatroomContext } from "../../context/ChatroomContext";
@@ -10,6 +10,8 @@ import MessageFooter from "../MessageFooter";
 import MessageHeader from "../MessageHeader";
 import StateMessage from "../StateMessage";
 import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
+import { NavigateToProfileParams } from "../../callBacks/type";
+import { CallBack } from "../../callBacks/callBackClass";
 
 interface SimpleMessageProps {
   onTapToUndoProp?: () => void;
@@ -51,8 +53,11 @@ const SimpleMessage = ({ onTapToUndoProp }: SimpleMessageProps) => {
     ? selectedMessageBackgroundColor
     : STYLES.$COLORS.SELECTED_BLUE;
   // styling props ended
+
+  const lmChatInterface = CallBack.lmChatInterface;
+
   return (
-    <View>
+    <View style={styles.messageParent}>
       {isItemIncludedInStateArr ? (
         customStateMessage ? (
           customStateMessage
@@ -130,6 +135,68 @@ const SimpleMessage = ({ onTapToUndoProp }: SimpleMessageProps) => {
           ) : null}
         </View>
       )}
+
+      {/* Sharp corner styles of a chat bubble */}
+      {!isItemIncludedInStateArr && !(item?.attachmentCount > 0) ? (
+        <View>
+          {isTypeSent ? (
+            <View
+              style={[
+                styles.typeSent,
+                sentMessageBackgroundColor
+                  ? {
+                      borderBottomColor: sentMessageBackgroundColor,
+                      borderLeftColor: sentMessageBackgroundColor,
+                    }
+                  : null,
+                isIncluded
+                  ? {
+                      borderBottomColor: SELECTED_BACKGROUND_COLOR,
+                      borderLeftColor: SELECTED_BACKGROUND_COLOR,
+                    }
+                  : null,
+              ]}
+            />
+          ) : (
+            <View
+              style={[
+                styles.typeReceived,
+                receivedMessageBackgroundColor
+                  ? {
+                      borderBottomColor: receivedMessageBackgroundColor,
+                      borderRightColor: receivedMessageBackgroundColor,
+                    }
+                  : null,
+                isIncluded
+                  ? {
+                      borderBottomColor: SELECTED_BACKGROUND_COLOR,
+                      borderRightColor: SELECTED_BACKGROUND_COLOR,
+                    }
+                  : null,
+              ]}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  const params: NavigateToProfileParams = {
+                    taggedUserId: null,
+                    member: item?.member,
+                  };
+                  lmChatInterface.navigateToProfile(params);
+                }}
+              >
+                <Image
+                  source={
+                    item?.member?.imageUrl
+                      ? { uri: item?.member?.imageUrl }
+                      : require("../../assets/images/default_pic.png")
+                  }
+                  style={styles.chatroomTopicAvatar}
+                />
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      ) : null}
     </View>
   );
 };

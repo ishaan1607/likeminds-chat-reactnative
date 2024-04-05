@@ -1,4 +1,4 @@
-import { View, Image, Pressable, TouchableOpacity } from "react-native";
+import { View, Image, Pressable } from "react-native";
 import React from "react";
 import { generateGifString } from "../../commonFuctions";
 import STYLES from "../../constants/Styles";
@@ -13,11 +13,13 @@ import MessageFooter from "../MessageFooter";
 import { useCustomComponentsContext } from "../../context/CustomComponentContextProvider";
 import { useAttachmentConversationContext } from "../../context/AttachmentConversationContext";
 import { styles } from "../AttachmentConversations/styles";
-import MessageNotSupportedView from "../MessageNotSupportedView";
+import VoiceNoteView from "../VoiceNoteView";
+import { PDFConversationView } from "../PDFConversationView";
+import { TouchableOpacity } from "react-native-gesture-handler";
 import { NavigateToProfileParams } from "../../callBacks/type";
 import { CallBack } from "../../callBacks/callBackClass";
 
-const MessageNotSupported = () => {
+const PDFConversation = () => {
   const {
     isIncluded,
     item,
@@ -99,7 +101,7 @@ const MessageNotSupported = () => {
             <MessageHeader />
           )}
 
-          <MessageNotSupportedView />
+          <PDFConversationView />
 
           {/* Message text */}
           {isAnswer ? <MessageText /> : null}
@@ -192,4 +194,4 @@ const MessageNotSupported = () => {
   );
 };
 
-export default MessageNotSupported;
+export default PDFConversation;
