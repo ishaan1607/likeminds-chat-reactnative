@@ -1,8 +1,8 @@
 {
   "name": "@likeminds.community/chat-rn-core",
-  "version": "1.0.0",
-  "versionCode": "12",
-  "versionName": "1.0.0",
+  "version": "1.0.1",
+  "versionCode": "13",
+  "versionName": "1.0.1",
   "description": "LikeMinds ReactNative Core SDK for chat",
   "scripts": {
     "android": "react-native run-android",
@@ -20,7 +20,7 @@
   "homepage": "https://likeminds.community/",
   "license": "ISC",
   "dependencies": {
-    "@likeminds.community/chat-rn": "1.5.4",
+    "@likeminds.community/chat-rn": "1.5.5",
     "@notifee/react-native": "7.6.1",
     "@react-native-async-storage/async-storage": "1.18.1",
     "@react-native-community/datetimepicker": "7.4.1",
