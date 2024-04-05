@@ -1,4 +1,4 @@
-let GIFPicker: any;
+let GIFPicker;
 
 try {
   GIFPicker = require("@giphy/react-native-sdk");
