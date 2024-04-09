@@ -22,7 +22,6 @@ import {
 } from "../../store/types/types";
 import { useAppDispatch, useAppSelector } from "../../store";
 import STYLES from "../../constants/Styles";
-import VideoPlayer from "react-native-media-console";
 import {
   AUDIO_TEXT,
   FAILED,
@@ -45,6 +44,7 @@ import { CustomisableMethodsContextProvider } from "../../context/CustomisableMe
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useChatroomContext } from "../../context/ChatroomContext";
+import VideoPlayer from "../../optionalDependecies/VideoPlayer";
 
 interface UploadResource {
   selectedImages: any;
@@ -400,12 +400,12 @@ const FileUpload = ({
             source={{ uri: selectedFileToView?.uri }}
             style={styles.mainImage}
           />
-        ) : itemType === VIDEO_TEXT ? (
+        ) : itemType === VIDEO_TEXT && VideoPlayer ? (
           <View style={styles.video}>
             <VideoPlayer
               source={{ uri: selectedFileToView?.uri }}
-              videoStyle={styles.videoPlayer}
-              videoRef={video}
+              style={styles.videoPlayer}
+              ref={video}
               disableBack={true}
               disableVolume={true}
               disableFullscreen={true}
