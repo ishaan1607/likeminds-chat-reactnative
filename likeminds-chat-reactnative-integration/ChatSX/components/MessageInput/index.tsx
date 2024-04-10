@@ -22,12 +22,14 @@ interface MessageInput {
   joinSecretChatroomProp: () => void;
   showJoinAlertProp: () => void;
   showRejectAlertProp: () => void;
+  messageForDisabledInputBox?: string;
 }
 
 const MessageInput = ({
   joinSecretChatroomProp,
   showJoinAlertProp,
   showRejectAlertProp,
+  messageForDisabledInputBox,
 }: MessageInput) => {
   const {
     navigation,
@@ -92,7 +94,9 @@ const MessageInput = ({
             chatroomDBDetails?.memberCanMessage === false ? (
               <View style={styles.disabledInput}>
                 <Text style={styles.disabledInputText}>
-                  Only Community Manager can message here.
+                  {messageForDisabledInputBox?.length !== 0
+                    ? messageForDisabledInputBox
+                    : "Only Community Manager can message here."}
                 </Text>
               </View>
             ) : //case to allow CM for messaging in an Announcement Room

@@ -25,6 +25,8 @@ export function ChatroomScreen() {
   const showViewProfile = true;
   const showSecretLeaveChatroom = true;
   const showChatroomTopic = false;
+  const messageForDisabledInputBox =
+    "Sorry, at this time only CM's can message here!";
   const {
     setChatroomTopic,
     leaveChatroom,
@@ -158,6 +160,7 @@ export function ChatroomScreen() {
         joinSecretChatroomProp={customJoinSecretChatroom}
         showJoinAlertProp={customShowJoinAlert}
         showRejectAlertProp={customShowRejectAlert}
+        messageForDisabledInputBox={messageForDisabledInputBox}
       />
     </ChatRoom>
   );
