@@ -44,8 +44,7 @@ import { CustomisableMethodsContextProvider } from "../../context/CustomisableMe
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import { useChatroomContext } from "../../context/ChatroomContext";
-import VideoPlayer from "../../optionalDependecies/VideoPlayer";
-
+import VideoPlayer from "react-native-media-console";
 interface UploadResource {
   selectedImages: any;
   conversationID: any;
@@ -400,12 +399,13 @@ const FileUpload = ({
             source={{ uri: selectedFileToView?.uri }}
             style={styles.mainImage}
           />
-        ) : itemType === VIDEO_TEXT && VideoPlayer ? (
+        ) : itemType === VIDEO_TEXT ? (
           <View style={styles.video}>
             <VideoPlayer
+              // @ts-ignore
               source={{ uri: selectedFileToView?.uri }}
-              style={styles.videoPlayer}
-              ref={video}
+              videoStyle={styles.videoPlayer}
+              videoRef={video}
               disableBack={true}
               disableVolume={true}
               disableFullscreen={true}

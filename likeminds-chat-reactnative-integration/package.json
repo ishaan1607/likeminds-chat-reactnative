@@ -66,6 +66,7 @@
     "react-native-tab-view": ">=3.5.0",
     "react-native-track-player": ">=4.0.1",
     "react-native-video": ">=5.2.1",
+    "@types/react-native-video": ">=5.0.14",
     "rn-emoji-keyboard": ">=1.2.1"
   },
   "peerDependenciesMeta": {

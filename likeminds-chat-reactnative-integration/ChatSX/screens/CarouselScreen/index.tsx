@@ -15,7 +15,7 @@ import STYLES from "../../constants/Styles";
 import { STATUS_BAR_STYLE } from "../../store/types/types";
 import { DocumentType } from "../../enums";
 import { useAppDispatch } from "../../store";
-import VideoPlayer from "../../optionalDependecies/VideoPlayer";
+import VideoPlayer from "react-native-media-console";
 
 const CarouselScreen = ({ navigation, route }: any) => {
   const video = useRef<any>(null);
@@ -160,12 +160,13 @@ const CarouselScreen = ({ navigation, route }: any) => {
             >
               {item?.type === IMAGE_TEXT ? (
                 <Image style={styles.image} source={{ uri: item?.url }} />
-              ) : item?.type === VIDEO_TEXT && VideoPlayer ? (
+              ) : item?.type === VIDEO_TEXT ? (
                 <View style={styles.video}>
                   <VideoPlayer
+                    // @ts-ignore
                     source={{ uri: item?.url }}
-                    style={styles.videoPlayer}
-                    ref={video}
+                    videoStyle={styles.videoPlayer}
+                    videoRef={video}
                     disableVolume={true}
                     disableBack={true}
                     disableFullscreen={true}
