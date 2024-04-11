@@ -13,6 +13,13 @@ import ChatroomTabNavigator from '../../src/ChatroomTabNavigator';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 
+interface HintMessages {
+  messageForRightsDisabled?: string;
+  messageForMemberCanMessage?: string;
+  messageForAnnouncementRoom?: string;
+  respondingDisabled?: string;
+}
+
 export function ChatroomScreen() {
   const showViewParticipants = true;
   const showShareChatroom = true;
@@ -25,8 +32,13 @@ export function ChatroomScreen() {
   const showViewProfile = true;
   const showSecretLeaveChatroom = true;
   const showChatroomTopic = false;
-  const messageForDisabledInputBox =
-    "Sorry, at this time only CM's can message here!";
+  const hintMessages: HintMessages = {
+    messagForMemberCanMessage:
+      "Sorry, at this time only CM's can message here!",
+    messageForRightsDisabled:
+      'Sorry your rights has been disabled, contact you CM for more info!',
+  };
+
   const {
     setChatroomTopic,
     leaveChatroom,
@@ -160,7 +172,7 @@ export function ChatroomScreen() {
         joinSecretChatroomProp={customJoinSecretChatroom}
         showJoinAlertProp={customShowJoinAlert}
         showRejectAlertProp={customShowRejectAlert}
-        messageForDisabledInputBox={messageForDisabledInputBox}
+        hintMessages={hintMessages}
       />
     </ChatRoom>
   );
