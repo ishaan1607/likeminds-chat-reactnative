@@ -88,9 +88,6 @@
     },
     "@react-native-clipboard/clipboard": {
       "optional": true
-    },
-    "@react-native-community/clipboard": {
-      "optional": true
     }
   },
   "jest": {
