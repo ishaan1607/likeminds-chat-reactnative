@@ -8,7 +8,6 @@ import React, {
 import { useAppDispatch } from "../store";
 import { GET_CONVERSATIONS_SUCCESS, SHOW_TOAST } from "../store/types/types";
 import { Platform } from "react-native";
-import moment from "moment";
 import { formatDate } from "../commonFuctions";
 import { CreatePollProps } from "../components/Poll/models";
 import { GetConversationsRequestBuilder } from "@likeminds.community/chat-rn";
@@ -21,7 +20,6 @@ import {
   TIME_TEXT,
 } from "../constants/Strings";
 import { Client } from "../client";
-import uuid from "react-native-uuid";
 
 interface CreatePollContextProps {
   children: ReactNode;
@@ -81,8 +79,8 @@ export const CreatePollContextProvider = ({
 
   // to set initial poll options
   useEffect(() => {
-    const id_1 = uuid.v4();
-    const id_2 = uuid.v4();
+    const id_1 = Math.random();
+    const id_2 = Math.random();
     const initialOptionArray = [
       {
         id: id_1,
@@ -107,7 +105,7 @@ export const CreatePollContextProvider = ({
   function addNewOption() {
     const newOptionsArr = [...optionsArray];
     const newOption = {
-      id: uuid.v4(),
+      id: Math.random(),
       text: "",
     };
     newOptionsArr.push(newOption);
@@ -326,6 +324,13 @@ export const CreatePollContextProvider = ({
     }
   }
 
+  function utcOffset() {
+    const date = new Date();
+    const offsetMinutes = date.getTimezoneOffset();
+
+    return -offsetMinutes;
+  }
+
   // readonly props consumed by UI component
   const contextValues: CreatePollContextValues = {
     show,
@@ -335,7 +340,7 @@ export const CreatePollContextProvider = ({
     optionsArray,
     showAdvancedOption,
     formatedDateTime: date ? formatDate(date, time) : "",
-    timeZoneOffsetInMinutes: moment().utcOffset(),
+    timeZoneOffsetInMinutes: utcOffset(),
     addOptionsEnabled,
     anonymousPollEnabled,
     liveResultsEnabled,

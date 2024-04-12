@@ -17,7 +17,6 @@ import {
 } from "../constants/Strings";
 import { createThumbnail } from "react-native-create-thumbnail";
 import PdfThumbnail from "react-native-pdf-thumbnail";
-import moment from "moment";
 import { DocumentType, Events, Keys } from "../enums";
 import { LMChatAnalytics } from "../analytics/LMChatAnalytics";
 import { getConversationType } from "../utils/analyticsUtils";
@@ -614,8 +613,20 @@ export function extractPathfromRouteQuery(inputString: string): string | null {
 
 // this function formats the date in "DD/MM/YYYY hh:mm" format
 export const formatDate = (date: any, time: any) => {
-  const formattedTime = moment(date).format("DD/MM/YYYY hh:mm");
-  return formattedTime;
+  const inputDate = new Date(time);
+
+  // Extracting date components
+  const day = String(inputDate.getDate()).padStart(2, "0");
+  const month = String(inputDate.getMonth() + 1).padStart(2, "0");
+  const year = inputDate.getFullYear();
+
+  // Extracting time components
+  const hours = String(inputDate.getHours()).padStart(2, "0");
+  const minutes = String(inputDate.getMinutes()).padStart(2, "0");
+
+  // Formating date and time
+  const formattedDateTime = `${day}/${month}/${year} ${hours}:${minutes}`;
+  return formattedDateTime;
 };
 
 // this function converts seconds count to mm:ss time format

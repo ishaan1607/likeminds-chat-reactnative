@@ -29,13 +29,11 @@ import {
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { getConversationType } from "../../utils/analyticsUtils";
 import { copySelectedMessages } from "../../commonFuctions";
-
-// TODO
-// import Clipboard from "@react-native-clipboard/clipboard";
-
 import { useAppDispatch } from "../../store";
 import { VOICE_NOTE_TEXT } from "../../constants/Strings";
 import AudioPlayer from "../../optionalDependecies/AudioPlayer";
+import RNClipboard from "../../optionalDependecies/RNClipboard";
+import CommunityClipboard from "../../optionalDependecies/CommunityClipboard";
 
 interface ChatroomHeaderProps {
   hideThreeDotsMenu?: boolean;
@@ -323,45 +321,57 @@ const ChatroomHeader = ({ hideThreeDotsMenu }: ChatroomHeaderProps) => {
                 </TouchableOpacity>
               )}
 
-            {/* {len === 1 && !isFirstMessageDeleted && isCopy ? (
-              <TouchableOpacity
-                onPress={() => {
-                  const output = copySelectedMessages(
-                    selectedMessages,
-                    chatroomID
-                  );
-                  // TODO
-                  // Clipboard.setString(output);
-                  dispatch({ type: SELECTED_MESSAGES, body: [] });
-                  dispatch({ type: LONG_PRESSED, body: false });
-                  setInitialHeader();
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/copy_icon3x.png")}
-                  style={styles.threeDots}
-                />
-              </TouchableOpacity>
-            ) : len > 1 && isCopy ? (
-              <TouchableOpacity
-                onPress={() => {
-                  const output = copySelectedMessages(
-                    selectedMessages,
-                    chatroomID
-                  );
-                  // TODO
-                  // Clipboard.setString(output);
-                  dispatch({ type: SELECTED_MESSAGES, body: [] });
-                  dispatch({ type: LONG_PRESSED, body: false });
-                  setInitialHeader();
-                }}
-              >
-                <Image
-                  source={require("../../assets/images/copy_icon3x.png")}
-                  style={styles.threeDots}
-                />
-              </TouchableOpacity>
-            ) : null} */}
+            {RNClipboard || CommunityClipboard ? (
+              <>
+                {len === 1 && !isFirstMessageDeleted && isCopy ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      const output = copySelectedMessages(
+                        selectedMessages,
+                        chatroomID
+                      );
+                      if (RNClipboard) {
+                        RNClipboard?.setString(output);
+                      }
+                      if (CommunityClipboard) {
+                        CommunityClipboard?.setString(output);
+                      }
+                      dispatch({ type: SELECTED_MESSAGES, body: [] });
+                      dispatch({ type: LONG_PRESSED, body: false });
+                      setInitialHeader();
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/images/copy_icon3x.png")}
+                      style={styles.threeDots}
+                    />
+                  </TouchableOpacity>
+                ) : len > 1 && isCopy ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      const output = copySelectedMessages(
+                        selectedMessages,
+                        chatroomID
+                      );
+                      if (RNClipboard) {
+                        RNClipboard?.setString(output);
+                      }
+                      if (CommunityClipboard) {
+                        CommunityClipboard?.setString(output);
+                      }
+                      dispatch({ type: SELECTED_MESSAGES, body: [] });
+                      dispatch({ type: LONG_PRESSED, body: false });
+                      setInitialHeader();
+                    }}
+                  >
+                    <Image
+                      source={require("../../assets/images/copy_icon3x.png")}
+                      style={styles.threeDots}
+                    />
+                  </TouchableOpacity>
+                ) : null}
+              </>
+            ) : null}
 
             {isSelectedMessageEditable &&
             (chatroomType === ChatroomType.DMCHATROOM

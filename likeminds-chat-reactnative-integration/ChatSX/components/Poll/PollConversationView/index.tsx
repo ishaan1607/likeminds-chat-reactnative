@@ -13,7 +13,6 @@ import {
   POLL_MULTIPLE_STATE_MAX,
   POLL_SUBMITTED_SUCCESSFULLY,
 } from "../../../constants/Strings";
-import moment from "moment";
 import PollConversationUI from "../PollConversationUI";
 import AnonymousPollModal from "../../../customModals/AnonymousPoll";
 import AddOptionsModal from "../../../customModals/AddOptionModal";
@@ -423,6 +422,15 @@ const PollConversationView = () => {
     }
   };
 
+  const calculateDaysToExpiry = () => {
+    const difference = item?.expiryTime - Date.now();
+
+    const millisecondsInADay = 24 * 60 * 60 * 1000;
+    const millisecondsToDays = difference / millisecondsInADay;
+
+    return Math.ceil(millisecondsToDays)?.toString();
+  };
+
   // readonly props consumed by UI component
   const props: PollConversationViewState = {
     text: item?.answer,
@@ -437,7 +445,7 @@ const PollConversationView = () => {
     allowAddOption: allowAddOption,
     shouldShowVotes: shouldShowVotes,
     hasPollEnded: hasPollEnded,
-    expiryTime: moment(item?.expiryTime).fromNow(),
+    expiryTime: calculateDaysToExpiry(),
     toShowResults: item?.toShowResults,
     member: item?.member,
     user: user,
