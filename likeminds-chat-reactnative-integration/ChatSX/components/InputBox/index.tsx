@@ -13,6 +13,7 @@ import {
   Vibration,
   ImageStyle,
   TextStyle,
+  ViewStyle,
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import { styles } from "./styles";
@@ -437,7 +438,7 @@ const MessageInputBox = ({
   const composedGesture = Gesture.Simultaneous(longPressGesture, panGesture);
 
   // draggle mic panGesture styles
-  const panStyle = useAnimatedStyle(() => {
+  const panStyle = useAnimatedStyle((): ViewStyle | ImageStyle | TextStyle => {
     return {
       transform: [
         {

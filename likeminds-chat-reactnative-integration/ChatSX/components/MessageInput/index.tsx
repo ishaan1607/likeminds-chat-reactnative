@@ -18,16 +18,25 @@ import {
 } from "../../constants/Strings";
 import { CustomisableMethodsContextProvider } from "../../context/CustomisableMethodsContext";
 
+interface HintMessages {
+  messageForRightsDisabled?: string;
+  messageForMemberCanMessage?: string;
+  messageForAnnouncementRoom?: string;
+  respondingDisabled?: string;
+}
+
 interface MessageInput {
   joinSecretChatroomProp: () => void;
   showJoinAlertProp: () => void;
   showRejectAlertProp: () => void;
+  hintMessages?: HintMessages;
 }
 
 const MessageInput = ({
   joinSecretChatroomProp,
   showJoinAlertProp,
   showRejectAlertProp,
+  hintMessages,
 }: MessageInput) => {
   const {
     navigation,
@@ -58,6 +67,10 @@ const MessageInput = ({
     handleDMRejectClick,
     handleFileUpload,
   }: ChatroomContextValues = useChatroomContext();
+  const messageForRightsDisabled = hintMessages?.messageForRightsDisabled;
+  const messageForMemberCanMessage = hintMessages?.messageForMemberCanMessage;
+  const messageForAnnouncementRoom = hintMessages?.messageForAnnouncementRoom;
+  const respondingDisabled = hintMessages?.respondingDisabled;
   return (
     <View
       style={{
@@ -92,7 +105,9 @@ const MessageInput = ({
             chatroomDBDetails?.memberCanMessage === false ? (
               <View style={styles.disabledInput}>
                 <Text style={styles.disabledInputText}>
-                  Only Community Manager can message here.
+                  {messageForMemberCanMessage
+                    ? messageForMemberCanMessage
+                    : "Only Community Manager can message here."}
                 </Text>
               </View>
             ) : //case to allow CM for messaging in an Announcement Room
@@ -120,14 +135,17 @@ const MessageInput = ({
             user.state !== 1 && chatroomDBDetails?.type === 7 ? (
               <View style={styles.disabledInput}>
                 <Text style={styles.disabledInputText}>
-                  Only Community Manager can message here.
+                  {messageForAnnouncementRoom
+                    ? messageForAnnouncementRoom
+                    : "Only Community Manager can message here."}
                 </Text>
               </View>
             ) : memberRights[3]?.isSelected === false ? (
               <View style={styles.disabledInput}>
                 <Text style={styles.disabledInputText}>
-                  The community managers have restricted you from responding
-                  here.
+                  {messageForRightsDisabled
+                    ? messageForRightsDisabled
+                    : " The community managers have restricted you from responding here."}
                 </Text>
               </View>
             ) : !(Object.keys(chatroomDBDetails)?.length === 0) &&
@@ -188,7 +206,9 @@ const MessageInput = ({
             ) : (
               <View style={styles.disabledInput}>
                 <Text style={styles.disabledInputText}>
-                  Responding is disabled
+                  {respondingDisabled
+                    ? respondingDisabled
+                    : "Responding is disabled"}
                 </Text>
               </View>
             )

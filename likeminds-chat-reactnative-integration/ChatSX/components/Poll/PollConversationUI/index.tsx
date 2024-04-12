@@ -105,7 +105,9 @@ const PollConversationUI = ({
             ]}
           >
             <Text style={[styles.smallText, styles.whiteColor]}>
-              {hasPollEnded ? "Poll Ended" : "Poll Ends " + expiryTime}
+              {hasPollEnded
+                ? "Poll Ended"
+                : "Poll Ends " + expiryTime + " days"}
             </Text>
           </View>
         </View>
