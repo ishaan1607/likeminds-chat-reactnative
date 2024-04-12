@@ -29,10 +29,6 @@ import {
 import { LMChatAnalytics } from "../../analytics/LMChatAnalytics";
 import { getConversationType } from "../../utils/analyticsUtils";
 import { copySelectedMessages } from "../../commonFuctions";
-
-// TODO
-// import Clipboard from "@react-native-clipboard/clipboard";
-
 import { useAppDispatch } from "../../store";
 import { VOICE_NOTE_TEXT } from "../../constants/Strings";
 import AudioPlayer from "../../optionalDependecies/AudioPlayer";
