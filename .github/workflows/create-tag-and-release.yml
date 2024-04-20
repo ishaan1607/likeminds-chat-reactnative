@@ -7,6 +7,10 @@ on:
 
 permissions: write-all
 
+defaults:
+    run:
+        working-directory: ./likeminds-chat-reactnative-integration
+
 jobs:
     create_tag:
         name: Create Git Tag
@@ -17,7 +21,6 @@ jobs:
           with:
             fetch-depth: 0
         - name: Check for version changes
-          working-directory: /likeminds-chat-reactnative-integration
           run: |
               # Fetch all tags from the remote repository
               git fetch --tags
@@ -35,7 +38,6 @@ jobs:
                 exit 1
               fi
         - name: Push Git Tag
-          working-directory: /likeminds-chat-reactnative-integration
           run: |
                 # Git login
                 git config --global user.name "$(git log -n 1 --pretty=format:%an)"
