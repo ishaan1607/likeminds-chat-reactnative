@@ -17,20 +17,16 @@ jobs:
           with:
             fetch-depth: 0
         - name: Check for version changes
-          working-directory: likeminds-chat-reactnative-integration
+          working-directory: ../likeminds-chat-reactnative-integration
           run: |
               # Fetch all tags from the remote repository
               git fetch --tags
               
               # Get the previous version from the last release tag
               export previous_version=$(git describe --tags --abbrev=0)
-
-              cd likeminds-chat-reactnative-integration
               
               # Get the current version from package.json
               export current_version=$(cat package.json | grep '"version":' | awk -F'"' '{print $4}')
-
-              cd ..
               
               if [[ "$previous_version" != "v$current_version" ]]; then
                 echo "Version has changed from $previous_version to v$current_version."
@@ -39,7 +35,7 @@ jobs:
                 exit 1
               fi
         - name: Push Git Tag
-          working-directory: likeminds-chat-reactnative-integration
+          working-directory: ../likeminds-chat-reactnative-integration
           run: |
                 # Git login
                 git config --global user.name "$(git log -n 1 --pretty=format:%an)"
